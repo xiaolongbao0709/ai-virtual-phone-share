@@ -2,13 +2,21 @@ name: Build index
 on:
   push:
     branches: [main]
+    # 送花只改 _flowers.json，跟索引无关。这里就把它挡在门外，连运行都不创建：
+    # 光靠下面 job 的 if 跳过是不够的——跳过也得先进 concurrency 组，
+    # 进组就会取消正在跑的真构建（见下）。
+    paths-ignore: ["_flowers.json"]
   workflow_dispatch:
 # App 的一次「编辑」会连发好几个提交（删旧文件、传新文件、说明、署名），
 # 每个提交各触发一次运行。不收敛的话它们会同时构建、竞争推送——只有一个
 # 推得上去，其余非快进失败；抢赢的还未必是最新提交，索引就停在旧状态。
 # 收敛成同组：新运行进来就取消还在跑的旧运行，永远只留最新一趟。
+#
+# 但 concurrency 是运行级的，job 的 if 是 job 级的：GitHub 先按组取消，
+# 再判断 if。所以一个什么都不做的运行照样能取消掉真构建，自己再跳过，
+# 结果没人重建索引。要跳过的运行必须拿到各自独立的组名，别碰 build-index。
 concurrency:
-  group: build-index
+  group: "build-index${{ (contains(github.event.head_commit.message, '[skip-index]') || github.actor == 'github-actions[bot]') && format('-noop-{0}', github.run_id) || '' }}"
   cancel-in-progress: true
 jobs:
   build:
