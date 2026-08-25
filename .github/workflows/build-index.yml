@@ -16,14 +16,17 @@ on:
 # 再判断 if。所以一个什么都不做的运行照样能取消掉真构建，自己再跳过，
 # 结果没人重建索引。要跳过的运行必须拿到各自独立的组名，别碰 build-index。
 concurrency:
-  group: "build-index${{ (contains(github.event.head_commit.message, '[skip-index]') || github.actor == 'github-actions[bot]') && format('-noop-{0}', github.run_id) || '' }}"
+  group: "build-index${{ (endsWith(github.event.head_commit.message, '[skip-index]') || github.actor == 'github-actions[bot]') && format('-noop-{0}', github.run_id) || '' }}"
   cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
     # 机器人自己的提交只改 _index.json，跳过避免死循环；
-    # 送花只改 _flowers.json（提交带 [skip-index]），也不用重建索引
-    if: github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip-index]')
+    # 送花只改 _flowers.json（提交带 [skip-index]），也不用重建索引。
+    # 用 endsWith 而不是 contains：标记是送花提交标题的结尾，而送花提交没有正文。
+    # contains 会连正文里顺嘴提到这个标记的普通提交一起跳过——本仓库真栽过一次，
+    # 那种漏掉是不报错的，索引就悄悄停在旧状态。
+    if: github.actor != 'github-actions[bot]' && !endsWith(github.event.head_commit.message, '[skip-index]')
     permissions:
       contents: write
     steps:
