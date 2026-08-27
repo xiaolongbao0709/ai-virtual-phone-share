@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T07:06:38.337Z",
+  "generatedAt": "2026-08-27T07:07:39.083Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "快捷指令模版",
-      "count": 1
+      "count": 2
     },
     {
       "name": "朋友圈美化",
@@ -1977,6 +1977,26 @@
       "avatar": "",
       "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
       "updatedAt": "2026-08-26T03:36:44+08:00"
+    },
+    {
+      "folder": "快捷指令模版",
+      "name": "语音唤起你的char快捷指令",
+      "dirName": "语音唤起你的char快捷指令",
+      "type": "dir",
+      "path": "资源/快捷指令模版/语音唤起你的char快捷指令",
+      "files": [],
+      "images": [
+        "资源/快捷指令模版/语音唤起你的char快捷指令/IMG_3266.png",
+        "资源/快捷指令模版/语音唤起你的char快捷指令/IMG_3267.png",
+        "资源/快捷指令模版/语音唤起你的char快捷指令/IMG_3268.png",
+        "资源/快捷指令模版/语音唤起你的char快捷指令/IMG_3269.jpeg",
+        "资源/快捷指令模版/语音唤起你的char快捷指令/IMG_3271.jpeg"
+      ],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "",
+      "updatedAt": "2026-08-27T15:07:19+08:00"
     },
     {
       "folder": "朋友圈美化",
