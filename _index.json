@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T07:07:39.083Z",
+  "generatedAt": "2026-08-27T07:14:36.045Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1826,7 +1826,7 @@
       "type": "dir",
       "path": "资源/应用/观影体剧院app[彩虹]",
       "files": [
-        "资源/应用/观影体剧院app[彩虹]/custom-app-1.0.0.zip"
+        "资源/应用/观影体剧院app[彩虹]/custom-app-1.0.0 (1).zip"
       ],
       "images": [
         "资源/应用/观影体剧院app[彩虹]/1000054631.jpg"
@@ -1835,7 +1835,7 @@
       "author": "南柯",
       "avatar": "资源/应用/观影体剧院app[彩虹]/.avatar.png",
       "ownerHash": "cdec925f9e2d6a79f64c584d0e0286f334fd96c5312717c1b5659b9dc42955d3",
-      "updatedAt": "2026-08-27T15:06:21+08:00"
+      "updatedAt": "2026-08-27T15:14:16+08:00"
     },
     {
       "folder": "应用",
