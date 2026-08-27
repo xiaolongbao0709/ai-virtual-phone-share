@@ -1,0 +1,403 @@
+外观-杂志
+/* 杂志风格｜聊天 App 配套外观
+   与"杂志风格气泡.css"搭配使用 */
+
+/* ── 全局颜色 ── */
+.chat-app {
+  --c-header-bg: #ffffff;
+  --c-page-body-bg: #f2f0eb;
+  --c-card: #ffffff;
+  --c-card-border: #1a1a1a;
+  --c-input: #ffffff;
+  --c-input-border: #1a1a1a;
+  --c-text-title: #1a1a1a;
+  --c-text: #444444;
+  --c-icon: #888888;
+  --c-icon-active: #1a1a1a;
+  --c-bubble-self: #1a1a1a;
+  --c-bubble-other: #f8f8f6;
+  --c-success: #2a7a2a;
+  --c-warning: #c87800;
+  --c-danger: #e01f2c;
+}
+
+/* ── 页面、标题栏与底栏 ── */
+.chat-app .page-body {
+  background-color: #f2f0eb;
+}
+
+.chat-app .page-header {
+  background: #ffffff;
+  border-bottom: 2px solid #1a1a1a;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.chat-app .page-title,
+.chat-app .page-back-btn {
+  color: #1a1a1a;
+  letter-spacing: 0.04em;
+}
+
+.chat-app .chat-tab-bar {
+  background: #ffffff;
+  border-top: 2px solid #1a1a1a;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.chat-app .chat-tab {
+  color: #aaaaaa;
+  letter-spacing: 0.04em;
+}
+
+.chat-app .chat-tab-active {
+  color: #1a1a1a;
+}
+
+/* ── 搜索框、输入框与常用按钮 ── */
+.chat-app .chat-search-bar,
+.chat-app .ui-input,
+.chat-app .ui-textarea,
+.chat-app .ui-select {
+  background: #ffffff;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 4px;
+  color: #1a1a1a;
+  box-shadow: none;
+}
+
+.chat-app .ui-btn-soft-action {
+  background: #f2f0eb;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 4px;
+  color: #1a1a1a;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.chat-app .ui-btn-outline {
+  background: #ffffff;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 4px;
+  color: #1a1a1a;
+}
+
+.chat-app .ui-toggle {
+  background: #cccccc;
+  border-radius: 0;
+}
+
+.chat-app .ui-toggle[data-checked] {
+  background: #e01f2c;
+}
+
+.chat-app .ui-toggle-knob {
+  border-radius: 0;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.20);
+}
+
+/* ── 消息页与联系人页｜杂志版 ── */
+
+/* ① 页面底色：新闻纸米黄 */
+.chat-app .page-body:has(.chat-search-bar) {
+  background: #f2f0eb !important;
+}
+
+/* ② 搜索框 */
+.chat-app .page-body:has(.chat-search-bar) .chat-search-bar {
+  background: #ffffff !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ③ 联系人/消息条目：目录行样式，用细线分割取代卡片 */
+.chat-app :is(.contact-item, .chat-item, .chat-list-item, .conversation-item) {
+  position: relative !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.18) !important;
+  border-radius: 0 !important;
+  margin: 0 16px !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 第一条加顶部线 */
+.chat-app :is(.contact-item, .chat-item, .chat-list-item, .conversation-item):first-child {
+  border-top: 1px solid rgba(26, 26, 26, 0.18) !important;
+}
+
+/* ④ 头像：圆形细黑边 */
+.chat-app .minimal-avatar-wrapper {
+  border-radius: 50% !important;
+  box-shadow:
+    0 0 0 1.5px #1a1a1a,
+    0 2px 8px rgba(0, 0, 0, 0.10) !important;
+}
+
+.chat-app .minimal-avatar-wrapper > img,
+.chat-app .minimal-avatar-wrapper > picture,
+.chat-app .minimal-avatar-wrapper > picture > img {
+  border-radius: 50% !important;
+}
+
+/* ⑤ 名字 / 预览 / 时间 */
+.chat-app :is(.contact-item, .chat-item, .chat-list-item, .conversation-item)
+:is(.contact-name, .chat-name) {
+  color: #1a1a1a !important;
+  letter-spacing: 0.02em !important;
+}
+
+.chat-app :is(.contact-item, .chat-item, .chat-list-item, .conversation-item)
+:is(.last-message, .chat-preview) {
+  color: #666666 !important;
+}
+
+.chat-app :is(.contact-item, .chat-item, .chat-list-item, .conversation-item)
+:is(.chat-time, .last-time) {
+  color: #999999 !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* ⑥ AI 标签：红色印章感 */
+.chat-app :is(.contact-item, .chat-item, .chat-list-item, .conversation-item) .chat-tag {
+  background: transparent !important;
+  color: #e01f2c !important;
+  border: 1.5px solid #e01f2c !important;
+  border-radius: 2px !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+}
+
+/* ⑦ 标题栏 */
+.chat-app:has(.page-body .chat-search-bar) .page-header {
+  background: #ffffff !important;
+  border-bottom: 2px solid #1a1a1a !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ⑧ 底栏 */
+.chat-app:has(.page-body .chat-search-bar) .chat-tab-bar {
+  background: #ffffff !important;
+  border-top: 2px solid #1a1a1a !important;
+  box-shadow: none !important;
+}
+
+/* ── 个人主页顶部 ── */
+.chat-app .user-profile-page-root {
+  background: #f2f0eb !important;
+}
+
+.chat-app .user-profile-page-root::before {
+  height: 330px !important;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent,
+      transparent 28px,
+      rgba(26, 26, 26, 0.05) 28px,
+      rgba(26, 26, 26, 0.05) 29px
+    ),
+    linear-gradient(180deg, #e8e4da 0%, #f2f0eb 100%) !important;
+}
+
+/* 头像：圆形细黑边 */
+.chat-app .user-profile-page-root .page-body > div > div:first-of-type > div:first-child > div {
+  border-color: #1a1a1a !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18) !important;
+}
+
+/* 在线状态圆点 */
+.chat-app .user-profile-page-root .bg-blue-400 {
+  background-color: #e01f2c !important;
+}
+
+/* 余额卡 */
+.chat-app .user-profile-page-root .page-body > div > button:first-of-type {
+  background: #ffffff !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-left: 5px solid #e01f2c !important;
+  border-radius: 4px !important;
+  color: #1a1a1a !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+.chat-app .user-profile-page-root .page-body > div > button:first-of-type span[style] {
+  color: #1a1a1a !important;
+}
+
+.chat-app .user-profile-page-root .page-body > div > button:first-of-type > div:last-child > span:last-child {
+  background: #f2f0eb !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-radius: 2px !important;
+  color: #1a1a1a !important;
+}
+
+/* 主页各组卡片 */
+.chat-app .user-profile-page-root .page-body > div > div:nth-of-type(n + 2) {
+  background: #ffffff !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-radius: 4px !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 三个快捷入口：红、黑、灰 */
+.chat-app .user-profile-page-root .page-body > div > div:nth-of-type(2) > button:nth-child(1) > div {
+  background: rgba(224, 31, 44, 0.10) !important;
+  border-left: 3px solid #e01f2c !important;
+  color: #e01f2c !important;
+}
+
+.chat-app .user-profile-page-root .page-body > div > div:nth-of-type(2) > button:nth-child(2) > div {
+  background: rgba(26, 26, 26, 0.08) !important;
+  border-left: 3px solid #1a1a1a !important;
+  color: #1a1a1a !important;
+}
+
+.chat-app .user-profile-page-root .page-body > div > div:nth-of-type(2) > button:nth-child(3) > div {
+  background: rgba(26, 26, 26, 0.05) !important;
+  border-left: 3px solid #888888 !important;
+  color: #444444 !important;
+}
+
+/* ── Chats 筛选胶囊 ── */
+.chat-app .page-body:has(.chat-search-bar)
+:is(
+  .chat-search-bar + div,
+  .chat-filter-tabs,
+  .chat-list-filters,
+  .chat-category-tabs,
+  .chat-filter-group
+) > button,
+.chat-app .page-body:has(.chat-search-bar)
+:is(.chat-filter-btn, .chat-filter-tab, .chat-category-tab) {
+  min-width: 92px !important;
+  background: #ffffff !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-radius: 4px !important;
+  color: #1a1a1a !important;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.12) !important;
+  letter-spacing: 0.04em !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: transform 120ms ease, box-shadow 120ms ease !important;
+}
+
+/* 激活态：黑底白字 + 红色 accent */
+.chat-app .page-body:has(.chat-search-bar)
+:is(
+  .chat-search-bar + div,
+  .chat-filter-tabs,
+  .chat-list-filters,
+  .chat-category-tabs,
+  .chat-filter-group
+) > button:is(.active, .is-active, [data-active="true"], [data-state="active"], [aria-selected="true"]),
+.chat-app .page-body:has(.chat-search-bar)
+:is(.chat-filter-btn, .chat-filter-tab, .chat-category-tab):is(.active, .is-active, [data-active="true"], [data-state="active"], [aria-selected="true"]),
+.chat-app .page-body:has(.chat-search-bar)
+:is(.chat-search-bar + div, .chat-filter-tabs, .chat-list-filters, .chat-category-tabs, .chat-filter-group)
+> button[class*="bg-blue-"] {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #1a1a1a !important;
+  border-bottom: 3px solid #e01f2c !important;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 按压感 */
+.chat-app .page-body:has(.chat-search-bar)
+:is(
+  .chat-search-bar + div,
+  .chat-filter-tabs,
+  .chat-list-filters,
+  .chat-category-tabs,
+  .chat-filter-group
+) > button:active,
+.chat-app .page-body:has(.chat-search-bar)
+:is(.chat-filter-btn, .chat-filter-tab, .chat-category-tab):active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: none !important;
+}
+
+/* chat-list-tab */
+.chat-app .chat-list-tab {
+  background: #ffffff !important;
+  color: #888888 !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-radius: 4px !important;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.chat-app .chat-list-tab.active {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #1a1a1a !important;
+  border-bottom: 3px solid #e01f2c !important;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* ── 聊天室背景：稿纸感 ── */
+.chat-app .chat-room-wrapper {
+  background-color: #ede9df !important;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent,
+      transparent 28px,
+      rgba(26, 26, 26, 0.06) 28px,
+      rgba(26, 26, 26, 0.06) 29px
+    ) !important;
+  background-size: cover !important;
+}
+
+/* 消息滚动层透明 */
+.chat-app .chat-room-wrapper > .page-body,
+.chat-app .chat-room-wrapper .chat-room-main-pane.page-body {
+  background: transparent !important;
+}
+
+/* 聊天室标题栏 */
+.chat-app .chat-room-wrapper .page-header {
+  background: #ffffff !important;
+  border-bottom: 2px solid #1a1a1a !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 输入栏 */
+.chat-app .chat-room-wrapper .chat-input-bar {
+  background: #ffffff !important;
+  border-top: 2px solid #1a1a1a !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 输入框本体 */
+.chat-app .chat-room-wrapper .chat-input-bar :is(input, textarea),
+.chat-app .chat-room-wrapper .chat-input-bar .chat-input {
+  background: #f2f0eb !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-radius: 4px !important;
+}
+
+/* ── 动态页卡片 ── */
+.chat-app .feed-post,
+.chat-app .feed-profile-card {
+  border-color: #1a1a1a;
+  border-radius: 4px;
+}
+
+.chat-app .feed-cover-bg {
+  background: linear-gradient(145deg, #e8e4da, #f2f0eb);
+}
