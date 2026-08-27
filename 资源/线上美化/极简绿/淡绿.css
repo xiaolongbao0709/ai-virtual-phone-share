@@ -239,8 +239,8 @@
   padding: 8px 12px;
   min-height: 36px;
   order: 2;
-  transform: translateY(-25px);
-  margin-bottom: -25px;
+  transform: translateY(-22.5px);
+  margin-bottom: -22.5px;
 }
 
 /* 底部图标 - 移到输入框上面，靠右对齐，往上移动 */
@@ -249,7 +249,7 @@
   justify-content: flex-end;
   order: 1;
   margin-bottom: 4px;
-  transform: translateY(-20px);
+  transform: translateY(-17.5px);
 }
 
 .chat-input-actions > * {
