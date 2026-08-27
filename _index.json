@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T01:15:49.343Z",
+  "generatedAt": "2026-08-27T02:42:48.710Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 24
+      "count": 25
     },
     {
       "name": "线上聊天状态栏",
@@ -2278,6 +2278,25 @@
       "avatar": "资源/线上美化/[蝴蝶结]粉波点主题/.avatar.png",
       "ownerHash": "8a040f68caf05d1b1e5de3056e748f42220d65d67704df8798b5e1477066bcd6",
       "updatedAt": "2026-08-26T21:27:20+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "[雪花]os小雨滴by小池",
+      "dirName": "[雪花]os小雨滴by小池",
+      "type": "dir",
+      "path": "资源/线上美化/[雪花]os小雨滴by小池",
+      "files": [
+        "资源/线上美化/[雪花]os小雨滴by小池/IMG_5796.asset.jpeg",
+        "资源/线上美化/[雪花]os小雨滴by小池/IMG_5797.asset.jpeg",
+        "资源/线上美化/[雪花]os小雨滴by小池/IMG_5799.asset.png",
+        "资源/线上美化/[雪花]os小雨滴by小池/os小雨滴by小池.txt"
+      ],
+      "images": [],
+      "description": "🈲二改二传（微调适配随意）\n一个仿qq美化 从我uwu美化改来的 \n按键位置看图2 输入状态在顶栏的在线状态",
+      "author": "@Dol0re3_",
+      "avatar": "资源/线上美化/[雪花]os小雨滴by小池/.avatar.png",
+      "ownerHash": "6a08d4fbb179025747de726b73fc09d681a2a7d30e74d9d35f57f31a77b70b8d",
+      "updatedAt": "2026-08-27T10:42:26+08:00"
     },
     {
       "folder": "线上美化",
