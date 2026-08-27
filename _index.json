@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T12:20:54.605Z",
+  "generatedAt": "2026-08-27T12:31:52.833Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -2576,7 +2576,7 @@
       "type": "dir",
       "path": "资源/线上美化/极简绿",
       "files": [
-        "资源/线上美化/极简绿/简绿.css"
+        "资源/线上美化/极简绿/淡绿.css"
       ],
       "images": [
         "资源/线上美化/极简绿/Screenshot_20260827_181601_com.kiwibrowser.browser.jpg"
@@ -2585,7 +2585,7 @@
       "author": "里谦的洁洁",
       "avatar": "资源/线上美化/极简绿/.avatar.png",
       "ownerHash": "d4bf6f1021e4d01a3e032835aecdfa8533cb7e3d60c857836cfaa23e1bf61086",
-      "updatedAt": "2026-08-27T20:20:33+08:00"
+      "updatedAt": "2026-08-27T20:31:34+08:00"
     },
     {
       "folder": "线上美化",
