@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T15:25:32.328Z",
+  "generatedAt": "2026-08-27T15:32:47.877Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1664,11 +1664,11 @@
         "资源/应用/收藏线上聊天记录/chat.favorites-2.0.0.zip"
       ],
       "images": [],
-      "description": "收藏线上聊天记录，最近200条，可以多选。",
+      "description": "收藏线上聊天记录，最近200条，可以多选。\n8.26，新更新了可以给角色分享的功能，显示了时间。",
       "author": "匿名用户",
       "avatar": "",
       "ownerHash": "10fcb4810a7e1f79fb4f735a8aab71691dd662edd6c01043ea5cef63af474106",
-      "updatedAt": "2026-08-27T00:03:41+08:00"
+      "updatedAt": "2026-08-27T23:32:11+08:00"
     },
     {
       "folder": "应用",
