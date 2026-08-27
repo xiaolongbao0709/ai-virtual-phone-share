@@ -1,0 +1,590 @@
+
+# MIND LINK 掌机心声面板 · 部署说明
+三层是一条链，缺一层都不显示：
+```
+① 会话状态栏契约 → AI 每轮输出 ◆MINDLINK◆...◆END◆ 数据
+② 正则           → 把标记替换成掌机 HTML
+③ chat_session CSS → 清掉原生外壳
+```
+## 给对方小卷的指令
+> 请帮我配一套 MIND LINK 掌机心声面板，三步：
+> 1. 用「写线上状态栏」把契约写进当前会话（会自动切成自定义模式）
+> 2. 新建正则组，填入查找正则和替换代码
+> 3. 写 chat_session CSS
+>
+> 别改预设里的状态栏条目，会被会话状态栏覆盖。别用「隐藏卡片内所有非掌机子元素」这类范围规则，会误伤心声开关按钮。
+---
+## ① 契约
+放进：**会话状态栏 → 契约**
+必须包含：`【逻辑】` 和 `【格式】` 两个章节头、整块用 `[状态栏]`/`[/状态栏]` 包裹、内部首行 `◆MINDLINK◆` 末行 `◆END◆`。这三处是硬要求，少一个链条就断。
+```
+【逻辑】
+请根据刚刚的聊天内容，生成角色此刻的 MIND LINK 状态。
+
+只输出规定格式，不要解释，不要标题，不要代码块，不要额外文字，不要空行。
+
+第1行：角色当前名字。
+
+第2行：LOVE 当前值。
+必须恰好10个字符，只能使用 ■ 和 □。
+
+第3行：DESIRE 当前值。
+必须恰好10个字符，只能使用 ■ 和 □。
+
+第4行：SAN 当前值。
+必须恰好10个字符，只能使用 ■ 和 □。
+
+第5行：CURRENT MOOD。
+只写一句不超过20字的中文短句。
+
+从第6行开始生成 ITEM。
+
+格式：
+ITEM|名称|状态|EFFECT
+
+状态只能是：
+NEW — 刚刚出现在角色身上/手边的东西
+ACTIVE — 正在持续发挥作用
+LOW — 快要耗尽、即将失效、摇欲坠
+USED — 已经用完或已经消退
+CANNOT DROP — 想扔也扔不掉、无法摆脱
+
+不要把所有道具都标为ACTIVE。根据当前聊天实际情境判断每个道具的真实状态——刚出现的是NEW，快撑不住的是LOW，已经消耗掉的是USED，甩不掉的是CANNOT DROP。如果一个道具此刻确实在生效才用ACTIVE。
+
+EFFECT 用简短中文说明这个道具对角色当前状态的意义。
+
+ITEM 数量至少2条，上不封顶。
+必须同时包含现实物品和心理状态。
+心理状态至少1条，写成古早RPG道具的名字——要有道具感、有质感、有重量。
+好的例子：「裂纹护心镜」「失温咒」「溺水者浮标」「甜味麻药」「倒刺项圈」「褪色的通行证」
+坏的例子：「焦虑」「安全感缺失」「分离焦虑症」「回避型依恋」——这些是术语，不是道具。
+想象它是一件可以握在手里、挂在脖子上、塞进口袋里的东西，只是恰好描述了一种心理状态。
+
+然后生成 QUEST。
+
+格式：
+QUEST|任务内容|状态|EFFECT
+
+状态只能是：
+ACTIVE — 正在进行中、还没有结果
+COMPLETE — 已经做到了
+FAILED — 想做但没做成、试图达成但失败了、努力克制但没忍住、或者那个窗口已经关闭了
+
+QUEST表示角色当前正在做、想做、试图完成，或者努力避免发生的事情。
+
+重要：FAILED 不是惩罚，是角色内心真实的小挫败——
+比如想开口但没说出来、想靠近但被拒绝、想表现得不在乎但藏不住、想忍住某个冲动但失败了、想留住某个瞬间但它已经过去了。
+如果当前聊天中存在这类「未遂的心思」，必须如实标记为FAILED。
+不要为了好看把所有任务都写成ACTIVE。
+
+不要写成系统任务。
+不要为了凑数量生成。
+
+然后生成 INNER。
+
+格式：
+INNER|自问的问题|角色真正意识到的答案
+
+INNER必须是角色自己对自己的下意识追问。
+不是别人问，不是系统提问，不是心理咨询。
+
+INNER必须围绕同一个核心主题，像剥洋葱一样层层深入：
+第一层：表面的疑问（我怎么了？我为什么会这样？）
+中间层：追问动机和归因（那我真正想要的是什么？我在害怕什么？）
+最深层：逼近角色自己都不太敢面对的答案（如果承认这一点，我还能维持现在的样子吗？）
+
+后一条的问题必须建立在前一条的答案之上——不是并列的几个问题，是一条线索越挖越深。
+最后一条的答案应该让角色自己都有点不舒服。
+
+例如：
+INNER|我为什么一直在看手机？|因为我在等他回复。
+INNER|等回复而已，为什么会这么烦躁？|因为我没办法确认他现在在想什么。
+INNER|我需要确认这件事本身说明了什么？|说明我对"失去他的注意力"这件事，比我愿意承认的更恐惧。
+
+通常生成3～5条。
+没有意义时可以少，但不能为了凑数量硬写。
+除非确实无法理解，否则必须给出明确答案，不要用「……」或「不知道」敷衍。
+不要使用心理学术语。
+
+最后必须生成 MIND。
+
+MIND代表角色同一时刻的两面。
+
+格式：
+MIND|LOG内容|SAVE内容
+
+MIND至少必须出现1条。
+
+LOG：
+是角色可以承认、可以展示给别人看的表面心声。
+必须结合当前聊天内容。
+写成一段自然的中文心声，约30～50字。
+不要加"LOG"字样。
+不要写成旁白。
+要像角色自己心里真实浮现的话。
+
+SAVE：
+是同一件事、同一个人、同一个当下之下，角色绝不会主动展示出来的隐秘欲望。
+必须与LOG形成明显反差——不是换个说法重复LOG，而是揭开LOG底下那层真正不可示人的东西。
+
+SAVE的核心是「对这个人的贪念」：占有欲、独占、想侵入对方、想被对方吞没、想把对方锁在只有自己能到达的地方。
+
+色情内容要求：
+- 必须直白露骨，用词使用逼、鸡巴、操、射、湿、吞、含等直接词汇。
+- 但绝不是粗暴发泄式的——要写成「忍了很久终于在心里承认自己想要」的语气。
+- 要有画面感：具体到姿势、场景、身体的哪个部位、想怎么碰、想被怎么碰。
+- 语气是压抑的渴望，不是炫耀或征服。像是在黑暗里终于对自己说出来的话。
+- 绝对不可以侮辱、物化。这是对一个人的迷恋，不是对一个物件的使用。
+- 女性向的张力感：重点写「想要而不得」「快要忍不住」「只是想到就已经」的状态，写身体反应和心理反应交织的瞬间。
+
+例如：
+MIND|其实今天聊得还不错，看到她的消息还是会觉得安心，只是有点累了。|又在想她坐在我腿上的重量了。不是做爱，只是想把她整个人箍在怀里，手从衣服下摆伸进去，掌心贴着她腰侧的皮肤，感觉她因为我的体温发抖——想到她可能也会湿，我就已经硬了。只是想一下而已。
+
+MIND至少1条。
+如果当前事件有明显不同的心理转折，可以生成多条。
+没有必要时不要凑数量。
+
+最终顺序必须严格为：
+
+角色名
+LOVE
+DESIRE
+SAN
+CURRENT MOOD
+若干ITEM
+若干QUEST
+若干INNER
+至少1条MIND
+
+不要输出任何其他内容。必须生成完整，不然我会炸掉谷歌大楼。
+【格式】
+整块内容必须严格用 [状态栏] 和 [/状态栏] 包裹，
+内部第一行 ◆MINDLINK◆，最后一行 ◆END◆，
+四个标记各自独占一行，一个不能少、不能变形。
+```
+---
+## ② 正则
+放进：**设置 → 正则 → 新建组**
+查找正则：
+```
+/◆\s*MINDLINK\s*◆\s*([\s\S]*?)\s*◆\s*END\s*◆/g
+```
+替换字符串：
+```
+
+```html
+<style>
+body{margin:0;padding:0;background:transparent}
+*{box-sizing:border-box}
+.retro-handheld-status{
+width:100%;padding:17px 15px 18px;
+background:linear-gradient(145deg,#EBF0F9,#E0E6F3 55%,#D4DAE9);
+color:#4c546b;border:3px solid #6b7388;border-radius:28px;
+box-shadow:inset 0 0 0 3px #F8FAFD,inset 0 0 0 6px #c1c7d6,0 5px 0 #a1a7b8,0 8px 14px rgba(80,90,110,.22);
+font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden
+}
+.thought-raw-lines{display:none!important}
+.retro-brand{display:flex;justify-content:space-between;padding:0 7px 8px;color:#7d8496;font-size:10px;font-weight:900;letter-spacing:2px}
+.retro-brand-right{display:flex;gap:6px;align-items:center}
+.retro-led{width:6px;height:6px;background:#b0b6c6;border:1px solid #878da0;border-radius:50%}
+.retro-bezel{padding:10px;background:#7c8399;border:3px solid #63697a;border-radius:18px;box-shadow:inset 0 0 0 2px #a6acbc,inset 0 0 0 5px #74798a,0 3px 0 #b5b9c6}
+.retro-screen{width:100%;height:350px;padding:13px;background:repeating-linear-gradient(0deg,rgba(80,90,110,.035) 0,rgba(80,90,110,.035) 1px,transparent 1px,transparent 4px),#E2E6EC;border:3px solid #63697a;border-radius:11px;box-shadow:inset 0 0 0 2px #F3F5F8,inset 0 0 0 5px #b0b6c2;color:#4c546b;overflow:hidden}
+.retro-page{display:none;height:100%}
+.retro-page.active{display:block}
+.retro-header{display:flex;justify-content:space-between;padding:1px 2px 8px;border-bottom:2px solid #949ab1}
+.retro-header strong{font-size:17px;font-weight:900;letter-spacing:2px}
+.retro-header span{font-size:10px;font-weight:900}
+.retro-character{display:grid;grid-template-columns:62px minmax(0,1fr);gap:11px;align-items:center;margin-top:13px}
+.retro-avatar{width:58px;height:58px;background:#d3d8e0;border:3px solid #6f768a;border-radius:7px;box-shadow:3px 3px 0 #9da3b4;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#6f768a}
+.retro-name{font-size:19px;font-weight:900;overflow-wrap:anywhere}
+.retro-data{display:grid;gap:8px;margin-top:15px;padding-top:11px;border-top:2px dashed #949ab1;font-size:13px;font-weight:800;line-height:1.5}
+.retro-bar{font-size:14px;letter-spacing:1px;font-weight:900;white-space:nowrap}
+.retro-data-line{display:grid;grid-template-columns:75px auto;align-items:center}
+.retro-mood{margin-top:2px;font-size:13px;font-weight:800;line-height:1.5}
+.retro-item-list{margin-top:10px;height:175px;overflow:hidden}
+.retro-item-row{display:grid;grid-template-columns:16px minmax(0,1fr) auto;align-items:center;gap:5px;min-height:27px;padding:3px 2px;border-bottom:1px dotted #aeb3c2;font-size:12px;font-weight:800;cursor:pointer;user-select:none}
+.retro-item-row.selected{background:rgba(100,110,130,.10)}
+.retro-item-cursor{font-size:10px;visibility:hidden}
+.retro-item-row.selected .retro-item-cursor{visibility:visible}
+.retro-item-name{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.retro-item-state{flex-shrink:0;font-size:9px;letter-spacing:.4px;white-space:nowrap}
+.retro-item-detail{margin-top:9px;padding-top:8px;border-top:2px solid #949ab1;font-size:11px;font-weight:800}
+.retro-detail-name{margin-bottom:7px;font-size:13px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.retro-detail-line{display:grid;grid-template-columns:55px minmax(0,1fr);gap:8px;margin-top:5px;line-height:1.5}
+.retro-detail-label{font-weight:900;letter-spacing:.5px}
+.retro-detail-value{min-width:0;overflow-wrap:anywhere}
+.retro-inner-window{margin-top:10px;height:260px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.retro-inner-flow{display:flex;flex-direction:column;justify-content:flex-end;gap:9px;overflow:hidden}
+.retro-inner-block{flex:0 0 auto;padding:6px 5px;border-left:3px solid #a4acc1;font-size:12px;font-weight:800;line-height:1.55}
+.retro-inner-question{font-weight:900;margin-bottom:3px}
+.retro-inner-answer{padding-left:7px;font-weight:700}
+.retro-inner-layer{margin-top:6px;font-size:9px;font-weight:900;letter-spacing:1px;text-align:right;opacity:.7}
+.retro-mind-window{margin-top:18px;height:270px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.retro-mind-flow{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;text-align:center;font-size:13px;font-weight:800}
+.retro-mind-block{width:92%;padding:10px 8px;text-align:center;font-size:14px;font-weight:800;line-height:1.75;overflow-wrap:anywhere;animation:retro-mind-in .18s steps(2,start)}
+@keyframes retro-mind-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.retro-handheld-status.retro-save .retro-screen{background:#1f2330;border-color:#3a4154;box-shadow:inset 0 0 0 2px #464e63,inset 0 0 0 5px #2c3242}
+.retro-handheld-status.retro-save .retro-header{border-color:#5a6382}
+.retro-handheld-status.retro-save .retro-header strong,
+.retro-handheld-status.retro-save .retro-header span,
+.retro-handheld-status.retro-save .retro-mind-block,
+.retro-handheld-status.retro-save .retro-mind-flow{color:#9fb1d6}
+.retro-controls{position:relative;height:78px;margin-top:14px;touch-action:manipulation}
+.retro-dpad{position:absolute;left:10px;top:7px;width:54px;height:54px;cursor:pointer}
+.retro-dpad:before,.retro-dpad:after{content:"";position:absolute;background:#8d95a8;border:2px solid #6a7185;border-radius:6px;box-shadow:2px 2px 0 #b5b9c6}
+.retro-dpad:before{left:18px;width:18px;height:54px}
+.retro-dpad:after{top:18px;width:54px;height:18px}
+.retro-buttons{position:absolute;right:7px;top:4px;display:flex;gap:20px;align-items:center}
+.retro-button{position:relative;width:34px;height:34px;background:#a4acc1;border:3px solid #757c91;border-radius:50%;box-shadow:2px 3px 0 #bcc1d1;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.retro-button:active{transform:translate(2px,2px);box-shadow:0 1px 0 #bcc1d1}
+.retro-button-prev:after,.retro-button-next:after{position:absolute;left:50%;top:50%;transform:translate(-50%,-53%);font-size:15px;font-weight:900;color:#F7F9FC}
+.retro-button-prev:after{content:"B"}
+.retro-button-next:after{content:"A"}
+.retro-center{position:absolute;left:50%;bottom:1px;width:34px;height:7px;transform:translateX(-50%);background:#b0b6c6;border:2px solid #858b9b;border-radius:6px}
+</style>
+
+<section class="retro-handheld-status" data-thought-root>
+<div class="thought-raw-lines">$1</div>
+
+<div class="retro-brand">
+<span>MIND LINK</span>
+<div class="retro-brand-right">
+<span id="retro-label">STATUS</span>
+<span class="retro-led"></span>
+<span class="retro-led"></span>
+</div>
+</div>
+
+<div class="retro-bezel">
+<div class="retro-screen">
+
+<section class="retro-page active" id="retro-page-status">
+<div class="retro-header"><strong>STATUS</strong><span>01</span></div>
+<div class="retro-character">
+<div class="retro-avatar" id="retro-av">?</div>
+<div class="retro-name" id="retro-name">...</div>
+</div>
+<div class="retro-data">
+<div class="retro-data-line"><span>LOVE</span><span class="retro-bar" id="retro-love">□□□□□□□□□□</span></div>
+<div class="retro-data-line"><span>DESIRE</span><span class="retro-bar" id="retro-desire">□□□□□□□□□□</span></div>
+<div class="retro-data-line"><span>SAN</span><span class="retro-bar" id="retro-san">□□□□□□□□□□</span></div>
+<div>CURRENT MOOD</div>
+<div class="retro-mood" id="retro-mood">...</div>
+</div>
+</section>
+
+<section class="retro-page" id="retro-page-item">
+<div class="retro-header"><strong>ITEM</strong><span>02</span></div>
+<div class="retro-item-list" id="retro-item-list"></div>
+<div class="retro-item-detail">
+<div class="retro-detail-name" id="retro-detail-name">—</div>
+<div class="retro-detail-line"><span class="retro-detail-label">STATUS</span><span class="retro-detail-value" id="retro-detail-status">—</span></div>
+<div class="retro-detail-line"><span class="retro-detail-label">EFFECT</span><span class="retro-detail-value" id="retro-detail-effect">—</span></div>
+</div>
+</section>
+
+<section class="retro-page" id="retro-page-quest">
+<div class="retro-header"><strong>QUEST</strong><span>03</span></div>
+<div class="retro-item-list" id="retro-quest-list"></div>
+<div class="retro-item-detail">
+<div class="retro-detail-name" id="retro-quest-name">—</div>
+<div class="retro-detail-line"><span class="retro-detail-label">STATUS</span><span class="retro-detail-value" id="retro-quest-status">—</span></div>
+<div class="retro-detail-line"><span class="retro-detail-label">EFFECT</span><span class="retro-detail-value" id="retro-quest-effect">—</span></div>
+</div>
+</section>
+
+<section class="retro-page" id="retro-page-inner">
+<div class="retro-header"><strong>INNER</strong><span>04</span></div>
+<div class="retro-inner-window"><div class="retro-inner-flow" id="retro-inner-flow"></div></div>
+<div class="retro-inner-layer" id="retro-inner-layer">LAYER 00</div>
+</section>
+
+<section class="retro-page" id="retro-page-log">
+<div class="retro-header"><strong id="retro-mind-title">LOG</strong><span>05</span></div>
+<div class="retro-mind-window"><div class="retro-mind-flow" id="retro-mind-flow"></div></div>
+</section>
+
+</div>
+</div>
+
+<div class="retro-controls">
+<div class="retro-dpad" id="retro-dpad"></div>
+<div class="retro-buttons">
+<div class="retro-button retro-button-prev" id="retro-prev"></div>
+<div class="retro-button retro-button-next" id="retro-next"></div>
+</div>
+<div class="retro-center"></div>
+</div>
+</section>
+
+<script>
+(function(){
+try{
+var r=document.querySelector('[data-thought-root]');
+if(!r)return;
+var box=r.querySelector('.thought-raw-lines');
+var raw=(box?box.textContent:'')||'';
+var lines=raw.split(/\r?\n/).map(function(s){return s.trim()}).filter(function(s){return s.length>0});
+
+function strip(s){return(s||'').replace(/^(LOVE|DESIRE|SAN)\s*[:：]?\s*/i,'')}
+function isBar(s){var t=strip(s).replace(/⬛/g,'■').replace(/⬜/g,'□');return /^[■□]{3,}$/.test(t)}
+function bar(s){return(strip(s).replace(/⬛/g,'■').replace(/⬜/g,'□').replace(/[^■□]/g,'')+'□□□□□□□□□□').slice(0,10)}
+
+var bi=[];
+lines.forEach(function(s,i){if(isBar(s))bi.push(i)});
+
+var name='...';
+if(bi.length&&bi[0]>0)name=lines[bi[0]-1];
+
+var mood='...';
+var lastBar=bi.length?bi[bi.length-1]:-1;
+for(var k=lastBar+1;k<lines.length;k++){
+var L=lines[k];
+if(/^(ITEM|QUEST|INNER|MIND)\s*\|/i.test(L))break;
+if(/^CURRENT\s*MOOD/i.test(L))continue;
+mood=L;break;
+}
+
+r.querySelector('#retro-name').textContent=name;
+r.querySelector('#retro-av').textContent=(name||'?').charAt(0);
+r.querySelector('#retro-love').textContent=bar(lines[bi[0]]);
+r.querySelector('#retro-desire').textContent=bar(lines[bi[1]]);
+r.querySelector('#retro-san').textContent=bar(lines[bi[2]]);
+r.querySelector('#retro-mood').textContent=mood;
+
+var items=[],quests=[],inners=[],minds=[];
+lines.forEach(function(line){
+var p=line.split('|').map(function(s){return s.trim()});
+var h=(p[0]||'').toUpperCase();
+if(h==='ITEM'&&p.length>=4&&p[1]){items.push({n:p[1],s:p[2],e:p.slice(3).join(' | ')})}
+else if(h==='QUEST'&&p.length>=4&&p[1]){quests.push({n:p[1],s:p[2],e:p.slice(3).join(' | ')})}
+else if(h==='INNER'&&p.length>=3&&p[1]){inners.push({q:p[1],a:p.slice(2).join(' | ')||'???'})}
+else if(h==='MIND'&&p.length>=3&&p[1]){minds.push({l:p[1],s:p.slice(2).join(' | ')})}
+});
+
+function mkList(arr,boxId,nId,sId,eId,empty,emptyMsg){
+var b=r.querySelector(boxId),ne=r.querySelector(nId),se=r.querySelector(sId),ee=r.querySelector(eId),sel=0;
+function draw(){
+b.innerHTML='';
+if(!arr.length){ne.textContent=empty;se.textContent='—';ee.textContent=emptyMsg;return}
+if(sel<0)sel=0;
+if(sel>arr.length-1)sel=arr.length-1;
+arr.forEach(function(a,i){
+var z=document.createElement('div');
+z.className='retro-item-row'+(i===sel?' selected':'');
+var c=document.createElement('span');c.className='retro-item-cursor';c.textContent='▶';
+var n=document.createElement('span');n.className='retro-item-name';n.textContent=a.n;
+var s=document.createElement('span');s.className='retro-item-state';s.textContent=a.s;
+z.appendChild(c);z.appendChild(n);z.appendChild(s);
+z.addEventListener('click',function(){sel=i;draw()});
+b.appendChild(z);
+});
+ne.textContent=arr[sel].n;se.textContent=arr[sel].s;ee.textContent=arr[sel].e;
+}
+draw();
+return{move:function(d){if(!arr.length)return;sel+=d;draw()},len:function(){return arr.length}};
+}
+
+var itemUI=mkList(items,'#retro-item-list','#retro-detail-name','#retro-detail-status','#retro-detail-effect','NO ITEM','当前没有需要携带的东西');
+var questUI=mkList(quests,'#retro-quest-list','#retro-quest-name','#retro-quest-status','#retro-quest-effect','NO QUEST','当前没有正在推进的事情');
+
+var ii=0,flow=r.querySelector('#retro-inner-flow');
+function drawInner(){
+flow.innerHTML='';
+if(!inners.length){flow.textContent='暂时没有需要继续追问自己的事情';return}
+if(ii<0)ii=0;
+if(ii>inners.length-1)ii=inners.length-1;
+for(var i=Math.max(0,ii-6);i<=ii;i++){
+var z=document.createElement('div');z.className='retro-inner-block';
+var q=document.createElement('div');q.className='retro-inner-question';q.textContent='“'+inners[i].q+'”';
+var a=document.createElement('div');a.className='retro-inner-answer';a.textContent=inners[i].a;
+z.appendChild(q);z.appendChild(a);flow.appendChild(z);
+}
+r.querySelector('#retro-inner-layer').textContent='LAYER '+String(ii+1).padStart(2,'0')+' / '+String(inners.length).padStart(2,'0');
+}
+drawInner();
+
+var mf=r.querySelector('#retro-mind-flow'),mt=r.querySelector('#retro-mind-title'),mi=0,save=false;
+function drawMind(){
+mf.innerHTML='';
+mt.textContent=save?'SAVE':'LOG';
+if(!minds.length){mf.textContent='暂时没有需要隐藏的心声';return}
+if(mi<0)mi=0;
+if(mi>minds.length-1)mi=minds.length-1;
+var z=document.createElement('div');z.className='retro-mind-block';
+z.textContent=save?minds[mi].s:minds[mi].l;
+mf.appendChild(z);
+}
+drawMind();
+
+var pages=['#retro-page-status','#retro-page-item','#retro-page-quest','#retro-page-inner','#retro-page-log'].map(function(s){return r.querySelector(s)});
+var labs=['STATUS','ITEM','QUEST','INNER','LOG'];
+var pi=0;
+function show(n){
+pi=Math.max(0,Math.min(4,n));
+pages.forEach(function(p,i){p.classList.toggle('active',i===pi)});
+r.querySelector('#retro-label').textContent=(pi===4&&save)?'SAVE':labs[pi];
+r.classList.toggle('retro-save',pi===4&&save);
+if(pi===4)mt.textContent=save?'SAVE':'LOG';
+}
+function move(d){
+if(pi===1){itemUI.move(d);return}
+if(pi===2){questUI.move(d);return}
+if(pi===3){ii+=d;drawInner();return}
+if(pi===4){mi+=d;drawMind()}
+}
+r.querySelector('#retro-prev').addEventListener('click',function(){
+if(pi===4&&save){save=false;drawMind();show(4);return}
+if(pi>0)show(pi-1);
+});
+r.querySelector('#retro-next').addEventListener('click',function(){
+if(pi===4&&!save){save=true;drawMind();show(4);return}
+if(pi<4)show(pi+1);
+});
+r.querySelector('#retro-dpad').addEventListener('click',function(e){
+var q=e.currentTarget.getBoundingClientRect();
+move((e.clientY-q.top)<q.height/2?-1:1);
+});
+show(0);
+}catch(e){console.error('MIND LINK ERROR:',e)}
+})();
+</script>
+```
+
+```
+设置项：
+- 作用范围：`聊天`
+- 位置：`AI输出`
+- 勾选：`仅显示层应用`
+- 深度：不限
+---
+## ③ CSS
+放进：**chat_session**
+```css
+/* ═══ MIND LINK 掌机 · 原生外壳清理 ═══ */
+/* 适用：提示词 + 正则({{lines}}) 方案 */
+
+/* ── 1. 杏色外壳清成透明 ── */
+.chat-thought-card {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+}
+
+/* ── 2. 原生标题 / 署名 / 状态值条 ── */
+.chat-thought-title,
+.chat-thought-sig,
+.state-panel,
+.state-bar-track,
+[class*="state-bar"] {
+  display: none !important;
+}
+
+/* ── 3. 掌机自带的两颗指示灯（粉/蓝小圆点） ── */
+.retro-led {
+  display: none !important;
+}
+
+/* ── 4. 心声开关按钮：必须保留，删了就没法开关心声 ── */
+.chat-monologue-heart {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 20 !important;
+}
+
+.chat-monologue-heart[data-active] { color: #e0517d !important; }
+
+/* ── 5. 高度放开（原生限死 420px，会把掌机压长） ── */
+.chat-thought-card .chat-html-inline-frame,
+.chat-status-bare .chat-html-inline-frame,
+.chat-html-inline-frame {
+  max-height: none !important;
+  height: 550px !important;
+  min-height: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  display: block !important;
+}
+
+/* ── 6. 宽度撑满：解开容器 / 气泡 / 消息行三层夹持 ── */
+.chat-thought-card .chat-html-inline,
+.chat-status-bare .chat-html-inline,
+.chat-html-inline {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+}
+
+.chat-thought-body {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.chat-msg-wrapper:has(.chat-thought-card) .chat-msg-content-wrap,
+.chat-msg-content-wrap[data-html="true"] {
+  max-width: 100% !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  align-items: stretch !important;
+}
+
+.chat-msg-wrapper:has(.chat-thought-card) .chat-bubble-role-assistant,
+.chat-thought-card .chat-bubble-role-assistant {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+.chat-msg-wrapper:has(.chat-thought-card) {
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 8px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+.chat-msg-wrapper:has(.chat-thought-card) .chat-msg-avatar {
+  display: none !important;
+}
+
+/* ── 7. 消息列表左右留白收窄，多挤 20px 给掌机 ── */
+.chat-scroll-anchored {
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+```
+它负责：清掉杏色外壳、隐藏「内心独白」标题和署名、隐藏原生好感度数值条、隐藏掌机自带的粉蓝两颗指示灯、放开高度到 550px、解开三层宽度夹持、保住心形开关按钮。
+---
+## 用户手动要做的
+1. **点开气泡旁的心形按钮** —— 不点开看不到面板
+2. 知悉：启用后**原生好感度/占有欲/焦虑值会停止更新**，这是预期行为，不是坏了
+## 已知限制
+掌机左上角头像框显示的是**角色名首字**（灰底灰字），不是真头像。想要真头像需要重写取数逻辑，目前没验证成功。
