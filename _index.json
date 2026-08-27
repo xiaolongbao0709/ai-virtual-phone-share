@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T15:23:33.685Z",
+  "generatedAt": "2026-08-27T15:25:32.328Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -33,7 +33,7 @@
     },
     {
       "name": "应用bug改善",
-      "count": 3
+      "count": 2
     },
     {
       "name": "快捷指令模版",
@@ -1963,20 +1963,6 @@
       "avatar": "",
       "ownerHash": "d634c528c09222703f150a3620947cc1cc7a13005cf35cf0f0dfaa9e16521076",
       "updatedAt": "2026-08-23T18:52:24+08:00"
-    },
-    {
-      "folder": "应用bug改善",
-      "name": "角色不能单独绑定用户面具",
-      "dirName": "角色不能单独绑定用户面具",
-      "type": "dir",
-      "path": "资源/应用bug改善/角色不能单独绑定用户面具",
-      "files": [],
-      "images": [],
-      "description": "角色不能单独绑定用户面具，用户只能切换全局面具。无法在同一时间点，与两个角色分别在不同的用户面具身份进行对话。不能同时跟两个user面具不同的char聊天。如果我切换全局面具之后，另一个不属于当前user的char给我发消息，读取的不是他应该读取的user面具。系统在生成这条消息的回复内容时，会读取当前设置的那个全局用户面具信息。",
-      "author": "",
-      "avatar": "",
-      "ownerHash": "76953ade950231817a362fb4b31c2c2a9e99d10f8a6b2f0a95446b81802ddfdf",
-      "updatedAt": "2026-08-26T23:17:50+08:00"
     },
     {
       "folder": "快捷指令模版",
