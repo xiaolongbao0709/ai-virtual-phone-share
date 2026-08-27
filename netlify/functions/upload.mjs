@@ -133,11 +133,68 @@ async function putFileOnBranch(token, owner, repo, branch, path, contentBase64, 
     });
 }
 
-/** 删文件（不存在就跳过） */
-async function deleteFile(token, owner, repo, path, message) {
-    const sha = await fileSha(token, owner, repo, path);
-    if (!sha) return;
-    await gh(token, "DELETE", `/repos/${owner}/${repo}/contents/${encodePath(path)}`, { message, sha });
+/** 路径是否存在（目录/文件都算）。查不到、查出错都当不存在。 */
+async function pathExists(token, owner, repo, path, ref) {
+    try {
+        await gh(token, "GET", `/repos/${owner}/${repo}/contents/${encodePath(path)}?ref=${encodeURIComponent(ref)}`);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+/**
+ * 一次提交写/删多个文件（Git Data API：blobs → tree → commit → 更新 ref）。
+ *
+ * 原先每个文件单独打一次 contents API，一次投稿/编辑就是七八个提交，两个后果：
+ *  1. 撞 GitHub 的乐观锁——build-index Action 监听 main，第一个文件落库它就重建
+ *     _index.json 推一格，后面的文件带着旧头过去就是「main is at X but expected Y」
+ *     （那个 workflow 的注释里已经描述过这个现象，当时是从 Action 那侧收敛的）；
+ *  2. 没有原子性——中途失败会在仓库里留下半份资源，作者既看不到也删不掉。
+ * 合成一次提交后两个问题一起消失，Action 每次操作也只被触发一次。
+ */
+async function commitFiles(token, owner, repo, branch, message, writes, deletes = []) {
+    if (writes.length === 0 && deletes.length === 0) return;
+
+    // blob 不动分支，先一次性传完；下面重试时这些 sha 可以直接复用。
+    const entries = [];
+    for (const item of writes) {
+        const blob = await gh(token, "POST", `/repos/${owner}/${repo}/git/blobs`, {
+            content: item.contentBase64.replace(/[\r\n]/g, ""),
+            encoding: "base64",
+        });
+        entries.push({ path: item.path, mode: "100644", type: "blob", sha: blob.sha });
+    }
+    // 树里 sha 置空表示删除。调用方只塞确实存在的路径，否则 GitHub 会整棵树报错。
+    for (const path of deletes) {
+        entries.push({ path, mode: "100644", type: "blob", sha: null });
+    }
+
+    // 分支头仍可能被推进（build-index 机器人、并发的另一次编辑）。更新 ref 会以
+    // 非快进被拒；重读分支头拿新父提交重来即可，blob 不用再传。
+    let lastError = null;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+        try {
+            const ref = await gh(token, "GET", `/repos/${owner}/${repo}/git/ref/heads/${branch}`);
+            const headSha = ref.object.sha;
+            const head = await gh(token, "GET", `/repos/${owner}/${repo}/git/commits/${headSha}`);
+            const tree = await gh(token, "POST", `/repos/${owner}/${repo}/git/trees`, {
+                base_tree: head.tree.sha,
+                tree: entries,
+            });
+            const commit = await gh(token, "POST", `/repos/${owner}/${repo}/git/commits`, {
+                message,
+                tree: tree.sha,
+                parents: [headSha],
+            });
+            await gh(token, "PATCH", `/repos/${owner}/${repo}/git/refs/heads/${branch}`, { sha: commit.sha });
+            return;
+        } catch (error) {
+            lastError = error;
+            if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 800 * (attempt + 1)));
+        }
+    }
+    throw lastError || new Error("提交失败");
 }
 
 async function gh(token, method, path, body) {
@@ -223,8 +280,15 @@ async function handleUpload(token, payload) {
 
     const [owner, repo] = REPO.split("/");
     const dir = `${RESOURCE_ROOT}/${folder}/${name}`;
-    const branch = `submit/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 
+    // 同分类同名 = 同一个文件夹，写进去就是覆盖别人的资源。投稿一律不许覆盖，
+    // 在开分支、传文件之前先拦下来。作者要更新自己的资源走 action:edit，
+    // 那条路凭 .owner 认人。
+    if (await pathExists(token, owner, repo, dir, "main")) {
+        return json(409, { ok: false, error: `「${folder}」里已经有叫「${name}」的资源了，换个名字再发` });
+    }
+
+    const branch = `submit/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
     const mainRef = await gh(token, "GET", `/repos/${owner}/${repo}/git/ref/heads/main`);
     await gh(token, "POST", `/repos/${owner}/${repo}/git/refs`, {
         ref: `refs/heads/${branch}`,
@@ -250,13 +314,8 @@ async function handleUpload(token, payload) {
     if (avatarBase64 && avatarBase64.length <= MAX_AVATAR_B64) {
         toWrite.push({ name: ".avatar.png", contentBase64: avatarBase64 });
     }
-    for (const file of toWrite) {
-        await gh(token, "PUT", `/repos/${owner}/${repo}/contents/${encodePath(dir)}/${encodeURIComponent(file.name)}`, {
-            message: `投稿：${dir}/${file.name}`,
-            content: file.contentBase64,
-            branch,
-        });
-    }
+    await commitFiles(token, owner, repo, branch, `投稿：${dir}`,
+        toWrite.map(file => ({ path: `${dir}/${file.name}`, contentBase64: file.contentBase64 })));
 
     const pr = await gh(token, "POST", `/repos/${owner}/${repo}/pulls`, {
         title: `投稿：${folder}/${name}`,
@@ -290,19 +349,20 @@ async function handleDelete(token, payload) {
     const verified = await verifyOwnerKey(token, owner, repo, path, ownerKey);
     if (verified) return verified;
 
-    // 凭证通过：递归删除该资源文件夹（机器人直接提交 main）
-    const removePath = async (target) => {
+    // 凭证通过：整个资源文件夹一次提交删干净。逐文件 DELETE 会连发好几个提交，
+    // 既撞 build-index 机器人的推送，又可能只删掉一半、留下一份没有 .owner 的
+    // 残骸——那种残骸作者再也删不掉了。
+    const collect = async (target) => {
         const info = await gh(token, "GET", `/repos/${owner}/${repo}/contents/${encodePath(target)}`);
         const items = Array.isArray(info) ? info : [info];
+        const paths = [];
         for (const item of items) {
-            if (item.type === "dir") await removePath(item.path);
-            else await gh(token, "DELETE", `/repos/${owner}/${repo}/contents/${encodePath(item.path)}`, {
-                message: `投稿者自助下架：${path}`,
-                sha: item.sha,
-            });
+            if (item.type === "dir") paths.push(...await collect(item.path));
+            else paths.push(item.path);
         }
+        return paths;
     };
-    await removePath(path);
+    await commitFiles(token, owner, repo, "main", `投稿者自助下架：${path}`, [], await collect(path));
     return json(200, { ok: true });
 }
 
@@ -331,16 +391,26 @@ async function handleEdit(token, payload) {
     const removeNames = Array.isArray(payload.removeFiles) ? payload.removeFiles : [];
     if (addFiles.length > MAX_FILES) return json(400, { ok: false, error: `文件太多（上限 ${MAX_FILES} 个）` });
 
-    // 先删：只允许删本资源文件夹内的普通文件，隐藏文件（.owner 等）一律不给碰
+    // 校验全部先做完、攒成一批，最后一次提交落地。原先是边校验边逐文件写，
+    // 一次编辑连发七八个提交，正是 build-index 机器人抢推的高发场景；而且中途
+    // 报错会留下改了一半的资源。
+    const writes = [];
+    const deletes = [];
+    const queueDelete = async (name) => {
+        const target = `${path}/${name}`;
+        if (await pathExists(token, owner, repo, target, "main")) deletes.push(target);
+    };
+
+    // 只允许删本资源文件夹内的普通文件，隐藏文件（.owner 等）一律不给碰
     for (const raw of removeNames) {
         const fileName = String(raw ?? "").split("/").pop() || "";
         if (!fileName || fileName.startsWith(".") || fileName.includes("..")) {
             return json(400, { ok: false, error: "待删除的文件名不合法" });
         }
-        await deleteFile(token, owner, repo, `${path}/${fileName}`, `编辑：删除 ${path}/${fileName}`);
+        await queueDelete(fileName);
     }
 
-    // 再加：与上传同一套体积校验
+    // 新增文件：与上传同一套体积校验
     let total = 0;
     for (const file of addFiles) {
         const fileName = cleanFileName(file?.name, "");
@@ -350,7 +420,7 @@ async function handleEdit(token, payload) {
         if (content.length > MAX_FILE_B64) return json(400, { ok: false, error: `文件「${fileName}」超过大小上限` });
         total += content.length;
         if (total > MAX_TOTAL_B64) return json(400, { ok: false, error: "单次提交总量超限，请拆分或压缩" });
-        await putFile(token, owner, repo, `${path}/${fileName}`, content, `编辑：更新 ${path}/${fileName}`);
+        writes.push({ path: `${path}/${fileName}`, contentBase64: content });
     }
 
     // 文字类字段：有值就写，清空就删掉对应文件
@@ -361,17 +431,21 @@ async function handleEdit(token, payload) {
         { name: ".author", value: author },
     ];
     for (const field of textFields) {
-        const target = `${path}/${field.name}`;
         if (field.value) {
-            await putFile(token, owner, repo, target, Buffer.from(field.value, "utf8").toString("base64"), `编辑：${target}`);
+            writes.push({ path: `${path}/${field.name}`, contentBase64: Buffer.from(field.value, "utf8").toString("base64") });
         } else {
-            await deleteFile(token, owner, repo, target, `编辑：清空 ${target}`);
+            await queueDelete(field.name);
         }
     }
     if (avatarBase64) {
         if (avatarBase64.length > MAX_AVATAR_B64) return json(400, { ok: false, error: "头像太大" });
-        await putFile(token, owner, repo, `${path}/.avatar.png`, avatarBase64, `编辑：${path}/.avatar.png`);
+        writes.push({ path: `${path}/.avatar.png`, contentBase64: avatarBase64 });
     }
+
+    // 同名文件既删又写时（删掉旧图又传了同名新图）只保留写入：一棵树里同路径
+    // 出现两次的行为没有保证，与其赌不如在这里定死。
+    const writePaths = new Set(writes.map(item => item.path));
+    await commitFiles(token, owner, repo, "main", `编辑：${path}`, writes, deletes.filter(target => !writePaths.has(target)));
 
     return json(200, { ok: true, path });
 }
