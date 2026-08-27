@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T06:40:37.120Z",
+  "generatedAt": "2026-08-27T06:44:57.901Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -309,16 +309,17 @@
       "type": "dir",
       "path": "资源/Js插件/消息emoji回应",
       "files": [
-        "资源/Js插件/消息emoji回应/消息表情回应.js"
+        "资源/Js插件/消息emoji回应/Message Reaction.js"
       ],
       "images": [
-        "资源/Js插件/消息emoji回应/IMG_20260822_084623.jpg"
+        "资源/Js插件/消息emoji回应/IMG_20260822_210414.jpg",
+        "资源/Js插件/消息emoji回应/IMG_20260822_210807.jpg"
       ],
       "description": "✅二改\n🚫二传二卖\n选择 导入-插件 即可使用\n如有bug请反馈 📕@木叶淀粉酶\n\n仿iMessage的Reaction功能，点击角色气泡右上角的按钮可回应该条消息\n功能及使用效果如图所示。\n特别说明：弹窗第一个“保存”按钮是当预设emoji中没有想要发送的emoji自己输入时使用的，第二个“完成”按钮是保存调节后的圆形大小、颜色、emoji字号等参数\n点击“移除”撤回当前的emoji回应（角色会知道）\n[粗]在记住按钮位置后可在插件那设置隐藏按钮[/粗]\n气泡层级是当出现emoji被遮挡的情况下通过调大层级数使其能在遮挡的内容上完整出现\n\n8.22更新：新增调整位置的参数，优化reaction样式",
       "author": "木叶淀粉酶",
       "avatar": "资源/Js插件/消息emoji回应/.avatar.png",
       "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
-      "updatedAt": "2026-08-22T08:56:59+08:00"
+      "updatedAt": "2026-08-27T14:44:39+08:00"
     },
     {
       "folder": "Js插件",
