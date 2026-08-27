@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T10:06:11.388Z",
+  "generatedAt": "2026-08-27T10:21:12.708Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 25
+      "count": 26
     },
     {
       "name": "线上聊天状态栏",
@@ -2568,6 +2568,24 @@
       "avatar": "资源/线上美化/微仿ds/.avatar.png",
       "ownerHash": "d4bf6f1021e4d01a3e032835aecdfa8533cb7e3d60c857836cfaa23e1bf61086",
       "updatedAt": "2026-08-25T20:41:29+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "极简绿",
+      "dirName": "极简绿",
+      "type": "dir",
+      "path": "资源/线上美化/极简绿",
+      "files": [
+        "资源/线上美化/极简绿/极简绿.css"
+      ],
+      "images": [
+        "资源/线上美化/极简绿/Screenshot_20260827_181601_com.kiwibrowser.browser.jpg"
+      ],
+      "description": "🚫二传\n🚫二改（自用随意）\n导入至聊天室CSS\n一切不适配的请询问ai\n测试设备∶仅安卓\n测试浏览器∶仅kiwi browser（缩放67％） \n做的很简陋，很多地方都没改🙊",
+      "author": "里谦的洁洁",
+      "avatar": "资源/线上美化/极简绿/.avatar.png",
+      "ownerHash": "d4bf6f1021e4d01a3e032835aecdfa8533cb7e3d60c857836cfaa23e1bf61086",
+      "updatedAt": "2026-08-27T18:20:48+08:00"
     },
     {
       "folder": "线上美化",
