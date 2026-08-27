@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T16:55:25.646Z",
+  "generatedAt": "2026-08-27T17:13:23.670Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -65,7 +65,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 10
+      "count": 11
     },
     {
       "name": "线下正则",
@@ -2982,6 +2982,23 @@
       "avatar": "资源/线上聊天状态栏/微信读书[幽灵]/.avatar.png",
       "ownerHash": "fafe02c203d6e36031b9f100bb083c184b4f867d8957ff4384f832bc1162cc57",
       "updatedAt": "2026-08-27T17:41:52+08:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "掌机心声mind link",
+      "dirName": "掌机心声mind link",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/掌机心声mind link",
+      "files": [
+        "资源/线上聊天状态栏/掌机心声mind link/IMG_8927.asset.png",
+        "资源/线上聊天状态栏/掌机心声mind link/float掌机心声部署说明.txt"
+      ],
+      "images": [],
+      "description": "[彩虹]禁二传二改（在float上改颜色和大小可以）[彩虹]\n这个一键复制给小卷配置，可以自己调颜色大小，需要改的地方有点多，如果他一下子改不了这么多就分开来复制让他改\n这个十字按键可以在234页操控上下，右边的按键控制左右，有问题可以找我2183663593但不保证都能解决（）",
+      "author": "小卷我求你了",
+      "avatar": "",
+      "ownerHash": "c09acf7dfcceae8c2d60d434a607f20641ae46e857af5fefad247ca3cdaafd94",
+      "updatedAt": "2026-08-28T01:12:59+08:00"
     },
     {
       "folder": "线上聊天状态栏",
