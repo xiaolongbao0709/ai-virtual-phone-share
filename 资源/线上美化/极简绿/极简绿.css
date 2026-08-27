@@ -1,0 +1,848 @@
+/* ═══ 单独聊天室 CSS 示例 ═══ */
+/* 作用范围：只影响当前聊天室，不影响其他页面。 */
+
+/* ── 颜色变量 ── */
+:root {
+  --c-header-bg: #FAFAFA;         /* 标题栏底色 - 与页面背景一致 */
+  --c-page-body-bg: #FAFAFA;      /* 消息区底色 */
+
+  --c-bubble-self: #D4EDDA;       /* 我的气泡 - 淡淡的绿色 */
+  --c-bubble-other: #DFECD5;      /* 对方气泡 - 淡绿色 */
+  --c-text-title: #2C3440;        /* 主要文字 */
+  --c-text: #797E85;              /* 次要文字 */
+  --c-icon: #A0A3A8;              /* 普通图标 */
+  --c-icon-active: #4A4A4A;       /* 强调色 */
+
+  --c-input: #FFFFFF;             /* 输入框背景 - 白色 */
+  --c-input-border: #07C160;      /* 输入框边框 - 绿色 */
+  --c-card: #FFFFFF;
+  --c-card-border: #E0E0E0;
+}
+
+/* ── 聊天室背景 ── */
+.chat-room-wrapper {
+  background: var(--c-page-body-bg);
+}
+
+/* ── 标题栏 ── */
+.page-header {
+  background: var(--c-header-bg);
+  backdrop-filter: none;
+  border-bottom: none;
+}
+
+.page-header-content {
+  position: relative;
+  justify-content: center;
+}
+
+.page-back-btn {
+  position: absolute;
+  left: 14px;
+  opacity: 0;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.page-header-content > *:last-child {
+  position: absolute;
+  right: 14px;
+  opacity: 0;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.page-header-content .settings-btn,
+.page-header-content .menu-btn,
+.page-header-content [class*="setting"],
+.page-header-content [class*="menu"] {
+  position: absolute;
+  right: 14px;
+  opacity: 0;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.page-title,
+.page-header-content .page-title,
+.page-header-content [class*="title"],
+.page-header-content [class*="name"] {
+  display: none !important;
+}
+
+.page-header-content::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 48px;
+  background: url("https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEZ9flqj9QbdpD-KtQ7v3fkYVke2IartwAC1iMAAqm5gVTiS3NDZ3YRCj0E.png") center/contain no-repeat;
+  flex-shrink: 0;
+  margin: 0 8px;
+}
+
+.page-back-btn {
+  color: var(--c-text-title);
+}
+
+/* ── 消息列表 ── */
+.chat-scroll-anchored {
+  padding: 16px 16px 24px;
+}
+
+.chat-msg-wrapper {
+  gap: 8px;
+}
+
+.chat-sys-msg {
+  color: var(--c-text);
+}
+
+/* 系统指令注入卡片 */
+.chat-system-instruction-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-card-border);
+  border-radius: 8px;
+  box-shadow: var(--chat-bubble-shadow);
+}
+
+.chat-system-instruction-title {
+  color: var(--c-text-title);
+  font-weight: 600;
+}
+
+.chat-system-instruction-body {
+  color: var(--c-text);
+  text-indent: 2em;
+}
+
+/* ═══ 气泡样式（带小尾巴，无分层） ═══ */
+
+/* ── 我的气泡（右侧） ── */
+.chat-bubble-role-user {
+  background: var(--c-bubble-self);
+  color: #1e3a2f;
+  padding: 6px 10px;
+  border-radius: 12px 12px 4px 12px;
+  position: relative;
+  overflow: visible;
+  margin-right: 6px;
+  line-height: 1.5;
+}
+
+/* 我的气泡小尾巴 - 只在纯文本消息上显示 */
+.chat-bubble-role-user:not(:has(.chat-bubble-media)):not(:has(.chat-sticker)):not(:has(.chat-gift-card)):not(:has(.chat-red-packet-card)):not(:has(.chat-transfer-card)):not(:has(.chat-html-inline)):not(:has(.chat-music-share-card)):not(:has(.chat-photo-card)):not(:has(.chat-xhs-share-card)):not(:has(.chat-location-card)):not(:has(.chat-media-file-card)):not(:has(.voice-msg-bubble)):not(:has(.scan-pay-card))::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background: var(--c-bubble-self);
+  border-bottom-right-radius: 8px;
+  transform: rotate(45deg);
+  z-index: 0;
+}
+
+/* ── 对方气泡（左侧） ── */
+.chat-bubble-role-assistant {
+  background: var(--c-bubble-other);
+  color: var(--c-text-title);
+  padding: 6px 10px;
+  border-radius: 12px 12px 12px 4px;
+  position: relative;
+  overflow: visible;
+  margin-left: 6px;
+  line-height: 1.5;
+}
+
+/* 对方气泡小尾巴 - 只在纯文本消息上显示 */
+.chat-bubble-role-assistant:not(:has(.chat-bubble-media)):not(:has(.chat-sticker)):not(:has(.chat-gift-card)):not(:has(.chat-red-packet-card)):not(:has(.chat-transfer-card)):not(:has(.chat-html-inline)):not(:has(.chat-music-share-card)):not(:has(.chat-photo-card)):not(:has(.chat-xhs-share-card)):not(:has(.chat-location-card)):not(:has(.chat-media-file-card)):not(:has(.voice-msg-bubble)):not(:has(.scan-pay-card))::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  background: var(--c-bubble-other);
+  border-bottom-left-radius: 8px;
+  transform: rotate(-45deg);
+  z-index: 0;
+}
+
+/* 气泡内文字 */
+.chat-markdown {
+  color: var(--c-text-title);
+  font-size: calc(15px*var(--app-text-scale,1));
+  line-height: 1.5;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.chat-markdown p + p,
+.chat-markdown-paragraph + .chat-markdown-paragraph {
+  margin-top: 4px;
+}
+
+.chat-bubble-media {
+  border-radius: 12px;
+  overflow: visible;
+}
+
+/* ── 引用、编辑、长按菜单 ── */
+.chat-quote-bar,
+.chat-inline-edit-textarea {
+  background: var(--c-input);
+  border: 1px solid var(--c-input-border);
+  border-radius: 8px;
+}
+
+.chat-inline-edit-btn-save {
+  background: var(--c-icon-active);
+  color: #ffffff;
+}
+
+.ctx-menu {
+  background: #2c2c2c;
+  border-radius: 8px;
+}
+
+.ctx-menu-btn {
+  color: #ffffff;
+}
+
+.ctx-menu-btn-danger {
+  color: #ff6b6b;
+}
+
+/* ── 输入栏 - 与全局背景统一，整体往上移动 ── */
+.chat-input-bar {
+  background: var(--c-page-body-bg);
+  backdrop-filter: none;
+  border-top: none;
+  background-color: var(--c-page-body-bg);
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  /* 往上移动更多 */
+  transform: translateY(-25px);
+}
+
+/* 输入框 - 绿色边框+白色背景 */
+.chat-input-textarea {
+  background: var(--c-input);
+  border: 1px solid var(--c-input-border);
+  color: var(--c-text-title);
+  font-size: calc(15px*var(--app-text-scale,1));
+  width: 100%;
+  margin: 0;
+  display: block;
+  border-radius: 20px;
+  padding: 8px 12px;
+  min-height: 36px;
+  order: 2;
+}
+
+/* 底部图标 - 移到输入框上面，靠右对齐，间距更小 */
+.chat-input-actions {
+  gap: 4px;
+  justify-content: flex-end;
+  order: 1;
+  margin-bottom: 4px;
+}
+
+.chat-input-actions > * {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* ── 隐藏原始图标内容，显示字母，颜色淡绿色 ── */
+/* 第一个图标 - 字母 i */
+.chat-input-actions > *:first-child {
+  font-size: 0;
+  color: transparent;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-input-actions > *:first-child::after {
+  content: 'i';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 700;
+  color: #A8D5A2;
+  opacity: 1;
+  font-style: italic;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* 第二个图标 - 字母 l */
+.chat-input-actions > *:nth-child(2) {
+  font-size: 0;
+  color: transparent;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-input-actions > *:nth-child(2)::after {
+  content: 'l';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 700;
+  color: #A8D5A2;
+  opacity: 1;
+  font-style: italic;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* 第三个图标 - 字母 o */
+.chat-input-actions > *:nth-child(3) {
+  font-size: 0;
+  color: transparent;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-input-actions > *:nth-child(3)::after {
+  content: 'o';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 700;
+  color: #A8D5A2;
+  opacity: 1;
+  font-style: italic;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* 第四个图标 - 字母 v */
+.chat-input-actions > *:nth-child(4) {
+  font-size: 0;
+  color: transparent;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-input-actions > *:nth-child(4)::after {
+  content: 'v';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 700;
+  color: #A8D5A2;
+  opacity: 1;
+  font-style: italic;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* 第五个图标 - 字母 e */
+.chat-input-actions > *:nth-child(5) {
+  font-size: 0;
+  color: transparent;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-input-actions > *:nth-child(5)::after {
+  content: 'e';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 700;
+  color: #A8D5A2;
+  opacity: 1;
+  font-style: italic;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* 第六个图标 - 字母 u */
+.chat-input-actions > *:nth-child(6) {
+  font-size: 0;
+  color: transparent;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-input-actions > *:nth-child(6)::after {
+  content: 'u';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 700;
+  color: #A8D5A2;
+  opacity: 1;
+  font-style: italic;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* 隐藏所有图标的原始SVG */
+.chat-input-actions > * svg,
+.chat-input-actions > * img,
+.chat-input-actions > * [class*="icon"],
+.chat-input-actions > * [class*="svg"] {
+  display: none !important;
+}
+
+/* ── 线下模式 ── */
+.chat-offline-toggle.chat-offline-active {
+  color: var(--c-text-title);
+}
+
+.chat-offline-body {
+  padding: 16px 8px 24px;
+  gap: 12px;
+}
+
+.chat-offline-empty,
+.chat-offline-time {
+  color: var(--c-icon);
+}
+
+.chat-offline-turn {
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--c-card) 56%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-card-border) 30%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.chat-offline-entry {
+  padding: 10px 14px 10px 18px;
+}
+
+.chat-offline-entry + .chat-offline-entry {
+  border-top: 1px solid color-mix(in srgb, var(--c-card-border) 22%, transparent);
+}
+
+.chat-offline-entry[data-role="user"]::before {
+  background: color-mix(in srgb, var(--c-icon) 50%, transparent);
+}
+
+.chat-offline-entry[data-role="assistant"]::before {
+  background: color-mix(in srgb, var(--c-text-title) 38%, transparent);
+}
+
+.chat-offline-label {
+  border-radius: 4px;
+  font-size: calc(11px*var(--app-text-scale,1));
+  font-weight: 600;
+}
+
+.chat-offline-entry[data-role="user"] .chat-offline-label {
+  color: var(--c-icon);
+  background: color-mix(in srgb, var(--c-icon) 10%, transparent);
+}
+
+.chat-offline-entry[data-role="assistant"] .chat-offline-label {
+  color: var(--c-text-title);
+  background: color-mix(in srgb, var(--c-text-title) 7%, transparent);
+}
+
+.chat-offline-text {
+  color: var(--c-text);
+  font-size: calc(14.5px*var(--app-text-scale,1));
+  line-height: 1.85;
+}
+
+.chat-offline-entry[data-role="assistant"] .chat-offline-text {
+  color: var(--c-text-title);
+}
+
+.chat-offline-text[data-active] {
+  background: color-mix(in srgb, var(--c-icon) 8%, transparent);
+}
+
+.chat-offline-summary-fold {
+  background: color-mix(in srgb, var(--c-page-body-bg) 50%, transparent);
+  border-radius: 6px;
+}
+
+.chat-offline-summary-fold > summary,
+.chat-offline-summary-content,
+.chat-offline-generating {
+  color: var(--c-icon);
+}
+
+.chat-offline-summary-content {
+  font-size: calc(13px*var(--app-text-scale,1));
+  line-height: 1.8;
+}
+
+/* ── 语音条 ── */
+.voice-msg-bubble {
+  border-radius: 12px;
+}
+
+.voice-msg-icon {
+  color: var(--c-icon-active);
+}
+
+.voice-msg-bar {
+  background: var(--c-icon);
+}
+
+.voice-msg-bars[data-playing] .voice-msg-bar {
+  background: var(--c-icon-active);
+}
+
+.voice-msg-dur {
+  color: var(--c-text);
+}
+
+/* ── 内心独白 ── */
+.chat-thought-card {
+  background: linear-gradient(135deg, #fef9ef, #fdf3e0);
+  border: 1px solid rgba(222,184,135,0.30);
+  border-radius: 12px;
+}
+
+.chat-thought-title,
+.chat-thought-sig {
+  color: #c9a96e;
+}
+
+.chat-thought-body {
+  color: #5a4a3a;
+}
+
+.chat-monologue-heart[data-active] {
+  color: #e74c5e;
+}
+
+/* ── 卡片消息 ── */
+.chat-red-packet-card,
+.chat-transfer-card,
+.chat-html-inline,
+.chat-music-share-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-card-border);
+  border-radius: 14px;
+}
+
+.ui-media-footer {
+  background: var(--c-card);
+  color: var(--c-text);
+}
+
+.ui-media-footer[data-status="declined"] {
+  color: var(--c-icon);
+}
+
+.chat-html-inline-frame {
+  max-height: min(36vh, 340px);
+}
+
+.chat-thought-card .chat-html-inline-frame,
+.chat-status-bare .chat-html-inline-frame {
+  max-height: min(52vh, 420px);
+}
+
+.chat-music-share-title {
+  color: var(--c-text-title);
+}
+
+.chat-music-share-artist {
+  color: var(--c-text);
+}
+
+/* 位置卡片 */
+.chat-location-card {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.chat-location-label {
+  background: var(--c-input);
+  color: var(--c-text);
+}
+
+/* 表情包 */
+.chat-sticker {
+  border-radius: 12px;
+}
+
+.chat-sticker-image img {
+  width: 120px;
+  height: 120px;
+}
+
+.chat-sticker-fallback {
+  background: color-mix(in srgb, var(--c-icon) 10%, transparent);
+  color: var(--c-text);
+}
+
+/* 引用消息 */
+.chat-quote-preview {
+  background: color-mix(in srgb, var(--c-icon) 10%, transparent);
+  border-left-color: color-mix(in srgb, var(--c-icon) 35%, transparent);
+  color: var(--c-icon);
+}
+
+/* 文件、图片、音频、视频附件 */
+.chat-media-file-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-card-border);
+  border-radius: 12px;
+}
+
+.chat-media-file-title {
+  color: var(--c-text-title);
+}
+
+.chat-media-file-time,
+.chat-media-file-save {
+  color: var(--c-text);
+}
+
+.chat-media-file-play,
+.chat-media-file-progress-fill {
+  background: var(--c-icon-active);
+}
+
+/* 礼物卡片 */
+.chat-gift-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.025);
+  margin: 2px 0 4px;
+}
+
+.chat-gift-card-body {
+  background: #ffffff;
+  overflow: visible;
+}
+
+.chat-gift-card-status {
+  background: rgba(0,0,0,0.055);
+  color: var(--c-text-title);
+}
+
+.chat-gift-card-title {
+  color: var(--c-text-title);
+  font-size: calc(24px*var(--app-text-scale,1));
+}
+
+.chat-gift-card-divider {
+  background: rgba(0,0,0,0.12);
+}
+
+.chat-gift-card-footer {
+  border-top: 1px solid rgba(0,0,0,0.12);
+}
+
+.chat-gift-card-cell-label,
+.chat-gift-card-kicker,
+.chat-gift-card-label,
+.chat-gift-card-brand {
+  color: var(--c-icon);
+}
+
+.chat-gift-card-cell-value,
+.chat-gift-card-source {
+  color: var(--c-text);
+}
+
+/* 文字照片卡片 */
+.chat-photo-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.025);
+  margin: 2px 0 4px;
+}
+
+.chat-photo-card-placeholder {
+  background: #ffffff;
+}
+
+.chat-photo-card-text {
+  color: var(--c-text-title);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: calc(13px*var(--app-text-scale,1));
+  font-style: italic;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.chat-photo-card-image {
+  background: #ffffff;
+}
+
+.chat-photo-card--image {
+  background: transparent;
+  box-shadow: none;
+}
+
+.chat-photo-card--image .chat-photo-card-image {
+  object-fit: contain;
+}
+
+/* 小红书分享卡片 */
+.chat-xhs-share-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+
+.chat-xhs-share-title {
+  color: var(--c-text-title);
+}
+
+.chat-xhs-share-head,
+.chat-xhs-share-author,
+.chat-xhs-share-desc {
+  color: var(--c-text);
+}
+
+.chat-xhs-share-mark {
+  background: #ff2442;
+  color: #ffffff;
+}
+
+.chat-xhs-share-cover {
+  border-radius: 6px;
+}
+
+.chat-xhs-share-tags span {
+  color: #ff2442;
+  background: #fff0f3;
+}
+
+/* 支付卡片 */
+.scan-pay-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-card-border);
+  border-radius: 14px;
+}
+.scan-pay-title {
+  color: var(--c-text-title);
+}
+.scan-pay-qr {
+  border-radius: 8px;
+}
+.scan-pay-hint {
+  color: var(--c-text);
+}
+.scan-pay-btn {
+  border-radius: 999px;
+}
+.scan-pay-btn-primary {
+  background: #07c160;
+  color: #ffffff;
+}
+
+/* 自定义 App 卡片 */
+.chat-app-card {
+  --cac-ink: #141414;
+  --cac-ink-soft: #3b3b3b;
+  --cac-ink-mute: #8c8c8c;
+  --cac-line: rgba(0,0,0,0.12);
+  --cac-dash: rgba(0,0,0,0.30);
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.06);
+}
+.chat-app-card-section-title {
+  background: var(--cac-ink);
+  color: #ffffff;
+}
+.chat-app-card-actions button:last-child:not([data-style="danger"]) {
+  background: var(--cac-ink);
+  color: #ffffff;
+}
+
+/* ── 状态值面板 ── */
+.state-panel {
+  background: color-mix(in srgb, var(--c-card) 70%, transparent);
+  border-radius: 6px;
+}
+
+.state-bar-track {
+  height: 6px;
+  border-radius: 3px;
+}
+
+/* ═══ 隐藏所有头像 ═══ */
+
+/* 隐藏用户（自己）的消息头像 */
+.chat-msg-wrapper[data-role="user"] .chat-msg-avatar,
+.chat-msg-wrapper[data-role="user"] .chat-avatar,
+.chat-msg-wrapper[data-role="user"] [class*="avatar"],
+.chat-msg-wrapper[data-role="user"] .msg-avatar {
+  display: none !important;
+}
+
+/* 隐藏对方（assistant）的头像 */
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-avatar,
+.chat-msg-wrapper[data-role="assistant"] .chat-avatar,
+.chat-msg-wrapper[data-role="assistant"] [class*="avatar"],
+.chat-msg-wrapper[data-role="assistant"] .msg-avatar {
+  display: none !important;
+}
+
+/* 备用选择器 - 隐藏所有角色的头像 */
+.chat-msg-row[data-role="user"] .avatar,
+.chat-msg-row[data-role="user"] .msg-avatar,
+.chat-msg-row[data-role="user"] .chat-avatar,
+.chat-msg-row[data-role="user"] .chat-bubble-avatar,
+.chat-msg-row[data-role="user"] [class*="avatar-img"],
+.chat-msg-row[data-role="user"] [class*="avatar-icon"] {
+  display: none !important;
+}
+
+.chat-msg-row[data-role="assistant"] .avatar,
+.chat-msg-row[data-role="assistant"] .msg-avatar,
+.chat-msg-row[data-role="assistant"] .chat-avatar,
+.chat-msg-row[data-role="assistant"] .chat-bubble-avatar,
+.chat-msg-row[data-role="assistant"] [class*="avatar-img"],
+.chat-msg-row[data-role="assistant"] [class*="avatar-icon"] {
+  display: none !important;
+}
