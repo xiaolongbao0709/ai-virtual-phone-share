@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T07:14:36.045Z",
+  "generatedAt": "2026-08-27T07:25:26.175Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1995,8 +1995,8 @@
       "description": "",
       "author": "",
       "avatar": "",
-      "ownerHash": "",
-      "updatedAt": "2026-08-27T15:07:19+08:00"
+      "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
+      "updatedAt": "2026-08-27T15:25:08+08:00"
     },
     {
       "folder": "朋友圈美化",
