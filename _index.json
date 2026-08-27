@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T17:53:51.539Z",
+  "generatedAt": "2026-08-27T17:57:20.932Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -2785,12 +2785,15 @@
       "files": [
         "资源/线上美化/薄荷生巧/薄荷生巧.css"
       ],
-      "images": [],
+      "images": [
+        "资源/线上美化/薄荷生巧/IMG_5295.png",
+        "资源/线上美化/薄荷生巧/IMG_5298.jpeg"
+      ],
       "description": "不算生巧的薄荷生巧。\n非常简陋可二改…＞_＜",
       "author": "兔叽",
       "avatar": "",
       "ownerHash": "c6eb64f5a21fe7976bb628a5a0d28675fe8cfc7bc2290fd401fcde6ba18999e7",
-      "updatedAt": "2026-08-28T01:53:21+08:00"
+      "updatedAt": "2026-08-28T01:57:00+08:00"
     },
     {
       "folder": "线上美化",
