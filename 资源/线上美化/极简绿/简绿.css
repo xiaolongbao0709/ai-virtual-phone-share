@@ -215,20 +215,18 @@
   color: #ff6b6b;
 }
 
-/* ── 输入栏 - 与全局背景统一，整体往上移动 ── */
+/* ── 输入栏 - 与全局背景统一 ── */
 .chat-input-bar {
   background: var(--c-page-body-bg);
   backdrop-filter: none;
   border-top: none;
   background-color: var(--c-page-body-bg);
-  padding: 8px 16px;
+  padding: 8px 16px 24px 16px;
   display: flex;
   flex-direction: column;
-  /* 往上移动更多 */
-  transform: translateY(-25px);
 }
 
-/* 输入框 - 绿色边框+白色背景 */
+/* 输入框 - 绿色边框+白色背景，往上移动 */
 .chat-input-textarea {
   background: var(--c-input);
   border: 1px solid var(--c-input-border);
@@ -241,14 +239,17 @@
   padding: 8px 12px;
   min-height: 36px;
   order: 2;
+  transform: translateY(-25px);
+  margin-bottom: -25px;
 }
 
-/* 底部图标 - 移到输入框上面，靠右对齐，间距更小 */
+/* 底部图标 - 移到输入框上面，靠右对齐，往上移动 */
 .chat-input-actions {
   gap: 4px;
   justify-content: flex-end;
   order: 1;
   margin-bottom: 4px;
+  transform: translateY(-20px);
 }
 
 .chat-input-actions > * {
