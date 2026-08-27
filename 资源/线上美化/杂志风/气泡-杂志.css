@@ -1,0 +1,33 @@
+气泡-杂志
+/* --- 杂志风格 气泡基础样式 --- */
+.chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble):not(.chat-bubble-other-special),
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble):not(.chat-bubble-other-special) {
+  backdrop-filter: none !important;
+  border-radius: 4px !important;
+  padding: 9px 14px !important;
+  margin-bottom: 4px !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* AI 气泡 — 白底 + 左侧红色 accent */
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble) {
+  background: #f8f8f6 !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-left: 5px solid #e01f2c !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.09) !important;
+}
+
+/* 用户气泡 — 黑底 + 右侧红色 accent */
+.chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble) {
+  background: #1a1a1a !important;
+  border: 1.5px solid #1a1a1a !important;
+  border-right: 5px solid #e01f2c !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 高光条 — 去掉 */
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble)::before,
+.chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble)::before {
+  display: none !important;
+}
