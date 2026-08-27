@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-27T06:44:57.901Z",
+  "generatedAt": "2026-08-27T06:45:57.650Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 22
+      "count": 21
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -339,25 +339,6 @@
       "avatar": "",
       "ownerHash": "ae6a9f76a3bd53095a0492578266a36fa1bd28ecfaee0c7c7098bcba3babe02d",
       "updatedAt": "2026-08-20T19:28:22+08:00"
-    },
-    {
-      "folder": "Js插件",
-      "name": "【优化】消息表情回应",
-      "dirName": "消息表情回应",
-      "type": "dir",
-      "path": "资源/Js插件/消息表情回应",
-      "files": [
-        "资源/Js插件/消息表情回应/Message Reaction.js"
-      ],
-      "images": [
-        "资源/Js插件/消息表情回应/IMG_20260822_210414.jpg",
-        "资源/Js插件/消息表情回应/IMG_20260822_210807.jpg"
-      ],
-      "description": "✅二改\n🚫二传二卖\n选择 导入-插件 即可使用\n如有bug请反馈 📕@木叶淀粉酶\n\n8.22三编：对已知问题进行了优化，该插件的使用说明都写在图里了\n早上发布的旧版本插件删不掉了/悲",
-      "author": "木叶淀粉酶",
-      "avatar": "资源/Js插件/消息表情回应/.avatar.png",
-      "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
-      "updatedAt": "2026-08-22T21:27:20+08:00"
     },
     {
       "folder": "Js插件",
