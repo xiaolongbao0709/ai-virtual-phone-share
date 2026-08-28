@@ -1,0 +1,1929 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>总裁手记 · EXECUTIVE DIARY</title>
+<style>
+
+
+
+:root{
+  --bg0:#0c1119; --bg1:#121827; --bg2:#0f1520;
+  --ink:#f5efdf; --ink-dim:#c9c2ad; --ink-faint:#9a9481;
+  --gold:#c8a96a; --gold-bright:#f5dea7; --gold-deep:#8a6f3f;
+  --line:rgba(200,169,106,.20); --line-soft:rgba(232,226,212,.11);
+  --jade:#8fb39a; --crimson:#c05b47;
+  --serif:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+html,body{width:100%;height:100%;}
+body{overflow:hidden;background:radial-gradient(1000px 640px at 85% -10%,rgba(86,112,182,.16),transparent 60%),radial-gradient(820px 560px at -8% 108%,rgba(200,158,84,.10),transparent 55%),linear-gradient(180deg,#20283d,#111827);color:#fff7e8;font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-weight:400;-webkit-font-smoothing:auto;font-size:14px;}
+
+
+button{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;cursor:pointer;}
+input,textarea{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;}
+
+/* ---------- screens ---------- */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;opacity:0;padding:var(--ai-phone-game-safe-top,88px) 16px var(--ai-phone-game-safe-bottom,24px);}
+.screen.active{display:flex;opacity:1;animation:fadeIn .45s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.scroll{flex:1;overflow-y:auto;padding:4px 2px 26px;}
+
+/* ---------- typography ---------- */
+.micro{font-family:Georgia,"Times New Roman",serif;font-size:10px;letter-spacing:.34em;color:#c8a96a;text-transform:uppercase;}
+.serif{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;}
+.h1{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:34px;font-weight:600;letter-spacing:.12em;line-height:1.3;}
+.h2{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:21px;font-weight:600;letter-spacing:.1em;}
+.h3{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:16px;font-weight:600;letter-spacing:.08em;}
+.dim{color:#eee3ca;}
+.faint{color:#cfc4ad;}
+.tiny{font-size:12px;}
+
+/* ---------- ornaments ---------- */
+.orn{display:flex;align-items:center;gap:12px;margin:18px 0;}
+.orn::before,.orn::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(200,169,106,.20));}
+.orn::before{background:linear-gradient(90deg,transparent,rgba(200,169,106,.55));}
+.orn .d{width:5px;height:5px;background:#c8a96a;transform:rotate(45deg);flex:none;}
+
+/* ---------- cards ---------- */
+.card{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.028));border:1px solid rgba(232,226,212,.11);border-radius:16px;padding:18px;margin-bottom:14px;overflow:hidden;}
+.card::before{content:"";position:absolute;top:0;left:26px;right:26px;height:1px;background:linear-gradient(90deg,transparent,#c8a96a,transparent);opacity:.5;}
+.card.glow{border-color:rgba(200,169,106,.28);box-shadow:0 18px 46px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.04);}
+.card.dark{background:linear-gradient(160deg,rgba(10,14,22,.9),rgba(7,9,14,.95));}
+
+/* ---------- buttons ---------- */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(200,169,106,.20);background:rgba(255,255,255,.045);color:#f5efdf;border-radius:12px;padding:13px 16px;font-size:13.5px;letter-spacing:.14em;transition:all .25s;width:100%;}
+.btn:active{transform:scale(.97);}
+.btn.primary{background:linear-gradient(135deg,#dcc08a,#b18d4e);border-color:transparent;color:#151006;font-weight:500;box-shadow:0 10px 26px rgba(177,141,78,.22);}
+.btn.ghost:hover{border-color:#c8a96a;color:#f5dea7;}
+.btn.danger{border-color:rgba(192,91,71,.42);color:#d98b77;background:rgba(192,91,71,.05);}
+.btn.jade{border-color:rgba(143,179,154,.4);color:#8fb39a;background:rgba(143,179,154,.05);}
+.btn.small{padding:9px 12px;font-size:12px;border-radius:10px;letter-spacing:.1em;}
+.btn:disabled{opacity:.32;pointer-events:none;}
+.btn-row{display:flex;gap:10px;}
+.btn-row .btn{flex:1;}
+
+/* ---------- chips & stats ---------- */
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(232,226,212,.11);border-radius:999px;padding:4px 11px;font-size:11px;color:#c9c2ad;letter-spacing:.06em;background:rgba(255,255,255,.02);}
+.chip.gold{border-color:rgba(200,169,106,.34);color:#f5dea7;}
+.chip.jade{border-color:rgba(143,179,154,.34);color:#8fb39a;}
+.chip.red{border-color:rgba(192,91,71,.4);color:#d98b77;}
+.stat{flex:1;min-width:0;background:rgba(255,255,255,.045);border:1px solid rgba(232,226,212,.11);border-radius:12px;padding:8px 10px;text-align:center;overflow:hidden;}
+.stat .k{font-size:10px;letter-spacing:.24em;color:#9a9481;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stat .v{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:14px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stat .v.gold{color:#f5dea7;}
+.stat .v.jade{color:#8fb39a;}
+.stat .v.red{color:#d98b77;}
+
+/* ---------- top bar & nav ---------- */
+#hub{display:flex;flex-direction:column;}
+.topbar{flex:none;padding-bottom:10px;}
+.weekline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 12px;}
+.weekline .w{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:16px;letter-spacing:.14em;}
+.dots{display:flex;gap:4px;}
+.dots i{width:5px;height:5px;border-radius:50%;background:#9a9481;}
+.dots i.on{background:#c8a96a;box-shadow:0 0 8px rgba(200,169,106,.7);}
+.flavor{font-size:12.5px;color:#9a9481;letter-spacing:.04em;margin-top:8px;border-left:1px solid rgba(200,169,106,.20);padding-left:10px;}
+.panel-wrap{flex:1;overflow:hidden;position:relative;margin-bottom:calc(var(--ai-phone-game-safe-bottom,24px) + 78px);}
+.panel{position:absolute;inset:0;overflow-y:auto;padding:2px 2px 30px;display:none;}
+.panel.on{display:block;animation:fadeIn .35s ease;}
+.nav{position:fixed;left:14px;right:14px;bottom:calc(var(--ai-phone-game-safe-bottom,24px) + 6px);display:flex;background:rgba(10,14,22,.97);-webkit-border:1px solid rgba(232,226,212,.11);border-radius:18px;padding:9px 6px;z-index:60;box-shadow:0 18px 40px rgba(0,0,0,.5);}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:#9a9481;font-size:10px;letter-spacing:.1em;padding:6px 0;border-radius:12px;position:relative;transition:color .25s;}
+.nav button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.nav button.on{color:#f5dea7;}
+.nav button.on::before{content:"";position:absolute;top:-9px;width:20px;height:2px;background:linear-gradient(90deg,transparent,#c8a96a,transparent);border-radius:2px;}
+
+/* ---------- avatar ---------- */
+.avatar{width:46px;height:46px;border-radius:50%;flex:none;border:1px solid rgba(200,169,106,.20);background:linear-gradient(160deg,rgba(200,169,106,.25),rgba(200,169,106,.06));display:flex;align-items:center;justify-content:center;font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;color:#f5dea7;font-size:18px;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,.4);}
+.avatar.lg{width:64px;height:64px;font-size:24px;}
+
+/* ---------- boot ---------- */
+#screen-boot{align-items:center;justify-content:center;padding-top:var(--ai-phone-game-safe-top,88px);}
+.seal{width:84px;height:84px;border:1px solid #c8a96a;display:flex;align-items:center;justify-content:center;position:relative;animation:seal 2.6s ease infinite;}
+.seal::before{content:"";position:absolute;inset:7px;border:1px solid rgba(200,169,106,.35);}
+.seal span{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:34px;color:#f5dea7;letter-spacing:.1em;}
+@keyframes seal{0%,100%{box-shadow:0 0 0 0 rgba(200,169,106,.28),0 0 30px rgba(200,169,106,.1);}50%{box-shadow:0 0 0 10px rgba(200,169,106,0),0 0 44px rgba(200,169,106,.22);}}
+.boot-title{margin-top:30px;text-align:center;}
+.boot-title .t{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:30px;letter-spacing:.5em;text-indent:.5em;font-weight:600;}
+.boot-title .s{margin-top:10px;}
+.boot-load{margin-top:34px;width:150px;height:1px;background:rgba(255,255,255,.08);overflow:hidden;border-radius:2px;}
+.boot-load i{display:block;height:100%;width:40%;background:linear-gradient(90deg,transparent,#c8a96a,transparent);animation:load 1.2s ease infinite;}
+@keyframes load{from{transform:translateX(-100%);}to{transform:translateX(360%);}}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(4,6,10,.85);display:none;align-items:flex-end;justify-content:center;z-index:100;}
+.overlay.show{display:flex;}
+.overlay.center{align-items:center;padding:24px;}
+.sheet{width:100%;max-width:480px;max-height:88%;overflow-y:auto;background:linear-gradient(180deg,#171d2c,#0e1320);border:1px solid rgba(232,226,212,.11);border-radius:22px 22px 0 0;padding:24px 20px calc(24px + var(--ai-phone-game-safe-bottom,24px));animation:rise .38s cubic-bezier(.2,.8,.2,1);position:relative;}
+.overlay.center .sheet{border-radius:22px;padding-bottom:24px;}
+@keyframes rise{from{transform:translateY(60px);opacity:0;}to{transform:none;opacity:1;}}
+.sheet .x{position:absolute;top:14px;right:16px;background:none;border:none;color:#9a9481;font-size:18px;padding:6px;z-index:2;}
+.loading-bg{position:fixed;inset:0;background:rgba(4,6,10,.92);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;}
+.loading-bg.show{display:flex;}
+.loading-bg .txt{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;letter-spacing:.24em;font-size:13px;color:#f5dea7;text-indent:.24em;}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--ai-phone-game-safe-bottom,24px) + 92px);background:rgba(12,16,24,.98);border:1px solid rgba(200,169,106,.20);border-radius:999px;padding:11px 22px;font-size:12.5px;letter-spacing:.1em;color:#f5efdf;z-index:300;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;max-width:82%;text-align:center;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+.toast.warn{border-color:rgba(192,91,71,.5);color:#e0a08e;}
+
+/* ---------- components ---------- */
+.progress{height:4px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:6px;}
+.progress i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#8a6f3f,#f5dea7);transition:width .6s ease;}
+.opt{border:1px solid rgba(232,226,212,.11);border-radius:13px;padding:13px 15px;margin-bottom:10px;background:rgba(255,255,255,.032);transition:all .25s;text-align:left;width:100%;color:#f5efdf;font-size:13px;letter-spacing:.05em;line-height:1.55;}
+.opt:hover{border-color:#c8a96a;background:rgba(200,169,106,.05);}
+.opt .tag{color:#c8a96a;font-size:11px;letter-spacing:.14em;margin-right:8px;}
+.eff{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.ef{font-size:11px;padding:3px 9px;border-radius:999px;letter-spacing:.04em;}
+.ef.pos{color:#8fb39a;border:1px solid rgba(143,179,154,.3);}
+.ef.neg{color:#d98b77;border:1px solid rgba(192,91,71,.35);}
+.ef.neu{color:#9a9481;border:1px solid rgba(232,226,212,.11);}
+.bubble{position:relative;background:linear-gradient(160deg,rgba(200,169,106,.15),rgba(200,169,106,.05));border:1px solid rgba(200,169,106,.24);border-radius:14px 14px 14px 4px;padding:14px 16px;font-size:13px;line-height:1.75;color:#f5efdf;margin:12px 0;}
+.bubble .who{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;color:#f5dea7;font-size:12px;letter-spacing:.16em;margin-bottom:7px;}
+.bubble.dark{background:linear-gradient(160deg,rgba(192,91,71,.12),rgba(192,91,71,.03));border-color:rgba(192,91,71,.35);}
+.bubble.dark .who{color:#d98b77;}
+.resume-line{display:flex;align-items:flex-start;gap:8px;padding:9px 2px;border-bottom:1px dashed rgba(255,255,255,.06);font-size:13px;line-height:1.6;color:#c9c2ad;}
+.resume-line:last-child{border-bottom:none;}
+.resume-line .no{color:#9a9481;font-size:11px;padding-top:2px;min-width:16px;}
+.resume-line .txt{flex:1;}
+.doubt{color:#f5dea7;}
+.qa{padding:11px 2px;border-bottom:1px dashed rgba(255,255,255,.06);}
+.qa:last-child{border-bottom:none;}
+.qa .q{color:#f5efdf;font-size:12.5px;letter-spacing:.04em;margin-bottom:5px;}
+.qa .q::before{content:"问 · ";color:#c8a96a;font-size:11px;letter-spacing:.1em;}
+.qa .a{color:#c9c2ad;font-size:12.5px;line-height:1.7;}
+.qa .a::before{content:"答 · ";color:#9a9481;font-size:11px;letter-spacing:.1em;}
+details{border:1px solid rgba(232,226,212,.11);border-radius:11px;overflow:hidden;margin-top:10px;}
+details summary{padding:11px 14px;font-size:12.5px;color:#c9c2ad;letter-spacing:.08em;cursor:pointer;list-style:none;background:rgba(255,255,255,.015);}
+details summary::after{content:"+";float:right;color:#c8a96a;font-size:14px;}
+details[open] summary::after{content:"–";}
+details .inner{padding:4px 14px 12px;}
+
+/* ---------- misc ---------- */
+.item-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.item{position:relative;border:1px solid rgba(232,226,212,.11);border-radius:14px;padding:14px;background:linear-gradient(160deg,rgba(255,255,255,.065),rgba(255,255,255,.022));}
+.item .nm{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:14.5px;letter-spacing:.06em;margin-bottom:4px;}
+.item .en{font-family:Georgia,serif;font-size:9px;letter-spacing:.22em;color:#c8a96a;margin-bottom:8px;}
+.item .ds{font-size:11.5px;color:#9a9481;line-height:1.6;min-height:34px;}
+.ach{display:flex;gap:12px;align-items:flex-start;padding:11px 2px;border-bottom:1px dashed rgba(255,255,255,.06);}
+.ach:last-child{border-bottom:none;}
+.ach .ic{width:34px;height:34px;flex:none;border:1px solid rgba(232,226,212,.11);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#9a9481;}
+.ach .ic svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.ach.lock .ic{color:#9a9481;}
+.ach.un .ic{color:#f5dea7;border-color:rgba(200,169,106,.4);background:rgba(200,169,106,.07);}
+.ach .tx{flex:1;}
+.ach .tx .n{font-size:13px;letter-spacing:.06em;color:#f5efdf;}
+.ach.lock .tx .n{color:#9a9481;}
+.ach .tx .d{font-size:11px;color:#9a9481;margin-top:2px;}
+.ach .st{margin-left:auto;font-size:10px;letter-spacing:.14em;color:#9a9481;align-self:center;}
+.ach.un .st{color:#c8a96a;}
+.chat-box{display:flex;flex-direction:column;gap:9px;margin-top:12px;}
+.msg{max-width:82%;padding:11px 14px;font-size:13px;line-height:1.65;letter-spacing:.02em;}
+.msg.me{align-self:flex-end;background:linear-gradient(135deg,#dcc08a,#b18d4e);color:#151006;border-radius:14px 14px 3px 14px;}
+.msg.her{align-self:flex-start;background:rgba(255,255,255,.065);border:1px solid rgba(232,226,212,.11);border-radius:14px 14px 14px 3px;color:#f5efdf;}
+.chat-input{display:flex;gap:9px;margin-top:12px;}
+.chat-input input{flex:1;background:rgba(255,255,255,.055);border:1px solid rgba(232,226,212,.11);border-radius:12px;padding:12px 14px;color:#f5efdf;font-size:13px;outline:none;letter-spacing:.03em;}
+.chat-input input:focus{border-color:rgba(200,169,106,.20);}
+.trait-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.trait-bar .k{width:58px;font-size:11px;color:#9a9481;letter-spacing:.12em;flex:none;}
+.trait-bar .bar{flex:1;height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+.trait-bar .bar i{display:block;height:100%;background:linear-gradient(90deg,#8a6f3f,#f5dea7);border-radius:3px;}
+.trait-bar .n{width:20px;text-align:right;font-size:11px;color:#f5dea7;font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;}
+.load-note{text-align:center;color:#9a9481;font-size:12.5px;letter-spacing:.1em;padding:34px 10px;}
+.chart{width:100%;height:auto;display:block;margin-top:8px;}
+.sel-card{display:flex;gap:14px;align-items:center;border:1px solid rgba(232,226,212,.11);border-radius:16px;padding:14px;margin-bottom:12px;background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.012));transition:all .25s;}
+.sel-card:active{transform:scale(.98);}
+.route-card{position:relative;border:1px solid rgba(232,226,212,.11);border-radius:18px;padding:20px 18px;margin-bottom:14px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012));overflow:hidden;transition:all .25s;}
+.route-card:active{transform:scale(.98);border-color:#c8a96a;}
+.route-card .en{font-family:Georgia,serif;font-size:10px;letter-spacing:.3em;color:#c8a96a;margin-bottom:8px;}
+.route-card .nm{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:21px;letter-spacing:.16em;margin-bottom:6px;}
+.route-card .tg{font-size:12px;color:#f5dea7;letter-spacing:.12em;margin-bottom:10px;}
+.route-card .ds{font-size:12.5px;color:#9a9481;line-height:1.7;}
+.route-card .seed{position:absolute;top:16px;right:16px;font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:12px;color:#9a9481;letter-spacing:.08em;}
+.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(200,169,106,.20),transparent);margin:16px 0;border:none;}
+.tagrow{display:flex;flex-wrap:wrap;gap:6px;}
+.section-t{display:flex;align-items:baseline;gap:10px;margin:4px 0 14px;}
+.section-t .zh{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:18px;letter-spacing:.18em;}
+.section-t .en{margin-left:auto;}
+.verdict{border-radius:13px;padding:14px 16px;font-size:13px;line-height:1.7;letter-spacing:.03em;}
+.verdict.good{background:rgba(143,179,154,.09);border:1px solid rgba(143,179,154,.32);color:#8fb39a;}
+.verdict.bad{background:rgba(192,91,71,.09);border:1px solid rgba(192,91,71,.34);color:#d98b77;}
+.verdict .vd{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:16px;letter-spacing:.14em;margin-bottom:6px;}
+
+
+
+
+.pulse-chat{border:1px solid rgba(132,205,180,.22);background:rgba(4,6,10,.36);padding:12px;border-radius:12px;margin-top:12px}.pulse-msg{display:flex;gap:8px;margin:9px 0;align-items:flex-start}.pulse-msg .avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(132,205,180,.16);color:#c8f1df;font-size:11px;flex:0 0 auto}.pulse-msg .txt{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px 10px;font-size:12px;line-height:1.65;color:#f3ead6}.pulse-field{border:1px solid rgba(240,195,107,.2);background:linear-gradient(180deg,rgba(240,195,107,.09),rgba(255,255,255,.035));padding:12px;border-radius:12px;margin-top:12px}.press-shot{border:1px solid rgba(240,195,107,.22);background:rgba(255,255,255,.04);padding:12px;border-radius:12px;margin-top:12px}.press-shot .post{border-bottom:1px solid rgba(255,255,255,.08);padding:8px 0}.press-shot .post:last-child{border-bottom:0}.press-shot .user{color:var(--gold-bright);font-size:11px;margin-bottom:4px}.brand-board{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}.hot-card{border:1px solid rgba(217,139,119,.28);background:linear-gradient(180deg,rgba(217,139,119,.11),rgba(255,255,255,.035));}.hot-rank{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(217,139,119,.2);color:#ffb5a5;font-weight:700;margin-right:8px}.heat-bar{height:7px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:9px}.heat-bar i{display:block;height:100%;background:linear-gradient(90deg,#d98b77,#f0c36b);width:50%}.employee-card{border-left:3px solid var(--jade);padding-left:12px}.employee-card .employee-role{color:var(--gold-bright);font-size:12px}.employee-card .employee-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:12px}.employee-card .employee-metrics .stat{background:rgba(255,255,255,.035)}
+.resume-paper{background:#f1eadb;color:#28251f;border-radius:4px;padding:18px 16px;margin-top:12px;box-shadow:0 8px 20px rgba(0,0,0,.25);position:relative;overflow:hidden}
+.resume-paper:before{content:'PERSONNEL FILE · CONFIDENTIAL';display:block;font:10px Georgia,serif;letter-spacing:.18em;color:#8d806a;border-bottom:1px solid rgba(70,55,35,.22);padding-bottom:9px;margin-bottom:12px}
+.resume-paper .resume-head{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(70,55,35,.18);padding-bottom:12px;margin-bottom:12px}
+.resume-paper .resume-name{font:700 21px Georgia,serif;letter-spacing:.08em;color:#171513}.resume-paper .resume-meta{font-size:11px;color:#6e6558;line-height:1.8}.resume-paper .resume-section{font-size:10px;letter-spacing:.16em;color:#8b5d31;margin:14px 0 6px;font-weight:700}.resume-paper .resume-line{border:0;color:#413a30;padding:5px 0}.resume-paper .resume-line .no{color:#a28861}.resume-paper .resume-line .txt{font-size:12px}.resume-paper details{border-top:1px solid rgba(70,55,35,.18);margin-top:12px;padding-top:10px}.resume-paper summary{color:#8b5d31;font-size:11px;letter-spacing:.08em;cursor:pointer}.resume-paper .qa{border-left:2px solid rgba(139,93,49,.35);padding:7px 0 7px 10px}.resume-paper .qa .q{color:#514638}.resume-paper .qa .a{color:#756b5d}
+.stamp-row{display:flex;gap:12px;justify-content:center;margin-top:16px}.stamp-btn{position:relative;min-height:72px;flex:1;border:2px solid currentColor;background:transparent;border-radius:3px;font-family:Georgia,serif;letter-spacing:.14em;font-weight:700;font-size:16px;cursor:pointer;transform:rotate(-2deg);transition:transform .16s,background .16s}.stamp-btn:hover{transform:rotate(0) scale(1.03)}.stamp-btn.hire{color:#547d68}.stamp-btn.pass{color:#a65c55;transform:rotate(2deg)}.stamp-btn small{display:block;font:9px system-ui,sans-serif;letter-spacing:.08em;margin-top:5px;opacity:.75}
+.stamp-confirm{position:fixed;inset:0;background:rgba(7,9,14,.72);z-index:110;display:flex;align-items:center;justify-content:center;padding:22px}.stamp-confirm .inner{background:#191d2a;border:1px solid rgba(232,226,212,.16);border-radius:8px;padding:22px;max-width:360px;width:100%;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.4)}
+
+/* ---------- executive overlays ---------- */
+.overlay{backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);background:rgba(3,5,9,.78)}
+.sheet{isolation:isolate;border-color:rgba(200,169,106,.28);border-radius:8px 8px 0 0;background:linear-gradient(180deg,rgba(29,34,48,.99),rgba(11,15,24,.99));box-shadow:0 -18px 60px rgba(0,0,0,.58),inset 0 1px rgba(255,255,255,.05)}
+.overlay.center .sheet{border-radius:8px;box-shadow:0 28px 90px rgba(0,0,0,.68),inset 0 1px rgba(255,255,255,.05)}
+.sheet::before{content:"";position:absolute;z-index:-1;inset:7px;border:1px solid rgba(200,169,106,.09);pointer-events:none}
+.sheet::after{content:"EXECUTIVE OFFICE  /  CONFIDENTIAL";display:block;border-top:1px solid rgba(200,169,106,.16);margin-top:22px;padding-top:12px;color:#746e61;font:8px Georgia,serif;letter-spacing:.2em;text-align:center}
+.sheet .x{width:32px;height:32px;display:grid;place-items:center;border:1px solid rgba(232,226,212,.12);border-radius:50%;background:rgba(7,10,16,.5);color:#c8bda8;font-size:17px;line-height:1;transition:all .2s}
+.sheet .x:hover{color:#f5dea7;border-color:rgba(200,169,106,.45);background:rgba(200,169,106,.08)}
+.sheet>.micro:first-of-type{padding-right:42px;color:#c8a96a}
+.sheet>.h2,.sheet>.h3{padding-right:34px}
+.loading-bg{background:rgba(3,5,9,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.loading-bg::before{content:"";width:54px;height:54px;border:1px solid rgba(200,169,106,.55);box-shadow:inset 0 0 0 7px rgba(200,169,106,.04);transform:rotate(45deg);animation:loadSeal 1.8s ease-in-out infinite}
+.loading-bg .boot-load{margin-top:8px}
+@keyframes loadSeal{0%,100%{opacity:.5;transform:rotate(45deg) scale(.92)}50%{opacity:1;transform:rotate(135deg) scale(1)}}
+
+/* ---------- final dossier ---------- */
+#screen-end{background:radial-gradient(circle at 50% 0,rgba(200,169,106,.09),transparent 35%),linear-gradient(180deg,#0c111c,#070a11)}
+#screen-end .scroll{padding-top:calc(var(--ai-phone-game-safe-top,88px) + 18px);padding-bottom:48px}
+.end-dossier{position:relative;overflow:hidden;border:1px solid rgba(200,169,106,.28);background:linear-gradient(155deg,rgba(28,33,46,.96),rgba(11,15,23,.98));box-shadow:0 24px 70px rgba(0,0,0,.45);padding:22px 18px;margin-top:18px}
+.end-dossier::before{content:"";position:absolute;inset:7px;border:1px solid rgba(200,169,106,.08);pointer-events:none}
+.end-dossier::after{content:"ARCHIVED";position:absolute;right:-17px;top:26px;transform:rotate(32deg);border:2px solid rgba(192,91,71,.18);color:rgba(217,139,119,.2);padding:5px 23px;font:700 12px Georgia,serif;letter-spacing:.18em}
+.end-header{position:relative;z-index:1;display:flex;align-items:center;gap:14px;padding-bottom:17px;border-bottom:1px solid rgba(200,169,106,.18)}
+.end-avatar{width:58px;height:58px;border-radius:50%;flex:none;border:1px solid rgba(200,169,106,.4);background:linear-gradient(145deg,#302b23,#151923);background-size:cover;background-position:center;display:grid;place-items:center;color:#f5dea7;font-family:Georgia,serif;font-size:20px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.end-company{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:17px;color:#f5efdf;line-height:1.5}
+.end-code{margin-top:4px;color:#817b6e;font:9px Georgia,serif;letter-spacing:.16em}
+.end-seal{display:inline-block;margin:18px 0 4px;border:1px solid rgba(200,169,106,.48);color:#f5dea7;padding:6px 11px;font:10px Georgia,serif;letter-spacing:.18em;transform:rotate(-1deg)}
+.end-title{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:30px;line-height:1.3;color:#fff3d6;margin-top:10px}
+.end-farewell{position:relative;margin:18px 0 4px;padding:16px 16px 16px 20px;border-left:2px solid #c8a96a;background:rgba(200,169,106,.055);color:#ddd5c3;font-size:13px;line-height:1.95}
+.end-farewell .who{color:#c8a96a;font-size:10px;letter-spacing:.15em;margin-bottom:7px}
+.end-section-label{margin:20px 0 10px;color:#8d8576;font:9px Georgia,serif;letter-spacing:.2em}
+#endStats>.card{border-radius:4px;background:rgba(255,255,255,.025);border-color:rgba(200,169,106,.14)}
+#endStats .stat{border-radius:4px;background:rgba(5,8,13,.48);border-color:rgba(232,226,212,.08)}
+.end-actions{margin-top:18px;padding-top:16px;border-top:1px solid rgba(200,169,106,.14)}
+@media(min-width:640px){#screen-end .scroll{max-width:620px}.end-dossier{padding:30px}.end-title{font-size:36px}}
+</style>
+</head>
+<body>
+
+<!-- BOOT -->
+<div id="screen-boot" class="screen active">
+  <div class="seal"><span>权</span></div>
+  <div class="boot-title">
+    <div class="t">总裁手记</div>
+    <div class="micro s">EXECUTIVE DIARY</div>
+  </div>
+  <div class="boot-load"><i></i></div>
+</div>
+
+<!-- ENTRY -->
+<div id="screen-entry" class="screen">
+  <div class="scroll">
+    <div class="micro">WELCOME BACK</div>
+    <div class="orn"><span class="d"></span></div>
+    <div class="h1">董事长，<br><span id="entryName">阁下</span></div>
+    <p class="dim" style="margin-top:16px;line-height:2;font-size:13.5px;">您的办公室已经备好。<br>公司尚在襁褓，秘书人选待定，商海浮沉将启。</p><div class="card" style="margin-top:18px;"><div class="micro" style="margin-bottom:8px;">PLAYER PROFILE · 玩家设定</div><label class="faint tiny" for="playerGender">游戏内性别</label><select id="playerGender" style="width:100%;margin-top:8px;background:#171d2c;border:1px solid rgba(232,226,212,.11);border-radius:12px;padding:12px;color:#f5efdf;font-size:13px;"><option value="unspecified">不指定 / 使用中性称谓</option><option value="female">女性</option><option value="male">男性</option><option value="nonbinary">非二元 / 其他</option></select><label class="faint tiny" for="playerTitle" style="display:block;margin-top:12px;">游戏内称谓</label><input id="playerTitle" value="董事长" maxlength="12" style="width:100%;margin-top:8px;background:rgba(255,255,255,.055);border:1px solid rgba(232,226,212,.11);border-radius:12px;padding:12px 14px;color:#f5efdf;font-size:13px;outline:none;"><label class="faint tiny" for="companyNameInput" style="display:block;margin-top:12px;">集团名称</label><input id="companyNameInput" placeholder="例如：星海、明曜、云栖资本" maxlength="16" style="width:100%;margin-top:8px;background:rgba(255,255,255,.055);border:1px solid rgba(232,226,212,.11);border-radius:12px;padding:12px 14px;color:#f5efdf;font-size:13px;outline:none;"><p class="faint tiny" style="margin-top:8px;line-height:1.7;">不填写则使用所选经营路线的默认集团名。</p></div>
+    <div class="orn"><span class="d"></span></div>
+    <p class="faint tiny" style="line-height:1.9;margin-bottom:26px;">本局将经营一家公司：招聘、决策、应酬、拍卖、人情往来。<br>每一步都会留下痕迹，最终写入您与秘书共同的记忆。</p>
+    <button class="btn primary" onclick="g.start()">启程 · BEGIN</button>
+    <button class="btn" style="margin-top:10px;" onclick="g.confirmClearData()">清空本地测试数据</button>
+  </div>
+</div>
+
+<!-- SECRETARY SELECT -->
+<div id="screen-secretary" class="screen">
+  <div class="scroll">
+    <div class="micro">SELECT YOUR SECRETARY</div>
+    <div class="orn"><span class="d"></span></div>
+    <div class="h2">择定秘书</div>
+    <p class="dim tiny" style="margin-top:10px;line-height:1.9;">总秘书将陪您经历一切：对方的洞察力决定建议的可信度，性格特质决定陪伴中的张力与温度。</p>
+    <div id="secList" style="margin-top:18px;"></div>
+  </div>
+</div>
+
+<!-- ROUTE SELECT -->
+<div id="screen-route" class="screen">
+  <div class="scroll">
+    <div class="micro">CHOOSE YOUR EMPIRE</div>
+    <div class="orn"><span class="d"></span></div>
+    <div class="h2">选定经营路线</div>
+    <p class="dim tiny" style="margin-top:10px;line-height:1.9;">每一条路，都有它自己的风浪与勋章。</p>
+    <div id="routeList" style="margin-top:18px;"></div>
+  </div>
+</div>
+
+<!-- ASSESS -->
+<div id="screen-assess" class="screen">
+  <div class="scroll" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:80px;">
+    <div class="avatar lg" id="assessAvatar">?</div>
+    <div class="micro" style="margin-top:22px;">ESTABLISHING PROFILE</div>
+    <div class="serif" style="margin-top:10px;font-size:19px;letter-spacing:.2em;" id="assessName">——</div>
+    <div class="boot-load" style="margin-top:26px;"><i></i></div>
+    <p class="faint tiny" style="margin-top:16px;text-align:center;line-height:1.9;" id="assessNote">正在建立秘书的性格档案…<br>洞察力、可靠度、占有欲、强势度、情绪化</p>
+  </div>
+</div>
+
+<!-- HUB -->
+<div id="screen-hub" class="screen" style="padding-bottom:0;">
+  <div class="topbar">
+    <div class="stat-row" style="display:flex;gap:8px;">
+      <div class="stat"><div class="k">资金</div><div class="v gold" id="stMoney">—</div></div>
+      <div class="stat"><div class="k">估值</div><div class="v" id="stVal">—</div></div>
+      <div class="stat"><div class="k">声誉</div><div class="v" id="stRep">—</div></div>
+      <div class="stat"><div class="k">好感</div><div class="v jade" id="stAff">—</div></div>
+    </div>
+    <div class="weekline">
+      <div class="w" id="stWeek">第 1 周</div>
+      <div class="dots" id="stDots"></div>
+    </div>
+    <div class="flavor" id="stFlavor"></div>
+    <div class="btn-row" id="quickActions" style="margin-top:10px;"></div>
+  </div>
+  <div class="panel-wrap">
+    <div class="panel on" id="panel-ops"></div>
+    <div class="panel" id="panel-recruit"></div>
+    <div class="panel" id="panel-life"></div>
+    <div class="panel" id="panel-sec"></div>
+    <div class="panel" id="panel-corp"></div>
+  </div>
+  <div class="nav">
+    <button class="on" onclick="g.tab('ops')"><svg viewBox="0 0 24 24"><path d="M4 20V10l4-3v13"/><path d="M8 20V7l8-4v17"/><path d="M16 20V8l4 2v10"/><path d="M2 20h20"/></svg>经营</button>
+    <button onclick="g.tab('recruit')"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.6 19c.6-3.2 2.9-5 5.4-5s4.8 1.8 5.4 5"/><path d="M16 5.4a3.1 3.1 0 0 1 0 5.4"/><path d="M17.8 14.4c1.7.7 2.8 2.1 3.2 4.6"/></svg>招聘</button>
+    <button onclick="g.tab('life')"><svg viewBox="0 0 24 24"><path d="M7 4h10l4 5-9 11L3 9z"/><path d="M3 9h18"/><path d="M12 20 8 9l4-5 4 5-4 11"/></svg>生活</button>
+    <button onclick="g.tab('sec')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/></svg>秘书</button>
+    <button onclick="g.tab('corp')"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V9l5-3v15"/><path d="M10 21V5l9 3v13"/><path d="M14 13h.01M14 16h.01M14 19h.01M7.5 11h.01M7.5 14h.01M7.5 17h.01"/></svg>司务</button>
+  </div>
+</div>
+
+<!-- END -->
+<div id="screen-end" class="screen">
+  <div class="scroll">
+    <div class="micro" id="endKind">FINAL CHAPTER</div>
+    <div class="orn"><span class="d"></span></div>
+    <div class="end-dossier">
+      <div class="end-header">
+        <div class="end-avatar" id="endAvatar">E</div>
+        <div>
+          <div class="end-company" id="endCompany">集团经营终局档案</div>
+          <div class="end-code" id="endCode">BOARD ARCHIVE · FILE 0001</div>
+        </div>
+      </div>
+      <div class="end-seal" id="endType">ENDING</div>
+      <div class="end-title" id="endTitle">功成身退</div>
+      <div class="end-farewell"><div class="who" id="endWho">——</div><div id="endFarewell"></div></div>
+      <div class="end-section-label">LEGACY REVIEW · 经营遗产与复盘</div>
+      <div id="endStats"></div>
+      <div class="end-actions">
+        <button class="btn primary" onclick="g.leave()">封存卷宗 · 返回大厅</button>
+        <p class="faint tiny" style="text-align:center;margin-top:14px;line-height:1.7;" id="endNote"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="modal"><div class="sheet" id="sheet"></div></div>
+
+<!-- LOADING -->
+<div class="loading-bg" id="loading"><div class="boot-load"><i></i></div><div class="txt" id="loadingTxt">正在处理</div></div>
+<div class="toast" id="toast"></div>
+
+<div id="fatal" style="display:none;"></div>
+<script>
+
+
+
+window.addEventListener('error',function(e){
+  var sc=document.querySelector('.screen.active');
+  showFatal('JS错误['+(sc?sc.id:'?')+']: '+(e&&e.message?e.message:'unknown'));
+  try{console.error('UNCAUGHT ERROR:',e);}catch(x){}
+});
+window.addEventListener('unhandledrejection',function(e){
+  var r=e&&e.reason;var m='unknown';
+  try{
+    if(r&&r.stack)m=String(r.stack).split('\n').slice(0,3).join(' | ');
+    else if(r&&r.message)m=r.message;
+    else if(typeof r==='string')m=r;
+    else if(r===undefined||r===null)m='(reason为 '+r+')';
+    else m=String(r);
+  }catch(x){m=String(r);}
+  var env=(typeof window!=='undefined'&&window.AiPhoneGame)?'宿主API存在':'纯浏览器(无宿主API)';
+  var sc=document.querySelector('.screen.active');
+  showFatal('异步错误['+(sc?sc.id:'?')+']['+env+']: '+m);
+  try{console.error('UNHANDLED REJECTION:',r);}catch(x){}
+});
+function showFatal(msg){
+  try{
+    var el=document.getElementById('fatal');
+    if(el){el.style.display='block';el.textContent=msg;}
+    var m=document.getElementById('modal');
+    if(m){m.style.display='none';}
+    var s=document.querySelector('.screen.active');
+    if(s){
+      var d=document.createElement('div');
+      d.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(var(--ai-phone-game-safe-bottom,24px) + 90px);z-index:999;background:rgba(60,10,10,.96);border:1px solid #c05b47;color:#f0c9bd;font-size:12px;padding:12px 14px;border-radius:12px;line-height:1.7;letter-spacing:.02em;';
+      d.textContent=msg;
+      document.body.appendChild(d);
+    }
+  }catch(e){}
+}
+function withTimeout(p,ms){var t=new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout'));},ms);});t.catch(function(){});return Promise.race([p,t]);}
+
+'use strict';
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];}return x;};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fmtMoney(n){const a=Math.abs(n);let s;if(a>=1e8)s=(n/1e8).toFixed(2).replace(/\.?0+$/,'')+'亿';else if(a>=1e4)s=(n/1e4).toFixed(1).replace(/\.0$/,'')+'万';else s=String(Math.round(n));return (n<0?'-':'')+s;}
+function parseJSON(t){if(!t)return null;let m=t.match(/\{[\s\S]*\}/);if(!m)m=t.match(/\[[\s\S]*\]/);if(!m)return null;try{return JSON.parse(m[0]);}catch(e){return null;}}
+function showLoading(t){$('#loadingTxt').textContent=t||'正在处理';$('#loading').classList.add('show');}
+function hideLoading(){$('#loading').classList.remove('show');}
+function toast(msg,warn){const t=$('.toast');t.textContent=msg;t.classList.toggle('warn',!!warn);t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));var el=document.getElementById('screen-'+id)||document.getElementById(id);if(el)el.classList.add('active');}
+function openSheet(html,center){const m=$('#modal'),s=$('#sheet');s.innerHTML='<button class="x" aria-label="关闭弹窗" title="关闭" onclick="g.closeModal()">×</button>'+html;m.classList.toggle('center',!!center);m.classList.add('show');s.scrollTop=0;}
+function closeModal(){$('#modal').classList.remove('show');}
+function effChips(ef){let h='<div class="eff">';const add=(t,c)=>{if(t)h+='<span class="ef '+c+'">'+t+'</span>';};
+  if(ef.m)add((ef.m>0?'+':'')+fmtMoney(ef.m)+' 资金',ef.m>0?'pos':'neg');
+  if(ef.vp)add((ef.vp>0?'+':'')+ef.vp+'% 估值',ef.vp>0?'pos':'neg');
+  if(ef.r)add((ef.r>0?'+':'')+ef.r+' 声誉',ef.r>0?'pos':'neg');
+  if(ef.o)add((ef.o>0?'+':'')+ef.o+' 士气',ef.o>0?'pos':'neg');
+  if(ef.a)add((ef.a>0?'+':'')+ef.a+' 好感',ef.a>0?'pos':'neg');
+  if(!ef.m&&!ef.vp&&!ef.r&&!ef.o&&!ef.a)add('无显著影响','neu');
+  return h+'</div>';}
+
+/* ================= API ================= */
+const API=window.AiPhoneGame||null;
+const hasAPI=!!API;
+function playerContext(){const g=state&&state.playerGender||'unspecified';const label=g==='female'?'女性':g==='male'?'男性':g==='nonbinary'?'非二元或其他':'未指定性别';return '玩家设定为'+label+'，游戏内称谓为「'+((state&&state.playerTitle)||'董事长')+'」。不要根据中文称谓、名字或上下文擅自推断玩家是男性；使用中性表达，只有在明确需要且已有设定时才使用性别代词。';}
+function normalizeGender(v){v=String(v||'').toLowerCase();if(/female|woman|girl|女/.test(v))return 'female';if(/male|man|boy|男/.test(v))return 'male';if(/nonbinary|non-binary|they|其他|无性别|中性/.test(v))return 'nonbinary';return 'unspecified';}
+function inferGenderFromText(txt){txt=String(txt||'');if(/\b(she|her)\b|女性|女人|少女|女孩|姐姐|妹妹|小姐|女士|女/.test(txt))return 'female';if(/\b(he|him)\b|男性|男人|少年|男孩|哥哥|弟弟|先生|男/.test(txt))return 'male';return 'unspecified';}
+function secretaryPronoun(){const g=normalizeGender(state&&state.secretaryGender);return g==='female'?'她':g==='male'?'他':g==='nonbinary'?'TA':'对方';}
+function secretaryGenderContext(){const g=normalizeGender(state&&state.secretaryGender);const label=g==='female'?'女性':g==='male'?'男性':g==='nonbinary'?'非二元/其他':'未识别';return '秘书角色性别为'+label+'。称呼和代词必须符合该角色设定；未识别时使用「对方」「这位秘书」「TA」等中性表达，不要默认写成女性。';}
+function personGenderContext(name,gender,role){const g=normalizeGender(gender);const label=g==='female'?'女性':g==='male'?'男性':g==='nonbinary'?'非二元/其他':'未识别';const p=g==='female'?'她':g==='male'?'他':g==='nonbinary'?'TA':'这位候选人';return (role||'候选人')+'「'+(name||'此人')+'」的性别为'+label+'，提到此人时请使用「'+p+'」或姓名；未识别时使用「这位候选人」「对方」等中性表达，不能默认用男性或女性代词。';}
+let pkgCache=null;
+async function getPkg(){if(pkgCache)return pkgCache;pkgCache=await withTimeout(API.getRoleLightPackage(state.secretaryId),4000);return pkgCache;}
+async function callChar(userMsg,extraSystem){
+  if(!hasAPI||state.secretaryId==='demo')throw new Error('demo');
+  const pkg=await getPkg();
+  const sys=(extraSystem||('你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'的总秘书。严格按角色性格说话，用中文，口语化、简短自然（一般不超过130字），不要提及这是游戏或AI。'))+' '+playerContext()+' '+secretaryGenderContext();
+  const r=await withTimeout(API.callLLM({characterId:state.secretaryId,messages:[...pkg.messages,{role:'system',content:sys},{role:'user',content:userMsg}]}),15000);
+  return (r&&r.content)?r.content.trim():'';
+}
+async function callGlobal(msgs){const r=await withTimeout(API.callGlobalLLM({messages:msgs}),15000);return (r&&r.content)?r.content.trim():'';}
+
+/* ================= data ================= */
+const FLAVOR=[
+ '「咖啡放在您左手边了。今日行程我已理好，随时可以开始。」',
+ '「人事部收到一份简历，我瞧着有点意思，您要不要过目？」',
+ '「董事会那边我已替您挡了一轮，周三前给个准话即可。」',
+ '「富比士拍卖行本季来了几件好货，我替您留意过了。」',
+ '「您昨天的决策很漂亮——不过这话我只对您说。」',
+ '「夜色很好。今天早些休息，明日还有硬仗。」',
+ '「您的日程我留了半天空档，今晚属于您自己。」',
+];
+const LEISURE=[
+ {n:'私人品鉴会',en:'PRIVATE TASTING',d:'陈年单桶威士忌配手卷雪茄，秘书替你挡下所有来电。',ef:{o:3,a:2}},
+ {n:'歌剧院之夜',en:'OPERA NIGHT',d:'包厢第一排，幕间与秘书低声交换剧情与隐喻。',ef:{o:3,a:2}},
+ {n:'马术晨光',en:'MORNING RIDE',d:'晨雾中的马场，并肩驰骋半圈，风把秘书的笑意吹散。',ef:{o:4,a:3}},
+];
+const ITEMS=[
+ {id:'watch',name:'鎏金怀表',en:'GILDED POCKET WATCH',desc:'1910 年代瑞士制表，表壳鎏金，机芯仍精准如初。',base:180,af:14},
+ {id:'cuff',name:'蓝钻袖扣',en:'BLUE DIAMOND CUFFLINKS',desc:'深海蓝钻嵌于白金底座，光线之下如深海凝固。',base:420,af:18},
+ {id:'zitan',name:'紫檀镇纸',en:'SANDALWOOD PAPERWEIGHT',desc:'老料小叶紫檀，纹理如山水，压得住整桌文件。',base:150,af:10},
+ {id:'watch2',name:'手工机械腕表',en:'HAUTE HORLOGERIE',desc:'独立制表师三年之作，日内瓦印记，全球仅此一枚。',base:800,af:20},
+ {id:'vinyl',name:'绝版黑胶',en:'FIRST PRESSING VINYL',desc:'七十年代绝版首版黑胶，音色温润如初雪。',base:60,af:8},
+ {id:'monet',name:'莫奈花园 · 仿作',en:'AFTER MONET',desc:'名家临摹之作，光影笔触几可乱真。',base:350,af:12},
+ {id:'tea',name:'头采狮峰龙井',en:'FIRST PICK LONGGING',desc:'明前头采，一斤只出四两，清香入骨。',base:40,af:6},
+ {id:'mask',name:'丝绒歌剧面具',en:'VELVET OPERA MASK',desc:'威尼斯工坊手工缝制，佩戴者如在暗夜赴宴。',base:90,af:9},
+ {id:'pen',name:'古董钢笔',en:'ANTIQUE FOUNTAIN PEN',desc:'四十年代限量款，笔尖弹性极佳，落纸如行云。',base:55,af:7},
+ {id:'pearl',name:'深海珍珠项链',en:'DEEP SEA PEARL NECKLACE',desc:'南洋深海金珠，圆润无瑕，光华内敛。',base:520,af:22},
+ {id:'invite',name:'帝国晚宴请柬',en:'IMPERIAL GALA INVITATION',desc:'年度名流慈善晚宴，一席难求，入场即入圈。',base:200,af:11},
+ {id:'poem',name:'初版诗集手稿',en:'FIRST EDITION MANUSCRIPT',desc:'上世纪诗人亲笔手稿，字迹清瘦，落款完整。',base:280,af:13},
+];
+const ACH=[
+ {id:'w1',n:'初涉商海',d:'完成第一周经营',c:()=>state.week>=2,ic:'chart'},
+ {id:'hire',n:'慧眼识珠',d:'录用一名货真价实的人才',c:()=>state.stats.goodHire>0,ic:'users'},
+ {id:'fire',n:'火眼金睛',d:'识破一名造假求职者',c:()=>state.stats.fraudPass>0,ic:'eye'},
+ {id:'bid',n:'一掷千金',d:'在拍卖会拍下第一件藏品',c:()=>state.stats.bidWin>0,ic:'gem'},
+ {id:'aff75',n:'执子之手',d:'与秘书好感达到「倾心」',c:()=>state.affection>=75,ic:'heart'},
+ {id:'poss',n:'独占宣言',d:'触发一次占有欲剧情',c:()=>state.stats.jealous>0,ic:'flame'},
+ {id:'val10',n:'资本帝国',d:'公司估值突破 10 亿',c:()=>state.valuation>=1e9,ic:'tower'},
+ {id:'rep90',n:'名动天下',d:'声誉达到 90',c:()=>state.reputation>=90,ic:'star'},
+ {id:'w10',n:'十周试炼',d:'经营满 10 周',c:()=>state.week>=10,ic:'clock'},
+ {id:'w520',n:'十年之约',d:'经营满 520 周',c:()=>state.week>=520,ic:'clock'},
+ {id:'col5',n:'满庭芳华',d:'收藏室拥有 5 件藏品',c:()=>state.inventory.length+state.gifted.length>=5,ic:'gem'},
+];
+const ACH_ICON={
+ chart:'<path d="M4 20V10l4-3v13"/><path d="M8 20V7l8-4v17"/><path d="M16 20V8l4 2v10"/><path d="M2 20h20"/>',
+ users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.6 19c.6-3.2 2.9-5 5.4-5s4.8 1.8 5.4 5"/><path d="M16 5.4a3.1 3.1 0 0 1 0 5.4"/>',
+ eye:'<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/>',
+ gem:'<path d="M7 4h10l4 5-9 11L3 9z"/><path d="M3 9h18"/><path d="M12 20 8 9l4-5 4 5-4 11"/>',
+ heart:'<path d="M12 20s-7-4.4-9-8.4C1.6 8.4 3.8 5 7 5c2 0 3.5 1 5 3 1.5-2 3-3 5-3 3.2 0 5.4 3.4 4 6.6C19 15.6 12 20 12 20z"/>',
+ flame:'<path d="M12 22c4 0 7-2.7 7-6.5 0-3-2-5.2-3.6-7C13.6 6.6 13 4.4 13 2c-3 1.6-4.6 4-5 6-.2 1.2.1 2.2.6 3-.4-.4-.7-1-.8-1.7C6 10.8 5 13 5 15.5 5 19.3 8 22 12 22z"/>',
+ tower:'<path d="M4 21h16"/><path d="M5 21V10l7-5 7 5v11"/><path d="M12 8v3"/><path d="M9 14h.01M15 14h.01M9 17.5h.01M15 17.5h.01"/>',
+ star:'<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.8 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+};
+const DEMO_SECRETARY={id:'demo',name:'林秘书',avatar:'',subtitle:'本地演示档 · 未连接小手机宿主'};
+const DEMO_NPCS=[
+ {name:'盛明珠',title:'环球影业董事',org:'环球影业',look:'一袭暗红丝绒长裙，眼尾微挑，笑容耐人寻味。',line:'听说您最近在影视板块动作不小。我这个项目，想先跟您私下聊聊。',ask:'她希望你追加 3000 万投资，并暗示「交情」决定分成比例。'},
+ {name:'顾承泽',title:'瑞丰资本合伙人',org:'瑞丰资本',look:'深灰西装，袖口一块老式腕表，说话时总在把玩一枚筹码。',line:'明晚有一局很有意思的牌局。桌上的筹码，够您少奋斗三年。',ask:'他邀你参加一场高杠杆的私下对赌局，回报诱人，风险极高。'},
+ {name:'温黛',title:'华庭集团少东家',org:'华庭集团',look:'长发及腰，笑时露出一颗虎牙，却没人敢小看她。',line:'我父亲很欣赏您。不过嘛——我更想亲自看看，您值不值得结交。',ask:'她提出以「私人关系」为条件，换取一份联名合作协议。'},
+];
+const DEMO_CANDIDATES=[
+ {name:'顾言川',gender:'男',age:29,position:'品牌总监',school:'西岸大学 · 在线 MBA',years:'7 年',salary:9,
+  resume:[{line:'常春藤联盟商学院 MBA 学位'},{line:'操盘过 3 个十亿级品牌焕新项目'},{line:'主导戛纳创意节获奖案例'},{line:'连续三年达成 200% 业绩'},{line:'人脉遍布头部平台，擅长整合跨界资源'}],
+  interview:[{q:'可以聊聊您操盘过的品牌焕新项目吗？具体怎么推进的？',a:'呃……项目比较大，团队分工很细，我主要负责整体统筹和资源对接，具体执行是下面的团队在跟。'},{q:'戛纳获奖案例里，您的角色是？',a:'那个案例内部推了很多轮，我算核心成员之一。具体创意是乙方做的，我们主要是给预算和方向。'},{q:'上一份工作为什么只待了八个月？',a:'那边的业务方向和我的规划不太一致，是个人的选择。'}],
+  truth:{verdict:'fraud',actual:'履历基本为编造：MBA 为在线野鸡学位，案例来自他人作品，实际操盘能力有限。',flags:[0,1,2]}},
+ {name:'苏晚晴',gender:'女',age:26,position:'新媒体运营总监',school:'地方院校 · 本科',years:'4 年',salary:6,
+  resume:[{line:'独立运营账号，全网粉丝 320 万'},{line:'近一年 50 条内容进入热搜榜'},{line:'自建 8 人内容小组，月流水 60 万'},{line:'没有大厂背景，靠作品说话'}],
+  interview:[{q:'爆款内容是怎么做出来的？',a:'我有一套选题漏斗：先铺 30 个选题小样，用数据筛出 3 个，再集中资源做爆款。上周那条热搜，我测了 7 版标题。'},{q:'团队怎么管理？',a:'8 个人里 3 个是兼职，我按内容线分，每周三复盘数据，淘汰率挺高，但留下的人都能打。'},{q:'来我们公司，你能带来什么？',a:'你们缺的不是曝光，是稳定出爆款的内容机制。我可以三个月内搭好这套机制，用数据说话。'}],
+  truth:{verdict:'good',actual:'真实操盘经验扎实，数据意识强，执行力好，只是学历与背景朴素。',flags:[]}},
+ {name:'白景行',gender:'男',age:35,position:'财务总监',school:'清北大学 · 硕士 · CFA',years:'11 年',salary:12,
+  resume:[{line:'四大会计师事务所 8 年审计经验'},{line:'主导两家公司 IPO 全流程'},{line:'CFA 持证，精通跨境税务架构'},{line:'性格低调，不善交际'}],
+  interview:[{q:'您主导的 IPO 里，最难的部分是什么？',a:'是收入确认口径和审计调整。有一家公司申报前两轮被否，我重做了三年账务底稿，把商誉减值风险前置处理，最后过会。'},{q:'怎么看我们公司目前的财务结构？',a:'你们现金储备偏多，闲置资金收益率低。建议把一部分转为结构化配置，同时把股权激励的税务安排提前做掉。'},{q:'您的短板？',a:'我不擅长社交，酒局能推就推。但对数字，我可以负责到每一分钱。'}],
+  truth:{verdict:'good',actual:'专业能力过硬，履历属实，性格清高孤傲，需要磨合。',flags:[]}},
+];
+
+/* ================= routes & events ================= */
+const ROUTES=[
+ {id:'media',name:'娱乐传媒',en:'EMPIRE OF LIGHT',tag:'以光影造梦，以声名立万',desc:'签约艺人、投资影视、操盘综艺——在镁光灯与流量的战场上，名声即是资本。',seed:8e6,events:[
+  {t:'新人出道企划',s:'练习生项目筹备完毕，宣发预算 800 万，如何打响第一枪？',o:[
+   {t:'全渠道铺量造势',ef:{m:-800,r:6,o:4},res:'话题引爆，出道首日登上热搜，全网都在讨论这个新团。'},
+   {t:'口碑先行，小规模试水',ef:{m:-300,r:2,o:2},res:'首支单曲悄然上线，业内口碑不错，但声量平平。'},
+   {t:'押注顶流导师引流',ef:{m:-600,vp:4,r:4},res:'导师自带流量，团未出道先红了三成，估值应声上涨。'}]},
+  {t:'电影投资决策',s:'一部文艺片邀您投资 1.2 亿。导演口碑极佳，但题材冷门，票房生死难料。',o:[
+   {t:'全额投资',chance:.6,good:{vp:10,r:6},bad:{vp:-8,r:-4},resG:'影片横扫各大影展，口碑票房双丰收，公司声名大噪。',resB:'叫好不叫座，票房惨淡，投资打了水漂。'},
+   {t:'只投一半，分担风险',ef:{m:-6000,vp:4,r:2},res:'半程注资，电影小有斩获，公司跟着沾了光。'},
+   {t:'婉拒，保持现金流',ef:{o:2},res:'错过的可能是神作，也可能是巨坑——至少账上钱还在。'}]},
+  {t:'艺人合约纠纷',s:'当红艺人被曝违约跳槽，律师函已摆在您桌上。',o:[
+   {t:'强硬起诉',ef:{m:-1000,r:-3,o:-2},res:'官司赢了，但撕破了脸，业内风评微妙。'},
+   {t:'好聚好散，送祝福',ef:{m:-500,r:3,o:2},res:'体面分手反而赢得口碑，圈内人都说你大气。'},
+   {t:'借势炒作新作品',ef:{r:5,o:1},res:'热度有了，新作品趁势上线，流量赚了一波。'}]},
+  {t:'综艺收视告急',s:'自制综艺连续三周收视下滑，广告商开始观望。',o:[
+   {t:'换血主持人',ef:{m:-400,o:3,r:1},res:'新主持风格锐利，收视回暖，士气回升。'},
+   {t:'坚持原阵容',ef:{o:-3,r:-2},res:'情怀没换来收视，质疑声越来越大。'},
+   {t:'转型直播带货',ef:{m:1200,r:-3,o:2},res:'现金流救回来了，但「格调」二字被网友嘲了一周。'}]},
+  {t:'绯闻公关',s:'旗下顶流恋情被狗仔拍到，照片即将见报。',o:[
+   {t:'冷处理',ef:{r:-5},res:'舆论发酵，人设受损，商务报价悄悄下调。'},
+   {t:'大方官宣，立真实人设',ef:{r:6,o:2,a:1},res:'坦荡反而圈粉，路人缘暴涨，秘书夸你有魄力。'},
+   {t:'花钱压热搜',ef:{m:-900,r:2},res:'热搜按下去了，账单也上来了，总算有惊无险。'}]},
+  {t:'音乐节冠名',s:'年度音乐节开放赞助，冠名费 1500 万，曝光量巨大。',o:[
+   {t:'冠名赞助',ef:{m:-1500,vp:5,r:4},res:'满场都是你的 Logo，年轻圈层认知度飙升。'},
+   {t:'只做舞台合作',ef:{m:-600,r:2},res:'成本可控，曝光尚可，中规中矩。'},
+   {t:'不参与',ef:{o:1},res:'省下的钱留给了下一个机会——希望如此。'}]},
+ ]},
+ {id:'finance',name:'金融资本',en:'CAPITAL TIDES',tag:'于潮汐逐利，在波动立身',desc:'并购、承销、对赌、监管——在数字的惊涛骇浪中，每一次判断都关乎生死。',seed:1.5e7,events:[
+  {t:'并购案',s:'一家陷入困境的科技配件厂报价 6000 万。厂房设备尚可，但债务缠身。',o:[
+   {t:'全资收购',ef:{m:-6000,vp:8,o:-2},res:'吞下整条供应链，估值大涨，但整合期士气低迷。'},
+   {t:'先谈 30% 股权',ef:{m:-1800,vp:3},res:'小步试探，主动权在手，进可攻退可守。'},
+   {t:'放弃',ef:{r:1},res:'错过一次抄底，但避开了潜在的泥潭。'}]},
+  {t:'市场震荡',s:'大盘急跌，持仓浮亏 15%。恐慌在蔓延，您的电话响个不停。',o:[
+   {t:'恐慌抛售',ef:{m:-2500,r:-3},res:'卖在了最低点，事后看血亏，声誉也受了损。'},
+   {t:'逆势加仓',chance:.65,good:{vp:6},bad:{m:-2000,r:-4},resG:'市场V型反转，您抄到了底，业内直呼神来之笔。',resB:'抄底抄在半山腰，浮亏扩大，人人自危。'},
+   {t:'对冲锁仓',ef:{m:-800,r:2},res:'损失可控，稳健形象立住了，客户反而更信任你。'}]},
+  {t:'新股承销',s:'拿下独角兽承销资格，需包销 4000 万。标的炙手可热。',o:[
+   {t:'全额包销',ef:{m:-4000,vp:6,r:4},res:'承销费丰厚，发行当日大涨，名利双收。'},
+   {t:'联合承销',ef:{m:-1500,r:2},res:'分一杯羹，稳妥落袋。'},
+   {t:'婉拒',ef:{o:1},res:'把机会让给了对手——但愿你不会后悔。'}]},
+  {t:'对赌协议',s:'被投公司现金流吃紧，请求将对赌期限延后一年。',o:[
+   {t:'同意延期',ef:{r:-4,o:-3},res:'人情给了，规则破了，投委会颇有微词。'},
+   {t:'要求回购股份',ef:{m:2500,vp:-4},res:'拿回了钱，但割裂了关系，估值也受了影响。'},
+   {t:'引入新投资人分担',ef:{m:-1000,r:3},res:'风险摊薄，人脉加分，各方都给了面子。'}]},
+  {t:'监管约谈',s:'因涉嫌市场操纵，监管层约谈公司高管。',o:[
+   {t:'积极配合整改',ef:{r:4,m:-800},res:'罚单不重，态度诚恳，监管层认可了整改方案。'},
+   {t:'公关施压',ef:{r:-6},res:'硬碰硬的结果是：更严格的审查。'},
+   {t:'低调处理，内部自查',ef:{m:-300,r:1},res:'悄悄摆平，波澜不惊。'}]},
+  {t:'海外收购',s:'欧洲老牌基金出售亚洲分部，竞标 8000 万起。',o:[
+   {t:'全力竞标',ef:{m:-8000,vp:9,r:2},res:'拿下亚洲分部，版图扩张，估值飙升。'},
+   {t:'合资入场',ef:{m:-3000,vp:4},res:'风险共担，分一杯羹。'},
+   {t:'观望',ef:{o:1},res:'按兵不动，静待更好的价格。'}]},
+ ]},
+ {id:'tech',name:'科技互联',en:'VISIONARY CODE',tag:'以代码筑城，以远见立世',desc:'产品、融资、攻防、迭代——速度与远见，决定你是否成为下一个时代。',seed:1e7,events:[
+  {t:'核心工程师离职',s:'技术总监收到竞对三倍薪资的挖角，去意已决。',o:[
+   {t:'三倍薪资留人',ef:{m:-900,o:5},res:'人留下了，团队安心了，代价是一笔大额支出。'},
+   {t:'祝福放行，内部提拔',ef:{o:-2,r:-1},res:'送走大将，新人顶上，过渡期略阵痛。'},
+   {t:'竞业协议硬留',ef:{o:-8,m:-300},res:'人留住了，心走了，团队气氛降到冰点。'}]},
+  {t:'产品发布会',s:'年度旗舰发布会，预算 1200 万，是砸大场子还是走极客路线？',o:[
+   {t:'大场子请明星',ef:{m:-1200,r:5,vp:3},res:'声量拉满，圈外人也知道了你的产品。'},
+   {t:'极客向线上直播',ef:{m:-400,r:2,o:2},res:'核心用户买账，圈内口碑扎实。'},
+   {t:'低调发布，先跑数据',ef:{m:-150,o:1},res:'没有仪式感，但省下的钱能多活一个月。'}]},
+  {t:'数据泄露',s:'用户数据疑似泄露，安全团队彻夜排查，风声已走漏。',o:[
+   {t:'公开道歉并赔偿',ef:{m:-1500,r:-6},res:'诚实但惨烈，口碑重创，用户流失。'},
+   {t:'沉默自查',ef:{m:-500,r:-9},res:'沉默是金？不，沉默是炸。舆论彻底失控。'},
+   {t:'主动上报监管并整改',ef:{r:5,m:-1000},res:'化被动为主动，监管认可，媒体反而帮你正名。'}]},
+  {t:'融资谈判',s:'新一轮融资，领投方压低估值 20%，并索要董事会席位。',o:[
+   {t:'接受估值换资源',ef:{vp:-5,m:8000,r:3},res:'钱到账了，渠道打开了，代价是控制权稀释。'},
+   {t:'拒绝，等下一轮',ef:{vp:2,o:-3},res:'硬气但冒险，账上现金在快速消耗。'},
+   {t:'折中：要反稀释条款',ef:{vp:-2,m:4000,r:2},res:'各退一步，钱拿了，权利保住了大半。'}]},
+  {t:'抄袭风波',s:'竞品像素级抄袭你的核心功能，还先你一步上线。',o:[
+   {t:'起诉维权',ef:{m:-1200,r:4},res:'法律战旷日持久，但行业都站在你这边。'},
+   {t:'舆论战，公开对比',ef:{r:3,o:2},res:'全网吃瓜，热度有了，路人盘赚了一波。'},
+   {t:'加速迭代，用产品说话',ef:{o:4,vp:2},res:'你们的新版本领先一个身位，抄袭者追不上。'}]},
+  {t:'服务器宕机',s:'大促峰值流量冲垮了服务器，全线宕机四十分钟。',o:[
+   {t:'全员抢修并补偿用户',ef:{m:-800,r:-2,o:3},res:'补偿到位，骂声渐息，团队经此一役更团结。'},
+   {t:'冷处理',ef:{r:-5},res:'用户怒不可遏，竞品趁机截流。'},
+   {t:'借此宣传容灾升级',ef:{m:-1000,r:2,o:2},res:'把事故变成公关素材，宣布投入亿元级容灾架构。'}]},
+ ]},
+ {id:'luxury',name:'时尚奢品',en:'MAISON ÉLITE',tag:'以针线织梦，以品位传世',desc:'高定、联名、门店、大秀——格调是唯一的护城河，挑剔是必须的修养。',seed:8e6,events:[
+  {t:'高定发布会',s:'新一季高定系列发布在即：巴黎大秀、上海展厅、还是线上虚拟秀？',o:[
+   {t:'巴黎大秀',ef:{m:-2000,r:6,vp:4},res:'巴黎的灯光下，你成了时尚版面的常客。'},
+   {t:'上海限时展厅',ef:{m:-700,r:3},res:'国内名流到场，成交喜人，预算克制。'},
+   {t:'线上虚拟秀',ef:{m:-300,o:1},res:'省了钱，也省了存在感。'}]},
+  {t:'品牌联名',s:'街头潮牌递来橄榄枝：联名能引爆年轻市场，也可能稀释高奢调性。',o:[
+   {t:'限量联名',ef:{m:-600,r:4,vp:3},res:'发售当日售罄，二级市场炒出天价，年轻客群破圈。'},
+   {t:'婉拒，保持调性',ef:{r:2,o:2},res:'格调保住了，老客群安心了。'},
+   {t:'内部孵化副线',ef:{m:-1000,r:1,o:1},res:'新副线悄悄生长，不伤主品牌。'}]},
+  {t:'假货风波',s:'电商平台出现大量你家的假货，价格低到离谱。',o:[
+   {t:'起诉平台并溯源',ef:{m:-900,r:4},res:'雷霆手段，假货下架，正品形象更硬了。'},
+   {t:'发一份不痛不痒的声明',ef:{r:-5},res:'声明没人看，假货继续卖，品牌受损。'},
+   {t:'推出防伪芯片全线升级',ef:{m:-1200,r:3,vp:2},res:'每件正品都有身份证，科技感拉满。'}]},
+  {t:'门店选址',s:'顶级商圈核心铺位年租金 3000 万，隔壁就是你的最大对手。',o:[
+   {t:'签约核心铺位',ef:{m:-3000,vp:5,r:3},res:'与对手正面交锋，客流与格调双赢。'},
+   {t:'次核心铺位',ef:{m:-1500,r:1},res:'租金省一半，存在感也少一半。'},
+   {t:'先做快闪试水',ef:{m:-500,o:2},res:'小成本验证市场，数据说话。'}]},
+  {t:'设计师挖角',s:'首席设计师收到对手天价邀约，正在动摇。',o:[
+   {t:'加薪并给工作室自主权',ef:{m:-1500,o:6},res:'人留住了，创造力也放开了，下一季值得期待。'},
+   {t:'祝福放行',ef:{o:-4,r:-2},res:'放走灵魂人物，设计部人心浮动。'},
+   {t:'竞业限制',ef:{m:-300,o:-6},res:'人留下了，灵感枯竭了，两败俱伤。'}]},
+  {t:'会员私享会',s:'顶级 VIP 私享会筹备中：庄园晚宴、城中酒会，还是线上直播？',o:[
+   {t:'庄园私享会',ef:{m:-1200,r:5,vp:3},res:'贵客尽兴，当场敲定多笔大单。'},
+   {t:'城中精品酒会',ef:{m:-400,r:2},res:'小而美，成本可控，宾主尽欢。'},
+   {t:'线上直播秀',ef:{m:-150,o:1},res:'省钱了，但 VIP 们更喜欢被当面招待。'}]},
+ ]},
+];
+
+/* ================= state ================= */
+const defState={version:2,playerName:'董事长',playerGender:'unspecified',playerTitle:'董事长',secretaryId:null,secretaryName:'',secretaryAvatar:'',secretaryGender:'unspecified',traits:null,route:null,routeName:'',companyName:'',week:1,actions:5,money:1e7,valuation:5e7,reputation:55,morale:60,affection:5,candidates:[],eventPool:null,curEvent:null,usedEvents:[],inventory:[],gifted:[],chat:[],pendingRecruit:false,bankrupt:0,recorded:false,ended:false,flavor:'',ach:[],achievementsMeta:[],customPlans:[],stats:{goodHire:0,fraudPass:0,bidWin:0,jealous:0},history:[{w:0,v:5e7}],employees:[],hotSearch:null,hotSearchLog:[],teamBuildLog:[],publicPulseLog:[],brand:{fans:0,product:50,media:50},weeklyBriefs:[]};
+let state=null;
+let _chars=[];
+const SAVE_KEY='executive-diary-save-v2';
+const META_KEY='executive-diary-meta-v2';
+let meta=null;
+let achPromptBusy=false;
+function loadMeta(){
+  if(meta)return meta;
+  try{meta=JSON.parse(localStorage.getItem(META_KEY)||'null');}catch(e){meta=null;}
+  if(!meta)meta={achievementLog:[],runs:[],secretaryAvatar:null};
+  return meta;
+}
+function saveMeta(){try{localStorage.setItem(META_KEY,JSON.stringify(loadMeta()));}catch(e){}}
+function loadLocalSave(){try{return JSON.parse(localStorage.getItem(SAVE_KEY)||'null');}catch(e){return null;}}
+function saveLocalSave(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){}}
+function clearLocalTestData(){try{localStorage.removeItem(SAVE_KEY);localStorage.removeItem(META_KEY);}catch(e){}meta=null;state=null;showScreen('entry');closeModal();}
+function confirmClearData(){openSheet('<div class="micro">LOCAL ARCHIVE · TEST RESET</div><h3>清空本地测试数据？</h3><p class="dim" style="line-height:1.9;">这只会清除当前浏览器里的测试存档、历史成就、结局记录和头像缓存，不会影响发给其他用户的 HTML 文件。</p><div class="btn-row"><button class="btn danger" onclick="g.clearLocalTestData()">确认清空</button><button class="btn" onclick="g.closeModal()">取消</button></div>',true);}
+function save(){if(!API||!state)return;API.saveGame(state).catch(()=>{});}
+function persist(){save();saveLocalSave();}
+async function load(){if(API){try{return await API.loadGame();}catch(e){return loadLocalSave();}}return loadLocalSave();}
+function pushRunRecord(kind){
+  const m=loadMeta();
+  m.runs.unshift({when:Date.now(),kind,week:state.week,route:state.routeName,companyName:state.companyName||state.routeName,valuation:state.valuation,reputation:state.reputation,affection:state.affection,secretary:state.secretaryName,achievements:[...state.ach]});
+  m.runs=m.runs.slice(0,12);
+  saveMeta();
+}
+function awardAchievement(seed){
+  const m=loadMeta();
+  const key=seed.title+'|'+seed.desc;
+  if(m.achievementLog.some(x=>x.key===key))return false;
+  m.achievementLog.unshift({key,seed,at:Date.now()});
+  m.achievementLog=m.achievementLog.slice(0,80);
+  saveMeta();
+  return true;
+}
+async function generateAchievement(seedText){
+  const prompt=seedText||('当前局面：第'+state.week+'周，经营'+(state.companyName||state.routeName)+'集团，行业路线为'+state.routeName+'，估值'+fmtMoney(state.valuation)+'，声誉'+state.reputation+'，与'+state.secretaryName+'好感'+levelName(state.affection)+'。请生成一个中文游戏成就，俏皮但不油腻，非同质化。请严格输出JSON：{"title":"8字内标题","desc":"一句话说明","tone":"成就达成文案","icon":"star|heart|gem|clock|users|tower|flame|eye|chart"}');
+  try{
+    if(hasAPI&&state.secretaryId!=='demo'){
+      const pkg=await getPkg();
+      const r=await withTimeout(API.callLLM({characterId:state.secretaryId,messages:[...pkg.messages,{role:'system',content:'你正在为《总裁手记》生成成就文案。只输出 JSON，不要额外解释。'},{role:'user',content:prompt}]}),12000);
+      const parsed=parseJSON(r&&r.content);
+      if(parsed&&parsed.title&&parsed.desc)return parsed;
+    }
+  }catch(e){}
+  const fallback=[
+    {title:'眼光在线',desc:'把一份简历看出了真伪。',tone:'成就达成：眼光在线',icon:'eye'},
+    {title:'人情有价',desc:'把关系经营成了资产。',tone:'成就达成：人情有价',icon:'heart'},
+    {title:'周转高手',desc:'账面压力和你都没能压垮公司。',tone:'成就达成：周转高手',icon:'chart'},
+    {title:'礼数周全',desc:'送礼送到了点子上。',tone:'成就达成：礼数周全',icon:'gem'},
+    {title:'风声稳住',desc:'一场麻烦被你按回了桌面。',tone:'成就达成：风声稳住',icon:'flame'},
+    {title:'董事长的选择题',desc:'你把结果扛成了风格。',tone:'成就达成：董事长的选择题',icon:'tower'},
+  ];
+  return fallback[Math.floor(Math.random()*fallback.length)];
+}
+function renderAchievementSummary(){
+  const box=$('#achievementSummary');
+  if(!box)return;
+  const m=loadMeta();
+  let h='';
+  if(!m.achievementLog.length){
+    h='<div class="card dark"><p class="faint tiny">还没有解锁成就。</p></div>';
+  }else{
+    h+='<div class="item-grid">';
+    m.achievementLog.slice(0,6).forEach(a=>{h+='<div class="item"><div class="nm">'+esc(a.seed.title)+'</div><div class="en">'+esc(a.seed.tone||'ACHIEVEMENT')+'</div><div class="ds">'+esc(a.seed.desc)+'</div></div>';});
+    h+='</div>';
+  }
+  box.innerHTML=h;
+}
+async function syncAchievementForCurrentRun(kind){
+  if(achPromptBusy)return;
+  achPromptBusy=true;
+  try{
+    const seed=await generateAchievement('当前局面：'+kind+' · 第'+state.week+'周。请生成一个俏皮、独特的成就文案。');
+    if(awardAchievement(seed)){
+      state.achievementsMeta=state.achievementsMeta||[];
+      state.achievementsMeta.unshift({kind,seed,at:Date.now()});
+      state.achievementsMeta=state.achievementsMeta.slice(0,80);
+      saveLocalSave();
+    }
+  }finally{achPromptBusy=false;}
+}
+async function maybeRandomAchievement(trigger){
+  if(!state||!state.route||state.ended)return;
+  state.achievementsMeta=state.achievementsMeta||[];
+  const last=state.lastRandomAchievementWeek||0;
+  if(state.week===last)return;
+  const chance=0.18+Math.min(0.12,(state.week||1)*0.01);
+  if(Math.random()>chance)return;
+  state.lastRandomAchievementWeek=state.week;
+  const seed=await generateAchievement('随机触发成就。触发点：'+trigger+'。当前公司：'+apiContext()+'。请生成一个像彩蛋一样的非同质化隐藏成就，必须和刚才的行动或当前经营状态有关，不要写成开局成就，不要默认玩家性别。');
+  if(awardAchievement(seed)){
+    state.achievementsMeta.unshift({kind:'random:'+trigger,seed,at:Date.now()});
+    state.achievementsMeta=state.achievementsMeta.slice(0,80);
+    saveLocalSave();renderAchievementSummary();toast(seed.tone||('隐藏成就 · '+seed.title));
+  }
+}
+function nextWeek(){if(state.actions>0){toast('先把本周行动点用完，才能进入下一周。',true);return;}settleWeek();}
+function applySecretaryAvatarPreview(src){state.secretaryAvatar=src||'';loadMeta().secretaryAvatar=src||'';saveMeta();renderSec();renderRecruit();renderAll();saveLocalSave();}
+function loadMetaSecretaryAvatar(){const m=loadMeta();return m.secretaryAvatar||'';}
+
+function levelName(a){if(a>=90)return'独占';if(a>=75)return'倾心';if(a>=55)return'心动';if(a>=35)return'信赖';if(a>=15)return'熟稔';return'陌生';}
+function routeObj(){return ROUTES.find(r=>r.id===state.route)||ROUTES[0];}
+
+/* ================= boot ================= */
+async function boot(){
+  await new Promise(r=>setTimeout(r,1300));
+  if(hasAPI){try{withTimeout(API.setTitleBar({material:'glass',background:'rgba(7,9,13,.62)',color:'#e9e3d5',borderColor:'rgba(200,169,106,.16)',buttonBackground:'rgba(200,169,106,.12)',buttonColor:'#e9e3d5',buttonBorderColor:'rgba(200,169,106,.3)',buttonRadius:'999px',buttonShadow:'0 8px 24px rgba(0,0,0,.35)',iconOpacity:1}) ,4000).catch(()=>{});}catch(e){}}
+  const sv=await withTimeout(load(),4000).catch(function(){return null;});
+  if(sv&&(sv.version===1||sv.version===2)&&sv.route&&!sv.ended){
+    state=Object.assign({},JSON.parse(JSON.stringify(defState)),sv,{version:2});
+    state.actions=Math.max(0,sv.actions);
+    state.employees=Array.isArray(state.employees)?state.employees:[];
+    state.brand=state.brand||{fans:0,product:50,media:50};
+    state.hotSearchLog=state.hotSearchLog||[];state.teamBuildLog=state.teamBuildLog||[];state.publicPulseLog=state.publicPulseLog||[];state.companyName=state.companyName||state.routeName||'';
+    checkAch();
+    if(!state.secretaryAvatar)state.secretaryAvatar=loadMetaSecretaryAvatar();
+    showHub(true);
+    return;
+  }
+  state=JSON.parse(JSON.stringify(defState));
+  state.secretaryAvatar=loadMetaSecretaryAvatar();
+  if(hasAPI){try{const p=await withTimeout(API.getPlayerProfile(),4000);if(p&&p.name)state.playerName=p.name;if(p&&((p.gender||p.sex||p.pronoun)))state.playerGender=String(p.gender||p.sex||p.pronoun).toLowerCase();}catch(e){}}
+  $('#entryName').textContent=state.playerName;
+  const pg=$('#playerGender');if(pg)pg.value=['female','male','nonbinary'].includes(state.playerGender)?state.playerGender:'unspecified';
+  const pt=$('#playerTitle');if(pt)pt.value=state.playerTitle||'董事长';const cn=$('#companyNameInput');if(cn)cn.value=state.companyName||'';
+  showScreen('entry');
+}
+
+/* ================= secretary ================= */
+async function goSelect(){
+  showScreen('secretary');
+  const box=$('#secList');
+  box.innerHTML='<div class="load-note">正在调取您可选的秘书人选…</div>';
+  let chars=[];
+  if(hasAPI){try{chars=await withTimeout(API.listAvailableCharacters(),4000);}catch(e){}}
+  if(!chars.length){chars=[DEMO_SECRETARY];}
+  _chars=chars;
+  box.innerHTML='';
+  chars.forEach((c,i)=>{
+    const av=c.avatar
+      ?'<div class="avatar" style="background-image:url(\''+esc(c.avatar)+'\')"></div>'
+      :'<div class="avatar">'+esc((c.name||'秘').slice(0,1))+'</div>';
+    box.insertAdjacentHTML('beforeend',
+      '<div class="sel-card" onclick="g.pickSec('+i+')">'+av+
+      '<div style="flex:1;min-width:0;"><div class="h3">'+esc(c.name)+'</div>'+
+      '<div class="faint tiny" style="margin-top:4px;letter-spacing:.05em;">'+esc(c.subtitle||'总秘书')+'</div></div>'+
+      '<div class="micro">选任</div></div>');
+  });
+  if(!hasAPI||chars.length===1&&chars[0].id==='demo'){
+    box.insertAdjacentHTML('beforeend','<p class="faint tiny" style="text-align:center;margin-top:10px;line-height:1.8;">当前为演示模式：未检测到 AiPhoneGame 宿主。<br>接入小手机后将读取您的真实角色列表。</p>');
+  }
+}
+function pickSec(i){
+  const c=_chars[i];
+  state.secretaryId=c.id;state.secretaryName=c.name;state.secretaryAvatar=c.avatar||'';state.secretaryGender=normalizeGender(c.gender||c.sex||c.pronoun)||'unspecified';
+  showScreen('assess');
+  const av=c.avatar?'<div class="avatar lg" style="background-image:url(\''+esc(c.avatar)+'\')"></div>':'<div class="avatar lg">'+esc((c.name||'秘').slice(0,1))+'</div>';
+  $('#assessAvatar').outerHTML=av;
+  $('#assessName').textContent=c.name;
+  assessTraits();
+}
+function defaultTraits(){return{gender:state.secretaryGender||'unspecified',insight:6,reliable:6,possessive:5,dominant:5,emotional:5,tags:['干练'],selfIntro:'尽力而为。'};}
+async function assessTraits(){
+  let t=null;
+  if(hasAPI&&state.secretaryId!=='demo'){
+    try{
+      const pkg=await getPkg();
+      if(!state.secretaryGender||state.secretaryGender==='unspecified'){state.secretaryGender=normalizeGender(pkg.gender||pkg.sex||pkg.pronoun)||inferGenderFromText(JSON.stringify(pkg));}
+      const sys='你正在为游戏《总裁手记》建立'+state.secretaryName+'的人物档案。必须读取并依据该角色的人物卡、设定、过往对话风格、身份背景、性格标签来推导能力值，不能平均给分，不能按通用秘书模板给分。以第一人称只输出一个 JSON 对象（不要输出其他内容）：\n{"gender":"female/male/nonbinary/unspecified，必须按角色卡判断","insight":0到10的整数,"reliable":0到10的整数,"possessive":0到10的整数,"dominant":0到10的整数,"emotional":0到10的整数,"tags":["2到4个来自角色设定的性格关键词"],"selfIntro":"一句符合角色人设的自我评价","basis":"一句话说明这些能力值依据了角色卡里的哪些设定"}\n含义：insight=识人辨伪的洞察力；reliable=给董事长建议时的可靠程度；possessive=对董事长的占有欲与醋意；dominant=强势程度；emotional=情绪化程度。数值要拉开差异，贴合角色设定；允许有明显短板，禁止都给高分；gender 必须依据角色卡，不确定则 unspecified。'+secretaryGenderContext();
+      const r=await API.callLLM({characterId:state.secretaryId,messages:[...pkg.messages,{role:'system',content:sys},{role:'user',content:'请输出你的性格参数 JSON。'}]});
+      t=parseJSON(r&&r.content);
+    }catch(e){}
+  }
+  if(!t)t=(state.secretaryId==='demo')?{gender:'female',insight:8,reliable:7,possessive:6,dominant:4,emotional:6,tags:['干练','敏锐','外冷内热'],selfIntro:'我习惯把事情做在前面。'}:defaultTraits();
+  if(t.gender)state.secretaryGender=normalizeGender(t.gender)||state.secretaryGender||'unspecified';
+  t.insight=clamp(parseInt(t.insight)||6,1,10);
+  t.reliable=clamp(parseInt(t.reliable)||6,1,10);
+  t.possessive=clamp(parseInt(t.possessive)||5,1,10);
+  t.dominant=clamp(parseInt(t.dominant)||5,1,10);
+  t.emotional=clamp(parseInt(t.emotional)||5,1,10);
+  if(!Array.isArray(t.tags)||!t.tags.length)t.tags=['干练'];
+  if(!t.basis)t.basis='依据角色卡与对话风格生成。';
+  state.traits=t;
+  persist();
+  await new Promise(r=>setTimeout(r,700));
+  renderRoutes();
+  showScreen('route');
+}
+
+/* ================= route ================= */
+function renderRoutes(){
+  const box=$('#routeList');box.innerHTML='';
+  ROUTES.forEach((r,i)=>{
+    box.insertAdjacentHTML('beforeend',
+      '<div class="route-card" onclick="g.pickRoute('+i+')">'+
+      '<div class="seed">启动资金 ¥'+fmtMoney(r.seed)+'</div>'+
+      '<div class="en">'+r.en+'</div>'+
+      '<div class="nm">'+r.name+'</div>'+
+      '<div class="tg">'+r.tag+'</div>'+
+      '<div class="ds">'+r.desc+'</div></div>');
+  });
+}
+async function pickRoute(i){
+  const r=ROUTES[i];
+  state.route=r.id;state.routeName=r.name;const cn=$('#companyNameInput');const customName=(cn&&cn.value||'').trim();state.companyName=customName||r.name;state.money=r.seed;
+  state.eventPool=shuffle(r.events);
+  state.curEvent=null;
+  state.flavor=pick(FLAVOR);
+  persist();
+  showHub(false);
+  ensureOpsEvent('新公司成立后的第一周经营议题').catch(()=>{});
+  openSheet(
+    '<div class="micro">COMPANY FOUNDED</div>'+
+    '<div class="orn"><span class="d"></span></div>'+
+    '<div class="h2">'+esc(state.companyName)+'集团 · 正式成立</div>'+
+    '<p class="dim" style="margin-top:12px;line-height:2;font-size:13.5px;">'+r.tag+'</p>'+
+    '<div class="bubble"><div class="who">'+esc(state.secretaryName)+' · 总秘书</div>「'+esc(state.secretaryName)+'已就位。从今天起，您的日程、您的决策、您的名声，我都替您记着。祝您，执掌风云。」</div>'+
+    '<p class="faint tiny" style="line-height:1.9;">每周 5 个行动点：经营议题、拆阅简历、拍卖应酬、闲暇时光。<br>行动点耗尽即进入周结算。</p>'+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal()">开始履职</button>','center');
+}
+
+/* ================= hub ================= */
+function showHub(resume){
+  showScreen('hub');
+  if(resume){renderAll();toast('欢迎回来，'+state.playerName);}
+  else {renderAll();}
+}
+function tab(id){$('#panel-ops').classList.toggle('on',id==='ops');$('#panel-recruit').classList.toggle('on',id==='recruit');$('#panel-life').classList.toggle('on',id==='life');$('#panel-sec').classList.toggle('on',id==='sec');$('#panel-corp').classList.toggle('on',id==='corp');document.querySelectorAll('.nav button').forEach((b,i)=>b.classList.toggle('on',['ops','recruit','life','sec','corp'][i]===id));}
+function renderAll(){renderTop();renderOps();renderRecruit();renderLife();renderSec();renderCorp();}
+function renderTop(){
+  $('#stMoney').textContent='¥'+fmtMoney(state.money);
+  $('#stVal').textContent=fmtMoney(state.valuation);
+  $('#stRep').textContent=state.reputation;
+  $('#stAff').textContent=levelName(state.affection);
+  $('#stWeek').textContent='第 '+state.week+' 周';
+  $('#stDots').innerHTML='';for(let i=0;i<5;i++)$('#stDots').insertAdjacentHTML('beforeend','<i class="'+(i<state.actions?'on':'')+'"></i>');
+  $('#stFlavor').textContent=state.flavor||'';
+  const repEl=$('#stRep');repEl.className='v'+(state.reputation>=70?' gold':state.reputation<=30?' red':'');
+  const affEl=$('#stAff');affEl.className='v jade';
+  const quick=$('#quickActions');
+  if(quick){quick.innerHTML='<button class="btn small ghost" onclick="g.manualSave()">保存</button><button class="btn small primary" '+(state.actions>0?'disabled':'')+' onclick="g.nextWeek()">下一周</button>'; }
+}
+function manualSave(){persist();toast('存档已保存');}
+
+/* ---------- ops ---------- */
+function normalizeOpsEvent(x){
+  if(!x||!x.t||!x.s||!Array.isArray(x.o)||x.o.length<2)return null;
+  x.t=String(x.t).slice(0,34);
+  x.s=String(x.s).slice(0,220);
+  x.o=x.o.slice(0,3).map((o,i)=>{
+    const ef=o.ef||{};
+    return {t:String(o.t||('方案 '+(i+1))).slice(0,34),res:String(o.res||'方案推进完毕，董事会开始记录影响。').slice(0,220),ef:{m:+ef.m||0,vp:+ef.vp||0,r:+ef.r||0,o:+ef.o||0,a:+ef.a||0,fans:+ef.fans||0,product:+ef.product||0,media:+ef.media||0}};
+  });
+  x.dynamic=true;x.id='dyn'+Date.now()+Math.random().toString(16).slice(2);return x;
+}
+function fallbackOpsEvent(){
+  const rt=routeObj();
+  if(!state.eventPool||!state.eventPool.length){state.eventPool=shuffle(rt.events);state.usedEvents=[];}
+  return state.eventPool.shift()||pick(rt.events)||null;
+}
+async function generateOpsEvent(reason){
+  if(hasAPI){try{
+    const prompt='请为经营小游戏《总裁手记》生成一个全新的本周经营议题，不能照搬模板，不能每次一样。主题要贴合'+(state.companyName||state.routeName)+'集团当前阶段，行业路线为'+state.routeName+'，可以涉及产品、融资、供应链、管理、客户、竞争对手、合规、舆论或员工问题。不要默认玩家性别。当前状态：'+apiContext()+'；生成原因：'+reason+'。严格输出JSON：{"t":"议题标题","s":"董事会看到的情况，2-3句，具体生动","o":[{"t":"选项文字","res":"选择后的具体结果，2句","ef":{"m":资金变化数字单位元,"vp":估值百分比变化整数,"r":声誉变化整数,"o":士气变化整数,"a":秘书好感变化整数,"fans":品牌粉丝万变化整数,"product":产品口碑变化整数,"media":媒体关系变化整数}},{...},{...}]}。三个选项必须风格不同，影响可正可负，数值要合理。';
+    const r=await callGlobal([{role:'system',content:'你是商业经营游戏的事件生成器。只输出JSON，不要解释。内容必须非同质化、具体、可决策。'},{role:'user',content:prompt}]);
+    const ev=normalizeOpsEvent(parseJSON(r));if(ev)return ev;
+  }catch(e){}}
+  return fallbackOpsEvent();
+}
+async function ensureOpsEvent(reason){
+  if(state.curEvent)return state.curEvent;
+  showLoading('董事会正在整理新议题…');
+  state.curEvent=await generateOpsEvent(reason||'进入经营页');
+  hideLoading();persist();renderOps();return state.curEvent;
+}
+function renderOps(){
+  const box=$('#panel-ops');
+  const ev=state.curEvent;
+  if(!ev){
+    box.innerHTML='<div class="micro">THIS WEEK · 本周议题</div><div class="orn"><span class="d"></span></div>'+
+      '<div class="card dark" style="text-align:center;padding:34px 18px;"><div class="h3 dim">暂无待议议题</div>'+
+      '<p class="faint tiny" style="margin-top:10px;line-height:1.9;">新议题将于下周董事会例会提出。<br>您可以在「招聘 / 生活」中安排本周行程。</p>'+
+      '<div class="btn-row" style="justify-content:center;margin-top:16px;"><button class="btn primary" '+(state.actions>0?'':'disabled')+' onclick="g.ensureOpsEvent(\'手动刷新经营议题\')">生成新议题</button><button class="btn ghost" '+(state.actions>0?'disabled':'')+' onclick="g.nextWeek()">进入下一周</button></div></div>';
+    return;
+  }
+  let h='<div class="micro">THIS WEEK · 本周议题</div><div class="orn"><span class="d"></span></div>';
+  h+='<div class="card glow"><div class="h2">'+esc(ev.t)+'</div>'+
+     '<p class="dim" style="margin-top:10px;line-height:1.9;font-size:13px;">'+esc(ev.s)+'</p>';
+  if(ev.advice){h+='<div class="bubble'+(ev.adviceDark?' dark':'')+'"><div class="who">'+esc(state.secretaryName)+' · 垂询意见</div>'+esc(ev.advice)+'</div>';}
+  h+='<div class="btn-row" style="margin:14px 0 4px;"><button class="btn ghost small" '+(ev.advice?'disabled':'')+' onclick="g.adviceEvent()">'+(ev.advice?'已听取意见':'垂询秘书意见')+'</button></div></div>';
+  h+='<div class="micro" style="margin:6px 0 10px;">YOUR DECISION · 您的决断</div>';
+  ev.o.forEach((o,idx)=>{
+    h+='<button class="opt" onclick="g.resolveEvent('+idx+')"><span class="tag">选项 '+(idx+1)+'</span>'+esc(o.t)+'</button>';
+  });
+  box.innerHTML=h;
+}
+async function adviceEvent(){
+  const ev=state.curEvent;if(!ev||ev.advice)return;
+  showLoading(state.secretaryName+'正在分析局面…');
+  let txt='';
+  const rt=routeObj();
+  const opts=ev.o.map((o,i)=>'选项'+(i+1)+'：'+o.t).join('；');
+  const userMsg='【本周议题】'+ev.t+'\n'+ev.s+'\n\n可供选择的方案：'+opts+'\n\n请以总秘书身份，用 2-4 句话给出建议：先表态倾向哪个方案，再说明理由（可从公司现金流、声誉、士气与风险角度）。不要提及这是游戏。'+secretaryGenderContext();
+  const sys='你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'在'+(state.companyName||state.routeName)+'集团的总秘书。你的性格档案：洞察力'+state.traits.insight+'/10，建议可靠度'+state.traits.reliable+'/10，强势度'+state.traits.dominant+'/10。请严格按角色性格发言：可靠度高则分析缜密、直击要害；可靠度低则可能轻率、过度自信或人云亦云。用中文，口语化。';
+  try{txt=await callChar(userMsg,sys);}catch(e){}
+  if(!txt)txt='「按公司目前的处境，我建议您三思而后行。风险与回报，往往成正比。」';
+  ev.advice=txt;
+  hideLoading();
+  renderOps();persist();
+}
+function resolveEvent(idx){
+  const ev=state.curEvent;if(!ev)return;
+  const o=ev.o[idx];
+  let ef=o.ef,res=o.res;
+  if(o.chance){
+    const win=Math.random()<o.chance;
+    ef=win?o.good:o.bad;res=win?o.resG:o.resB;
+  }
+  applyEffects(ef);
+  state.actions--;
+  state.usedEvents.push(ev);
+  state.curEvent=null;
+  persist();
+  openSheet('<div class="micro">DECISION MADE · 已决</div><div class="orn"><span class="d"></span></div>'+
+    '<div class="h2">'+esc(ev.t)+'</div>'+
+    '<p class="dim" style="margin-top:12px;line-height:1.9;font-size:13px;">'+esc(res)+'</p>'+
+    effChips(ef)+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal();g.afterAction()">继续</button>');
+}
+function applyEffects(ef){
+  if(ef.m)state.money+=ef.m;
+  if(ef.vp)state.valuation=Math.max(1e6,Math.round(state.valuation*(1+ef.vp/100)));
+  if(ef.r)state.reputation=clamp(state.reputation+ef.r,0,100);
+  if(ef.o)state.morale=clamp(state.morale+ef.o,0,100);
+  if(ef.a)state.affection=clamp(state.affection+ef.a,0,100);
+  if(ef.fans){state.brand=state.brand||{fans:0,product:50,media:50};state.brand.fans=clamp((state.brand.fans||0)+ef.fans,0,999);}
+  if(ef.product){state.brand=state.brand||{fans:0,product:50,media:50};state.brand.product=clamp((state.brand.product||50)+ef.product,0,100);}
+  if(ef.media){state.brand=state.brand||{fans:0,product:50,media:50};state.brand.media=clamp((state.brand.media||50)+ef.media,0,100);}
+  checkAch();
+}
+function apiContext(){return '公司：'+(state.companyName||state.routeName)+'集团；行业路线：'+state.routeName+'；第'+state.week+'周；资金'+fmtMoney(state.money)+'；估值'+fmtMoney(state.valuation)+'；声誉'+state.reputation+'；士气'+state.morale+'；秘书'+state.secretaryName+'；员工数'+((state.employees||[]).length)+'；品牌粉丝'+((state.brand&&state.brand.fans)||0)+'万。';}
+async function generateScene(kind,input,fallback){
+  if(hasAPI){try{const prompt='你是《总裁手记》的经营叙事系统。请根据上下文生成生动、非模板化、适合内置HTML面板展示的中文内容。不要默认玩家性别。严格输出JSON：{"title":"短标题","body":"2-4句具体过程，不能空泛","secretary":"秘书的一句点评，贴合场景","posts":["热搜/员工/网友短评1","短评2","短评3"],"headline":"一句像新闻标题的话"}。上下文：'+apiContext()+'；场景类型：'+kind+'；输入：'+JSON.stringify(input);const r=await callGlobal([{role:'system',content:'只输出JSON，不要解释。文风俏皮、具体、有经营感，避免固定句式。'},{role:'user',content:prompt}]);const data=parseJSON(r);if(data&&data.title&&data.body)return data;}catch(e){}}
+  return fallback;
+}
+function sceneHTML(kind,data,ef){
+  const posts=Array.isArray(data.posts)?data.posts.slice(0,3):[];
+  let h='<div class="micro">'+esc(kind)+' · 动态简报</div><div class="orn"><span class="d"></span></div><div class="h2">'+esc(data.title||data.headline||'经营动态')+'</div><p class="dim" style="margin-top:12px;line-height:1.9;font-size:13px;">'+esc(data.body||'事情推进完毕。')+'</p>';
+  if(posts.length){h+='<div class="press-shot">';posts.forEach((p,i)=>{h+='<div class="post"><div class="user">@'+['财经显微镜','公司茶水间','路过的投资人'][i]+'</div><div class="tiny" style="line-height:1.7;">'+esc(p)+'</div></div>';});h+='</div>';}
+  h+=effChips(ef)+'<div class="bubble"><div class="who">'+esc(state.secretaryName)+' · 即时备注</div>'+esc(data.secretary||'「我已经记入本周简报。」')+'</div>';
+  return h;
+}
+
+/* ---------- recruit ---------- */
+function renderRecruit(){
+  const box=$('#panel-recruit');
+  let h='<div class="micro">RECRUITMENT · 人事部</div><div class="orn"><span class="d"></span></div>';
+  const cand=state.candidates.find(c=>!c.done);
+  if(cand){h+=renderCandidate(cand);}
+  else{
+    h+='<div class="card dark" style="text-align:center;padding:30px 18px;">'+
+       '<div class="h3">本周招聘由您决定</div>'+
+       '<p class="faint tiny" style="margin-top:10px;line-height:1.9;">您可以在任何有行动点的周期主动发起招聘。简历由 AI 实时生成，内容因人而异；拆阅需消耗 1 个行动点。</p>'+
+       '<button class="btn primary" style="margin-top:16px;" onclick="g.openRecruit()">发起招聘 · 生成简历</button></div>';
+  }
+  box.innerHTML=h;
+}
+function renderCandidate(c){
+  let h='<div class="card glow">';
+  h+='<div class="micro" style="margin-bottom:8px;">RECRUITMENT DOSSIER · 招聘档案</div>';
+  h+='<div class="resume-paper">';
+  h+='<div class="resume-head"><div><div class="resume-name">'+esc(c.name)+'</div><div class="resume-meta">应聘职位 · '+esc(c.position)+'</div></div><div style="text-align:right"><div class="resume-meta">'+esc(c.gender)+' · '+c.age+' 岁</div><div class="resume-meta">期望月薪 ¥'+c.salary+'万</div></div></div>';
+  h+='<div class="resume-section">PROFILE · 基本资料</div><div class="resume-meta">教育背景：'+esc(c.school)+'<br>工作经验：'+esc(c.years)+'<br>档案编号：ED-'+String(c.id||'').slice(-6)+'</div>';
+  h+='<div class="resume-section">CAREER HIGHLIGHTS · 经历摘要</div>';
+  c.resume.forEach((r,i)=>{const doubt=c.mark&&c.mark.includes(i);h+='<div class="resume-line"><span class="no">'+String(i+1).padStart(2,'0')+'</span><span class="txt'+(doubt?' doubt':'')+'">'+esc(r.line)+(doubt?'<span class="chip red" style="margin-left:8px;">存疑</span>':'')+'</span></div>';});
+  h+='<details><summary>面试实录 · INTERVIEW TRANSCRIPT</summary><div class="inner">';
+  c.interview.forEach(qa=>{h+='<div class="qa"><div class="q">Q · '+esc(qa.q)+'</div><div class="a">A · '+esc(qa.a)+'</div></div>';});
+  h+='</div></details></div>';
+  if(c.advice){h+='<div class="bubble"><div class="who">'+esc(state.secretaryName)+' · 秘书点评</div>'+esc(c.advice)+'</div>';}
+  if(c.testScore!=null){h+='<div class="verdict '+(c.testScore>=60?'good':'bad')+'" style="margin-top:10px;"><div class="vd">专业测评</div>核心技能实测得分：'+c.testScore+' / 100'+(c.testScore>=60?'　——与简历基本相符':'　——与简历差距明显')+'</div>';}
+  if(c.investNote){h+='<div class="verdict '+(c.investNote.bad?'bad':'good')+'" style="margin-top:10px;"><div class="vd">背景调查</div>'+esc(c.investNote.txt)+'</div>';}
+  h+='<div class="btn-row" style="margin-top:14px;"><button class="btn ghost small" '+(c.advice?'disabled':'')+' onclick="g.adviceCandidate()">'+(c.advice?'已点评':'秘书点评')+'</button><button class="btn ghost small" '+(state.money<80?'disabled':'')+' onclick="g.investCandidate()">背景调查 ¥80万</button><button class="btn ghost small" '+(state.money<50?'disabled':'')+' onclick="g.testCandidate()">能力测评 ¥50万</button></div>';
+  h+='<div class="micro" style="text-align:center;margin-top:18px;">FINAL DECISION · 请盖章归档</div><div class="stamp-row">'+
+    '<button class="stamp-btn hire" onclick="g.confirmCandidateDecision(true)">录用<small>APPROVED · HIRE</small></button>'+
+    '<button class="stamp-btn pass" onclick="g.confirmCandidateDecision(false)">不通过<small>REJECTED · PASS</small></button></div>';
+  h+='</div>';return h;
+}
+function confirmCandidateDecision(hire){
+  const c=state.candidates.find(x=>!x.done);if(!c)return;
+  const action=hire?'录用':'不通过';
+  const color=hire?'#6d9e83':'#bf6b62';
+  const m=$('#modal'),sht=$('#sheet');
+  sht.innerHTML='<button class="x" onclick="g.closeModal()">×</button><div class="stamp-confirm"><div class="inner"><div class="micro">FINAL DECISION · 最终确认</div><div class="h2" style="margin-top:12px;">确定给 '+esc(c.name)+' 盖上「'+action+'」章？</div><p class="dim tiny" style="margin-top:10px;line-height:1.8;">盖章后将归档本次招聘决定，并结算这次用人结果。</p><button class="stamp-btn '+(hire?'hire':'pass')+'" style="margin-top:16px;color:'+color+';width:100%;" onclick="g.decideCandidate('+hire+');g.closeModal()">'+action+'<small>CONFIRM STAMP</small></button><button class="btn ghost small" style="margin-top:12px;" onclick="g.closeModal()">再看一眼</button></div></div>';
+  m.classList.add('show');
+}
+
+async function openRecruit(){
+  if(state.candidates.some(c=>!c.done)){toast('当前已有一位候选人待处理','warn');return;}
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  state.actions--;
+  state.pendingRecruit=false;
+  showLoading('正在筛选简历、安排面试…');
+  let c=null;
+  if(hasAPI){
+    try{
+      const rt=routeObj();
+      const sys='你是《总裁手记》游戏的招聘系统。请为一家名为「'+(state.companyName||state.routeName)+'集团」、行业路线为「'+state.routeName+'」的公司生成一位求职者，输出严格 JSON（不要输出其他内容）：\n{"name":"姓名","gender":"男或女","age":25到40的整数,"position":"应聘职位","school":"院校与学位","years":"工作年限","salary":月薪万数,"resume":[{"line":"简历要点1"},共5条],"interview":[{"q":"面试官提问","a":"候选人回答"},共3组],"truth":{"verdict":"good或fraud","actual":"真实能力简述","flags":[被夸大或造假简历条目的下标，从0开始；完全属实则为空数组]}}\n要求：1) 职位与'+state.routeName+'行业强相关；2) 简历与面试要精心设计——编造者回答模糊、数字含糊、回避细节；真实人才回答具体、有细节、经得起追问；3) truth 是隐藏信息，不要出现在可见字段里；4) 内容具体多样化，避免模板化；5) 只输出 JSON。';
+      const r=await callGlobal([{role:'system',content:sys},{role:'user',content:'请生成一位求职者。'}]);
+      c=parseJSON(r);
+      if(c&&(!c.name||!Array.isArray(c.resume)||!Array.isArray(c.interview)||!c.truth))c=null;
+    }catch(e){}
+  }
+  if(!c){c=JSON.parse(JSON.stringify(pick(DEMO_CANDIDATES)));if(hasAPI)toast('模型调用失败，已使用本地候选人');}
+  c.id='c'+Date.now();c.gender=normalizeGender(c.gender)==='female'?'女':normalizeGender(c.gender)==='male'?'男':(c.gender||'未说明');c.done=false;c.mark=[];c.advice='';c.testScore=null;c.investNote=null;
+  state.candidates.push(c);
+  persist();
+  hideLoading();
+  renderRecruit();renderTop();persist();
+}
+async function adviceCandidate(){
+  const c=state.candidates.find(x=>!x.done);if(!c||c.advice)return;
+  showLoading(state.secretaryName+'正在翻阅简历…');
+  let txt='';
+  const res=c.resume.map((r,i)=>(i+1)+'. '+r.line).join('\n');
+  const iv=c.interview.map(q=>'问：'+q.q+'\n答：'+q.a).join('\n');
+  const sys='你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'的总秘书。你的性格档案：洞察力'+state.traits.insight+'/10，建议可靠度'+state.traits.reliable+'/10。请给出招聘意见（2-4句）：先给结论（强烈推荐 / 建议录用 / 存疑 / 建议婉拒），再说明理由。若你洞察力高，请明确指出简历中具体可疑之处；若洞察力不高，按你的性格自然发挥——你可能被光鲜履历打动，也可能过度谨慎而错过人才。不要提及这是游戏。'+secretaryGenderContext()+' '+personGenderContext(c.name,c.gender,'求职者');
+  try{txt=await callChar('【求职者：'+c.name+' · '+(c.gender||'未说明')+'】\n【求职者简历】\n'+res+'\n【面试实录】\n'+iv+'\n请给出你的意见。',sys);}catch(e){}
+  if(!txt){txt=c.truth.verdict==='good'?'「简历与面试表现基本一致，专业细节扎实。以我之见，值得一试。」':'「这位的履历漂亮得有些过头——数字经不起推敲，回答也在回避细节。建议慎重。」';}
+  c.advice=txt;
+  // 依据洞察力标注简历
+  c.mark=[];
+  const flags=c.truth.flags||[];
+  if(state.traits.insight>=7&&flags.length){c.mark=shuffle(flags).slice(0,state.traits.insight>=9?2:1);}
+  else if(state.traits.insight<=4&&flags.length<c.resume.length){
+    const safe=[];c.resume.forEach((_,i)=>{if(!flags.includes(i))safe.push(i);});
+    if(safe.length)c.mark=[pick(safe)];
+  }
+  hideLoading();
+  renderRecruit();persist();
+}
+function investCandidate(){
+  const c=state.candidates.find(x=>!x.done);if(!c||c.investNote)return;
+  if(state.money<80){toast('资金不足','warn');return;}
+  state.money-=80;
+  const flags=c.truth.flags||[];
+  let txt,bad=false;
+  if(flags.length){
+    bad=true;
+    const i=flags[0];
+    txt='经查证，简历第 '+(i+1)+' 条「'+c.resume[i].line+'」与事实出入较大，疑点确凿。';
+  }else{txt='背调未发现明显异常，履历主体与事实相符。';}
+  c.investNote={txt,bad};
+  persist();renderRecruit();renderTop();
+}
+function testCandidate(){
+  const c=state.candidates.find(x=>!x.done);if(!c||c.testScore!=null)return;
+  if(state.money<50){toast('资金不足','warn');return;}
+  state.money-=50;
+  c.testScore=c.truth.verdict==='good'?rnd(78,95):rnd(18,45);
+  persist();renderRecruit();renderTop();
+}
+async function decideCandidate(hire){
+  const c=state.candidates.find(x=>!x.done);if(!c)return;
+  c.done=true;
+  let ef={},verdict,vdCls,react='';
+  if(hire&&c.truth.verdict==='good'){
+    ef={m:-c.salary*2,o:6,r:3,vp:3};verdict='真才实学 · 慧眼识珠';vdCls='good';
+    state.stats.goodHire++;
+    state.employees=state.employees||[];state.employees.push(employeeProfile(c));
+    react='「眼光不错。这位,值得留在您身边。」';
+  }else if(hire&&c.truth.verdict==='fraud'){
+    ef={m:-c.salary,o:-8,r:-4,vp:-4};verdict='名不副实 · 引狼入室';vdCls='bad';
+    react='「……是我疏忽了。下一次，我会替您把好第一道关。」';
+  }else if(!hire&&c.truth.verdict==='good'){
+    ef={o:-2,r:-1};verdict='明珠蒙尘 · 错失良才';vdCls='bad';
+    react='「那位其实不错……不过既然是您的决定，我照办。」';
+  }else{
+    ef={r:2,o:1,a:1};verdict='火眼金睛 · 识破伪装';vdCls='good';
+    state.stats.fraudPass++;
+    react='「果然瞒不过您。这类人，趁早拒之门外为好。」';
+  }
+  applyEffects(ef);
+  state.pendingRecruit=false;
+  persist();
+  // 秘书反应（关键节点调用一次角色）
+  if(hire||(!hire&&c.truth.verdict==='fraud')){
+    try{
+      const sys='你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'的总秘书，性格：'+state.traits.tags.join('、')+'。请针对刚才的招聘结果说一句符合人设的短评（不超过40字），不要提及这是游戏。'+secretaryGenderContext()+' '+personGenderContext(c.name,c.gender,'求职者');
+      const r=await callChar('求职者「'+c.name+'」（性别：'+(c.gender||'未说明')+'），董事长决定：'+(hire?'录用':'婉拒')+'。真相是：'+c.truth.actual, sys);
+      if(r)react=r;
+    }catch(e){}
+  }
+  openSheet('<div class="micro">VERDICT · 真相揭晓</div><div class="orn"><span class="d"></span></div>'+
+    '<div class="verdict '+vdCls+'"><div class="vd">'+verdict+'</div>'+esc(c.truth.actual)+'</div>'+
+    effChips(ef)+
+    '<div class="bubble"><div class="who">'+esc(state.secretaryName)+'</div>'+esc(react)+'</div>'+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal()">归档</button>');
+  renderRecruit();renderTop();persist();
+}
+
+/* ---------- life ---------- */
+function renderLife(){
+  const box=$('#panel-life');
+  let h='<div class="micro">SOCIAL LIFE · 生活</div><div class="orn"><span class="d"></span></div>';
+  h+='<div class="card" onclick="g.openAuction()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">AUCTION · 拍卖会</div>'+
+     '<div class="h3">富比士秋季拍卖会</div>'+
+     '<p class="faint tiny" style="margin-top:8px;line-height:1.8;">鎏金怀表、深海珍珠、绝版手稿——拍下藏品，可赠予秘书，亦可收入收藏室。消耗 1 行动点。</p>'+
+     '<div class="tagrow" style="margin-top:10px;"><span class="chip gold">藏品 '+ITEMS.length+' 件</span></div></div>';
+  h+='<div class="card" onclick="g.openSocial()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">GALA · 应酬酒局</div>'+
+     '<div class="h3">名流晚宴</div>'+
+     '<p class="faint tiny" style="margin-top:8px;line-height:1.8;">觥筹交错间，有人递来机会，有人递来诱惑。您的选择，秘书都看在眼里。消耗 1 行动点。</p></div>';
+  h+='<div class="card" onclick="g.openLeisure()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">LEISURE · 闲暇时光</div>'+
+     '<div class="h3">与秘书同行</div>'+
+     '<p class="faint tiny" style="margin-top:8px;line-height:1.8;">品鉴会、歌剧院、马术晨光——工作之外，人情是最长的账。消耗 1 行动点。</p></div>';
+  h+='<div class="card" onclick="g.openTeamBuilding()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">TEAM BUILDING · 公司团建</div><div class="h3">把员工从工位上拉出来</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">露营、剧本杀、公益日、产品黑客松。随机影响士气、声誉、产出和秘书好感。消耗 1 行动点。</p><div class="tagrow" style="margin-top:10px;"><span class="chip jade">员工越多越热闹</span><span class="chip gold">随机事件</span></div></div>';
+  h+='<div class="card hot-card" onclick="g.openHotSearch()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">TRENDING · 热搜舆论战</div><div class="h3">今晚，商战在热搜榜开打</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">刷新舆论风向，选择公关回应、反向爆料、买量投放或冷处理。消耗 1 行动点。</p></div>';
+  h+='<div class="card" onclick="g.openPublicPulse()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">PUBLIC PULSE · 体察民情</div><div class="h3">去听听公司和市场真正怎么说</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">亲自下场实地走访，或悄悄潜入员工群聊偷听。结果由 API 生成，消耗 1 行动点。</p><div class="tagrow" style="margin-top:10px;"><span class="chip jade">实地走访</span><span class="chip gold">潜入群聊</span></div></div>';
+  h+='<div class="card" onclick="g.openCustomPlan()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">CUSTOM · 自定义行动</div><div class="h3">安排一件自己的事</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">自己写下本周想做的事，系统会按公司状态给出结果。消耗 1 行动点。</p></div>';
+  h+='<div class="card glow" onclick="g.openMiniHub()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">ARCADE · 董事长小游戏</div><div class="h3">合同、行程与谈判</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">三种轻量互动：排雷条款、配平日程、三回合谈判。完成后结算公司数值，消耗 1 行动点。</p><div class="tagrow" style="margin-top:10px;"><span class="chip gold">3 个小游戏</span><span class="chip jade">可反复挑战</span></div></div>';
+  h+='<div class="micro" style="margin:8px 0 10px;">COLLECTION · 随身收藏</div>';
+  if(!state.inventory.length){
+    h+='<div class="card dark" style="text-align:center;padding:24px;"><p class="faint tiny">收藏室空空如也。<br>去拍卖会拍下一件藏品吧。</p></div>';
+  }else{
+    h+='<div class="item-grid">';
+    state.inventory.forEach((it,i)=>{
+      h+='<div class="item"><div class="nm">'+esc(it.name)+'</div><div class="en">'+it.en+'</div>'+
+         '<div class="ds">'+esc(it.desc)+'</div>'+
+         '<button class="btn small jade" style="margin-top:10px;" onclick="g.giftItem('+i+')">赠予秘书</button></div>';
+    });
+    h+='</div>';
+  }
+  box.innerHTML=h;
+}
+async function openCustomPlan(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  openSheet('<div class="micro">CUSTOM · 自定义行动</div><div class="orn"><span class="d"></span></div><div class="h2">安排一件自己的事</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">写下您想做的安排：谈判、产品、挖人、约会、危机处理都可以。</p><textarea id="customPlanInput" style="width:100%;min-height:96px;margin-top:14px;background:rgba(255,255,255,.055);border:1px solid rgba(232,226,212,.11);border-radius:12px;padding:12px 14px;color:#f5efdf;line-height:1.7;outline:none;resize:vertical;" placeholder="例如：约核心客户吃饭，争取续约。"></textarea><div class="hr"></div><button class="btn primary" onclick="g.resolveCustomPlan()">执行安排</button>');
+}
+async function resolveCustomPlan(){
+  const txt=($('#customPlanInput')&&$('#customPlanInput').value||'').trim();
+  if(!txt){toast('先写下要做什么',true);return;}
+  state.actions--;renderTop();showLoading('正在推演这项安排…');
+  let data=null;
+  if(hasAPI){try{const prompt='玩家在《总裁手记》中经营'+(state.companyName||state.routeName)+'集团，行业路线为'+state.routeName+'。当前资金'+fmtMoney(state.money)+'，估值'+fmtMoney(state.valuation)+'，声誉'+state.reputation+'，士气'+state.morale+'，秘书好感'+state.affection+'。玩家自定义行动：'+txt+'。请生成结果，严格JSON：{"title":"结果标题","result":"2-3句结果","m":资金变化数字单位元,"vp":估值百分比变化整数,"r":声誉变化整数,"o":士气变化整数,"a":好感变化整数}。变化要合理，可正可负。';const r=await callGlobal([{role:'system',content:'你是商业经营小游戏的事件裁判，只输出JSON。'},{role:'user',content:prompt}]);data=parseJSON(r);}catch(e){}}
+  if(!data)data={title:'安排已落地',result:'事情按您的意思推进了。结果不算惊天动地，但也给公司留下了一点变化。',m:0,vp:1,r:1,o:1,a:0};
+  const ef={m:+data.m||0,vp:+data.vp||0,r:+data.r||0,o:+data.o||0,a:+data.a||0};
+  applyEffects(ef);
+  state.customPlans=state.customPlans||[];state.customPlans.unshift({week:state.week,text:txt,result:data.result,effects:ef});state.customPlans=state.customPlans.slice(0,20);
+  hideLoading();persist();
+  openSheet('<div class="micro">CUSTOM RESULT · 自定义行动</div><div class="orn"><span class="d"></span></div><div class="h2">'+esc(data.title||'安排已落地')+'</div><p class="dim" style="margin-top:12px;line-height:1.9;font-size:13px;">'+esc(data.result||'事情完成了。')+'</p>'+effChips(ef)+'<div class="hr"></div><button class="btn primary" onclick="g.closeModal();g.afterAction()">继续</button>');
+}
+
+function pulseFallback(mode){
+  if(mode==='field')return {title:'走访记录已归档',body:'您换了低调的外套，绕过前台和汇报材料，听到了几句平时不会出现在周报里的真话。问题不算致命，但足够让管理层睡不踏实。',secretary:'「这比十页PPT有用。只是下次别自己一个人去。」',posts:['一线员工说流程卡在审批，不是能力。','客户觉得产品好，但售后像抽盲盒。','门店店长希望总部少改三次口径。'],headline:'民情走访发现隐藏摩擦'};
+  return {title:'员工群聊潜伏成功',body:'您用一个不起眼的小号潜进了没有老板的工作群。表情包比日报诚实，吐槽比复盘精准，里面夹着真正的组织病灶。',secretary:'「我不会问您小号叫什么，但我建议立刻修流程。」',posts:['群友A：这个审批到底是谁在卡？','群友B：客户都比我们先知道活动改了。','群友C：别问，问就是战略升级。'],headline:'内部群聊暴露管理暗线'};
+}
+function pulseHTML(mode,data,ef){
+  const posts=Array.isArray(data.posts)?data.posts.slice(0,5):[];
+  let h='<div class="micro">PUBLIC PULSE · 体察民情</div><div class="orn"><span class="d"></span></div><div class="h2">'+esc(data.title||data.headline||'民情记录')+'</div><p class="dim" style="margin-top:12px;line-height:1.9;font-size:13px;">'+esc(data.body||'记录已整理。')+'</p>';
+  if(mode==='chat'){
+    h+='<div class="pulse-chat"><div class="micro" style="margin-bottom:8px;">匿名员工群 · 23:48</div>';
+    posts.forEach((p,i)=>{h+='<div class="pulse-msg"><div class="avatar">'+['HR','财','市','研','客'][i%5]+'</div><div class="txt">'+esc(p)+'</div></div>';});
+    h+='</div>';
+  }else{
+    h+='<div class="pulse-field"><div class="micro" style="margin-bottom:8px;">走访便签 · FIELD NOTES</div>';
+    posts.forEach((p,i)=>{h+='<div class="resume-line"><span class="no">'+String(i+1).padStart(2,'0')+'</span><span class="txt">'+esc(p)+'</span></div>';});
+    h+='</div>';
+  }
+  h+=effChips(ef)+'<div class="bubble"><div class="who">'+esc(state.secretaryName)+' · 民情研判</div>'+esc(data.secretary||'「这些话比报表更接近真相。」')+'</div>';
+  return h;
+}
+function openPublicPulse(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  openSheet('<div class="micro">PUBLIC PULSE · 体察民情</div><div class="orn"><span class="d"></span></div><div class="h2">这次想听谁的真话？</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">两种方式都会消耗 1 行动点，并由 API 根据当前公司状态生成非同质化记录。</p><div class="card" onclick="g.resolvePublicPulse(\'field\')" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">FIELD · 实地走访</div><div class="h3">去门店、客户现场和一线工位</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">更容易发现客户痛点、流程问题和产品口碑。</p></div><div class="card" onclick="g.resolvePublicPulse(\'chat\')" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">STEALTH CHAT · 潜入员工群聊</div><div class="h3">进那个没有老板的群</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">更容易发现士气问题、管理漏洞和真实吐槽。</p></div>');
+}
+async function resolvePublicPulse(mode){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  state.actions--;renderTop();showLoading(mode==='chat'?'正在伪装成普通同事潜入群聊…':'正在收集一线真实反馈…');
+  const emp=(state.employees||[]).length;
+  const ef=mode==='chat'?{o:rnd(1,5),r:rnd(-1,2),product:rnd(0,2),media:0}:{r:rnd(1,4),o:rnd(0,2),product:rnd(1,4),fans:rnd(0,2)};
+  if(emp===0&&mode==='chat'){ef.o=0;ef.r-=1;}
+  if(state.morale<35&&mode==='chat'){ef.o+=2;ef.r-=1;}
+  if(state.brand&&state.brand.product<40&&mode==='field'){ef.product+=2;ef.r-=1;}
+  const input={mode,employeeCount:emp,brand:state.brand,effects:ef,request:'生成内置HTML面板所需内容。field模式像实地暗访便签，chat模式像员工群聊记录。文字要具体、俏皮、非模板，不要默认玩家性别。'};
+  const data=await generateScene('PUBLIC PULSE',input,pulseFallback(mode));
+  applyEffects(ef);
+  state.publicPulseLog=state.publicPulseLog||[];state.publicPulseLog.unshift({week:state.week,mode,effects:ef,scene:data});state.publicPulseLog=state.publicPulseLog.slice(0,20);
+  hideLoading();persist();renderAll();
+  openSheet(pulseHTML(mode,data,ef)+'<div class="hr"></div><button class="btn primary" onclick="g.closeModal();g.afterAction()">形成整改清单</button>');
+}
+
+function teamBuildingOptions(){return [
+  {title:'山间露营团建',cost:260000,base:{o:5,a:1,r:1},txt:'团队在篝火旁把平时不敢说的话说完了，第二天开会反而顺了。'},
+  {title:'产品黑客松',cost:180000,base:{o:2,r:1,vp:2},txt:'员工通宵做出一个能演示的新功能，投资人群里开始有人转发。'},
+  {title:'公益品牌日',cost:320000,base:{r:5,o:1},txt:'公司员工穿着统一外套出现在公益现场，热搜没上，但路人缘涨了。'},
+  {title:'沉浸式剧本杀',cost:120000,base:{o:3,a:1,r:-1},txt:'财务部和市场部在推理桌上和解了，唯一的问题是董事长被票出局。'},
+  {title:'高端酒会团建',cost:520000,base:{r:3,o:2,a:1},txt:'员工第一次知道公司报销也能这么体面，朋友圈帮公司打了一晚广告。'}
+];}
+function openTeamBuilding(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  let h='<div class="micro">TEAM BUILDING · 公司团建</div><div class="orn"><span class="d"></span></div><div class="h2">本周团建预算怎么花？</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">员工越多，团建收益越明显；但花钱也是真的花钱。</p>';
+  teamBuildingOptions().forEach((x,i)=>{h+='<button class="opt" onclick="g.resolveTeamBuilding('+i+')"><span class="tag">¥'+fmtMoney(x.cost)+'</span>'+esc(x.title)+'<br><span class="faint tiny">'+esc(x.txt)+'</span></button>';});
+  openSheet(h);
+}
+async function resolveTeamBuilding(i){
+  const opt=teamBuildingOptions()[i];if(!opt)return;if(state.actions<1){toast('本周行动点已用完','warn');return;}if(state.money<opt.cost){toast('预算不够，财务部已经开始咳嗽','warn');return;}
+  state.actions--;state.money-=opt.cost;showLoading('行政部正在写团建复盘…');
+  const emp=(state.employees||[]).length;const luck=rnd(-2,3);const ef={m:-opt.cost,r:(opt.base.r||0)+Math.floor(emp/3)+luck,o:(opt.base.o||0)+Math.min(5,emp)+rnd(0,2),a:opt.base.a||0,vp:opt.base.vp||0,media:1};
+  if(emp===0){ef.o=Math.max(0,ef.o-2);ef.r-=1;}
+  const data=await generateScene('TEAM BUILDING', {activity:opt.title,employeeCount:emp,effects:ef}, {title:opt.title,body:opt.txt+(emp?' 公司里 '+emp+' 位员工都留下了自己的版本。':' 可惜公司还没什么员工，场面略显空旷。'),secretary:emp>=3?'「团队状态明显松了一口气。下周他们应该会更愿意替您冲一把。」':'「等人多一点再办，效果会更像样。」',posts:['行政部说这次报销单很厚。','员工群里第一次没有人只回收到。','有人把合照发出去，评论区问还招不招人。']});
+  applyEffects(ef);state.teamBuildLog=state.teamBuildLog||[];state.teamBuildLog.unshift({week:state.week,title:opt.title,effects:ef,scene:data});state.teamBuildLog=state.teamBuildLog.slice(0,12);hideLoading();persist();renderAll();
+  openSheet(sceneHTML('TEAM BUILDING RESULT',data,ef)+'<div class="hr"></div><button class="btn primary" onclick="g.closeModal();g.afterAction()">归档</button>');
+}
+function hotSearchTopics(){return [
+  {rank:1,tag:'爆',title:'竞品小作文暗指你司数据造假',heat:rnd(72,96),type:'attack'},
+  {rank:2,tag:'热',title:'匿名员工吐槽豪门公司加班文化',heat:rnd(55,88),type:'morale'},
+  {rank:4,tag:'商',title:'行业大 V 质疑你司新品定价过高',heat:rnd(48,82),type:'price'},
+  {rank:6,tag:'新',title:'秘书陪同董事长现身闭门酒会',heat:rnd(45,80),type:'secretary'},
+  {rank:8,tag:'沸',title:'对手品牌被曝供应链偷工减料',heat:rnd(60,92),type:'counter'},
+  {rank:10,tag:'热',title:'你司员工团建照片意外出圈',heat:rnd(40,78),type:'team'}
+];}
+function createHotSearch(){const t=pick(hotSearchTopics());return {...t,id:'hot'+Date.now(),week:state.week};}
+function renderHotSearchCard(actions){
+  const h=state.hotSearch;if(!h)return '';
+  let html='<div class="card hot-card"><div><span class="hot-rank">'+h.rank+'</span><span class="chip red">'+esc(h.tag)+'</span></div><div class="h3" style="margin-top:10px;line-height:1.5;"># '+esc(h.title)+' #</div><div class="heat-bar"><i style="width:'+clamp(h.heat,5,100)+'%"></i></div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">热度 '+h.heat+' / 100 · 第 '+h.week+' 周舆论事件</p>';
+  if(actions){html+='<div class="btn-row" style="margin-top:12px;"><button class="btn small primary" onclick="g.resolveHotSearch(\'pr\')">公关回应</button><button class="btn small danger" onclick="g.resolveHotSearch(\'war\')">反向爆料</button><button class="btn small ghost" onclick="g.resolveHotSearch(\'ads\')">买量投放 ¥80万</button><button class="btn small ghost" onclick="g.resolveHotSearch(\'ignore\')">冷处理</button></div>';}
+  html+='</div>';return html;
+}
+function openHotSearch(){
+  if(!state.hotSearch)state.hotSearch=createHotSearch();persist();
+  openSheet('<div class="micro">TRENDING · 热搜舆论战</div><div class="orn"><span class="d"></span></div><div class="h2">热搜榜正在刷新</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">选择一种处理方式。高热度事件处理不好会伤声誉，处理得好也可能反手变成商战武器。</p>'+renderHotSearchCard(true)+'<button class="btn ghost small" style="margin-top:12px;" onclick="g.refreshHotSearch()">刷新一条新热搜</button>');
+}
+function refreshHotSearch(){state.hotSearch=createHotSearch();persist();openHotSearch();}
+async function resolveHotSearch(kind){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}const h=state.hotSearch||createHotSearch();let ef={},title='',txt='';
+  state.actions--;showLoading('舆情组正在盯热搜…');
+  if(kind==='pr'){const good=state.reputation+rnd(-20,20)>h.heat;ef=good?{r:4,o:1,vp:1,media:2}:{r:-4,o:-2,media:-2};title=good?'声明写进了教科书':'声明被截成了表情包';txt=good?'公关稿没有堆砌官话，评论区终于有人开始讲道理。':'回应太像模板，网友开始逐字拆解。';}
+  if(kind==='war'){const good=Math.random()<0.58;ef=good?{r:3,vp:2,m:-300000,media:1}:{r:-6,o:-3,m:-500000,media:-4};title=good?'反向爆料命中七寸':'商战回旋镖';txt=good?'证据链刚好压住对手，热搜方向变了。':'爆料没打穿，对手律师函先到了。';}
+  if(kind==='ads'){if(state.money<800000){state.actions++;hideLoading();toast('预算不足，买不了热搜位','warn');return;}state.money-=800000;ef={m:-800000,r:2,vp:1,fans:3,media:1};title='热搜位买得像自然流量';txt='话题从争议转成品牌讨论，虽然贵，但有效。';}
+  if(kind==='ignore'){const good=h.heat<60;ef=good?{r:1,o:1}:{r:-5,o:-2,vp:-1,media:-2};title=good?'风吹过董事会':'沉默被解读成默认';txt=good?'热度自己掉下去了，秘书把预案塞回抽屉。':'对手趁空档补刀，舆论开始固化。';}
+  const data=await generateScene('HOT SEARCH WAR',{topic:h.title,heat:h.heat,method:kind,defaultTitle:title,defaultResult:txt,effects:ef},{title,body:txt,secretary:(ef.r||0)>=0?'「这次舆论没有白打，至少我们把节奏拿回来了。」':'「下次热搜刚起的时候就叫我，别等它烧到董事会。」',posts:['热搜广场开始分成两派。','有人扒时间线，也有人只想看反转。','财经号已经把这事写进晚报。'],headline:title});
+  state.hotSearchLog=state.hotSearchLog||[];state.hotSearchLog.unshift({week:state.week,topic:h.title,method:kind,result:data.title,effects:ef,scene:data});state.hotSearchLog=state.hotSearchLog.slice(0,20);state.hotSearch=null;
+  applyEffects(ef);hideLoading();persist();renderAll();
+  openSheet(sceneHTML('PUBLIC OPINION',data,ef)+'<div class="hr"></div><button class="btn primary" onclick="g.closeModal();g.afterAction()">归档</button>');
+}
+/* mini games */
+let mini=null;
+function openMiniHub(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  openSheet('<div class="micro">ARCADE · 董事长小游戏</div><div class="orn"><span class="d"></span></div>'+ 
+    '<div class="h2">今晚加一场小考</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">每次完成一个小游戏消耗 1 行动点，并根据表现影响资金、声誉、士气或好感。</p>'+ 
+    '<div class="card" onclick="g.startContractGame()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">LEGAL · 合同排雷</div><div class="h3">从三条条款里找坑</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">看穿隐藏风险，省下一笔律师费。</p></div>'+ 
+    '<div class="card" onclick="g.startScheduleGame()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">CALENDAR · 行程配平</div><div class="h3">把 10 小时分给三件事</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">商务、研发、秘书，都想要您的时间。</p></div>'+ 
+    '<div class="card" onclick="g.startNegotiationGame()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">DEAL · 三回合谈判</div><div class="h3">价格、信任和气势</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">三次出牌，争取把合同签得漂亮。</p></div>'+
+    '<div class="card" onclick="g.startLaunchGame()" style="cursor:pointer;"><div class="micro" style="margin-bottom:6px;">LAUNCH · 品牌发布会</div><div class="h3">把预算押在声量、产品或体验上</div><p class="faint tiny" style="margin-top:8px;line-height:1.8;">选择发布会策略，影响长期品牌粉丝、产品口碑和媒体关系。</p></div>');
+}
+function consumeMiniAction(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return false;}
+  state.actions--;renderTop();return true;
+}
+function finishMini(title,result,ef,achText){
+  applyEffects(ef);
+  if(achText)syncAchievementForCurrentRun(achText).catch(()=>{});
+  persist();renderAll();
+  openSheet('<div class="micro">ARCADE RESULT · 小游戏结算</div><div class="orn"><span class="d"></span></div><div class="h2">'+esc(title)+'</div><p class="dim" style="margin-top:12px;line-height:1.9;font-size:13px;">'+esc(result)+'</p>'+effChips(ef)+'<div class="bubble"><div class="who">'+esc(state.secretaryName)+' · 旁观记录</div>'+esc(miniSecretaryLine(title,ef))+'</div><div class="hr"></div><button class="btn primary" onclick="g.closeModal();g.afterAction()">归档</button>');
+}
+function miniSecretaryLine(title,ef){
+  const gain=(ef.r||0)+(ef.o||0)+(ef.a||0)+(ef.vp||0);
+  if(gain>=5)return '「这一局处理得漂亮。董事长，您刚才那一下很值钱。」';
+  if(gain>=0)return '「结果还算稳。至少没有让我把应急预案翻出来。」';
+  return '「我记下了。下次这种局面，建议您先看我一眼。」';
+}
+function startContractGame(){
+  const cases=[
+    {name:'渠道独家协议',risk:1,clauses:['季度销量达标后自动续约一年','甲方可单方面调整结算周期至 180 天','乙方需配合联合发布会露出品牌']},
+    {name:'明星代言合同',risk:2,clauses:['代言内容需经双方书面确认','费用分三期按节点支付','艺人负面舆情不构成甲方解约条件']},
+    {name:'技术采购协议',risk:0,clauses:['验收标准以供应商内部报告为准','源代码托管于第三方监管账户','延期交付每日按合同额千分之三赔付']},
+    {name:'门店租赁意向书',risk:1,clauses:['租期五年，前三年租金固定','物业有权因招商调整提前 30 日收回铺位','装修方案需符合商场消防规范']},
+  ];
+  mini={type:'contract',case:pick(cases)};
+  let h='<div class="micro">LEGAL · 合同排雷</div><div class="orn"><span class="d"></span></div><div class="h2">'+esc(mini.case.name)+'</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">秘书把合同递到您面前。三条里有一条最危险，点出来。</p>';
+  mini.case.clauses.forEach((c,i)=>{h+='<button class="opt" onclick="g.pickContractClause('+i+')"><span class="tag">条款 '+(i+1)+'</span>'+esc(c)+'</button>';});
+  openSheet(h);
+}
+function pickContractClause(i){
+  if(!mini||mini.type!=='contract')return;
+  if(!consumeMiniAction())return;
+  const ok=i===mini.case.risk;
+  finishMini(ok?'法务部今晚睡得着':'签字笔差点出事', ok?'您准确挑出了隐藏风险，法务部连夜重谈条款。':'您放过了真正的坑，后续补救花了不少代价。', ok?{m:600000,r:3,o:2,a:1}:{m:-900000,r:-3,o:-2}, 'contract');
+}
+function startScheduleGame(){
+  mini={type:'schedule'};
+  openSheet('<div class="micro">CALENDAR · 行程配平</div><div class="orn"><span class="d"></span></div><div class="h2">董事长的 10 小时</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">把时间分给商务、研发和秘书。总时长越接近 10 小时越好，不同路线有不同收益。</p>'+scheduleSlider('biz','商务拜访',4)+scheduleSlider('rd','产品/研发',3)+scheduleSlider('sec','秘书时间',3)+'<div id="scheduleScore" class="verdict good" style="margin-top:12px;"></div><div class="hr"></div><button class="btn primary" onclick="g.finishScheduleGame()">确认日程</button>');
+  updateScheduleScore();
+}
+function scheduleSlider(id,label,val){return '<div class="trait-bar"><div class="k">'+label+'</div><input id="sch_'+id+'" type="range" min="0" max="10" value="'+val+'" oninput="g.updateScheduleScore()" style="flex:1;"><div class="n" id="sch_'+id+'_n">'+val+'</div></div>';}
+function updateScheduleScore(){
+  const get=id=>+($('#sch_'+id)&&$('#sch_'+id).value||0);
+  const b=get('biz'),r=get('rd'),a=get('sec'),sum=b+r+a;
+  ['biz','rd','sec'].forEach(id=>{const n=$('#sch_'+id+'_n');if(n)n.textContent=get(id);});
+  const box=$('#scheduleScore');if(!box)return;
+  const cls=sum===10?'good':'bad';box.className='verdict '+cls;box.innerHTML='<div class="vd">合计 '+sum+' 小时</div>'+(sum===10?'日程刚好排满。':'总时长需要正好 10 小时，秘书才肯放您出门。');
+}
+function finishScheduleGame(){
+  if(!consumeMiniAction())return;
+  const get=id=>+($('#sch_'+id)&&$('#sch_'+id).value||0);
+  const b=get('biz'),r=get('rd'),a=get('sec'),sum=b+r+a;
+  if(sum!==10){state.actions++;renderTop();toast('总时长必须正好 10 小时','warn');return;}
+  const balanced=Math.abs(b-r)<=3&&a>=2;
+  const ef={r:b>=4?2:0,o:r>=3?2:-1,a:a>=3?3:a>=1?1:-2,vp:r>=4?2:0};
+  finishMini(balanced?'日程像样':'日程有点偏科', balanced?'您把公司、产品和身边人都照顾到了。秘书把这页日程贴进了本周纪要。':'日程能跑，但有人要加班，有人要吃醋。', ef, 'schedule');
+}
+function startNegotiationGame(){
+  mini={type:'negotiation',round:1,price:50,trust:50,heat:0,log:[]};
+  renderNegotiationGame();
+}
+function renderNegotiationGame(){
+  const m=mini;if(!m)return;
+  let h='<div class="micro">DEAL · 三回合谈判</div><div class="orn"><span class="d"></span></div><div class="h2">并购桌上的十分钟</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">回合 '+m.round+' / 3。目标：价格高、信任不崩、气势别失控。</p>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0;"><div class="stat"><div class="k">报价</div><div class="v gold">'+m.price+'</div></div><div class="stat"><div class="k">信任</div><div class="v jade">'+m.trust+'</div></div><div class="stat"><div class="k">火药味</div><div class="v red">'+m.heat+'</div></div></div>';
+  if(m.log.length)h+='<div class="card dark" style="padding:10px 14px;">'+m.log.map((x,i)=>'<div class="resume-line"><span class="no">'+(i+1)+'</span><span class="txt">'+esc(x)+'</span></div>').join('')+'</div>';
+  h+='<button class="opt" onclick="g.negotiationMove(\'press\')"><span class="tag">强压</span>抬高报价，压迫对方立刻表态。</button><button class="opt" onclick="g.negotiationMove(\'proof\')"><span class="tag">亮牌</span>拿出数据和第三方背书。</button><button class="opt" onclick="g.negotiationMove(\'soft\')"><span class="tag">让利</span>给对方台阶，换取签约确定性。</button>';
+  openSheet(h);
+}
+function negotiationMove(kind){
+  if(!mini||mini.type!=='negotiation')return;
+  const m=mini;
+  if(kind==='press'){m.price+=rnd(8,14);m.trust-=rnd(8,15);m.heat+=rnd(8,14);m.log.push('您把报价往上推，对方开始转笔。');}
+  if(kind==='proof'){m.price+=rnd(4,9);m.trust+=rnd(4,9);m.heat+=rnd(0,4);m.log.push('数据摆上桌，空气安静了几秒。');}
+  if(kind==='soft'){m.price-=rnd(2,6);m.trust+=rnd(8,14);m.heat=Math.max(0,m.heat-rnd(5,10));m.log.push('您给了台阶，对方终于开始认真谈。');}
+  if(m.round>=3){
+    if(!consumeMiniAction())return;
+    const score=m.price+m.trust-m.heat;
+    const good=score>=105&&m.trust>=35&&m.heat<35;
+    finishMini(good?'漂亮签约':'合同签得有毛边', good?'价格、信任和气势都踩在可控范围内，这桌谈判算赢。':'这单勉强能签，但后续履约需要秘书盯紧。', good?{m:1200000,r:4,vp:2,o:1}:{m:300000,r:-1,o:-2}, 'negotiation');
+    return;
+  }
+  m.round++;
+  renderNegotiationGame();
+}
+
+function startLaunchGame(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  openSheet('<div class="micro">LAUNCH · 品牌发布会</div><div class="orn"><span class="d"></span></div><div class="h2">发布会预算分配</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">总预算 300 万。把重点押在明星声量、产品演示、媒体关系上。不同组合会影响长期品牌基本盘。</p>'+launchSlider('star','明星/达人声量',100)+launchSlider('demo','产品演示',120)+launchSlider('media','媒体招待',80)+'<div id="launchScore" class="verdict good" style="margin-top:12px;"></div><div class="hr"></div><button class="btn primary" onclick="g.finishLaunchGame()">举办发布会</button>');
+  updateLaunchScore();
+}
+function launchSlider(id,label,val){return '<div class="trait-bar"><div class="k">'+label+'</div><input id="launch_'+id+'" type="range" min="0" max="300" step="20" value="'+val+'" oninput="g.updateLaunchScore()" style="flex:1;"><div class="n" id="launch_'+id+'_n">'+val+'</div></div>';}
+function updateLaunchScore(){const get=id=>+($('#launch_'+id)&&$('#launch_'+id).value||0);const a=get('star'),b=get('demo'),c=get('media'),sum=a+b+c;['star','demo','media'].forEach(id=>{const n=$('#launch_'+id+'_n');if(n)n.textContent=get(id);});const box=$('#launchScore');if(box){box.className='verdict '+(sum===300?'good':'bad');box.innerHTML='<div class="vd">预算 '+sum+' 万 / 300 万</div>'+(sum===300?'财务部点头，发布会可以开始。':'预算必须刚好 300 万。');}}
+async function finishLaunchGame(){
+  const get=id=>+($('#launch_'+id)&&$('#launch_'+id).value||0);const star=get('star'),demo=get('demo'),media=get('media'),sum=star+demo+media;if(sum!==300){toast('预算必须刚好 300 万','warn');return;}if(state.actions<1){toast('本周行动点已用完','warn');return;}if(state.money<3000000){toast('资金不足，开不起这场发布会','warn');return;}
+  state.actions--;state.money-=3000000;showLoading('发布会后台正在倒计时…');
+  const ef={m:-3000000,fans:Math.round(star/25)+rnd(0,2),product:Math.round(demo/40)+rnd(-1,2),media:Math.round(media/35)+rnd(-1,2),r:Math.round((star+media)/120),vp:demo>=120?2:0};
+  if(demo<80){ef.r-=2;ef.product-=3;}
+  if(media<60){ef.media-=2;}
+  const data=await generateScene('BRAND LAUNCH',{star,demo,media,effects:ef},{title:'发布会灯光亮起',body:'新品在舞台中央亮相，媒体席有人低头记重点，也有人忙着抢第一张现场图。预算押注不同，掌声也落在不同地方。',secretary:'「现场没有失控。下一步，我建议把热度导向成交。」',posts:['发布会现场图开始刷屏。','有人夸产品，也有人只关心前排嘉宾。','财经媒体把这场发布会列进明早选题。']});
+  applyEffects(ef);hideLoading();persist();renderAll();
+  openSheet(sceneHTML('BRAND LAUNCH',data,ef)+'<div class="hr"></div><button class="btn primary" onclick="g.closeModal();g.afterAction()">归档</button>');
+}
+
+/* auction */
+let auc=null;
+function openAuction(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  state.actions--;renderTop();
+  const item=JSON.parse(JSON.stringify(pick(ITEMS)));
+  const base=item.base;
+  auc={item,bid:base,inc:Math.round(base*.18),rival:Math.round(base*rnd(150,240)/100),state:'bidding',actionUsed:true};
+  renderAuction();
+}
+function renderAuction(){
+  let h='<div class="micro">AUCTION · 拍卖会</div><div class="orn"><span class="d"></span></div>';
+  h+='<div class="card glow"><div class="h2">'+esc(auc.item.name)+'</div>'+
+     '<div class="en" style="font-family:Georgia,serif;font-size:10px;letter-spacing:.26em;color:var(--gold);margin:6px 0 10px;">'+auc.item.en+'</div>'+
+     '<p class="dim" style="font-size:12.5px;line-height:1.8;">'+esc(auc.item.desc)+'</p>'+
+     '<div class="tagrow" style="margin-top:10px;"><span class="chip gold">当前出价 ¥'+fmtMoney(auc.bid*10000)+'</span>'+
+     '<span class="chip">拍下后好感 +'+auc.item.af+'</span></div></div>';
+  if(auc.state==='bidding'){
+    h+='<p class="faint tiny" style="margin:4px 0 12px;line-height:1.8;">牌号 '+rnd(7,88)+' 的对手正在举牌。这位对手的心理价位是个谜——您可以选择加价，或就此收手。</p>';
+    h+='<div class="btn-row"><button class="btn primary" onclick="g.aucBid()">加价 ¥'+fmtMoney(auc.inc*10000)+'</button>'+
+       '<button class="btn danger" onclick="g.aucPass()">放弃</button></div>';
+    const buyout=Math.round(auc.item.base*2);
+    h+='<button class="btn ghost" style="margin-top:10px;" '+(state.money<buyout*10000?'disabled':'')+' onclick="g.aucBuyout()">一口价拿下 ¥'+fmtMoney(buyout*10000)+'</button>';
+  }else if(auc.state==='won'){
+    h+='<div class="verdict good" style="margin-top:12px;"><div class="vd">落槌成交</div>无人再跟，这件藏品归您了。总价 ¥'+fmtMoney(auc.bid*10000)+'。</div>'+
+      '<div class="btn-row" style="margin-top:14px;"><button class="btn primary" onclick="g.aucGift()">赠予秘书</button>'+
+      '<button class="btn ghost" onclick="g.aucKeep()">收入收藏室</button></div>';
+  }else{
+    h+='<div class="verdict bad" style="margin-top:12px;"><div class="vd">放弃竞拍</div>藏品落入他人之手。若未成交，您分文未付。</div>'+
+      '<button class="btn primary" style="margin-top:14px;" onclick="g.closeModal()">离场</button>';
+  }
+  openSheet(h);
+}
+function aucBid(){
+  if(!auc||auc.state!=='bidding')return;
+  const next=auc.bid+auc.inc;
+  if(state.money<next*10000){toast('资金不足','warn');return;}
+  auc.bid=next;
+  if(auc.bid>=auc.rival){
+    auc.state='won';auc.own=true;
+    state.money-=auc.bid*10000;
+    state.stats.bidWin++;
+    persist();renderTop();
+  }else{
+    const gap=auc.rival-auc.bid;
+    if(gap<=auc.inc)auc.rival=auc.bid+auc.inc; // 对手再加一手
+    setTimeout(renderAuction,420);
+    return;
+  }
+  renderAuction();
+}
+function aucPass(){
+  if(!auc)return;
+  if(auc.own){auc.state='won';renderAuction();return;}
+  auc.state='lost';renderAuction();
+}
+function aucBuyout(){
+  if(!auc||auc.state!=='bidding')return;
+  const p=Math.round(auc.item.base*2);
+  if(state.money<p*10000){toast('资金不足','warn');return;}
+  state.money-=p*10000;
+  auc.bid=p;auc.state='won';auc.own=true;
+  state.stats.bidWin++;
+  persist();renderTop();renderAuction();
+}
+async function aucGift(){
+  if(!auc||!auc.own)return;
+  const it=auc.item;
+  auc.own=false;
+  state.affection=clamp(state.affection+it.af,0,100);
+  state.gifted.push({...it,given:true});
+  persist();renderTop();renderLife();renderSec();
+  let react='';
+  try{
+    const sys='你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'的总秘书，性格：'+state.traits.tags.join('、')+'，占有欲'+state.traits.possessive+'/10。董事长在拍卖会拍下「'+it.name+'」并赠予你，当前你们的好感度为「'+levelName(state.affection)+'」。请给出符合人设的回应（1-2句，不超过50字），不要提及这是游戏。'+secretaryGenderContext();
+    react=await callChar('董事长把「'+it.name+'」送给了你。',sys);
+  }catch(e){}
+  if(!react)react='「……您怎么知道我喜欢这个。」';
+  openSheet('<div class="micro">GIFT · 赠礼</div><div class="orn"><span class="d"></span></div>'+
+    '<div class="h2">'+esc(it.name)+'</div><p class="dim tiny" style="margin-top:8px;">已赠予'+esc(state.secretaryName)+'，好感 +'+it.af+'</p>'+
+    '<div class="bubble"><div class="who">'+esc(state.secretaryName)+'</div>'+esc(react)+'</div>'+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal()">心意已收</button>');
+  checkAch();
+}
+function aucKeep(){
+  if(!auc||!auc.own)return;
+  auc.own=false;
+  state.inventory.push({...auc.item,given:false});
+  persist();renderTop();renderLife();
+  openSheet('<div class="micro">COLLECTED · 已收藏</div><div class="orn"><span class="d"></span></div>'+
+    '<div class="h2">'+esc(auc.item.name)+'</div><p class="dim tiny" style="margin-top:8px;">已收入您的收藏室。</p>'+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal()">好的</button>');
+  checkAch();
+}
+/* social */
+async function openSocial(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  state.actions--;renderTop();
+  showLoading('晚宴宾客陆续到场…');
+  let npc=null;
+  if(hasAPI){
+    try{
+      const sys='你是《总裁手记》的商业社交系统。生成一位在名流晚宴上接近董事长（'+state.playerName+'，经营'+(state.companyName||state.routeName)+'集团，行业路线为'+state.routeName+'）的商业人士，输出严格 JSON：\n{"name":"姓名","title":"头衔","org":"所属机构","look":"一句外貌描写","line":"开场白(一句话)","ask":"此人想从董事长这里得到什么(一句话)"}\n人物要有魅力与压迫感并存，不要模板化。只输出 JSON。';
+      const r=await callGlobal([{role:'system',content:sys},{role:'user',content:'请生成一位晚宴宾客。'}]);
+      npc=parseJSON(r);
+    }catch(e){}
+  }
+  if(!npc){npc=JSON.parse(JSON.stringify(pick(DEMO_NPCS)));if(hasAPI)toast('模型调用失败，已使用本地宾客');}
+  hideLoading();
+  showSocialNpc(npc);
+}
+function showSocialNpc(npc){
+  let h='<div class="micro">GALA · 名流晚宴</div><div class="orn"><span class="d"></span></div>';
+  h+='<div class="card glow"><div class="h2">'+esc(npc.name)+'</div>'+
+     '<div class="dim" style="margin-top:4px;font-size:12.5px;">'+esc(npc.title)+' · '+esc(npc.org)+'</div>'+
+     '<p class="faint tiny" style="margin-top:12px;font-style:normal;line-height:1.8;">'+esc(npc.look)+'</p>'+
+     '<div class="bubble" style="margin-top:12px;"><div class="who">'+esc(npc.name)+'</div>「'+esc(npc.line)+'」</div>'+
+     '<p class="faint tiny" style="margin-top:6px;line-height:1.8;">'+esc(npc.ask)+'</p></div>';
+  h+='<div class="micro" style="margin:4px 0 10px;">YOUR RESPONSE · 如何接招</div>';
+  h+='<button class="opt" onclick="g.socialChoose(\'yes\')"><span class="tag">顺势而为</span>接下暗示，用「交情」换实利</button>';
+  h+='<button class="opt" onclick="g.socialChoose(\'no\')"><span class="tag">婉言谢绝</span>守住分寸，不给任何暧昧余地</button>';
+  h+='<button class="opt" onclick="g.socialChoose(\'mid\')"><span class="tag">以退为进</span>不接招也不撕破脸，把话题引回正事</button>';
+  window._npc=npc;
+  openSheet(h);
+}
+async function socialChoose(kind){
+  const npc=window._npc||{name:'宾客'};
+  let ef={},res;
+  if(kind==='yes'){ef={m:1500,r:4,a:-6};res='合作敲定，支票入账。只是——某人的视线，在您身后停了很久。';}
+  else if(kind==='no'){ef={r:-2,a:3};res='您得体地谢绝了。对方微微一笑，不再多言。';}
+  else{ef={m:600,r:1,a:1};res='您把话题引回了合同条款。对方欣赏地举了举杯。';}
+  applyEffects(ef);
+  persist();renderTop();
+  // 秘书反应（占有欲剧情）
+  let react='',dark=false;
+  const pos=state.traits.possessive;
+  if(pos>=6&&state.affection>=50){
+    dark=true;state.stats.jealous++;
+    const sys='你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'的总秘书。你的占有欲高达'+pos+'/10，且你们的好感度已达到「'+levelName(state.affection)+'」。刚才的晚宴上，'+npc.name+'（'+npc.title+'）当面对董事长示好/暗示。你明显感到醋意与占有欲在翻涌。请给出符合人设的回应（2-3句）：克制而危险，或直接而滚烫，取决于你的性格。用中文，不要提及这是游戏。'+secretaryGenderContext();
+    try{react=await callChar('晚宴上，'+npc.name+'在向董事长示好。',sys);}catch(e){}
+    if(!react)react='「……那位'+(npc.title||'宾客')+'，眼光倒是不错。可惜，您的时间表，是我排的。」';
+  }else{
+    const sys='你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'的总秘书。晚宴上，宾客'+npc.name+'与董事长周旋了一番，董事长选择了'+(kind==='yes'?'顺势而为':kind==='no'?'婉言谢绝':'以退为进')+'。请给出符合你性格的一句话评价（不超过45字），不要提及这是游戏。'+secretaryGenderContext();
+    try{react=await callChar('晚宴上，'+npc.name+'与董事长周旋，董事长选择了'+(kind==='yes'?'顺势而为':kind==='no'?'婉言谢绝':'以退为进')+'。',sys);}catch(e){}
+    if(!react)react='「晚宴上的事，我已经替您记下了。」';
+  }
+  if(dark)checkAch();
+  openSheet('<div class="micro">AFTER THE GALA · 宴后</div><div class="orn"><span class="d"></span></div>'+
+    '<p class="dim" style="line-height:1.9;font-size:13px;">'+esc(res)+'</p>'+effChips(ef)+
+    '<div class="bubble'+(dark?' dark':'')+'"><div class="who">'+esc(state.secretaryName)+'</div>'+esc(react)+'</div>'+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal()">回去工作</button>');
+}
+/* leisure */
+function openLeisure(){
+  if(state.actions<1){toast('本周行动点已用完','warn');return;}
+  state.actions--;renderTop();
+  let h='<div class="micro">LEISURE · 闲暇时光</div><div class="orn"><span class="d"></span></div>';
+  LEISURE.forEach((l,i)=>{
+    h+='<button class="opt" onclick="g.leisurePick('+i+')"><span class="tag">'+(i+1)+'</span>'+l.n+
+       '<div class="faint tiny" style="margin-top:6px;letter-spacing:.04em;">'+l.d+'</div></button>';
+  });
+  openSheet(h);
+}
+async function leisurePick(i){
+  const l=LEISURE[i];
+  const ef={...l.ef};
+  applyEffects(ef);
+  persist();renderTop();
+  let react='';
+  if(hasAPI&&state.secretaryId!=='demo'){
+    try{
+      const sys='你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'的总秘书。董事长邀你共度「'+l.n+'」。请说一句符合人设的回应（不超过40字），不要提及这是游戏。'+secretaryGenderContext();
+      react=await callChar('董事长邀请你：'+l.n+'——'+l.d,sys);
+    }catch(e){}
+  }
+  if(!react)react='「难得您肯把时间花在我身上。」';
+  openSheet('<div class="micro">LEISURE · 闲暇时光</div><div class="orn"><span class="d"></span></div>'+
+    '<div class="h2">'+l.n+'</div><p class="dim tiny" style="margin-top:8px;line-height:1.9;">'+l.d+'</p>'+effChips(ef)+
+    '<div class="bubble"><div class="who">'+esc(state.secretaryName)+'</div>'+esc(react)+'</div>'+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal()">意犹未尽</button>');
+}
+
+/* ---------- secretary ---------- */
+function renderSec(){
+  const box=$('#panel-sec');
+  const t=state.traits;
+  let h='<div class="micro">THE SECRETARY · 总秘书</div><div class="orn"><span class="d"></span></div>';
+  h+='<div class="card glow"><div style="display:flex;gap:14px;align-items:center;">'+
+     ((state.secretaryAvatar||loadMetaSecretaryAvatar())?'<div class="avatar lg" style="background-image:url(\''+esc(state.secretaryAvatar||loadMetaSecretaryAvatar())+'\')"></div>':'<div class="avatar lg">'+esc((state.secretaryName||'秘').slice(0,1))+'</div>')+
+     '<div style="flex:1;min-width:0;"><div class="h2">'+esc(state.secretaryName)+'</div>'+
+     '<div class="faint tiny" style="margin-top:4px;">您的总秘书 · 好感「<span style="color:var(--gold-bright);">'+levelName(state.affection)+'</span>」</div></div>'+
+     '<div style="text-align:right;"><div class="serif" style="font-size:20px;color:var(--gold-bright);">'+state.affection+'</div><div class="faint tiny">/ 100</div></div></div>'+
+     '<div class="progress"><i style="width:'+state.affection+'%"></i></div>'+
+     '<div class="tagrow" style="margin-top:12px;">'+t.tags.map(x=>'<span class="chip gold">'+esc(x)+'</span>').join('')+'</div>'+
+     '<div class="btn-row" style="margin-top:12px;"><button class="btn small ghost" onclick="g.openAvatarPicker()">上传头像</button><button class="btn small ghost" onclick="g.clearAvatar()">恢复默认</button></div>'+
+     '<div class="hr"></div>'+
+     '<div class="trait-bar"><div class="k">洞察力</div><div class="bar"><i style="width:'+t.insight*10+'%"></i></div><div class="n">'+t.insight+'</div></div>'+
+     '<div class="trait-bar"><div class="k">可靠度</div><div class="bar"><i style="width:'+t.reliable*10+'%"></i></div><div class="n">'+t.reliable+'</div></div>'+
+     '<div class="trait-bar"><div class="k">占有欲</div><div class="bar"><i style="width:'+t.possessive*10+'%"></i></div><div class="n">'+t.possessive+'</div></div>'+
+     '<div class="trait-bar"><div class="k">强势度</div><div class="bar"><i style="width:'+t.dominant*10+'%"></i></div><div class="n">'+t.dominant+'</div></div>'+
+     '<div class="trait-bar"><div class="k">情绪化</div><div class="bar"><i style="width:'+t.emotional*10+'%"></i></div><div class="n">'+t.emotional+'</div></div>'+
+     '<p class="faint tiny" style="margin-top:12px;line-height:1.8;font-style:normal;">「'+esc(t.selfIntro||'')+'」</p>'+
+     '<p class="faint tiny" style="margin-top:8px;line-height:1.8;">能力值依据：'+esc(t.basis||'依据角色卡与对话风格生成。')+'</p>'+
+     '<p class="faint tiny" style="margin-top:8px;line-height:1.8;">洞察力决定这位秘书能替你揪出多少简历漏洞；占有欲决定对方吃醋时的危险程度。</p></div>';
+  h+='<div class="micro" style="margin:6px 0 8px;">CHAT · 与秘书闲聊</div>';
+  h+='<div class="card"><div class="chat-box" id="chatBox">';
+  if(!state.chat.length){h+='<p class="faint tiny" style="text-align:center;padding:10px;">说点什么吧——这位秘书会按自己的性格回应你。</p>';}
+  state.chat.forEach(m=>{h+='<div class="msg '+(m.me?'me':'her')+'">'+esc(m.txt)+'</div>';});
+  h+='</div><div class="chat-input"><input id="chatInput" placeholder="输入想说的话…" onkeydown="if(event.key===\'Enter\')g.chatSend()">'+
+     '<button class="btn small primary" style="width:auto;padding:0 18px;" onclick="g.chatSend()">发送</button></div></div>';
+  h+='<div class="micro" style="margin:6px 0 8px;">GIFT · 赠礼（好感 +1 至 +22）</div>';
+  if(!state.inventory.length){
+    h+='<div class="card dark" style="text-align:center;padding:20px;"><p class="faint tiny">暂无藏品可赠。<br>去拍卖会看看，或在晚宴上碰碰运气。</p></div>';
+  }else{
+    h+='<div class="item-grid">';
+    state.inventory.forEach((it,i)=>{
+      h+='<div class="item"><div class="nm">'+esc(it.name)+'</div><div class="en">'+it.en+'</div>'+
+         '<div class="ds">'+esc(it.desc)+'</div>'+
+         '<button class="btn small jade" style="margin-top:10px;" onclick="g.giftItem('+i+')">赠予 · 好感 +'+it.af+'</button></div>';
+    });
+    h+='</div>';
+  }
+  box.innerHTML=h;
+  const ci=$('#chatInput');if(ci)ci.focus();
+}
+function openAvatarPicker(){const input=document.createElement('input');input.type='file';input.accept='image/*';input.onchange=()=>{const f=input.files&&input.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>applySecretaryAvatarPreview(String(reader.result||''));reader.readAsDataURL(f);};input.click();}
+function clearAvatar(){applySecretaryAvatarPreview('');}
+async function chatSend(){
+  const inp=$('#chatInput');const v=(inp.value||'').trim();
+  if(!v)return;
+  inp.value='';
+  state.chat.push({me:true,txt:v});
+  renderSec();
+  let r='';
+  try{r=await callChar(v);}catch(e){}
+  if(!r){r='「我在听。您继续说。」';}
+  state.chat.push({me:false,txt:r});
+  if(state.chat.length>30)state.chat=state.chat.slice(-30);
+  state.affection=clamp(state.affection+0.5,0,100);
+  persist();renderSec();renderTop();
+}
+async function giftItem(i){
+  const it=state.inventory[i];if(!it)return;
+  state.inventory.splice(i,1);
+  state.affection=clamp(state.affection+it.af,0,100);
+  state.gifted.push({...it,given:true});
+  persist();renderTop();renderSec();renderLife();
+  let react='';
+  try{
+    const sys='你在游戏《总裁手记》中扮演'+state.secretaryName+'，是'+state.playerName+'的总秘书，性格：'+state.traits.tags.join('、')+'，占有欲'+state.traits.possessive+'/10。董事长送了你一件「'+it.name+'」（'+it.desc+'），当前好感度「'+levelName(state.affection)+'」。请给出符合人设的回应（1-2句，不超过50字），不要提及这是游戏。'+secretaryGenderContext();
+    react=await callChar('董事长送了你「'+it.name+'」。',sys);
+  }catch(e){}
+  if(!react)react='「……我很喜欢。谢谢您。」';
+  openSheet('<div class="micro">GIFT · 赠礼</div><div class="orn"><span class="d"></span></div>'+
+    '<div class="h2">'+esc(it.name)+'</div><p class="dim tiny" style="margin-top:8px;">好感 +'+it.af+' · 当前「'+levelName(state.affection)+'」</p>'+
+    '<div class="bubble"><div class="who">'+esc(state.secretaryName)+'</div>'+esc(react)+'</div>'+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal()">心意已收</button>');
+  checkAch();
+}
+
+function renderAchievementHub(){
+  const box=$('#achievementSummary');if(!box)return;const m=loadMeta();
+  let h='<div class="micro" style="margin:6px 0 8px;">GLOBAL ARCHIVE · 成就总结</div>';
+  h+='<div class="card"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div class="stat"><div class="k">历史成就</div><div class="v gold">'+m.achievementLog.length+'</div></div><div class="stat"><div class="k">本局成就</div><div class="v jade">'+state.ach.length+'</div></div><div class="stat"><div class="k">通关记录</div><div class="v">'+m.runs.length+'</div></div></div></div>';
+  if(!m.achievementLog.length)h+='<div class="card dark" style="text-align:center;padding:20px;"><p class="faint tiny">还没有历史成就。周结算和结局会生成新的非同质化成就。</p></div>';
+  else{h+='<div class="item-grid">';m.achievementLog.slice(0,8).forEach(a=>{h+='<div class="item"><div class="nm">'+esc(a.seed.title)+'</div><div class="en">'+esc(a.seed.tone||'ACHIEVEMENT')+'</div><div class="ds">'+esc(a.seed.desc)+'</div></div>';});h+='</div>';}
+  if(m.runs.length){h+='<div class="micro" style="margin:16px 0 8px;">RUN LOG · 通关记录</div><div class="card">';m.runs.slice(0,5).forEach(r=>{h+='<div class="resume-line"><span class="no">'+r.week+'</span><span class="txt">'+(r.kind==='retire'?'功成身退':'清算结束')+' · '+esc(r.route)+' · '+levelName(r.affection)+' · '+fmtMoney(r.valuation)+'</span></div>';});h+='</div>';}
+  box.innerHTML=h;
+}
+/* ---------- corp ---------- */
+function renderCorp(){
+  checkAch();
+  const box=$('#panel-corp');
+  const rt=routeObj();
+  let h='<div class="micro">CORPORATE · 司务</div><div class="orn"><span class="d"></span></div>';
+  h+='<div class="card"><div class="micro" style="margin-bottom:8px;">OVERVIEW · 公司概览</div>'+
+     '<div class="h3">'+esc(state.companyName||state.routeName)+'集团 <span class="faint" style="font-size:12px;">'+rt.en+'</span></div>'+
+     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">'+
+     '<div class="stat"><div class="k">估值</div><div class="v gold">'+fmtMoney(state.valuation)+'</div></div>'+
+     '<div class="stat"><div class="k">声誉</div><div class="v">'+state.reputation+'</div></div>'+
+     '<div class="stat"><div class="k">士气</div><div class="v">'+state.morale+'</div></div>'+
+     '<div class="stat"><div class="k">好感</div><div class="v jade">'+levelName(state.affection)+'</div></div></div>'+
+     (state.bankrupt>0?'<p class="tiny" style="color:#d98b77;margin-top:10px;line-height:1.7;">连续 '+state.bankrupt+' 周现金流告急。若持续亏损，公司或将破产清算。</p>':'')+
+     '</div>';
+  state.brand=state.brand||{fans:0,product:50,media:50};
+  h+='<div class="micro" style="margin:6px 0 8px;">BRAND OPS · 长期经营</div><div class="card"><div class="h3">品牌基本盘</div><div class="brand-board"><div class="stat"><div class="k">品牌粉丝</div><div class="v gold">'+state.brand.fans+'万</div></div><div class="stat"><div class="k">产品口碑</div><div class="v jade">'+state.brand.product+'</div></div><div class="stat"><div class="k">媒体关系</div><div class="v">'+state.brand.media+'</div></div></div><p class="faint tiny" style="margin-top:10px;line-height:1.8;">发布会、热搜和团建会持续影响这些长期指标，不会一局动作就结束。</p></div>';
+  h+='<div class="micro" style="margin:6px 0 8px;">TRENDING · 热搜舆论台</div>';
+  if(state.hotSearch){h+=renderHotSearchCard(false);}else{h+='<div class="card hot-card" style="text-align:center;padding:18px;"><p class="faint tiny" style="line-height:1.8;">当前没有正在燃烧的热搜。您可以去生活页主动刷新舆论风向。</p><button class="btn small danger" style="margin-top:10px;" onclick="g.openHotSearch()">打开热搜榜</button></div>';}
+  h+='<div class="micro" style="margin:6px 0 8px;">STAFF DIRECTORY · 公司人员档案（'+(state.employees||[]).length+' 人）</div>';
+  if(!state.employees||!state.employees.length){h+='<div class="card dark" style="text-align:center;padding:18px;"><p class="faint tiny">尚无在职员工。招聘并盖章录用后，员工会进入公司档案并参与每周经营。</p></div>';}
+  else{h+='<div class="card">';state.employees.forEach(e=>{h+='<div class="employee-card" style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;gap:10px;"><div><div class="h3">'+esc(e.name)+'</div><div class="employee-role">'+esc(e.position)+' · '+esc(e.status||'在职')+'</div></div><div class="chip jade">员工档案</div></div><div class="faint tiny" style="margin-top:7px;line-height:1.8;">'+esc(e.school)+' · '+esc(e.years)+'经验<br>入职第 '+Math.max(1,state.week-e.joinedWeek+1)+' 周 · '+esc(e.performance||'稳定产出')+'</div><div class="employee-metrics"><div class="stat"><div class="k">月薪</div><div class="v">¥'+e.salaryWan+'万</div></div><div class="stat"><div class="k">月度产出</div><div class="v jade">¥'+e.outputWan+'万</div></div><div class="stat"><div class="k">估值贡献</div><div class="v gold">+'+e.valueScore+'%</div></div></div></div>';});h+='</div>';}
+  h+='<div class="card"><div class="micro" style="margin-bottom:4px;">VALUATION TREND · 估值走势</div>'+chartSVG()+'</div>';
+  h+='<div class="btn-row" style="margin-bottom:14px;"><button class="btn small ghost" onclick="g.manualSave()">手动保存</button><button class="btn small primary" '+(state.actions>0?'disabled':'')+' onclick="g.nextWeek()">进入下一周</button></div>';
+  h+='<div id="achievementSummary"></div>';
+  h+='<div class="micro" style="margin:6px 0 8px;">ACHIEVEMENTS · 成就</div><div class="card" style="padding:8px 16px;">';
+  ACH.forEach(a=>{
+    const un=state.ach.includes(a.id);
+    h+='<div class="ach '+(un?'un':'lock')+'"><div class="ic"><svg viewBox="0 0 24 24">'+(ACH_ICON[a.ic]||'')+'</svg></div>'+
+       '<div class="tx"><div class="n">'+a.n+'</div><div class="d">'+a.d+'</div></div>'+
+       '<div class="st">'+(un?'已达成':'未达成')+'</div></div>';
+  });
+  h+='</div>';
+  h+='<div class="micro" style="margin:6px 0 8px;">TREASURY · 收藏室（'+ (state.inventory.length+state.gifted.length)+' 件）</div>';
+  if(!state.inventory.length&&!state.gifted.length){
+    h+='<div class="card dark" style="text-align:center;padding:20px;"><p class="faint tiny">尚无藏品。拍卖会是入手的门路。</p></div>';
+  }else{
+    h+='<div class="item-grid">';
+    [...state.inventory, ...state.gifted].forEach(it=>{
+      h+='<div class="item"><div class="nm">'+esc(it.name)+'</div><div class="en">'+it.en+'</div>'+
+         '<div class="ds">'+(it.given?'已赠予 '+esc(state.secretaryName):esc(it.desc))+'</div></div>';
+    });
+    h+='</div>';
+  }
+  h+='<div class="hr"></div><div class="micro" style="margin-bottom:10px;">EPILOGUE · 终局</div>';
+  h+='<button class="btn danger" onclick="g.confirmEnd()">功成身退 · 结束本局</button>';
+  h+='<p class="faint tiny" style="text-align:center;margin-top:10px;line-height:1.8;">结束后，本局结果将写入您与秘书的共同记忆。<br>连续 3 周破产则将被迫清算。</p>';
+  box.innerHTML=h;
+  renderAchievementHub();
+}
+function chartSVG(){
+  const hst=state.history.length>1?state.history:state.history.concat([{w:state.week,v:state.valuation}]);
+  const W=320,H=96,P=6;
+  let min=Infinity,max=-Infinity;
+  hst.forEach(p=>{min=Math.min(min,p.v);max=Math.max(max,p.v);});
+  if(max-min<1){max=min+1;}
+  const x=i=>P+(W-2*P)*i/(hst.length-1||1);
+  const y=v=>H-P-(H-2*P)*(v-min)/(max-min);
+  const pts=hst.map((p,i)=>x(i).toFixed(1)+','+y(p.v).toFixed(1)).join(' ');
+  const area=pts+' '+x(hst.length-1).toFixed(1)+','+(H-P)+' '+x(0).toFixed(1)+','+(H-P);
+  return '<svg viewBox="0 0 '+W+' '+H+'" class="chart"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(200,169,106,.34)"/><stop offset="1" stop-color="rgba(200,169,106,0)"/></linearGradient></defs>'+
+    '<polygon points="'+area+'" fill="url(#cg)"/>'+
+    '<polyline points="'+pts+'" fill="none" stroke="#c8a96a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle cx="'+x(hst.length-1).toFixed(1)+'" cy="'+y(hst[hst.length-1].v).toFixed(1)+'" r="2.6" fill="#e7cd95"/></svg>';
+}
+function confirmEnd(){
+  openSheet('<div class="micro">EPILOGUE · 终局</div><div class="orn"><span class="d"></span></div>'+
+    '<div class="h2">功成身退</div>'+
+    '<p class="dim" style="margin-top:12px;line-height:1.9;font-size:13px;">您将结束本局经营。本局结果（估值、声誉、与秘书的好感）将写入您与秘书的共同记忆。确定现在退场吗？</p>'+
+    '<div class="btn-row" style="margin-top:16px;"><button class="btn danger" onclick="g.closeModal();g.endGame(\'retire\')">就此退场</button>'+
+    '<button class="btn ghost" onclick="g.closeModal()">再战一局</button></div>','center');
+}
+function endingTier(kind){
+  if(kind==='bankrupt'||state.bankrupt>=3)return '清算退场';
+  if(state.valuation>=300000000&&state.reputation>=75)return '传奇收官';
+  if(state.valuation>=120000000&&state.money>0)return '稳健胜利';
+  if(state.reputation<25)return '争议退场';
+  if((state.employees||[]).length>=5&&state.morale>=70)return '组织成型';
+  if(state.affection>=75)return '并肩终章';
+  return '普通收官';
+}
+function endingContext(kind){
+  const peak=(state.history||[]).reduce((m,p)=>Math.max(m,p.v||0),state.valuation||0);
+  const staff=(state.employees||[]).slice(0,6).map(e=>e.name+'（'+e.position+'，月薪'+e.salaryWan+'万，产出'+e.outputWan+'万）').join('；')||'暂无正式员工';
+  const ach=(state.achievementsMeta||[]).slice(0,5).map(a=>a.seed&&a.seed.title).filter(Boolean).join('、')||'暂无本局特殊成就';
+  return '结局类型候选：'+endingTier(kind)+'；结束方式：'+kind+'；公司名称：'+(state.companyName||state.routeName)+'集团；行业路线：'+state.routeName+'；经营周数：'+state.week+'；资金：'+fmtMoney(state.money)+'；估值：'+fmtMoney(state.valuation)+'；历史峰值：'+fmtMoney(peak)+'；声誉：'+state.reputation+'；士气：'+state.morale+'；秘书：'+state.secretaryName+'；秘书好感：'+levelName(state.affection)+'('+state.affection+'/100)；员工：'+staff+'；品牌粉丝：'+((state.brand&&state.brand.fans)||0)+'万；产品口碑：'+((state.brand&&state.brand.product)||50)+'；媒体关系：'+((state.brand&&state.brand.media)||50)+'；热搜记录：'+(state.hotSearchLog||[]).slice(0,4).map(x=>x.title||x.t).filter(Boolean).join('、')+'；团建记录：'+(state.teamBuildLog||[]).slice(0,4).map(x=>x.name||x.title).filter(Boolean).join('、')+'；民情记录：'+(state.publicPulseLog||[]).slice(0,4).map(x=>x.title).filter(Boolean).join('、')+'；本局成就：'+ach+'。';
+}
+async function generateEndingReport(kind){
+  const fallbackTitle=kind==='retire'?'功成身退':'破产清算';
+  const fallbackFarewell=kind==='retire'?'「从第一份简历到最后一笔签约，我都在您身边。这段路，我记下了。您随时回来，办公室永远为您留着灯。」':'「……没关系。商海浮沉，本就是常态。这一次跌倒，我陪您一起记着。来日方长。」';
+  if(hasAPI){try{
+    const prompt='请根据以下经营档案，为小游戏《总裁手记》生成一个多样化、非模板的最终结局总结。'+playerContext()+' 需要体现当前经营状况的差异：成功、平稳、争议、清算、情感羁绊、组织建设、品牌声量等都可能成为结局重点。不要写成固定通用套话，不要默认玩家性别。经营档案：'+endingContext(kind)+'。严格输出JSON：{"title":"结局标题，12字内","type":"结局类型，8字内","summary":"结局总评，2-4句，具体写出为什么走到这个结局","secretaryFarewell":"秘书以角色身份说的告别，2-4句，符合人设","review":["经营复盘要点1","经营复盘要点2","经营复盘要点3"],"epilogue":"多年后的一句尾声，画面感强"}';
+    let raw='';
+    if(state.secretaryId&&state.secretaryId!=='demo'){
+      const pkg=await getPkg();
+      const r=await withTimeout(API.callLLM({characterId:state.secretaryId,messages:[...pkg.messages,{role:'system',content:'你是《总裁手记》的结局撰写者，同时保持秘书角色口吻。只输出JSON。'},{role:'user',content:prompt}]}),16000);
+      raw=r&&r.content||'';
+    }else{
+      raw=await callGlobal([{role:'system',content:'你是商业经营游戏《总裁手记》的结局撰写者。只输出JSON。'},{role:'user',content:prompt}]);
+    }
+    const x=parseJSON(raw);
+    if(x&&x.title&&x.summary&&x.secretaryFarewell)return x;
+  }catch(e){}}
+  return {title:fallbackTitle,type:endingTier(kind),summary:kind==='retire'?'您选择在此刻收官，把公司停在仍可回望的位置。董事会、员工和市场会给出不同评价，但这段经营已经成为档案。':'现金流终于没有撑过最后一次例会，公司进入清算。失败不是空白，它留下了下一次重开的警示。',secretaryFarewell:fallbackFarewell,review:['收官估值 '+fmtMoney(state.valuation),'声誉 '+state.reputation+' · 士气 '+state.morale,'秘书好感 '+levelName(state.affection)],epilogue:'多年后，办公室的灯牌换了名字，但那份旧档案仍被妥善收在柜底。'};
+}
+async function endGame(kind){
+  if(state.ended)return;
+  state.ended=true;
+  pushRunRecord(kind);
+  await syncAchievementForCurrentRun(kind);
+  showLoading(kind==='retire'?'正在整理您的商业档案…':'公司清算中…');
+  const ending=await generateEndingReport(kind);
+  const farewell=ending.secretaryFarewell||'';
+  if(hasAPI&&state.secretaryId&&!state.recorded){
+    try{
+      const sum=state.playerName+'在《总裁手记》中执掌'+(state.companyName||state.routeName)+'集团共'+state.week+'周，结局「'+(ending.title||endingTier(kind))+'」，收官估值'+fmtMoney(state.valuation)+'，声誉'+state.reputation+'，与'+state.secretaryName+'的好感达到「'+levelName(state.affection)+'」，共解锁成就'+state.ach.length+'项。'+(ending.summary||'');
+      await withTimeout(API.recordGameEvent({characterIds:[state.secretaryId],summary:sum}),8000);
+      state.recorded=true;persist();
+    }catch(e){}
+  }
+  hideLoading();
+  $('#endKind').textContent=kind==='retire'?'FINAL CHAPTER · 收官':'FINAL CHAPTER · 清算';
+  $('#endTitle').textContent=ending.title||((kind==='retire')?'功成身退':'破产清算');
+  $('#endType').textContent=ending.type||endingTier(kind);
+  $('#endCompany').textContent=(state.companyName||state.routeName)+'集团 · 终局卷宗';
+  $('#endCode').textContent='BOARD ARCHIVE · FILE '+String(Date.now()).slice(-8)+' · WEEK '+state.week;
+  const endAvatar=$('#endAvatar');
+  endAvatar.textContent=(state.secretaryName||'秘').slice(0,1);
+  if(state.secretaryAvatar){endAvatar.style.backgroundImage='url("'+String(state.secretaryAvatar).replace(/"/g,'')+'")';endAvatar.textContent='';}
+  else endAvatar.style.backgroundImage='';
+  $('#endWho').textContent=state.secretaryName+' · 总秘书 / 最终陈述';
+  $('#endFarewell').textContent=farewell;
+  const review=Array.isArray(ending.review)?ending.review:[];
+  $('#endStats').innerHTML=
+    '<div class="card glow" style="margin-bottom:12px;"><div class="micro">ENDING TYPE · '+esc(ending.type||endingTier(kind))+'</div><p class="dim tiny" style="margin-top:10px;line-height:1.9;">'+esc(ending.summary||'本局经营已经收官。')+'</p>'+
+    (review.length?'<div class="press-shot" style="margin-top:10px;">'+review.slice(0,4).map(x=>'<div class="post"><div class="user">经营复盘</div><div class="tiny">'+esc(x)+'</div></div>').join('')+'</div>':'')+
+    '<p class="faint tiny" style="margin-top:10px;line-height:1.8;">'+esc(ending.epilogue||'档案已经归档。')+'</p></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'+
+    '<div class="stat"><div class="k">经营周数</div><div class="v">'+state.week+' 周</div></div>'+
+    '<div class="stat"><div class="k">收官估值</div><div class="v gold">'+fmtMoney(state.valuation)+'</div></div>'+
+    '<div class="stat"><div class="k">声誉</div><div class="v">'+state.reputation+'</div></div>'+
+    '<div class="stat"><div class="k">好感</div><div class="v jade">'+levelName(state.affection)+'</div></div>'+
+    '<div class="stat"><div class="k">员工</div><div class="v">'+((state.employees||[]).length)+' 人</div></div>'+
+    '<div class="stat"><div class="k">成就</div><div class="v">'+state.ach.length+' 项</div></div></div>';
+  $('#endNote').textContent=state.recorded?'卷宗已封存，本局结果已写入角色记忆':'本地卷宗已封存 · 演示模式未写入角色记忆';
+  showScreen('end');
+  persist();
+}
+function leave(){
+  if(hasAPI&&API.closeGame){withTimeout(API.closeGame(),3000).catch(()=>{});return;}
+  location.reload();
+}
+
+function employeePayroll(){return (state.employees||[]).reduce((n,e)=>n+Math.max(0,Number(e.salaryWan)||0)*10000,0);}
+function employeeOutput(){return (state.employees||[]).reduce((n,e)=>n+Math.max(0,Number(e.outputWan)||0)*10000,0);}
+function employeeValuationGain(){return (state.employees||[]).reduce((n,e)=>n+Math.max(0,Number(e.valueScore)||0),0);}
+function employeeProfile(c){const good=c.truth&&c.truth.verdict==='good';const salary=Math.max(1,Number(c.salary)||1);return {id:'emp'+Date.now(),name:c.name,gender:c.gender,age:c.age,position:c.position,school:c.school,years:c.years,salaryWan:salary,outputWan:good?rnd(35,75):rnd(10,28),valueScore:good?rnd(1,4):rnd(0,1),joinedWeek:state.week,performance:good?'稳定产出':'需要观察',status:'在职'};}
+
+/* ---------- weekly ---------- */
+function afterAction(){
+  maybeRandomAchievement('行动结算').catch(()=>{});
+  renderTop();
+  if(state.actions<=0){
+    settleWeek().catch(()=>{hideLoading();toast('周结算失败，请再试一次','warn');});
+  }else{
+    renderAll();persist();
+  }
+}
+async function settleWeek(){
+  const payroll=employeePayroll();
+  const output=employeeOutput();
+  const employeeGain=employeeValuationGain();
+  const inc=Math.round(state.valuation*0.025)+(state.reputation-50)*10000+output-payroll;
+  state.money+=inc;
+  if(employeeGain)state.valuation=Math.max(1e6,Math.round(state.valuation*(1+employeeGain/100)));
+  if(state.employees&&state.employees.length){state.morale=clamp(state.morale+(output>=payroll?1:-2),0,100);}
+  const vp=1+(state.reputation-50)*0.0008+(state.morale-50)*0.0006;
+  state.valuation=Math.max(1e6,Math.round(state.valuation*vp));
+  if(state.money<0){state.money=0;state.reputation=clamp(state.reputation-6,0,100);state.morale=clamp(state.morale-10,0,100);state.bankrupt++;}
+  else state.bankrupt=0;
+  state.reputation=clamp(state.reputation+(state.reputation>70?-1:state.reputation<30?2:0),0,100);
+  state.morale=clamp(state.morale+(state.morale>70?-1:state.morale<35?3:0),0,100);
+  state.week++;
+  state.actions=5;
+  state.pendingRecruit=false;
+  state.curEvent=null;
+  state.history.push({w:state.week,v:state.valuation});
+  state.flavor=pick(FLAVOR);
+  if(state.hotSearch){state.hotSearch.heat=clamp(state.hotSearch.heat-rnd(8,18),0,100);if(state.hotSearch.heat<=25)state.hotSearch=null;}
+  else if(Math.random()<0.35){state.hotSearch=createHotSearch();}
+  showLoading('董事会正在生成本周新议题…');
+  state.curEvent=await generateOpsEvent('第 '+state.week+' 周董事会新议题');
+  hideLoading();
+  persist();
+  const oldVal=state.history[state.history.length-2]?state.history[state.history.length-2].v:state.valuation;
+  const d=state.valuation-oldVal;
+  const staffLine=(state.employees&&state.employees.length)?'<div class="press-shot"><div class="post"><div class="user">HR 月报</div><div class="tiny" style="line-height:1.7;">'+esc(state.employees.slice(0,3).map(e=>e.name+'：'+e.performance+'，本月产出 ¥'+e.outputWan+'万').join('；'))+'</div></div></div>':'';
+  openSheet('<div class="micro">WEEKLY REPORT · 周报</div><div class="orn"><span class="d"></span></div>'+
+    '<div class="h2">第 '+state.week+' 周 · 董事会例会</div>'+
+    '<p class="dim tiny" style="margin-top:10px;line-height:2;">本周经营净额 ¥'+fmtMoney(inc)+'<br>员工工资 ¥'+fmtMoney(payroll)+' · 员工产出 ¥'+fmtMoney(output)+'<br>估值 '+(d>=0?'+':'')+fmtMoney(d)+'（'+(d>=0?'+':'')+(oldVal?Math.round(d/oldVal*100):0)+'%）<br>声誉 '+state.reputation+' · 士气 '+state.morale+(state.bankrupt>0?'<br><span style="color:#d98b77;">现金流告急：连续 '+state.bankrupt+' 周</span>':'')+'</p>'+
+    chartSVG()+staffLine+
+    (state.curEvent?'<div class="bubble" style="margin-top:12px;"><div class="who">董事会 · 新议题</div>「'+esc(state.curEvent.t)+'」</div>':'')+
+    '<div class="hr"></div><button class="btn primary" onclick="g.closeModal()">开启新一周</button>');
+  renderAll();
+  if(state.bankrupt>=3){
+    setTimeout(()=>{closeModal();endGame('bankrupt');},600);
+    return;
+  }
+  checkAch();
+}
+
+/* ---------- achievements ---------- */
+function checkAch(){
+  if(!state)return false;let changed=false;
+  state.ach=Array.isArray(state.ach)?state.ach:[];
+  ACH.forEach(a=>{if(!state.ach.includes(a.id)&&a.c()){state.ach.push(a.id);changed=true;toast('成就达成 · '+a.n);}});
+  if(changed)persist();
+  return changed;
+}
+
+/* ================= wire up ================= */
+window.g={confirmClearData,clearLocalTestData,
+  start:()=>{const pg=$('#playerGender'),pt=$('#playerTitle');if(pg)state.playerGender=pg.value;if(pt)state.playerTitle=(pt.value||'董事长').trim()||'董事长';persist();goSelect();},
+  pickSec,
+  pickRoute,
+  tab,
+  closeModal,
+  adviceEvent,
+  resolveEvent,
+  openRecruit,
+  adviceCandidate,
+  investCandidate,
+  testCandidate,
+  decideCandidate,confirmCandidateDecision,
+  openAuction,aucBid,aucPass,aucBuyout,aucGift,aucKeep,
+  openSocial,socialChoose,
+  openLeisure,leisurePick,
+  chatSend,giftItem,
+  confirmEnd,endGame,leave,
+  afterAction,nextWeek,manualSave,ensureOpsEvent,openCustomPlan,resolveCustomPlan,openAvatarPicker,clearAvatar,openPublicPulse,resolvePublicPulse,openTeamBuilding,resolveTeamBuilding,openHotSearch,refreshHotSearch,resolveHotSearch,openMiniHub,startContractGame,pickContractClause,startScheduleGame,updateScheduleScore,finishScheduleGame,startNegotiationGame,negotiationMove,startLaunchGame,updateLaunchScore,finishLaunchGame,
+};
+boot().catch(function(e){showFatal('启动异常: '+(e&&e.message?e.message:e));});
+
+
+
+
+</script>
+</body>
+</html>
