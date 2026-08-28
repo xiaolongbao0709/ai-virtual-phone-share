@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T13:36:13.235Z",
+  "generatedAt": "2026-08-28T13:37:46.832Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1414,7 +1414,7 @@
       "author": "yzy",
       "avatar": "资源/应用/collect/.avatar.png",
       "ownerHash": "c84f1904fa7b68c212c91bc5fda2055472af121e6c8f64740a348e1eb138a112",
-      "updatedAt": "2026-08-28T17:59:24+08:00"
+      "updatedAt": "2026-08-28T21:37:19+08:00"
     },
     {
       "folder": "应用",
