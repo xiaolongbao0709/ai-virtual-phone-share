@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T13:45:13.389Z",
+  "generatedAt": "2026-08-28T13:46:20.987Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1297,7 +1297,6 @@
         "资源/应用/[爱心]论坛app/forum-float-app-v1.8.0.zip"
       ],
       "images": [
-        "资源/应用/[爱心]论坛app/IMG_3729.png",
         "资源/应用/[爱心]论坛app/IMG_3730.png",
         "资源/应用/[爱心]论坛app/IMG_3732.png",
         "资源/应用/[爱心]论坛app/IMG_3733.png"
@@ -1306,7 +1305,7 @@
       "author": "末末",
       "avatar": "",
       "ownerHash": "b5ad1b31d3822e30694b781f9a0721bc5b93fff92859b104499055699a7268ee",
-      "updatedAt": "2026-08-28T21:44:52+08:00"
+      "updatedAt": "2026-08-28T21:45:59+08:00"
     },
     {
       "folder": "应用",
