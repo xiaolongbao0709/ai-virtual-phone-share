@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T02:20:19.045Z",
+  "generatedAt": "2026-08-28T02:22:39.828Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 29
+      "count": 25
     },
     {
       "name": "线上聊天状态栏",
@@ -2575,24 +2575,6 @@
     },
     {
       "folder": "线上美化",
-      "name": "微仿ds",
-      "dirName": "微仿ds",
-      "type": "dir",
-      "path": "资源/线上美化/微仿ds",
-      "files": [
-        "资源/线上美化/微仿ds/微仿ds.css"
-      ],
-      "images": [
-        "资源/线上美化/微仿ds/Screenshot_20260825_203550_com.kiwibrowser.browser.jpg"
-      ],
-      "description": "🚫二传\n🉑二改\n导入至聊天室CSS\n一切不适配的请询问ai\n测试设备∶仅安卓\n测试浏览器∶仅kiwi browser（缩放67％） \n因为代码全是贴图的，所以禁用夜间模式，底部真的肘不动了，背景图可换，做的很简陋，支持改动🙏",
-      "author": "里谦的洁洁",
-      "avatar": "资源/线上美化/微仿ds/.avatar.png",
-      "ownerHash": "d4bf6f1021e4d01a3e032835aecdfa8533cb7e3d60c857836cfaa23e1bf61086",
-      "updatedAt": "2026-08-25T20:41:29+08:00"
-    },
-    {
-      "folder": "线上美化",
       "name": "杂志风",
       "dirName": "杂志风",
       "type": "dir",
@@ -2611,24 +2593,6 @@
       "avatar": "",
       "ownerHash": "3fa5d4b8a645483b397341996fd8240c49b89d41e275e38cf975dc0418149767",
       "updatedAt": "2026-08-28T00:03:00+08:00"
-    },
-    {
-      "folder": "线上美化",
-      "name": "极简绿",
-      "dirName": "极简绿",
-      "type": "dir",
-      "path": "资源/线上美化/极简绿",
-      "files": [
-        "资源/线上美化/极简绿/淡绿.css"
-      ],
-      "images": [
-        "资源/线上美化/极简绿/Screenshot_20260827_181601_com.kiwibrowser.browser.jpg"
-      ],
-      "description": "🚫二传\n🚫二改（自用随意）\n导入至聊天室CSS\n一切不适配的请询问ai\n测试设备∶仅安卓\n测试浏览器∶仅kiwi browser（缩放67％） \n做的很简陋，很多地方都没改🙊",
-      "author": "里谦的洁洁",
-      "avatar": "资源/线上美化/极简绿/.avatar.png",
-      "ownerHash": "d4bf6f1021e4d01a3e032835aecdfa8533cb7e3d60c857836cfaa23e1bf61086",
-      "updatedAt": "2026-08-27T20:31:34+08:00"
     },
     {
       "folder": "线上美化",
@@ -2713,26 +2677,6 @@
       "avatar": "资源/线上美化/立体蓝/.avatar.png",
       "ownerHash": "bf65bc1c732341505dc056c65d6ad17b6862e2c1f0cdf99f70af36a873b438aa",
       "updatedAt": "2026-08-13T15:56:45+08:00"
-    },
-    {
-      "folder": "线上美化",
-      "name": "粉色少女心",
-      "dirName": "粉色少女心",
-      "type": "dir",
-      "path": "资源/线上美化/粉色少女心",
-      "files": [
-        "资源/线上美化/粉色少女心/粉.css",
-        "资源/线上美化/粉色少女心/粉键.css"
-      ],
-      "images": [
-        "资源/线上美化/粉色少女心/Screenshot_20260826_204203_com.kiwibrowser.browser.jpg",
-        "资源/线上美化/粉色少女心/Screenshot_20260826_204214_com.kiwibrowser.browser.jpg"
-      ],
-      "description": "🚫二传\n🚫二改（自用随意）\n导入至聊天室CSS\n一切不适配的请询问ai\n测试设备∶仅安卓\n测试浏览器∶仅kiwi browser（缩放67％） \n第一个文件隐藏底部图标了，第二个文件只能用回车键发送信息，图标还是在原位置，正在输入中不见了，自行判断😕，红包转账都没改，做的很简陋\n图一文件一，图二文件二",
-      "author": "里谦的洁洁",
-      "avatar": "资源/线上美化/粉色少女心/.avatar.png",
-      "ownerHash": "d4bf6f1021e4d01a3e032835aecdfa8533cb7e3d60c857836cfaa23e1bf61086",
-      "updatedAt": "2026-08-26T21:04:35+08:00"
     },
     {
       "folder": "线上美化",
@@ -2829,24 +2773,6 @@
       "avatar": "资源/线上美化/薄荷生巧/.avatar.png",
       "ownerHash": "c6eb64f5a21fe7976bb628a5a0d28675fe8cfc7bc2290fd401fcde6ba18999e7",
       "updatedAt": "2026-08-28T02:00:46+08:00"
-    },
-    {
-      "folder": "线上美化",
-      "name": "轻松🐻",
-      "dirName": "轻松🐻",
-      "type": "dir",
-      "path": "资源/线上美化/轻松🐻",
-      "files": [
-        "资源/线上美化/轻松🐻/轻松熊2.css"
-      ],
-      "images": [
-        "资源/线上美化/轻松🐻/Screenshot_20260826_104459_com.kiwibrowser.browser.jpg"
-      ],
-      "description": "🚫二传\n🚫二改（自用随意）\n导入至聊天室CSS\n一切不适配的请询问ai\n测试设备∶仅安卓\n测试浏览器∶仅kiwi browser（缩放67％） \n做的很简陋❤️❤️，很多地方都没改😆，背景图可更改\n改了头像框的问题，如果还是有问题，自改",
-      "author": "里谦的洁洁",
-      "avatar": "资源/线上美化/轻松🐻/.avatar.png",
-      "ownerHash": "d4bf6f1021e4d01a3e032835aecdfa8533cb7e3d60c857836cfaa23e1bf61086",
-      "updatedAt": "2026-08-26T10:46:46+08:00"
     },
     {
       "folder": "线上美化",
