@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T11:55:00.683Z",
+  "generatedAt": "2026-08-28T11:56:18.036Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -53,7 +53,7 @@
     },
     {
       "name": "游戏",
-      "count": 6
+      "count": 7
     },
     {
       "name": "特调材料",
@@ -2313,6 +2313,22 @@
       "avatar": "资源/消息列表美化/仿ins主页/.avatar.png",
       "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
       "updatedAt": "2026-08-17T19:42:39+08:00"
+    },
+    {
+      "folder": "游戏",
+      "name": "word search",
+      "dirName": "word search",
+      "type": "dir",
+      "path": "资源/游戏/word search",
+      "files": [
+        "资源/游戏/word search/word search byKhalilah.txt"
+      ],
+      "images": [],
+      "description": "",
+      "author": "Khalilah",
+      "avatar": "资源/游戏/word search/.avatar.png",
+      "ownerHash": "3b2ec651ad1405938e448749951310a2a116dd422b84a87c2e25c611edd1200c",
+      "updatedAt": "2026-08-28T19:55:54+08:00"
     },
     {
       "folder": "游戏",
