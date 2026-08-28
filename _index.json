@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T11:39:28.601Z",
+  "generatedAt": "2026-08-28T11:41:14.182Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 52
+      "count": 53
     },
     {
       "name": "应用bug改善",
@@ -1777,6 +1777,26 @@
       "avatar": "资源/应用/景匣/.avatar.png",
       "ownerHash": "c84f1904fa7b68c212c91bc5fda2055472af121e6c8f64740a348e1eb138a112",
       "updatedAt": "2026-08-27T12:41:24+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "活字乱刷",
+      "dirName": "活字乱刷",
+      "type": "dir",
+      "path": "资源/应用/活字乱刷",
+      "files": [
+        "资源/应用/活字乱刷/manifest.json",
+        "资源/应用/活字乱刷/presets.json",
+        "资源/应用/活字乱刷/活字乱刷.html"
+      ],
+      "images": [
+        "资源/应用/活字乱刷/未命名作品.png"
+      ],
+      "description": "一个打发时间的小游戏，做的是可以联机的，但我自己测试的时候没有试过联机，无聊可以玩玩！有问题的话可以🍠反馈",
+      "author": "Khalilah",
+      "avatar": "",
+      "ownerHash": "3b2ec651ad1405938e448749951310a2a116dd422b84a87c2e25c611edd1200c",
+      "updatedAt": "2026-08-28T19:40:51+08:00"
     },
     {
       "folder": "应用",
