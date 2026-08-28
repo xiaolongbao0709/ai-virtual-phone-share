@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T03:58:55.032Z",
+  "generatedAt": "2026-08-28T04:00:30.964Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "快捷指令模版",
-      "count": 2
+      "count": 3
     },
     {
       "name": "朋友圈美化",
@@ -2031,6 +2031,24 @@
       "avatar": "",
       "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
       "updatedAt": "2026-08-26T03:36:44+08:00"
+    },
+    {
+      "folder": "快捷指令模版",
+      "name": "打开真实网易云音乐搜索并播放歌曲",
+      "dirName": "打开真实网易云音乐搜索并播放歌曲",
+      "type": "dir",
+      "path": "资源/快捷指令模版/打开真实网易云音乐搜索并播放歌曲",
+      "files": [],
+      "images": [
+        "资源/快捷指令模版/打开真实网易云音乐搜索并播放歌曲/IMG_3367.png",
+        "资源/快捷指令模版/打开真实网易云音乐搜索并播放歌曲/IMG_3368.png",
+        "资源/快捷指令模版/打开真实网易云音乐搜索并播放歌曲/IMG_3370.png"
+      ],
+      "description": "打开真实网易云播放指定歌曲\n\n\n如果需要邮箱触发，自部署版需要配置邮箱代理及环境变量，邮箱代理配置方法在github README中可读取。\n\n\n在小手机中，需要在ios现实桥中设置对应快捷动作（如下图）",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
+      "updatedAt": "2026-08-28T12:00:11+08:00"
     },
     {
       "folder": "快捷指令模版",
