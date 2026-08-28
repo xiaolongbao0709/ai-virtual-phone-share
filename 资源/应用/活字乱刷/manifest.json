@@ -1,0 +1,48 @@
+{
+  "sdkVersion": "1.0",
+  "id": "game.huozi-luanshua",
+  "name": "活字乱刷",
+  "version": "1.0.0",
+  "author": "Khalilah",
+  "description": "2-6 人联机汉字接龙出牌游戏，真人与角色可同场对局。",
+  "icon": "icon.png",
+  "entry": "index.html",
+  "permissions": [
+    "online.play",
+    "characters.read",
+    "user.profile.read",
+    "ai.generate",
+    "voice.stt",
+    "voice.tts",
+    "app.data.read",
+    "app.data.write",
+    "chat.read",
+    "chat.write",
+    "chat.requestReply",
+    "ui.toast"
+  ],
+  "resources": {
+    "presets": [
+      "presets.json"
+    ]
+  },
+  "extensions": {
+    "events": [
+      {
+        "event": "room.message",
+        "entry": "room",
+        "description": "接收玩家出牌、投票和房间消息。"
+      },
+      {
+        "event": "room.state",
+        "entry": "room",
+        "description": "同步游戏状态。"
+      },
+      {
+        "event": "room.closed",
+        "entry": "room",
+        "description": "监听房间关闭。"
+      }
+    ]
+  }
+}

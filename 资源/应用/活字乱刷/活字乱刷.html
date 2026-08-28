@@ -1,0 +1,1547 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>活字乱刷</title>
+<style>
+*{box-sizing:border-box}
+html,body{width:100%;min-height:100%;margin:0;overflow:hidden;background:#eef1ec;color:#29323a;font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}
+button{min-height:44px;border:0;border-radius:8px;background:#dfe7dc;color:#29323a;font-weight:800}
+button:disabled{opacity:.45}
+input,textarea{width:100%;min-height:44px;border:1px solid rgba(92,105,112,.18);border-radius:8px;background:rgba(255,255,255,.82);color:#29323a;padding:0 12px}
+textarea{min-height:104px;padding:10px;resize:none}
+small{color:#6d7a82}
+.hidden{display:none!important}
+
+.app{
+  min-height:100dvh;
+  padding:var(--ai-phone-app-safe-top,56px) 14px var(--ai-phone-app-safe-bottom,20px);
+  display:flex;flex-direction:column;gap:10px;
+  background:
+    radial-gradient(circle at top,rgba(184,199,188,.36),transparent 38%),
+    radial-gradient(circle at 18% 18%,rgba(221,202,185,.32),transparent 20%),
+    linear-gradient(180deg,#f3f1eb 0%,#e8eee9 100%)
+}
+.topbar{display:flex;align-items:center;gap:10px;padding-right:84px}
+.brand{
+  width:42px;height:42px;flex:0 0 auto;display:grid;place-items:center;
+  border-radius:8px;background:linear-gradient(135deg,#c7d8cc,#e7d5bf);
+  color:#27343c;font-size:24px;font-weight:900;
+  box-shadow:0 10px 20px rgba(67,78,84,.14)
+}
+.brandText{min-width:0}
+h1{margin:0;font-size:20px;line-height:1.05}
+.sub{margin-top:2px;color:#66747c;font-size:12px}
+.roomPill{
+  margin-left:auto;padding:7px 10px;border-radius:999px;
+  background:rgba(255,255,255,.66);border:1px solid rgba(92,105,112,.14);
+  color:#4c5b62;font-size:12px;white-space:nowrap
+}
+.stage,.screen{min-height:0;display:flex;flex-direction:column;gap:10px}
+.stage,.screen{flex:1}
+.panel{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(92,105,112,.13);
+  border-radius:8px;
+  box-shadow:0 14px 30px rgba(67,78,84,.1)
+}
+.pad{padding:12px}
+.row{display:flex;align-items:center;gap:8px}
+.col{display:flex;flex-direction:column;gap:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2 .wide{grid-column:1/-1}
+.primary{background:#c7d8cc}
+.warn{background:#e6d4b9}
+.danger{background:#e1b9b3}
+.ghost{background:rgba(255,255,255,.58);border:1px solid rgba(92,105,112,.16)}
+.hero{
+  min-height:74px;padding:12px;display:flex;align-items:flex-end;border-radius:8px;
+  background:linear-gradient(135deg,rgba(199,216,204,.45),rgba(196,209,219,.35))
+}
+.heroTitle{font-size:21px;font-weight:900}
+.heroText{margin-top:3px;color:#5f6c74;font-size:12px}
+.rail{display:flex;gap:8px;overflow:auto;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.charCard{
+  width:90px;flex:0 0 auto;padding:9px 8px;display:flex;flex-direction:column;
+  align-items:center;gap:6px;border:1px solid rgba(92,105,112,.14);
+  border-radius:8px;background:rgba(255,255,255,.64)
+}
+.charCard.selected{border-color:#78917f;background:rgba(199,216,204,.45)}
+.charName{width:100%;overflow:hidden;text-align:center;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800}
+.avatar{
+  width:42px;height:42px;flex:0 0 auto;border-radius:50%;object-fit:cover;
+  border:2px solid #fff;background:#c8d1d5;box-shadow:0 3px 8px rgba(67,78,84,.14)
+}
+.avatar.big{width:46px;height:46px}
+.fallback{display:grid;place-items:center;color:#334047;font-weight:900;background:#d8e0dc}
+.footerHint{color:#6d7a82;font-size:12px;text-align:center}
+.lobbyList{display:flex;flex-direction:column;gap:8px}
+.playerRow{
+  display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;
+  background:rgba(255,255,255,.62);border:1px solid rgba(92,105,112,.12)
+}
+.playerMeta{min-width:0;flex:1}
+.playerName{display:flex;align-items:center;gap:6px;min-width:0;font-weight:800}
+.playerName span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.playerTag{padding:2px 7px;border-radius:999px;background:#edf0ec;color:#66747c;font-size:11px}
+.playerCount{
+  min-width:24px;height:24px;display:grid;place-items:center;padding:0 6px;
+  border-radius:8px;background:#e6d4b9;color:#29323a;font-size:12px;font-weight:900
+}
+.statusBar{display:flex;gap:8px}
+.statusBox{
+  flex:1;min-width:0;padding:10px 12px;border-radius:8px;
+  background:rgba(255,255,255,.66);border:1px solid rgba(92,105,112,.12)
+}
+.statusTitle{font-weight:900}
+.statusSub{margin-top:2px;overflow:hidden;color:#69777f;font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.mainGame{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
+.board{
+  position:relative;flex:1;min-height:0;overflow:hidden;border-radius:8px;
+  background:linear-gradient(180deg,rgba(224,232,226,.88),rgba(211,221,216,.96));
+  border:1px solid rgba(92,105,112,.14)
+}
+.boardInner{
+  position:absolute;inset:14px;overflow:hidden;border-radius:8px;
+  background:rgba(255,255,255,.38);border:1px solid rgba(92,105,112,.12)
+}
+.seats{position:absolute;inset:0}
+.seat{position:absolute;width:84px;text-align:center}
+.seat .avatar{margin:0 auto 4px}
+.seatName{overflow:hidden;color:#334047;font-size:12px;font-weight:800;text-overflow:ellipsis;white-space:nowrap}
+.seatCount{
+  display:inline-block;margin-top:3px;padding:2px 6px;border-radius:8px;
+  background:rgba(255,255,255,.74);border:1px solid rgba(92,105,112,.12);
+  color:#5f6c74;font-size:11px
+}
+.seatTurn{filter:drop-shadow(0 0 9px rgba(118,143,126,.45))}
+.seat0{left:50%;bottom:6px;transform:translateX(-50%)}
+.seat1{left:8px;bottom:78px}
+.seat2{left:8px;top:72px}
+.seat3{left:50%;top:8px;transform:translateX(-50%)}
+.seat4{right:8px;top:72px}
+.seat5{right:8px;bottom:78px}
+.centerCard{
+  position:absolute;top:46%;left:50%;width:min(86%,420px);padding:12px;
+  transform:translate(-50%,-50%);border-radius:8px;background:rgba(255,255,255,.62);
+  border:1px solid rgba(92,105,112,.12);box-shadow:0 12px 26px rgba(67,78,84,.09);
+  text-align:center
+}
+.sectionLabel,.pendingLabel{margin-bottom:6px;color:#6a777e;font-size:12px}
+.sentence{min-height:70px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px}
+.pendingBox{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(92,105,112,.22)}
+.tile{
+  width:42px;height:50px;display:grid;place-items:center;border:3px solid #fffdf7;
+  border-radius:8px;background:#d7e2dd;color:#26323a;font-size:24px;font-weight:900;
+  box-shadow:0 3px 0 #9aa9a2
+}
+.tile.small{width:30px;height:36px;font-size:18px;border-width:2px}
+.tile.sel{background:#e6d4b9;transform:translateY(-7px)}
+.tile.add{background:#c7d8cc}
+.log{max-height:72px;overflow:auto;margin-top:8px;color:#607078;font-size:12px;text-align:left}
+.voteBox{
+  position:absolute;right:12px;bottom:12px;left:12px;padding:10px;border-radius:8px;
+  background:rgba(255,255,255,.9);border:1px solid rgba(92,105,112,.14);
+  box-shadow:0 12px 26px rgba(67,78,84,.14)
+}
+.voiceRow{margin-top:8px}
+.handWrap{flex:0 0 auto;display:flex;flex-direction:column;gap:8px}
+.hand{
+  min-height:104px;display:flex;align-items:flex-end;gap:7px;overflow-x:auto;
+  padding:10px 2px 4px;scrollbar-width:none
+}
+.hand::-webkit-scrollbar{display:none}
+.hand .tile{width:56px;height:76px;flex:0 0 auto;font-size:34px}
+.buttonGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.buttonGrid .wide{grid-column:1/-1}
+.modal{
+  position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:18px;
+  background:rgba(69,78,83,.38)
+}
+.modalCard{
+  width:min(100%,420px);display:flex;flex-direction:column;gap:10px;padding:12px;
+  border-radius:8px;background:#f8f7f1;color:#29323a;
+  border:1px solid rgba(92,105,112,.16);box-shadow:0 20px 46px rgba(67,78,84,.2)
+}
+.voiceCard{padding:10px;border-radius:8px;background:rgba(255,255,255,.72);border:1px solid rgba(92,105,112,.12)}
+.voiceBadge{
+  display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;
+  background:#c7d8cc;color:#26323a;font-size:12px;font-weight:900
+}
+.toast{
+  position:fixed;right:16px;bottom:calc(var(--ai-phone-app-safe-bottom,20px) + 12px);
+  left:16px;z-index:30;padding:10px 12px;border-radius:8px;background:#526168;
+  color:#fff;text-align:center
+}
+@media(max-width:360px){
+  h1{font-size:18px}
+  .heroTitle{font-size:22px}
+  .tile{width:38px;height:46px;font-size:21px}
+  .hand .tile{width:52px;height:70px;font-size:30px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">字</div>
+    <div class="brandText">
+      <h1>活字乱刷</h1>
+      <div class="sub" id="subtitle">联机文字接龙对局</div>
+    </div>
+    <div class="roomPill" id="roomPill">未进入房间</div>
+  </div>
+
+  <main class="stage">
+    <section id="home" class="screen">
+      <div class="hero panel">
+        <div>
+          <div class="heroTitle">把字牌刷成句子</div>
+          <div class="heroText">2-6 人开局，真人和角色都能同桌。</div>
+        </div>
+      </div>
+
+      <div class="panel pad">
+        <div class="grid2">
+          <button class="primary" id="createBtn">开新局</button>
+          <button class="ghost" id="loadCharsBtn">读取角色</button>
+          <div class="row wide">
+            <input id="joinCode" placeholder="输入好友房间码">
+            <button id="joinBtn">加入</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel pad col">
+        <div class="row" style="justify-content:space-between">
+          <b>本机角色席位</b>
+          <small id="charCount">0 个已选</small>
+        </div>
+        <div id="charList" class="rail"></div>
+        <div class="footerHint">点头像卡片选择角色，角色会按真实设定出牌和投票。</div>
+      </div>
+    </section>
+
+    <section id="lobby" class="screen hidden">
+      <div class="panel pad col">
+        <div class="row">
+          <b>房间码</b>
+          <input id="roomCode" readonly>
+          <button id="copyBtn">复制</button>
+        </div>
+        <small>至少 2 人即可开始，最多 6 人。</small>
+      </div>
+
+      <div class="panel pad col">
+        <div class="row" style="justify-content:space-between">
+          <b>玩家</b>
+          <small id="lobbyCount">0 / 6</small>
+        </div>
+        <div id="lobbyPlayers" class="lobbyList"></div>
+      </div>
+
+      <div class="panel pad">
+        <div class="grid2">
+          <button class="primary" id="startBtn">开始游戏</button>
+          <button class="ghost" id="leaveBtn">返回主页</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" class="screen hidden">
+      <div class="statusBar">
+        <div class="statusBox">
+          <div class="statusTitle" id="phaseText">对局中</div>
+          <div class="statusSub" id="turnText"></div>
+        </div>
+        <div class="statusBox" style="max-width:110px;flex:0 0 110px;text-align:center">
+          <div class="statusTitle">规则</div>
+          <div class="statusSub" id="ruleSub">单字直出</div>
+        </div>
+      </div>
+
+      <div class="mainGame">
+        <div class="board">
+          <div class="boardInner">
+            <div class="seats" id="seats"></div>
+
+            <div class="centerCard">
+              <div class="sectionLabel">公共句子</div>
+              <div class="sentence" id="sentence"></div>
+
+              <div id="pendingWrap" class="pendingBox hidden">
+                <div class="pendingLabel">待审牌</div>
+                <div class="sentence" id="pendingSentence"></div>
+              </div>
+
+              <div class="log" id="log"></div>
+            </div>
+
+            <div id="voteBox" class="voteBox hidden">
+              <b id="voteTitle"></b>
+              <div class="sub" id="voteExplain"></div>
+
+              <div class="row voiceRow">
+                <button class="ghost" id="playVoteVoiceBtn">播放语音解释</button>
+              </div>
+
+              <div id="voteActionRow" class="row voiceRow">
+                <button class="primary" id="yesBtn">赞成</button>
+                <button class="danger" id="noBtn">反对</button>
+              </div>
+
+              <div id="voteWaitText" class="sub" style="margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="handWrap">
+          <div class="hand" id="hand"></div>
+
+          <div id="playActions" class="buttonGrid">
+            <button id="playSingleBtn">单字直出</button>
+            <button id="chainBtn">接龙到旧句</button>
+            <button class="wide warn" id="newComboBtn">全新起句</button>
+          </div>
+
+          <div id="endActions" class="buttonGrid hidden">
+            <button class="primary" id="backHomeBtn">回到首页</button>
+            <button class="warn" id="restartBtn">再开一局</button>
+            <button class="wide ghost" id="battleReportBtn">发战报到聊天</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="explainModal" class="modal hidden">
+  <div class="modalCard">
+    <b id="explainTitle">解释你的组合</b>
+    <small id="explainHint">可以输入文字，也可以录一条语音条。语音不转写。</small>
+
+    <textarea id="explainText" placeholder="说明这组字为什么合理、通顺、有趣或符合语境。"></textarea>
+
+    <div class="row">
+      <button class="primary" id="recordBtn">录语音</button>
+      <button class="warn" id="stopRecordBtn" disabled>停止录音</button>
+      <button class="ghost" id="clearVoiceBtn">清除语音</button>
+    </div>
+
+    <div id="voicePreview" class="voiceCard hidden">
+      <div class="row" style="justify-content:space-between">
+        <span class="voiceBadge">已录制语音</span>
+        <small id="voiceInfo"></small>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost" id="playVoiceBtn">播放语音</button>
+        <button class="ghost" id="removeVoiceBtn">移除语音</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <button class="primary" id="sendExplainBtn">发送并进入投票</button>
+      <button class="ghost" id="cancelExplainBtn">取消</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const A=window.AiPhone||window.AiPhoneApp||mockApi();
+
+const DECK=(
+  "我你他她它们的了是不在有和就都而及与着或一个上中下去回来到说看想能会要把被给让从向对为以跟很太更最也还又再才已吗呢吧啊呀哦哈哇"+
+  "天地图山海云风雨雪星月日夜光火水木金土花草树心梦家门路车书茶饭酒猫狗鱼鸟人友爱恨笑哭跑跳飞坐站吃喝买卖送拿放开关进出近远"+
+  "高低大小多少新旧好坏真假美丑冷暖快慢早晚黑白红蓝绿黄紫清乱强弱空满轻重香甜苦辣酸咸软硬仙魔龙魂剑灯影城舟桥窗笛鼓霜雾雷电糖锅面吻抱偷混杀辅推"
+).split("");
+
+let room=null;
+let selfId="local_"+Math.random().toString(36).slice(2,8);
+let isHost=false;
+let state=null;
+let selected=[];
+let selectedChars=[];
+let loadedChars=[];
+let myProfile={name:"我",avatar:""};
+let explainCtx=null;
+let explainVoiceClip=null;
+let recording=false;
+let launchContext=null;
+let battleTarget={sessionId:null,characterId:null};
+
+const $=id=>document.getElementById(id);
+
+function mockApi(){
+  const events={};
+  const emit=(type,payload)=>(events[type]||[]).forEach(fn=>fn(payload));
+
+  return {
+    app:{getLaunchContext:async()=>null,close:async()=>{}},
+    user:{getProfile:async()=>({name:"我",avatar:""})},
+    characters:{list:async()=>[],get:async id=>({id,name:"角色"})},
+    ai:{
+      generate:async()=>({
+        text:JSON.stringify({
+          mode:"new",
+          cards:["梦"],
+          explain:"这组字像一个突然出现的念头，很符合现在的心情。"
+        })
+      })
+    },
+    voice:{
+      record:async()=>({ok:true,dataUrl:"",mimeType:"audio/webm",ms:1000}),
+      stopRecord:async()=>{},
+      play:async()=>{},
+      tts:async()=>({ok:true,dataUrl:""})
+    },
+    media:{
+      put:async({dataUrl})=>({ref:dataUrl}),
+      get:async({ref})=>({dataUrl:ref})
+    },
+    chat:{
+      getCurrentSession:async()=>null,
+      writeHistory:async()=>({ok:true}),
+      requestReply:async()=>({ok:true})
+    },
+    room:{
+      create:async()=>({code:"TEST",selfUserId:selfId,isHost:true}),
+      join:async()=>({code:"TEST",selfUserId:selfId,isHost:false}),
+      send:async payload=>setTimeout(()=>emit("room.message",{
+        from:{id:selfId,name:myProfile.name},
+        payload
+      }),20),
+      setState:async next=>{
+        state=next;
+        emit("room.state",{state:next});
+      },
+      leave:async()=>{},
+      close:async()=>{}
+    },
+    on:(type,fn)=>{
+      (events[type]||(events[type]=[])).push(fn);
+      return ()=>{};
+    }
+  };
+}
+
+function toast(text){
+  $("toast").textContent=text;
+  $("toast").classList.remove("hidden");
+  clearTimeout(toast.timer);
+  toast.timer=setTimeout(()=>$("toast").classList.add("hidden"),1800);
+}
+
+function show(screen){
+  ["home","lobby","game"].forEach(id=>{
+    $(id).classList.toggle("hidden",id!==screen);
+  });
+}
+
+function uid(){
+  return Math.random().toString(36).slice(2,10);
+}
+
+function draw(count){
+  const result=[];
+  for(let i=0;i<count;i++){
+    result.push(DECK[Math.floor(Math.random()*DECK.length)]);
+  }
+  return result;
+}
+
+function compactAvatar(value){
+  if(!value||typeof value!=="string")return "";
+  if(value.startsWith("data:")||value.startsWith("blob:"))return "";
+  return value;
+}
+
+function avatarFallback(name){
+  return (name||"人").slice(0,1);
+}
+
+function avatarNode(name,src,size=42){
+  const cls=size===46?"avatar big":"avatar";
+  if(src)return `<img class="${cls}" src="${src}" alt="">`;
+  return `<div class="${cls} fallback" style="width:${size}px;height:${size}px">${avatarFallback(name)}</div>`;
+}
+
+function current(){
+  return state?.players?.[state.turnIndex];
+}
+
+function myHumanSeat(){
+  return state?.players?.find(player=>
+    player.ownerId===selfId&&!player.isAi&&!player.charId
+  )||null;
+}
+
+function isMyTurn(){
+  return current()?.ownerId===selfId;
+}
+
+function jsonFromText(text,fallback){
+  try{
+    const match=(text||"").match(/\{[\s\S]*\}/);
+    return match?JSON.parse(match[0]):fallback;
+  }catch{
+    return fallback;
+  }
+}
+
+function myAvatar(){
+  return compactAvatar(
+    myProfile.avatar||
+    myProfile.avatarUrl||
+    myProfile.image||
+    myProfile.portrait||
+    myProfile.headImg||
+    myProfile.coverUrl||
+    ""
+  );
+}
+
+async function storeVoice(clip){
+  if(!clip?.dataUrl)return null;
+
+  try{
+    if(A.media?.put){
+      const saved=await A.media.put({dataUrl:clip.dataUrl});
+      return {
+        ref:saved.ref,
+        mimeType:clip.mimeType||"",
+        ms:clip.ms||0
+      };
+    }
+  }catch{}
+
+  return null;
+}
+
+async function playVoice(voice){
+  if(!voice)return;
+
+  try{
+    if(voice.ref){
+      await A.voice.play({dataUrl:voice.ref});
+      return;
+    }
+
+    if(voice.dataUrl){
+      await A.voice.play({dataUrl:voice.dataUrl});
+    }
+  }catch{
+    toast("语音播放失败");
+  }
+}
+
+async function resolveBattleTarget(){
+  if(battleTarget.characterId||battleTarget.sessionId)return battleTarget;
+
+  if(!launchContext){
+    try{
+      launchContext=await A.app.getLaunchContext();
+    }catch{}
+  }
+
+  let session=null;
+
+  try{
+    if(A.chat?.getCurrentSession){
+      session=await A.chat.getCurrentSession();
+    }
+  }catch{}
+
+  battleTarget={
+    characterId:launchContext?.characterId||session?.characterId||null,
+    sessionId:launchContext?.sessionId||session?.sessionId||null
+  };
+
+  return battleTarget;
+}
+
+function getOtherCharacterTargets(){
+  const targets=[];
+  const seen=new Set();
+
+  if(!state?.players?.length)return targets;
+
+  for(const player of state.players){
+    if(!player.charId)continue;
+    if(player.ownerId===selfId)continue;
+    if(seen.has(player.charId))continue;
+
+    seen.add(player.charId);
+    targets.push({
+      characterId:player.charId,
+      name:player.name||"角色"
+    });
+  }
+
+  return targets;
+}
+
+function buildBattleReport(){
+  const winner=state.players.find(
+    player=>player.id===state.winnerId
+  );
+
+  const finalSentence=state.tableText.join("")||"空";
+  const records=(state.log||[])
+    .slice(0,8)
+    .reverse()
+    .join(" / ");
+
+  return [
+    "[活字乱刷战报]",
+    `本局结果：${winner?.name||"未知"}获胜。`,
+    `最终公共句子：${finalSentence}`,
+    `对局人数：${state.players.length}人`,
+    `对局记录：${records}`,
+    "这是刚刚结束的一局联机游戏。"
+  ].join("\n");
+}
+
+async function sendBattleReport(){
+  if(!state||state.phase!=="end"){
+    toast("只有对局结束后才能发战报");
+    return;
+  }
+
+  let targets=getOtherCharacterTargets();
+
+  // 如果本局没有其他角色，再使用当前聊天上下文作为备用目标。
+  if(!targets.length){
+    const fallback=await resolveBattleTarget();
+
+    if(fallback.characterId){
+      targets=[{
+        characterId:fallback.characterId,
+        name:"当前角色"
+      }];
+    }
+  }
+
+  if(!targets.length){
+    toast("本局没有可发送战报的角色");
+    return;
+  }
+
+  const report=buildBattleReport();
+  let successCount=0;
+
+  for(const target of targets){
+    try{
+      await A.chat.writeHistory({
+        characterId:target.characterId,
+        role:"user",
+        historyRole:"user",
+        content:report
+      });
+
+      successCount++;
+
+      if(A.chat.requestReply){
+        await A.chat.requestReply({
+          characterId:target.characterId
+        });
+      }
+    }catch(error){
+      console.warn("发送战报失败",target.characterId,error);
+    }
+  }
+
+  if(successCount===0){
+    toast("战报发送失败");
+  }else{
+    toast(`战报已发送给 ${successCount} 名角色`);
+  }
+}
+
+async function init(){
+  try{
+    myProfile=await A.user.getProfile({})||myProfile;
+  }catch{}
+
+  try{
+    launchContext=await A.app.getLaunchContext();
+  }catch{}
+
+  await resolveBattleTarget().catch(()=>{});
+
+  $("createBtn").onclick=createRoom;
+  $("joinBtn").onclick=joinRoom;
+  $("loadCharsBtn").onclick=loadChars;
+  $("copyBtn").onclick=()=>{
+    navigator.clipboard?.writeText($("roomCode").value);
+    toast("房间码已复制");
+  };
+  $("startBtn").onclick=startGame;
+  $("leaveBtn").onclick=backHome;
+  $("backHomeBtn").onclick=backHome;
+  $("restartBtn").onclick=restartGame;
+  $("battleReportBtn").onclick=sendBattleReport;
+
+  $("playSingleBtn").onclick=()=>submitPlay(false,false);
+  $("chainBtn").onclick=()=>submitPlay(true,true);
+  $("newComboBtn").onclick=()=>submitPlay(false,true);
+
+  $("yesBtn").onclick=()=>vote("yes");
+  $("noBtn").onclick=()=>vote("no");
+  $("playVoteVoiceBtn").onclick=()=>playVoice(state?.pending?.explainVoice);
+
+  $("recordBtn").onclick=startRecording;
+  $("stopRecordBtn").onclick=stopRecording;
+  $("playVoiceBtn").onclick=()=>playVoice(explainVoiceClip);
+  $("removeVoiceBtn").onclick=clearVoice;
+  $("clearVoiceBtn").onclick=clearVoice;
+  $("sendExplainBtn").onclick=sendExplain;
+  $("cancelExplainBtn").onclick=closeExplain;
+
+  A.on("room.message",onRoomMessage);
+  A.on("room.state",event=>{
+    state=event.state;
+    render();
+    autoAct();
+  });
+  A.on("room.closed",()=>{
+    toast("房间已关闭");
+    backHome();
+  });
+
+  renderCharacters();
+}
+
+async function loadChars(){
+  try{
+    const list=await A.characters.list()||[];
+
+    const details=await Promise.all(
+      list.slice(0,12).map(async item=>{
+        try{
+          return {...(await A.characters.get(item.id)),...item};
+        }catch{
+          return item;
+        }
+      })
+    );
+
+    loadedChars=details.map(item=>({
+      id:item.id,
+      name:item.name||item.nickname||"角色",
+      avatar:compactAvatar(
+        item.avatar||
+        item.avatarUrl||
+        item.image||
+        item.icon||
+        item.portrait||
+        item.headImg||
+        item.coverUrl||
+        ""
+      )
+    }));
+
+    renderCharacters();
+  }catch{
+    toast("读取角色失败");
+  }
+}
+
+function renderCharacters(){
+  $("charCount").textContent=`${selectedChars.length} 个已选`;
+  $("charList").innerHTML="";
+
+  if(!loadedChars.length){
+    $("charList").innerHTML="<small>点击“读取角色”后显示真实角色头像。</small>";
+    return;
+  }
+
+  loadedChars.forEach(character=>{
+    const chosen=selectedChars.some(item=>item.id===character.id);
+    const button=document.createElement("button");
+
+    button.type="button";
+    button.className=`charCard ${chosen?"selected":""}`;
+    button.innerHTML=`
+      ${avatarNode(character.name,character.avatar,42)}
+      <div class="charName">${character.name}</div>
+    `;
+
+    button.onclick=()=>{
+      selectedChars=chosen
+        ?selectedChars.filter(item=>item.id!==character.id)
+        :[...selectedChars,character];
+
+      renderCharacters();
+    };
+
+    $("charList").appendChild(button);
+  });
+}
+
+function addLocalSeats(){
+  state.players.push({
+    id:uid(),
+    ownerId:selfId,
+    name:myProfile.name||"我",
+    avatar:myAvatar(),
+    hand:[],
+    isAi:false
+  });
+
+  selectedChars.forEach(character=>{
+    state.players.push({
+      id:uid(),
+      ownerId:selfId,
+      charId:character.id,
+      name:character.name,
+      avatar:compactAvatar(character.avatar),
+      hand:[],
+      isAi:true
+    });
+  });
+}
+
+async function createRoom(){
+  try{
+    toast("正在创建房间");
+    room=await A.room.create({title:"活字乱刷",maxPlayers:6});
+    selfId=room.selfUserId||selfId;
+    isHost=room.isHost!==false;
+    $("roomCode").value=room.code||"";
+    $("roomPill").textContent=room.code?`房间 ${room.code}`:"房间已创建";
+  }catch{
+    room={code:"LOCAL",selfUserId:selfId,isHost:true,local:true};
+    isHost=true;
+    $("roomCode").value="LOCAL";
+    $("roomPill").textContent="本地模式";
+    toast("联网房间暂不可用，已进入本地模式");
+  }
+
+  state={
+    phase:"lobby",
+    hostId:selfId,
+    players:[],
+    turnIndex:0,
+    tableText:[],
+    pending:null,
+    champId:null,
+    singleStreak:0,
+    winnerId:null,
+    log:[]
+  };
+
+  addLocalSeats();
+
+  try{
+    await A.room.setState(state);
+  }catch{}
+
+  show("lobby");
+  render();
+}
+
+async function joinRoom(){
+  const code=$("joinCode").value.trim();
+  if(!code)return toast("请输入房间码");
+
+  try{
+    room=await A.room.join({code});
+    selfId=room.selfUserId||selfId;
+    isHost=room.isHost===true;
+    $("roomCode").value=code;
+    $("roomPill").textContent=`房间 ${code}`;
+    show("lobby");
+
+    await A.room.send({
+      type:"hello",
+      profile:{
+        name:myProfile.name||"我",
+        avatar:myAvatar()
+      },
+      chars:selectedChars.map(character=>({
+        id:character.id,
+        name:character.name,
+        avatar:compactAvatar(character.avatar)
+      }))
+    });
+  }catch(error){
+    toast("加入失败："+(error.message||error));
+  }
+}
+
+async function onRoomMessage(event){
+  if(!isHost||!state)return;
+
+  const message=event.payload||event;
+
+  if(message.type==="hello"&&state.phase==="lobby"){
+    if(state.players.length>=6)return;
+
+    const ownerId=event.from?.id||message.ownerId||uid();
+
+    state.players.push({
+      id:uid(),
+      ownerId,
+      name:message.profile?.name||event.from?.name||"玩家",
+      avatar:compactAvatar(message.profile?.avatar||""),
+      hand:[],
+      isAi:false
+    });
+
+    for(const character of message.chars||[]){
+      if(state.players.length>=6)break;
+
+      state.players.push({
+        id:uid(),
+        ownerId,
+        charId:character.id,
+        name:character.name||"角色",
+        avatar:compactAvatar(character.avatar||""),
+        hand:[],
+        isAi:true
+      });
+    }
+
+    await A.room.setState(state);
+  }
+
+  if(message.type==="play"&&state.phase==="playing"){
+    await handlePlay(message);
+  }
+
+  if(message.type==="vote"&&state.phase==="voting"){
+    await handleVote(message);
+  }
+}
+
+async function startGame(){
+  if(!isHost)return toast("只有房主可以开始");
+  if(!state?.players)return toast("房间状态未就绪");
+  if(state.players.length<2)return toast("至少需要 2 人开局");
+
+  state.players=state.players.map(player=>({
+    ...player,
+    hand:draw(10)
+  }));
+
+  state.phase="playing";
+  state.turnIndex=0;
+  state.tableText=[];
+  state.pending=null;
+  state.champId=null;
+  state.singleStreak=0;
+  state.winnerId=null;
+  state.log=["游戏开始，每位玩家获得 10 张手牌。"];
+
+  try{
+    await A.room.setState(state);
+  }catch{}
+
+  render();
+}
+
+function backHome(){
+  selected=[];
+  state=null;
+  room=null;
+  isHost=false;
+  explainCtx=null;
+  explainVoiceClip=null;
+  battleTarget={sessionId:null,characterId:null};
+
+  $("roomCode").value="";
+  $("joinCode").value="";
+  $("roomPill").textContent="未进入房间";
+
+  closeExplain();
+  show("home");
+  renderCharacters();
+}
+
+async function restartGame(){
+  if(!isHost)return toast("只有房主可以再开一局");
+  if(!state?.players?.length)return backHome();
+
+  selected=[];
+  state.players=state.players.map(player=>({
+    ...player,
+    hand:draw(10)
+  }));
+  state.phase="playing";
+  state.turnIndex=0;
+  state.tableText=[];
+  state.pending=null;
+  state.champId=null;
+  state.singleStreak=0;
+  state.winnerId=null;
+  state.log=["新一局开始，每位玩家获得 10 张手牌。"];
+
+  try{
+    await A.room.setState(state);
+  }catch{}
+
+  render();
+}
+
+function openExplain(context){
+  explainCtx=context;
+  explainVoiceClip=null;
+  recording=false;
+
+  $("explainTitle").textContent=context.title;
+  $("explainHint").textContent=context.hint;
+  $("explainText").value="";
+  $("voiceInfo").textContent="";
+  $("voicePreview").classList.add("hidden");
+  $("recordBtn").disabled=false;
+  $("stopRecordBtn").disabled=true;
+  $("explainModal").classList.remove("hidden");
+}
+
+function closeExplain(){
+  if(recording&&A.voice?.stopRecord){
+    A.voice.stopRecord().catch(()=>{});
+  }
+
+  recording=false;
+  $("explainModal").classList.add("hidden");
+}
+
+async function startRecording(){
+  if(recording)return;
+  if(!A.voice?.record)return toast("当前环境不支持录音");
+
+  recording=true;
+  $("recordBtn").disabled=true;
+  $("stopRecordBtn").disabled=false;
+  $("voiceInfo").textContent="正在录音...";
+  $("voicePreview").classList.remove("hidden");
+
+  try{
+    const clip=await A.voice.record({maxMs:12000});
+    explainVoiceClip=clip;
+    $("voiceInfo").textContent=`已录制 ${Math.round((clip.ms||0)/1000)} 秒`;
+  }catch{
+    explainVoiceClip=null;
+    $("voicePreview").classList.add("hidden");
+    toast("录音失败");
+  }finally{
+    recording=false;
+    $("recordBtn").disabled=false;
+    $("stopRecordBtn").disabled=true;
+  }
+}
+
+function stopRecording(){
+  if(A.voice?.stopRecord){
+    A.voice.stopRecord().catch(()=>{});
+  }
+}
+
+function clearVoice(){
+  explainVoiceClip=null;
+  $("voiceInfo").textContent="";
+  $("voicePreview").classList.add("hidden");
+}
+
+async function sendExplain(){
+  if(!explainCtx)return;
+
+  const player=current();
+  const text=$("explainText").value.trim();
+
+  if(!text&&!explainVoiceClip){
+    return toast("请输入解释或录制语音");
+  }
+
+  let storedVoice=null;
+
+  if(explainVoiceClip){
+    storedVoice=await storeVoice(explainVoiceClip);
+    if(!storedVoice){
+      return toast("语音保存失败，请重新录制");
+    }
+  }
+
+  const message={
+    type:"play",
+    playerId:player.id,
+    cards:explainCtx.cards,
+    chain:explainCtx.chain,
+    explain:text.slice(0,500),
+    explainVoice:storedVoice
+  };
+
+  closeExplain();
+
+  if(isHost)await handlePlay(message);
+  else await A.room.send(message);
+}
+
+async function submitPlay(chain,allowCombo){
+  if(!isMyTurn())return toast("还没轮到你");
+  if(state.phase!=="playing")return toast("当前不能出牌");
+  if(!selected.length)return toast("请选择字牌");
+  if(chain&&!state.tableText.length)return toast("桌面为空，只能全新起句");
+  if(!allowCombo&&selected.length!==1)return toast("单字直出只能选择 1 张牌");
+
+  const player=current();
+  const cards=selected.map(index=>player.hand[index]);
+  selected=[];
+
+  if(cards.length>1){
+    openExplain({
+      chain,
+      cards,
+      title:chain?"接龙解释":"全新起句解释",
+      hint:chain
+        ?`将「${cards.join("")}」接到「${state.tableText.join("")}」后面。`
+        :"这组字不接旧句，作为新的短语或句子。"
+    });
+    return;
+  }
+
+  const message={
+    type:"play",
+    playerId:player.id,
+    cards,
+    chain,
+    explain:"",
+    explainVoice:null
+  };
+
+  if(isHost)await handlePlay(message);
+  else await A.room.send(message);
+}
+
+async function handlePlay(message){
+  const player=state.players.find(item=>item.id===message.playerId);
+  const active=current();
+
+  if(!player||!active||active.id!==player.id)return;
+
+  const cards=Array.isArray(message.cards)?message.cards:[];
+  if(!cards.length)return;
+  if(player.hand.length===1&&cards.length>1)return;
+
+  for(const card of cards){
+    const index=player.hand.indexOf(card);
+    if(index>=0)player.hand.splice(index,1);
+  }
+
+  if(cards.length===1){
+    state.tableText=message.chain
+      ?[...state.tableText,...cards]
+      :cards;
+
+    state.singleStreak++;
+    state.log.unshift(`${player.name} 打出「${cards.join("")}」。`);
+
+    if(state.singleStreak>=state.players.length*3){
+      state.tableText=[];
+      state.singleStreak=0;
+      state.log.unshift("连续单字出牌达到三轮，公共句子已清空。");
+    }
+
+    finishTurn();
+  }else{
+    state.phase="voting";
+    state.pending={
+      playerId:player.id,
+      cards,
+      chain:!!message.chain,
+      explain:String(message.explain||"").slice(0,500),
+      explainVoice:message.explainVoice||null,
+      votes:{}
+    };
+
+    const fullText=(message.chain?state.tableText:[]).concat(cards).join("");
+    state.log.unshift(`${player.name} 提交待审句子「${fullText}」。`);
+  }
+
+  await A.room.setState(state);
+}
+
+async function vote(value){
+  if(!state?.pending)return;
+
+  const voter=myHumanSeat();
+  if(!voter)return toast("当前没有可投票的玩家");
+  if(voter.id===state.pending.playerId)return toast("出牌者不能给自己投票");
+  if(state.pending.votes[voter.id])return toast("你已经投过票");
+
+  const message={
+    type:"vote",
+    voterId:voter.id,
+    vote:value
+  };
+
+  if(isHost)await handleVote(message);
+  else await A.room.send(message);
+}
+
+async function handleVote(message){
+  if(!state.pending)return;
+  if(message.voterId===state.pending.playerId)return;
+  if(state.pending.votes[message.voterId])return;
+
+  state.pending.votes[message.voterId]=message.vote;
+
+  const eligible=state.players.length-1;
+  const voted=Object.keys(state.pending.votes).length;
+
+  if(voted>=eligible)resolveVote();
+
+  await A.room.setState(state);
+}
+
+function resolveVote(){
+  const yes=Object.values(state.pending.votes).filter(v=>v==="yes").length;
+  const no=Object.values(state.pending.votes).filter(v=>v==="no").length;
+  const player=state.players.find(item=>item.id===state.pending.playerId);
+
+  if(yes>no){
+    state.tableText=state.pending.chain
+      ?[...state.tableText,...state.pending.cards]
+      :state.pending.cards;
+
+    state.champId=player.id;
+    state.singleStreak=0;
+    punish(player,state.pending.cards.length);
+    state.log.unshift(`投票通过：${yes}赞/${no}反，${player.name} 成为擂主。`);
+  }else{
+    player.hand.push(...state.pending.cards);
+    state.log.unshift(`投票失败：${yes}赞/${no}反，${player.name} 收回字牌。`);
+  }
+
+  state.pending=null;
+  state.phase="playing";
+  finishTurn();
+}
+
+function punish(player,count){
+  const index=state.players.findIndex(item=>item.id===player.id);
+
+  for(let i=1;i<count;i++){
+    state.players[(index+i)%state.players.length].hand.push(...draw(1));
+  }
+}
+
+function finishTurn(){
+  const player=current();
+
+  if(player.hand.length===0){
+    state.phase="end";
+    state.winnerId=player.id;
+    state.log.unshift(`${player.name} 清空手牌，获得胜利。`);
+    return;
+  }
+
+  state.turnIndex=(state.turnIndex+1)%state.players.length;
+
+  const next=current();
+
+  if(next.id===state.champId){
+    state.tableText=[];
+    state.champId=null;
+    state.log.unshift(`${next.name} 的擂主回合开始，公共句子清空。`);
+  }
+
+  next.hand.push(...draw(1));
+}
+
+async function autoAct(){
+  if(!state||state.phase==="end")return;
+
+  if(state.phase==="playing"&&isMyTurn()&&current().isAi){
+    setTimeout(aiTurn,600);
+  }
+
+  if(state.phase==="voting"&&state.pending){
+    for(const player of state.players.filter(item=>
+      item.isAi&&
+      item.id!==state.pending.playerId&&
+      !state.pending.votes[item.id]
+    )){
+      setTimeout(()=>aiVote(player),500);
+    }
+  }
+}
+
+async function aiTurn(){
+  const player=current();
+  if(!player||!player.isAi)return;
+
+  let result={
+    mode:"new",
+    cards:[player.hand[0]],
+    explain:"先稳妥出一字。"
+  };
+
+  try{
+    const response=await A.ai.generate({
+      characterId:player.charId,
+      appTags:["huozi","turn"],
+      instruction:
+        `当前桌面：${state.tableText.join("")||"空"}。`+
+        `你的手牌：${player.hand.join("、")}。`+
+        "当前轮到你出牌。请严格按照真实角色的人设、性格、关系、记忆和说话方式行动。"+
+        "不要只追求机械最优，要像角色本人在牌桌上出牌并解释。"
+    });
+
+    result=jsonFromText(response.text,result);
+  }catch{}
+
+  const cards=(result.cards||[])
+    .filter(card=>player.hand.includes(card))
+    .slice(0,player.hand.length===1?1:5);
+
+  const explainText=String(result.explain||"角色自动出牌。").slice(0,500);
+  let explainVoice=null;
+
+  if(cards.length>1&&A.voice?.tts){
+    try{
+      const speech=await A.voice.tts({
+        characterId:player.charId,
+        text:explainText
+      });
+      explainVoice=await storeVoice(speech);
+    }catch{}
+  }
+
+  const message={
+    type:"play",
+    playerId:player.id,
+    cards:cards.length?cards:[player.hand[0]],
+    chain:result.mode==="chain"&&state.tableText.length>0,
+    explain:explainText,
+    explainVoice
+  };
+
+  if(isHost)await handlePlay(message);
+  else await A.room.send(message);
+}
+
+async function aiVote(player){
+  if(!state?.pending||!player?.charId)return;
+
+  const pending=state.pending;
+  const sentence=(pending.chain?state.tableText:[])
+    .concat(pending.cards)
+    .join("");
+
+  let voteValue="yes";
+
+  try{
+    const response=await A.ai.generate({
+      characterId:player.charId,
+      appTags:["huozi","vote"],
+      instruction:
+        "你正在以当前角色本人身份参与《活字乱刷》的牌桌投票。"+
+        "请先客观判断句子本身是否通顺、是否成立、是否能表达一个完整或可理解的意思。"+
+        "如果句子明显通顺、合理、有画面感，或者是可以理解的脑洞、网络梗、口语、古风表达，通常应该投赞成。"+
+        "不要因为角色性格不同、关系特殊，或者想制造戏剧冲突，就故意反对一个明显通顺的句子。"+
+        "在句子基本成立的前提下，再结合角色自己的审美、性格、价值观、记忆、当前情绪，以及和出牌人的关系调整判断。"+
+        "只有在句子确实牵强、无法理解、明显不成立、不符合角色明确立场，或包含恶意、人身攻击、低俗违规内容时，才投反对。"+
+        "角色可以反对，但不能为了表现人设而机械反对，也不能每局都投同一个结果。"+
+        "\n\n"+
+        `待审句子：「${sentence}」\n`+
+        `出牌者解释：「${pending.explain||"没有文字解释"}」\n`+
+        "请只输出严格 JSON，不要输出额外文字："+
+        "{\"vote\":\"yes\"或\"no\",\"reason\":\"符合角色人设的一句话理由\"}"
+    });
+
+    const result=jsonFromText(response?.text,{});
+    const raw=String(
+      result.vote||
+      result.decision||
+      result.result||
+      ""
+    ).trim().toLowerCase();
+
+    if(["yes","赞成","同意","通过","支持"].includes(raw)){
+      voteValue="yes";
+    }else if(["no","反对","不同意","不通过","拒绝"].includes(raw)){
+      voteValue="no";
+    }
+  }catch{
+    voteValue="yes";
+  }
+
+  const message={
+    type:"vote",
+    voterId:player.id,
+    vote:voteValue
+  };
+
+  if(isHost)await handleVote(message);
+  else await A.room.send(message);
+}
+
+function render(){
+  if(!state)return;
+
+  $("subtitle").textContent=room?.code
+    ?`房间 ${room.code}`
+    :"联机文字接龙对局";
+
+  $("roomPill").textContent=room?.code
+    ?`房间 ${room.code}`
+    :"未进入房间";
+
+  if(state.phase==="lobby"){
+    show("lobby");
+    $("startBtn").disabled=!isHost||state.players.length<2;
+    renderLobby();
+    return;
+  }
+
+  show("game");
+  renderGame();
+}
+
+function renderLobby(){
+  $("lobbyCount").textContent=`${state.players.length} / 6`;
+
+  $("lobbyPlayers").innerHTML=state.players.map(player=>`
+    <div class="playerRow">
+      ${avatarNode(player.name,player.avatar,42)}
+      <div class="playerMeta">
+        <div class="playerName">
+          <span>${player.name}</span>
+          <span class="playerTag">${player.isAi?"角色":"玩家"}</span>
+        </div>
+      </div>
+      <div class="playerCount">${player.hand?.length||0}</div>
+    </div>
+  `).join("");
+}
+
+function renderGame(){
+  const ended=state.phase==="end";
+
+  $("phaseText").textContent=ended
+    ?"胜负已分"
+    :state.phase==="voting"
+      ?"投票中"
+      :"对局中";
+
+  $("turnText").textContent=ended
+    ?`${state.players.find(player=>player.id===state.winnerId)?.name||"未知"} 获胜`
+    :`轮到 ${current()?.name||"?"}`;
+
+  $("ruleSub").textContent=state.phase==="voting"
+    ?"多字待审"
+    :"单字直出";
+
+  $("sentence").innerHTML=(state.tableText.length?state.tableText:["空"])
+    .map(char=>`<div class="tile ${char==="空"?"small":""}">${char}</div>`)
+    .join("");
+
+  if(state.phase==="voting"&&state.pending){
+    $("pendingWrap").classList.remove("hidden");
+    $("pendingSentence").innerHTML=state.pending.cards
+      .map(char=>`<div class="tile add">${char}</div>`)
+      .join("");
+  }else{
+    $("pendingWrap").classList.add("hidden");
+    $("pendingSentence").innerHTML="";
+  }
+
+  $("log").innerHTML=(state.log||[])
+    .slice(0,8)
+    .map(item=>`<div>${item}</div>`)
+    .join("");
+
+  $("seats").innerHTML=state.players.map((player,index)=>`
+    <div class="seat seat${index} ${current()?.id===player.id?"seatTurn":""}">
+      ${avatarNode(player.name,player.avatar,46)}
+      <div class="seatName">${player.name}</div>
+      <div class="seatCount">${player.hand.length}张</div>
+    </div>
+  `).join("");
+
+  renderVoteBox();
+  renderHand();
+
+  $("playActions").classList.toggle("hidden",ended);
+  $("endActions").classList.toggle("hidden",!ended);
+}
+
+function renderVoteBox(){
+  const visible=state.phase==="voting"&&!!state.pending;
+
+  $("voteBox").classList.toggle("hidden",!visible);
+  if(!visible)return;
+
+  const sentence=(state.pending.chain?state.tableText:[])
+    .concat(state.pending.cards)
+    .join("");
+
+  $("voteTitle").textContent=`是否认可「${sentence}」`;
+  $("voteExplain").textContent=state.pending.explain||"无文字解释";
+  $("playVoteVoiceBtn").disabled=!state.pending.explainVoice;
+
+  const voter=myHumanSeat();
+  const isAuthor=voter?.id===state.pending.playerId;
+  const alreadyVoted=voter?.id
+    ?!!state.pending.votes[voter.id]
+    :false;
+
+  $("voteActionRow").classList.toggle("hidden",isAuthor||alreadyVoted);
+
+  $("voteWaitText").textContent=isAuthor
+    ?"你是出牌者，等待其他玩家投票。"
+    :alreadyVoted
+      ?"你已投票，等待结果。"
+      :"请选择赞成或反对。";
+}
+
+function renderHand(){
+  const player=myHumanSeat();
+
+  if(!player){
+    $("hand").innerHTML="<small>当前没有可显示的个人手牌。</small>";
+    ["playSingleBtn","chainBtn","newComboBtn"]
+      .forEach(id=>$(id).disabled=true);
+    return;
+  }
+
+  $("hand").innerHTML=player.hand.map((char,index)=>`
+    <div class="tile ${selected.includes(index)?"sel":""}" data-index="${index}">
+      ${char}
+    </div>
+  `).join("");
+
+  $("hand").querySelectorAll(".tile").forEach(tile=>{
+    tile.onclick=()=>{
+      const index=Number(tile.dataset.index);
+
+      selected=selected.includes(index)
+        ?selected.filter(item=>item!==index)
+        :[...selected,index];
+
+      renderHand();
+    };
+  });
+
+  const canPlay=
+    state.phase==="playing"&&
+    isMyTurn()&&
+    current()?.ownerId===selfId;
+
+  $("playSingleBtn").disabled=!canPlay;
+  $("chainBtn").disabled=!canPlay||!state.tableText.length;
+  $("newComboBtn").disabled=!canPlay;
+}
+
+init();
+</script>
+</body>
+</html>
