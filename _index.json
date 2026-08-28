@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T10:08:51.057Z",
+  "generatedAt": "2026-08-28T11:39:28.601Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 24
+      "count": 25
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -242,6 +242,22 @@
       "avatar": "资源/Js插件/多选发图/.avatar.png",
       "ownerHash": "ff57dccf982a00ed402e4dcdeb333036bb0a95391ca1f65879d78a5f731a08be",
       "updatedAt": "2026-08-22T19:53:13+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "强力清除双引号",
+      "dirName": "强力清除双引号",
+      "type": "dir",
+      "path": "资源/Js插件/强力清除双引号",
+      "files": [
+        "资源/Js插件/强力清除双引号/去除双引号.js"
+      ],
+      "images": [],
+      "description": "哈基米抽风/层数过多会出现引号\n肘击了一个去除引号的…\n很简陋可以二改…＞_＜",
+      "author": "兔叽",
+      "avatar": "资源/Js插件/强力清除双引号/.avatar.png",
+      "ownerHash": "c6eb64f5a21fe7976bb628a5a0d28675fe8cfc7bc2290fd401fcde6ba18999e7",
+      "updatedAt": "2026-08-28T19:39:04+08:00"
     },
     {
       "folder": "Js插件",
