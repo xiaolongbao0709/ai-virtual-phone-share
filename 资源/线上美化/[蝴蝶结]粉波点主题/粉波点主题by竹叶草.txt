@@ -1,4 +1,4 @@
-/* ═══ 粉波点主题 by 竹叶草 禁止二改二转═══ */
+/* ═══ 粉波点主题 by 竹叶草 禁止二改二转 ═══ */
 
 .chat-app {
   --c-header-bg: #FFF5F7;
@@ -50,7 +50,7 @@
 }
 
 .page-title::after {
-  content: " (๑\`･ᴗ･´๑)";
+  content: " (๑`･ᴗ･´๑)";
   font-size: 15px;
   font-weight: normal;
   color: #E8B4C2;
@@ -290,7 +290,6 @@
 
 .chat-transfer-card,
 .chat-transfer-card * {
-  font-size: 13px !important;
   color: #9A7A85 !important;
 }
 
@@ -313,7 +312,7 @@
 }
 
 .chat-transfer-card .label::after {
-  content: "" !important;
+  content: " (σ≧▽≦)σ" !important;
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -411,7 +410,6 @@
 
 .chat-red-packet-card,
 .chat-red-packet-card * {
-  font-size: 13px !important;
   color: #9A7A85 !important;
 }
 
@@ -440,7 +438,7 @@
 }
 
 .chat-red-packet-card .label::after {
-  content: "" !important;
+  content: "(σ≧▽≦)σ " !important;
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -452,7 +450,7 @@
 }
 
 
-/* ═══ 10. 底部标签透明 + 颜文字 ═══ */
+/* ═══ 10. 底部标签透明 ═══ */
 
 /* 强制覆盖所有底部标签的背景 */
 .chat-transfer-card .label,
@@ -465,24 +463,6 @@
   background-color: transparent !important;
 }
 
-/* 转账底部标签 - 加颜文字在最后 */
-.chat-transfer-card .label::after {
-  content: " (σ≧▽≦)σ" !important;
-  color: #D8708A !important;
-  font-size: 12px !important;
-  margin-left: 4px !important;
-  display: inline !important;
-}
-
-/* 红包底部标签 - 加颜文字在最前 */
-.chat-red-packet-card .label::before {
-  content: "(σ≧▽≦)σ " !important;
-  color: #D8708A !important;
-  font-size: 12px !important;
-  margin-right: 4px !important;
-  display: inline !important;
-}
-
 [class*="footer"],
 [class*="Footer"] {
   background: transparent !important;
@@ -490,7 +470,7 @@
 }
 
 
-/* ═══ 11. 头像框 - 修复压扁问题 ═══ */
+/* ═══ 11. 头像框 ═══ */
 
 /* 所有头像 - 加上保持比例的属性 */
 .chat-msg-avatar img,
@@ -638,9 +618,9 @@
 }
 
 
-/* ═══ 14. 其他卡片气泡偏移（对方改近到15px） ═══ */
+/* ═══ 14. 其他卡片气泡偏移 ═══ */
 
-/* 自己发的消息（右侧）- 保持30px */
+/* 自己发的消息（右侧） */
 .chat-bubble-role-user:has(.chat-app-card),
 .chat-bubble-role-user:has(.chat-thought-card),
 .chat-bubble-role-user:has(.chat-system-instruction-card),
@@ -657,7 +637,7 @@
 }
 
 
-/* ═══ 15. 状态栏字体调小 ═══ */
+/* ═══ 15. 状态栏字体 ═══ */
 
 [class*="status"],
 [class*="online"],
