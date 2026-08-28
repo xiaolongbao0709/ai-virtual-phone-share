@@ -1,0 +1,1441 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Word Search</title>
+    <style>
+        /* 样式与之前完全一致，略 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: 'PingFang SC', 'Helvetica Neue', system-ui, sans-serif;
+            background: #0d0b1a;
+            color: #f0ecf5;
+            overflow: hidden;
+            touch-action: none;
+        }
+        .game-screen {
+            min-height: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: var(--ai-phone-game-safe-top, 88px) 12px var(--ai-phone-game-safe-bottom, 20px);
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(ellipse at 50% 0%, #1e1a3a 0%, #0d0b1a 70%);
+            overflow: hidden;
+            position: relative;
+        }
+        .game-scroll {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+            -webkit-overflow-scrolling: touch;
+        }
+        .game-scroll::-webkit-scrollbar {
+            width: 3px;
+        }
+        .game-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 9px;
+        }
+        .char-select-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: fadeIn 0.45s ease;
+        }
+        .char-select-screen .title-block {
+            text-align: center;
+            padding: 8px 0 4px;
+        }
+        .char-select-screen .title-block h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #f7d875, #e8b84c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .char-select-screen .title-block p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 1px;
+        }
+        .char-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 4px 0 12px;
+        }
+        .char-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .char-card:active {
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.10);
+        }
+        .char-card .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #f7d875;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            overflow: hidden;
+            object-fit: cover;
+        }
+        .char-card .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .char-card .info {
+            flex: 1;
+            min-width: 0;
+        }
+        .char-card .info .name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #f0ecf5;
+        }
+        .char-card .info .sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.45);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .char-card .check {
+            font-size: 20px;
+            color: #f7d875;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .char-card.selected .check {
+            opacity: 1;
+        }
+        .char-card.selected {
+            border-color: rgba(247, 216, 117, 0.35);
+            background: rgba(247, 216, 117, 0.07);
+        }
+        .char-select-screen .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .char-select-screen .empty-state .icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #f7d875, #e8b84c);
+            color: #1a162e;
+            cursor: pointer;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 24px rgba(247, 216, 117, 0.18);
+        }
+        .btn-primary:active {
+            transform: scale(0.97);
+            opacity: 0.85;
+        }
+        .btn-primary:disabled {
+            opacity: 0.4;
+            transform: none;
+            pointer-events: none;
+        }
+        .game-play-screen {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            animation: fadeIn 0.4s ease;
+        }
+        .game-play-screen.active {
+            display: flex;
+        }
+        .game-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 0 4px;
+            flex-shrink: 0;
+        }
+        .game-header .progress {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.55);
+            font-weight: 500;
+        }
+        .game-header .progress span {
+            color: #f7d875;
+            font-weight: 700;
+        }
+        .game-header .score {
+            font-size: 15px;
+            font-weight: 600;
+            color: #f0ecf5;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .game-header .score span {
+            color: #f7d875;
+        }
+        .ai-bubble {
+            flex-shrink: 0;
+            display: flex;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            min-height: 64px;
+            align-items: flex-start;
+        }
+        .ai-bubble .ai-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #f7d875;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+        .ai-bubble .ai-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .ai-bubble .ai-msg {
+            flex: 1;
+            min-width: 0;
+        }
+        .ai-bubble .ai-msg .ai-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.50);
+            margin-bottom: 2px;
+        }
+        .ai-bubble .ai-msg .ai-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #f0ecf5;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+        .ai-bubble .ai-msg .ai-text .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: #f7d875;
+            margin-left: 2px;
+            animation: blink 0.9s step-end infinite;
+            vertical-align: text-bottom;
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        .word-list {
+            flex-shrink: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            justify-content: center;
+            min-height: 40px;
+        }
+        .word-list .word-item {
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .word-list .word-item.found {
+            color: #f7d875;
+            text-decoration: line-through;
+            text-decoration-color: #f7d875;
+            opacity: 0.7;
+        }
+        .grid-container {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            padding: 4px 0;
+            touch-action: none;
+        }
+        .grid-table {
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .grid-table td {
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 18px;
+            font-weight: 600;
+            color: #f0ecf5;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: background 0.15s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            padding: 0;
+            text-transform: uppercase;
+        }
+        .grid-table td:active {
+            background: rgba(255, 255, 255, 0.10);
+        }
+        .grid-table td.selected {
+            background: rgba(247, 216, 117, 0.25);
+            border-color: rgba(247, 216, 117, 0.35);
+        }
+        .grid-table td.found {
+            background: rgba(247, 216, 117, 0.10);
+            color: #f7d875;
+            border-color: rgba(247, 216, 117, 0.15);
+        }
+        .grid-table td.highlight {
+            background: rgba(247, 216, 117, 0.18);
+        }
+        .grid-table td.invalid {
+            background: rgba(255, 80, 80, 0.15);
+        }
+        .action-row {
+            flex-shrink: 0;
+            display: flex;
+            gap: 10px;
+            padding: 2px 0 4px;
+        }
+        .action-row .btn-secondary {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.60);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .action-row .btn-secondary:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .action-row .btn-secondary:disabled {
+            opacity: 0.3;
+            transform: none;
+            pointer-events: none;
+        }
+        .action-row .btn-secondary .badge {
+            display: inline-block;
+            background: rgba(247, 216, 117, 0.15);
+            color: #f7d875;
+            font-size: 12px;
+            border-radius: 10px;
+            padding: 0 8px;
+            margin-left: 4px;
+            font-weight: 600;
+        }
+        .action-row .btn-secondary.danger {
+            color: rgba(255, 150, 150, 0.55);
+            border-color: rgba(255, 150, 150, 0.08);
+        }
+        .action-row .btn-secondary.danger:active {
+            background: rgba(255, 150, 150, 0.06);
+        }
+        .result-screen {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            text-align: center;
+            padding: 20px 0;
+            animation: fadeIn 0.5s ease;
+        }
+        .result-screen.active {
+            display: flex;
+        }
+        .result-screen .big-icon {
+            font-size: 64px;
+            margin-bottom: 4px;
+        }
+        .result-screen .result-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f7d875;
+        }
+        .result-screen .result-score {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.70);
+        }
+        .result-screen .result-score span {
+            font-size: 36px;
+            font-weight: 700;
+            color: #f0ecf5;
+        }
+        .result-screen .result-detail {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.40);
+            line-height: 1.6;
+            max-width: 300px;
+        }
+        .result-screen .result-ai-msg {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            max-width: 340px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.75);
+            margin: 4px 0 8px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .result-screen .btn-primary {
+            max-width: 280px;
+            margin-top: 8px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .pulse-glow {
+            animation: pulseGlow 1.2s ease-in-out 2;
+        }
+        @keyframes pulseGlow {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(247, 216, 117, 0);
+            }
+            50% {
+                box-shadow: 0 0 30px 8px rgba(247, 216, 117, 0.10);
+            }
+        }
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #f0ecf5;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateX(-50%) translateY(12px);
+            white-space: nowrap;
+            max-width: 80%;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        @media (max-width: 380px) {
+            .grid-table td {
+                width: 28px;
+                height: 28px;
+                font-size: 16px;
+            }
+            .char-card .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            .ai-bubble .ai-msg .ai-text {
+                font-size: 14px;
+            }
+        }
+        @media (max-height: 640px) {
+            .game-screen {
+                padding-top: var(--ai-phone-game-safe-top, 72px);
+                padding-bottom: var(--ai-phone-game-safe-bottom, 16px);
+            }
+            .ai-bubble {
+                padding: 10px 12px;
+                min-height: 56px;
+            }
+            .grid-table td {
+                width: 28px;
+                height: 28px;
+                font-size: 16px;
+            }
+        }
+        @supports (padding: max(0px)) {
+            .game-screen {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-screen" id="app">
+        <div class="game-scroll" id="scrollContainer">
+            <div class="char-select-screen" id="charSelectScreen">
+                <div class="title-block">
+                    <h1>🔍 Word Search</h1>
+                    <p>选择一位搭档，一起找英文单词！</p>
+                </div>
+                <div id="charListContainer" style="flex:1;min-height:0;"></div>
+                <button class="btn-primary" id="startGameBtn" disabled>开始游戏</button>
+                <div style="height:6px;"></div>
+            </div>
+            <div class="game-play-screen" id="gamePlayScreen">
+                <div class="game-header">
+                    <div class="progress">已找到 <span id="foundCount">0</span> / <span id="totalWords">0</span></div>
+                    <div class="score">⭐ <span id="scoreNum">0</span></div>
+                </div>
+                <div class="ai-bubble" id="aiBubble">
+                    <div class="ai-avatar" id="aiAvatar">🧠</div>
+                    <div class="ai-msg">
+                        <div class="ai-name" id="aiName">搭档</div>
+                        <div class="ai-text" id="aiText">找到所有单词吧！我会为你加油。</div>
+                    </div>
+                </div>
+                <div class="word-list" id="wordList"></div>
+                <div class="grid-container">
+                    <table class="grid-table" id="gridTable"></table>
+                </div>
+                <div class="action-row">
+                    <button class="btn-secondary" id="hintBtn">💡 提示 <span class="badge" id="hintCount">3</span></button>
+                    <button class="btn-secondary danger" id="resetBtn">🔄 重置</button>
+                </div>
+                <div style="height:4px;"></div>
+            </div>
+            <div class="result-screen" id="resultScreen">
+                <div class="big-icon">🏆</div>
+                <div class="result-title" id="resultTitle">全部找到！</div>
+                <div class="result-score">得分 <span id="resultScore">0</span></div>
+                <div class="result-detail" id="resultDetail">你找到了所有单词！</div>
+                <div class="result-ai-msg" id="resultAiMsg">🎉 太棒了！</div>
+                <button class="btn-primary" id="replayBtn">🔄 新游戏</button>
+                <button class="btn-secondary" id="closeBtn" style="margin-top:6px;width:auto;padding:10px 28px;border:1px solid rgba(255,255,255,0.06);border-radius:12px;background:transparent;color:rgba(255,255,255,0.35);font-size:14px;cursor:pointer;">退出</button>
+            </div>
+        </div>
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---------- 词库 ----------
+            const WORD_BANK = [
+                'ant', 'bat', 'cat', 'dog', 'eel', 'fox', 'gnu', 'hog', 'imp', 'jay',
+                'koi', 'lynx', 'moth', 'newt', 'orca', 'pug', 'rat', 'seal', 'toad', 'vole',
+                'wolf', 'yak', 'zebu', 'ape', 'bass', 'crab', 'deer', 'emu', 'frog', 'goat',
+                'hare', 'ibis', 'jaguar', 'koala', 'llama', 'moose', 'newt', 'otter', 'puma', 'quail',
+                'racoon', 'sheep', 'tiger', 'urchin', 'viper', 'weasel', 'xerus', 'yabby', 'zebra',
+                'apple', 'bread', 'cheese', 'dates', 'eggs', 'figs', 'grape', 'honey', 'icing', 'jam',
+                'kale', 'lemon', 'mango', 'nuts', 'oats', 'peach', 'quince', 'rice', 'sugar', 'tea',
+                'ube', 'vinegar', 'water', 'xylitol', 'yogurt', 'zest', 'berry', 'cocoa', 'dill', 'elder',
+                'fennel', 'garlic', 'herbs', 'ice', 'jelly', 'kiwi', 'lime', 'milk', 'noodle', 'olive',
+                'pasta', 'quinoa', 'raisin', 'salad', 'tofu', 'udon', 'vanilla', 'walnut', 'yam', 'ziti',
+                'bay', 'cave', 'dune', 'earth', 'fjord', 'glen', 'hill', 'island', 'jungle', 'knoll',
+                'lake', 'marsh', 'north', 'ocean', 'peak', 'ridge', 'south', 'tree', 'upland', 'valley',
+                'weald', 'xeric', 'yard', 'zenith', 'bluff', 'creek', 'delta', 'estuary', 'forest', 'gulf',
+                'harbor', 'inlet', 'meadow', 'oasis', 'pond', 'quarry', 'river', 'stream', 'tundra', 'volcano',
+                'wood', 'canyon', 'desert', 'everglade', 'glacier', 'highland', 'islet', 'lagoon', 'mountain', 'prairie',
+                'arm', 'bone', 'chin', 'ear', 'eye', 'face', 'hair', 'joint', 'kidney', 'lung',
+                'muscle', 'nerve', 'organ', 'pulse', 'rib', 'skin', 'tooth', 'vein', 'wrist', 'xiphoid',
+                'yolk', 'belly', 'brain', 'colon', 'dermis', 'elbow', 'finger', 'gland', 'heart', 'iris',
+                'jaw', 'knee', 'liver', 'mouth', 'nose', 'palm', 'spleen', 'thigh', 'ulna', 'voice',
+                'waist', 'ankle', 'blood', 'chest', 'elbow', 'femur', 'gust', 'heel', 'iliac', 'joint',
+                'book', 'chair', 'door', 'envelope', 'frame', 'guitar', 'hat', 'ink', 'jacket', 'key',
+                'lamp', 'mirror', 'needle', 'oven', 'pen', 'quilt', 'ring', 'sofa', 'table', 'umbrella',
+                'vase', 'window', 'xylophone', 'yarn', 'zipper', 'belt', 'clock', 'desk', 'eraser', 'fork',
+                'glass', 'helmet', 'icebox', 'jug', 'knife', 'lock', 'mat', 'notebook', 'ornament', 'pencil',
+                'quill', 'ruler', 'spoon', 'thread', 'umbrella', 'vial', 'wand', 'yardstick', 'bucket', 'candle'
+            ];
+
+            // ---------- 状态 ----------
+            const state = {
+                characters: [],
+                selectedCharId: null,
+                charName: '搭档',
+                charAvatar: null,
+                words: [],
+                grid: [],
+                gridSize: 12,
+                wordPositions: [],
+                found: [],
+                selectedCells: [],
+                score: 0,
+                hintRemaining: 3,
+                isWaiting: false,
+                gameOver: false,
+                playerName: '玩家',
+                rolePackage: null,
+            };
+
+            // ---------- DOM ----------
+            const $ = id => document.getElementById(id);
+            const charListContainer = $('charListContainer');
+            const startBtn = $('startGameBtn');
+            const charSelectScreen = $('charSelectScreen');
+            const gamePlayScreen = $('gamePlayScreen');
+            const resultScreen = $('resultScreen');
+            const foundCount = $('foundCount');
+            const totalWords = $('totalWords');
+            const scoreNum = $('scoreNum');
+            const aiAvatar = $('aiAvatar');
+            const aiName = $('aiName');
+            const aiText = $('aiText');
+            const wordList = $('wordList');
+            const gridTable = $('gridTable');
+            const hintBtn = $('hintBtn');
+            const hintCount = $('hintCount');
+            const resetBtn = $('resetBtn');
+            const resultTitle = $('resultTitle');
+            const resultScore = $('resultScore');
+            const resultDetail = $('resultDetail');
+            const resultAiMsg = $('resultAiMsg');
+            const replayBtn = $('replayBtn');
+            const closeBtn = $('closeBtn');
+            const toastEl = $('toast');
+
+            const API = window.AiPhoneGame;
+
+            // ---------- 工具 ----------
+            function isApiAvailable() { return typeof API !== 'undefined' && API !== null; }
+            async function safeApiCall(fn, fallback) {
+                if (!isApiAvailable()) return fallback;
+                try { return await fn(); } catch (e) { console.warn(e); return fallback; }
+            }
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+            function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+            function getCharInitial(name) {
+                if (!name) return '?';
+                const m = name.match(/^[\u4e00-\u9fa5]/);
+                if (m) return m[0];
+                return name.charAt(0).toUpperCase() || '?';
+            }
+            function escHtml(str) {
+                if (!str) return '';
+                const d = document.createElement('div');
+                d.textContent = str;
+                return d.innerHTML;
+            }
+
+            let toastTimer = null;
+
+            function showToast(msg, duration) {
+                duration = duration || 1800;
+                toastEl.textContent = msg;
+                toastEl.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toastEl.classList.remove('show'), duration);
+            }
+
+            // ---------- 角色选择 ----------
+            async function loadCharacters() {
+                const list = await safeApiCall(() => API.listAvailableCharacters(), []);
+                state.characters = list || [];
+                renderCharList();
+            }
+
+            function renderCharList() {
+                const list = state.characters;
+                if (!list || list.length === 0) {
+                    charListContainer.innerHTML = `
+                <div class="empty-state">
+                  <div class="icon">📭</div>
+                  <div>没有可用角色。<br/>请先在手机里创建角色。</div>
+                  <div style="margin-top:12px;font-size:13px;color:rgba(255,255,255,0.2);">或使用内置搭档</div>
+                </div>
+              `;
+                    startBtn.disabled = true;
+                    return;
+                }
+                let html = '<div class="char-grid">';
+                list.forEach((ch) => {
+                    const initial = getCharInitial(ch.name);
+                    const avatarHtml = ch.avatar ? `<img src="${ch.avatar}" alt="" loading="lazy" />` : initial;
+                    const selected = state.selectedCharId === ch.id ? 'selected' : '';
+                    html += `
+                <div class="char-card ${selected}" data-id="${ch.id}">
+                  <div class="avatar">${avatarHtml}</div>
+                  <div class="info">
+                    <div class="name">${escHtml(ch.name)}</div>
+                    <div class="sub">${escHtml(ch.subtitle || '')}</div>
+                  </div>
+                  <div class="check">✓</div>
+                </div>
+              `;
+                });
+                html += '</div>';
+                charListContainer.innerHTML = html;
+
+                charListContainer.querySelectorAll('.char-card').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        selectCharacter(id);
+                    });
+                });
+                if (state.selectedCharId) {
+                    const cards = charListContainer.querySelectorAll('.char-card');
+                    cards.forEach(el => {
+                        if (el.dataset.id === state.selectedCharId) el.classList.add('selected');
+                    });
+                }
+                updateStartBtn();
+            }
+
+            function selectCharacter(id) {
+                state.selectedCharId = id;
+                const cards = charListContainer.querySelectorAll('.char-card');
+                cards.forEach(el => el.classList.toggle('selected', el.dataset.id === id));
+                const ch = state.characters.find(c => c.id === id);
+                if (ch) {
+                    state.charName = ch.name;
+                    state.charAvatar = ch.avatar || null;
+                }
+                updateStartBtn();
+                if (navigator.vibrate) navigator.vibrate(8);
+            }
+
+            function updateStartBtn() {
+                startBtn.disabled = !state.selectedCharId;
+                if (state.selectedCharId) {
+                    const ch = state.characters.find(c => c.id === state.selectedCharId);
+                    startBtn.textContent = `开始 · 搭档 ${ch ? ch.name : ''}`;
+                } else {
+                    startBtn.textContent = '选择一位搭档';
+                }
+            }
+
+            // ---------- 生成拼图 ----------
+            function generatePuzzle(numWords) {
+                const gridSize = state.gridSize;
+                const grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
+                const positions = [];
+                const shuffled = shuffleArray([...WORD_BANK]);
+                const unique = [];
+                const seen = new Set();
+                for (let w of shuffled) {
+                    if (!seen.has(w) && w.length >= 3 && w.length <= 8) {
+                        seen.add(w);
+                        unique.push(w);
+                    }
+                }
+                const words = unique.slice(0, numWords);
+                const dirs = [
+                    [0, 1],
+                    [1, 0],
+                    [1, 1],
+                    [1, -1]
+                ];
+                for (let w of words) {
+                    let placed = false;
+                    let attempts = 0;
+                    while (!placed && attempts < 300) {
+                        attempts++;
+                        const row = Math.floor(Math.random() * gridSize);
+                        const col = Math.floor(Math.random() * gridSize);
+                        const dir = dirs[Math.floor(Math.random() * dirs.length)];
+                        const dr = dir[0],
+                            dc = dir[1];
+                        let fit = true;
+                        for (let i = 0; i < w.length; i++) {
+                            const r = row + i * dr,
+                                c = col + i * dc;
+                            if (r < 0 || r >= gridSize || c < 0 || c >= gridSize) { fit = false; break; }
+                            if (grid[r][c] !== '' && grid[r][c] !== w[i]) { fit = false; break; }
+                        }
+                        if (fit) {
+                            const cells = [];
+                            for (let i = 0; i < w.length; i++) {
+                                const r = row + i * dr,
+                                    c = col + i * dc;
+                                grid[r][c] = w[i];
+                                cells.push([r, c]);
+                            }
+                            positions.push({ word: w, row, col, dir: dir, cells });
+                            placed = true;
+                        }
+                    }
+                    if (!placed) console.warn('无法放置单词:', w);
+                }
+                for (let r = 0; r < gridSize; r++) {
+                    for (let c = 0; c < gridSize; c++) {
+                        if (grid[r][c] === '') {
+                            grid[r][c] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                        }
+                    }
+                }
+                return { grid, positions, words: positions.map(p => p.word) };
+            }
+
+            function resetGameState() {
+                state.found = [];
+                state.selectedCells = [];
+                state.score = 0;
+                state.hintRemaining = 3;
+                state.gameOver = false;
+                state.isWaiting = false;
+                const numWords = Math.min(9, Math.floor(Math.random() * 4) + 6);
+                const puzzle = generatePuzzle(numWords);
+                state.grid = puzzle.grid;
+                state.wordPositions = puzzle.positions;
+                state.words = puzzle.words;
+            }
+
+            async function loadRolePackage(charId) {
+                if (!isApiAvailable()) { state.rolePackage = null; return; }
+                try {
+                    state.rolePackage = await API.getRoleLightPackage(charId);
+                } catch (e) {
+                    state.rolePackage = null;
+                }
+            }
+
+            // ---------- 开始游戏 ----------
+            async function startGame() {
+                if (!state.selectedCharId) { showToast('请选择一位搭档'); return; }
+                await loadRolePackage(state.selectedCharId);
+                const profile = await safeApiCall(() => API.getPlayerProfile(), { name: '玩家' });
+                state.playerName = profile.name || '玩家';
+
+                const saved = await safeApiCall(() => API.loadGame(), null);
+                if (saved && saved.wordsearch_data) {
+                    const d = saved.wordsearch_data;
+                    if (d.grid && d.grid.length === state.gridSize && d.words && d.wordPositions) {
+                        state.grid = d.grid;
+                        state.wordPositions = d.wordPositions;
+                        state.words = d.words;
+                        state.found = d.found || [];
+                        state.score = d.score || 0;
+                        state.hintRemaining = d.hintRemaining !== undefined ? d.hintRemaining : 3;
+                        state.gameOver = d.gameOver || false;
+                        showToast('📂 读取存档成功');
+                    } else {
+                        resetGameState();
+                    }
+                } else {
+                    resetGameState();
+                }
+
+                charSelectScreen.style.display = 'none';
+                gamePlayScreen.classList.add('active');
+                resultScreen.classList.remove('active');
+
+                renderGrid();
+                renderWordList();
+                updateUI();
+                aiGreeting();
+            }
+
+            // ---------- 渲染网格 ----------
+            function renderGrid() {
+                const grid = state.grid;
+                const size = grid.length;
+                let html = '';
+                for (let r = 0; r < size; r++) {
+                    html += '<tr>';
+                    for (let c = 0; c < size; c++) {
+                        const letter = grid[r][c];
+                        const isFound = isCellFound(r, c);
+                        const isSelected = state.selectedCells.some(([sr, sc]) => sr === r && sc === c);
+                        let cls = '';
+                        if (isFound) cls += ' found';
+                        if (isSelected) cls += ' selected';
+                        html += `<td class="${cls}" data-row="${r}" data-col="${c}">${letter.toUpperCase()}</td>`;
+                    }
+                    html += '</tr>';
+                }
+                gridTable.innerHTML = html;
+                setupGridTouchEvents();
+            }
+
+            // ---------- 触摸滑动（全新实现：基于起点方向，填充直线，支持斜线） ----------
+            let touchActive = false;
+            let startRow = -1,
+                startCol = -1;
+
+            function setupGridTouchEvents() {
+                const tds = gridTable.querySelectorAll('td');
+                tds.forEach(td => {
+                    td.removeEventListener('touchstart', onTouchStart);
+                    td.removeEventListener('touchmove', onTouchMove);
+                    td.removeEventListener('touchend', onTouchEnd);
+                    td.removeEventListener('touchcancel', onTouchEnd);
+                });
+                tds.forEach(td => {
+                    td.addEventListener('touchstart', onTouchStart, { passive: true });
+                    td.addEventListener('touchmove', onTouchMove, { passive: true });
+                    td.addEventListener('touchend', onTouchEnd, { passive: true });
+                    td.addEventListener('touchcancel', onTouchEnd, { passive: true });
+                });
+            }
+
+            function onTouchStart(e) {
+                if (state.gameOver || state.isWaiting) return;
+                const td = e.currentTarget;
+                const row = parseInt(td.dataset.row);
+                const col = parseInt(td.dataset.col);
+                if (isCellFound(row, col)) {
+                    touchActive = false;
+                    return;
+                }
+                touchActive = true;
+                startRow = row;
+                startCol = col;
+                state.selectedCells = [
+                    [row, col]
+                ];
+                renderGrid();
+            }
+
+            function onTouchMove(e) {
+                if (!touchActive || state.gameOver || state.isWaiting) return;
+                const touch = e.touches[0];
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (!el) return;
+                const td = el.closest('td');
+                if (!td) return;
+                const row = parseInt(td.dataset.row);
+                const col = parseInt(td.dataset.col);
+                // 不能选中已找到的格子
+                if (isCellFound(row, col)) return;
+
+                // 计算从起点到当前点的方向
+                const dr = Math.sign(row - startRow);
+                const dc = Math.sign(col - startCol);
+                // 方向必须为 (0,±1), (±1,0), (±1,±1) 之一，且不能同时为0
+                if (dr === 0 && dc === 0) return;
+                // 检查当前点是否在从起点沿该方向的直线上（即与起点的行差列差比例一致）
+                // 由于我们只允许水平、垂直、对角线，所以只要 (row-startRow) 和 (col-startCol) 的绝对值成比例
+                const absDr = Math.abs(row - startRow);
+                const absDc = Math.abs(col - startCol);
+                // 必须满足：要么行差为0，要么列差为0，要么行差等于列差（对角线）
+                if (!(absDr === 0 || absDc === 0 || absDr === absDc)) {
+                    return; // 不在直线方向上
+                }
+
+                // 沿直线填充从起点到当前点的所有格子（不包括起点，起点已在selectedCells中）
+                const newCells = [];
+                const steps = Math.max(absDr, absDc);
+                // 从第1步到第steps步
+                for (let i = 1; i <= steps; i++) {
+                    const r = startRow + i * dr;
+                    const c = startCol + i * dc;
+                    if (r < 0 || r >= state.gridSize || c < 0 || c >= state.gridSize) break;
+                    if (isCellFound(r, c)) break; // 遇到已找到的格子停止
+                    newCells.push([r, c]);
+                }
+                // 更新selectedCells为起点+中间点
+                state.selectedCells = [
+                    [startRow, startCol]
+                ];
+                for (let cell of newCells) {
+                    state.selectedCells.push(cell);
+                }
+                renderGrid();
+            }
+
+            function onTouchEnd(e) {
+                if (touchActive && state.selectedCells.length >= 3) {
+                    checkSelectedWord();
+                }
+                touchActive = false;
+                startRow = -1;
+                startCol = -1;
+            }
+
+            // ---------- 检查单词（验证共线连续） ----------
+            function checkSelectedWord() {
+                if (state.selectedCells.length < 3) {
+                    state.selectedCells = [];
+                    renderGrid();
+                    return;
+                }
+                const sorted = state.selectedCells;
+                // 验证所有点是否在一条直线上且连续（步长1）
+                let isValid = true;
+                if (sorted.length >= 2) {
+                    const dr = sorted[1][0] - sorted[0][0];
+                    const dc = sorted[1][1] - sorted[0][1];
+                    if (dr === 0 && dc === 0) isValid = false;
+                    else {
+                        for (let i = 1; i < sorted.length; i++) {
+                            const ddr = sorted[i][0] - sorted[i - 1][0];
+                            const ddc = sorted[i][1] - sorted[i - 1][1];
+                            if (ddr !== dr || ddc !== dc) { isValid = false; break; }
+                            if (Math.abs(ddr) > 1 || Math.abs(ddc) > 1) { isValid = false; break; }
+                        }
+                    }
+                }
+                if (!isValid) {
+                    state.selectedCells = [];
+                    renderGrid();
+                    showToast('请沿同一方向连续滑动选择');
+                    return;
+                }
+
+                let word = '';
+                for (let [r, c] of sorted) {
+                    word += state.grid[r][c];
+                }
+                word = word.toLowerCase();
+
+                const wordObj = state.wordPositions.find(p => p.word === word && !state.found.includes(word));
+                if (wordObj) {
+                    state.found.push(word);
+                    state.score += 10;
+                    state.selectedCells = [];
+                    renderGrid();
+                    renderWordList();
+                    updateUI();
+                    showToast(`✅ 找到 "${word}"！+10 分`);
+                    aiReact('found', word);
+                    saveProgress();
+                    if (state.found.length === state.words.length) {
+                        setTimeout(() => finishGame(), 600);
+                    }
+                } else {
+                    state.selectedCells = [];
+                    renderGrid();
+                    showToast('不是目标单词，再试试');
+                }
+            }
+
+            function isCellFound(row, col) {
+                for (let p of state.wordPositions) {
+                    if (state.found.includes(p.word)) {
+                        for (let [r, c] of p.cells) {
+                            if (r === row && c === col) return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            // ---------- 渲染单词列表 ----------
+            function renderWordList() {
+                let html = '';
+                for (let w of state.words) {
+                    const found = state.found.includes(w);
+                    html += `<span class="word-item ${found ? 'found' : ''}">${w}</span>`;
+                }
+                wordList.innerHTML = html;
+                totalWords.textContent = state.words.length;
+                foundCount.textContent = state.found.length;
+            }
+
+            function updateUI() {
+                scoreNum.textContent = state.score;
+                hintCount.textContent = state.hintRemaining;
+                foundCount.textContent = state.found.length;
+                totalWords.textContent = state.words.length;
+                hintBtn.disabled = state.gameOver || state.isWaiting || state.hintRemaining <= 0;
+                if (state.gameOver) {
+                    hintBtn.disabled = true;
+                    resetBtn.disabled = false;
+                } else {
+                    resetBtn.disabled = false;
+                }
+                renderWordList();
+            }
+
+            // ---------- AI 对话 ----------
+            function setAiMessage(name, text, isTyping) {
+                aiName.textContent = name || state.charName || '搭档';
+                if (isTyping) {
+                    aiText.innerHTML = text + '<span class="typing-cursor"></span>';
+                } else {
+                    aiText.textContent = text;
+                }
+                if (state.charAvatar) {
+                    aiAvatar.innerHTML = `<img src="${state.charAvatar}" alt="" />`;
+                } else {
+                    const initial = getCharInitial(state.charName);
+                    aiAvatar.textContent = initial;
+                }
+            }
+
+            async function aiGreeting() {
+                const name = state.charName || '搭档';
+                const pName = state.playerName || '玩家';
+                setAiMessage(name, `嗨 ${pName}！一起找单词吧！`, false);
+                const prompt =
+                    `你是${name}，请用你独特的人设风格，向${pName}打个招呼，并简单介绍游戏（在字母网格中找英文单词）。要热情、自然，贴合你的人设。**不要提自己的名字**，以对方为中心。只用纯自然语言。`;
+                const context = 'greeting';
+                const reply = await callAIForResponse(prompt, context);
+                if (reply) setAiMessage(name, reply, false);
+            }
+
+            async function aiReact(action, word) {
+                if (state.isWaiting) return;
+                state.isWaiting = true;
+                updateUI();
+                setAiMessage(state.charName, '🤔 嗯…', true);
+
+                let context = '';
+                let prompt = '';
+                if (action === 'found') {
+                    context = `找到了单词 "${word}"`;
+                    prompt =
+                        `${state.playerName} 刚刚找到了单词 "${word}"！请根据你的人设，用活泼、鼓励的语气表达兴奋和赞赏。只用自然语言。简短（1-2句话）。`;
+                } else if (action === 'reset') {
+                    context = '重置了拼图';
+                    prompt =
+                        `${state.playerName} 重置了拼图。请用鼓励的语气说点什么，让他继续尝试。只用自然语言。简短（1句话）。`;
+                } else if (action === 'finish') {
+                    context = '找到了所有单词';
+                    prompt =
+                        `${state.playerName} 找到了所有单词！请根据你的人设，给予温暖、祝贺的总结和告别。只用自然语言。2-3句话。`;
+                }
+
+                const reply = await callAIForResponse(prompt, context);
+                setAiMessage(state.charName, reply);
+                state.isWaiting = false;
+                updateUI();
+            }
+
+            async function callAIForResponse(prompt, context) {
+                if (!isApiAvailable()) {
+                    return getFallbackResponse(context);
+                }
+                try {
+                    let messages = [];
+                    if (state.rolePackage && state.rolePackage.messages) {
+                        messages = [...state.rolePackage.messages];
+                    } else {
+                        messages = [{
+                            role: 'system',
+                            content: `你是一个温暖、风趣、善于鼓励的搭档，名叫${state.charName}。你的回答简短、有创意，贴合你的人设。用中文回复。绝对不要使用任何动作描述（如*微笑*），不要用星号或括号，只输出纯自然语言对话。`
+                        }];
+                    }
+                    messages.push({
+                        role: 'system',
+                        content: `重要：你的回复必须只包含自然语言，不要有任何动作描述（如*微笑*）、不要用星号、括号或任何格式标记。只输出对话内容。游戏是英文单词搜索。`
+                    });
+                    const progress = `${state.found.length}/${state.words.length} 个单词已找到`;
+                    messages.push({
+                        role: 'system',
+                        content: `玩家：${state.playerName}。当前游戏进度：${progress}。${context}`
+                    });
+                    messages.push({ role: 'user', content: prompt });
+
+                    const result = await API.callLLM({
+                        characterId: state.selectedCharId,
+                        messages: messages,
+                    });
+                    let reply = result.content || getFallbackResponse(context);
+                    reply = reply.replace(/\*[^*]*\*/g, '').replace(/\([^)]*\)/g, '').trim();
+                    return reply;
+                } catch (e) {
+                    console.warn(e);
+                    return getFallbackResponse(context);
+                }
+            }
+
+            function getFallbackResponse(context) {
+                if (context.includes('greeting')) {
+                    return `嗨，${state.playerName}！来挑战一下眼力吧，找到所有隐藏的单词！`;
+                } else if (context.includes('找到了单词')) {
+                    const msgs = ['🎉 太棒了！', '🌟 好厉害！', '👏 真不错！', '💪 你太强了！'];
+                    return msgs[Math.floor(Math.random() * msgs.length)];
+                } else if (context.includes('重置')) {
+                    return '😊 没关系，慢慢来。';
+                } else if (context.includes('所有单词')) {
+                    return '🎊 你做到了！太了不起了！';
+                }
+                return '😊 继续加油！';
+            }
+
+            // ---------- 提示 ----------
+            async function giveHint() {
+                if (state.gameOver || state.isWaiting) return;
+                if (state.hintRemaining <= 0) { showToast('提示次数已用完'); return; }
+                state.hintRemaining -= 1;
+                const unfound = state.words.filter(w => !state.found.includes(w));
+                if (unfound.length === 0) { showToast('所有单词都已找到！'); return; }
+                const word = unfound[Math.floor(Math.random() * unfound.length)];
+                const pos = state.wordPositions.find(p => p.word === word);
+                if (!pos) { showToast('出错了，请重试'); return; }
+                const [r, c] = pos.cells[0];
+                const hintText = `有一个单词以 "${word[0].toUpperCase()}" 开头，共 ${word.length} 个字母，从第 ${r+1} 行第 ${c+1} 列开始。`;
+                state.selectedCells = [];
+                renderGrid();
+                const td = gridTable.querySelector(`td[data-row="${r}"][data-col="${c}"]`);
+                if (td) {
+                    td.classList.add('highlight');
+                    setTimeout(() => td.classList.remove('highlight'), 3000);
+                }
+                updateUI();
+                saveProgress();
+
+                state.isWaiting = true;
+                setAiMessage(state.charName, '🤔 让我想想怎么提示你…', true);
+                const prompt =
+                    `你刚刚给${state.playerName}一个提示：${hintText}。请用你的口吻，把这句话说得自然、贴合你的人设，像是你在给对方线索。不要添加额外无关内容，只说这一句提示。`;
+                const reply = await callAIForResponse(prompt, '提示');
+                setAiMessage(state.charName, reply);
+                state.isWaiting = false;
+                updateUI();
+                showToast(`💡 提示：${hintText}`);
+            }
+
+            // ---------- 重置 ----------
+            async function resetPuzzle() {
+                if (state.gameOver) {
+                    resetGameState();
+                    renderGrid();
+                    renderWordList();
+                    updateUI();
+                    setAiMessage(state.charName, '🔄 新拼图已生成！');
+                    saveProgress();
+                    return;
+                }
+                if (state.found.length > 0) {
+                    if (!confirm('重置拼图？当前进度将丢失。')) return;
+                }
+                resetGameState();
+                renderGrid();
+                renderWordList();
+                updateUI();
+                setAiMessage(state.charName, '🔄 新拼图已就绪！');
+                saveProgress();
+                await aiReact('reset', '');
+            }
+
+            // ---------- 结束 ----------
+            async function finishGame() {
+                state.gameOver = true;
+                gamePlayScreen.classList.remove('active');
+                resultScreen.classList.add('active');
+
+                const total = state.words.length;
+                const score = state.score;
+                resultScore.textContent = score;
+                resultDetail.textContent = `找到了全部 ${total} 个单词！`;
+
+                let title, icon;
+                if (score >= total * 10) { title = '🏆 完美！';
+                    icon = '🏆'; } else if (score >= total * 7) { title = '🌟 非常棒！';
+                    icon = '🌟'; } else { title = '💪 好样的！';
+                    icon = '💪'; }
+                document.querySelector('.result-screen .big-icon').textContent = icon;
+                resultTitle.textContent = title;
+
+                const context = '找到了所有单词';
+                const prompt =
+                    `${state.playerName} 找到了全部 ${total} 个单词，得分 ${score}。请根据你的人设，说一段温暖的总结和告别。只用自然语言。`;
+                const reply = await callAIForResponse(prompt, context);
+                resultAiMsg.textContent = reply;
+
+                await recordGameResult(score);
+                await safeApiCall(() => API.saveGame({ wordsearch_data: null }), null);
+            }
+
+            async function recordGameResult(score) {
+                if (!isApiAvailable()) return;
+                try {
+                    const pName = state.playerName || '玩家';
+                    const cName = state.charName || '搭档';
+                    const summary =
+                        `${pName} 和 ${cName} 一起玩了英文单词搜索游戏，${pName} 找到了所有单词，获得 ${score} 分。`;
+                    await API.recordGameEvent({
+                        characterIds: [state.selectedCharId],
+                        summary: summary,
+                    });
+                } catch (e) { console.warn(e); }
+            }
+
+            // ---------- 存档 ----------
+            async function saveProgress() {
+                if (!isApiAvailable()) return;
+                try {
+                    await API.saveGame({
+                        wordsearch_data: {
+                            grid: state.grid,
+                            wordPositions: state.wordPositions,
+                            words: state.words,
+                            found: state.found,
+                            score: state.score,
+                            hintRemaining: state.hintRemaining,
+                            gameOver: state.gameOver,
+                        }
+                    });
+                } catch (e) { console.warn(e); }
+            }
+
+            // ---------- 重新开始 / 退出 ----------
+            async function replayGame() {
+                resultScreen.classList.remove('active');
+                gamePlayScreen.classList.add('active');
+                resetGameState();
+                renderGrid();
+                renderWordList();
+                updateUI();
+                aiGreeting();
+                await safeApiCall(() => API.saveGame({ wordsearch_data: null }), null);
+            }
+
+            async function closeGame() {
+                if (isApiAvailable()) {
+                    try { await API.closeGame(); } catch (e) { console.warn(e); }
+                } else {
+                    showToast('👋 再见！');
+                    setTimeout(() => {
+                        document.body.innerHTML =
+                            '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.3);font-size:16px;background:#0d0b1a;">游戏已退出</div>';
+                    }, 500);
+                }
+            }
+
+            // ---------- 初始化 ----------
+            async function init() {
+                if (isApiAvailable()) {
+                    try {
+                        await API.setTitleBar({
+                            material: 'glass',
+                            background: 'rgba(13, 11, 26, 0.72)',
+                            color: '#f0ecf5',
+                            borderColor: 'rgba(255,255,255,0.06)',
+                            buttonBackground: 'rgba(255,255,255,0.06)',
+                            buttonColor: '#f0ecf5',
+                            buttonBorderColor: 'rgba(255,255,255,0.08)',
+                            buttonRadius: '999px',
+                            buttonShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                            iconOpacity: 0.9,
+                        });
+                    } catch (e) { /* ignore */ }
+                }
+
+                await loadCharacters();
+
+                startBtn.addEventListener('click', startGame);
+                hintBtn.addEventListener('click', giveHint);
+                resetBtn.addEventListener('click', resetPuzzle);
+                replayBtn.addEventListener('click', replayGame);
+                closeBtn.addEventListener('click', closeGame);
+
+                setTimeout(() => {
+                    if (charSelectScreen.style.display !== 'none' && state.characters.length > 0 && !state
+                        .selectedCharId) {
+                        selectCharacter(state.characters[0].id);
+                    }
+                }, 400);
+
+                console.log('[Word Search] 滑动优化：基于起点方向，稳定支持斜线选择，减少误触。');
+            }
+
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                init();
+            } else {
+                document.addEventListener('DOMContentLoaded', init);
+            }
+
+        })();
+    </script>
+</body>
+</html>
