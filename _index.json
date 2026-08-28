@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T11:56:18.036Z",
+  "generatedAt": "2026-08-28T13:22:30.231Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "快捷指令模版",
-      "count": 3
+      "count": 4
     },
     {
       "name": "朋友圈美化",
@@ -2122,6 +2122,24 @@
       "avatar": "",
       "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
       "updatedAt": "2026-08-28T12:11:13+08:00"
+    },
+    {
+      "folder": "快捷指令模版",
+      "name": "查真实手机快捷指令模版",
+      "dirName": "查真实手机快捷指令模版",
+      "type": "dir",
+      "path": "资源/快捷指令模版/查真实手机快捷指令模版",
+      "files": [],
+      "images": [
+        "资源/快捷指令模版/查真实手机快捷指令模版/IMG_3401.jpeg",
+        "资源/快捷指令模版/查真实手机快捷指令模版/IMG_3402.png",
+        "资源/快捷指令模版/查真实手机快捷指令模版/IMG_3403.png"
+      ],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
+      "updatedAt": "2026-08-28T21:22:08+08:00"
     },
     {
       "folder": "快捷指令模版",
