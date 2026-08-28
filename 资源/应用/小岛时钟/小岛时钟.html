@@ -1,0 +1,2051 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>环岛番茄钟</title>
+  <style>
+    :root {
+      --mint: #63b7af;
+      --mint-dark: #2d8c84;
+      --sea: #bdebe7;
+      --sand: #fff2c8;
+      --coral: #ff9f8a;
+      --ink: #31515a;
+      --card: rgba(255,255,255,.78);
+      --safe-top: var(--ai-phone-app-safe-top, 58px);
+      --safe-bottom: var(--ai-phone-app-safe-bottom, 22px);
+      --shadow: 0 14px 36px rgba(64,128,132,.16);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 16% 12%, rgba(255,255,255,.9) 0 10px, transparent 11px),
+        radial-gradient(circle at 82% 18%, rgba(255,255,255,.72) 0 8px, transparent 9px),
+        linear-gradient(180deg, #d7fbff 0%, #e9fff4 54%, #fff6dc 100%);
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      min-height: 44px;
+      border-radius: 999px;
+      background: white;
+      color: var(--ink);
+      box-shadow: 0 8px 20px rgba(49,81,90,.08);
+    }
+
+    button:active {
+      transform: scale(.98);
+    }
+
+    .app {
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: var(--safe-top) 14px var(--safe-bottom);
+      overflow: hidden;
+    }
+
+    .topbar {
+      padding-right: 72px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #245b61;
+      letter-spacing: .03em;
+    }
+
+    .topbar p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: rgba(49,81,90,.62);
+    }
+
+    .content {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+
+    .content::-webkit-scrollbar {
+      display: none;
+    }
+
+    .character-card {
+      padding: 13px;
+      border-radius: 26px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.74);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 54px 1fr auto;
+      gap: 11px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      background:
+        radial-gradient(circle at 35% 32%, #ffffff 0 8px, transparent 9px),
+        linear-gradient(135deg, #bdebe7, #ffdfc9);
+      border: 3px solid rgba(255,255,255,.86);
+      box-shadow: 0 8px 18px rgba(49,81,90,.13);
+    }
+
+    .char-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #245b61;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .char-tip {
+      margin-top: 3px;
+      font-size: 12px;
+      color: rgba(49,81,90,.58);
+    }
+
+    .small-btn {
+      min-height: 36px;
+      padding: 0 12px;
+      font-size: 12px;
+      background: rgba(99,183,175,.14);
+      color: var(--mint-dark);
+      box-shadow: none;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      padding: 5px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.48);
+    }
+
+    .tab {
+      min-height: 38px;
+      box-shadow: none;
+      background: transparent;
+      color: rgba(49,81,90,.64);
+      font-size: 12px;
+    }
+
+    .tab.active {
+      background: white;
+      color: var(--mint-dark);
+      box-shadow: 0 8px 18px rgba(49,81,90,.09);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .hero {
+      position: relative;
+      height: 245px;
+      overflow: hidden;
+      border-radius: 32px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.32)),
+        linear-gradient(150deg, #d8fff9, #bdebe7 52%, #ffeec2);
+      border: 1px solid rgba(255,255,255,.76);
+      box-shadow: var(--shadow);
+    }
+
+    .sun {
+      position: absolute;
+      right: 28px;
+      top: 24px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #ffd976;
+      box-shadow: 0 0 0 12px rgba(255,217,118,.17);
+    }
+
+    .sea {
+      position: absolute;
+      left: -10%;
+      right: -10%;
+      bottom: 0;
+      height: 94px;
+      border-radius: 50% 50% 0 0 / 32% 32% 0 0;
+      background:
+        radial-gradient(ellipse at 22% 0, rgba(255,255,255,.72) 0 16px, transparent 17px),
+        radial-gradient(ellipse at 54% 7%, rgba(255,255,255,.58) 0 14px, transparent 15px),
+        radial-gradient(ellipse at 82% 0, rgba(255,255,255,.62) 0 16px, transparent 17px),
+        linear-gradient(180deg, #95dcd8, #78c9c4);
+    }
+
+    .island {
+      position: absolute;
+      right: 24px;
+      bottom: 54px;
+      width: 104px;
+      height: 58px;
+      border-radius: 52% 48% 45% 48%;
+      background: linear-gradient(180deg, #9bd983, #6fbd6f);
+      box-shadow: inset 0 -14px 0 rgba(115,89,54,.14);
+      transform: rotate(-3deg);
+    }
+
+    .island::before {
+      content: "";
+      position: absolute;
+      left: 13px;
+      bottom: -12px;
+      width: 78px;
+      height: 23px;
+      border-radius: 50%;
+      background: #f4d487;
+      z-index: -1;
+    }
+
+    .palm {
+      position: absolute;
+      right: 63px;
+      bottom: 99px;
+      width: 8px;
+      height: 42px;
+      border-radius: 8px;
+      background: #9c7445;
+      transform: rotate(8deg);
+    }
+
+    .palm::before {
+      content: "✦";
+      position: absolute;
+      left: -16px;
+      top: -21px;
+      color: #3fa66d;
+      font-size: 42px;
+      transform: rotate(-12deg);
+    }
+
+    .boat {
+      position: absolute;
+      left: calc(18px + var(--progress, 0) * 1%);
+      bottom: 72px;
+      width: 72px;
+      height: 66px;
+      transition: left .7s ease;
+      filter: drop-shadow(0 8px 8px rgba(49,81,90,.15));
+      z-index: 5;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .boat-avatar {
+      position: absolute;
+      left: 2px;
+      top: 8px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background: #fff;
+      z-index: 4;
+    }
+
+    .sail {
+      position: absolute;
+      left: 31px;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-left: 30px solid #fffdf4;
+      border-top: 40px solid transparent;
+    }
+
+    .mast {
+      position: absolute;
+      left: 29px;
+      top: 0;
+      width: 3px;
+      height: 48px;
+      border-radius: 8px;
+      background: #7c6b50;
+    }
+
+    .hull {
+      position: absolute;
+      left: 8px;
+      bottom: 6px;
+      width: 60px;
+      height: 19px;
+      border-radius: 0 0 30px 30px;
+      background: #ff9f8a;
+    }
+
+    .speech {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 142px;
+      z-index: 10;
+      display: none;
+      padding: 10px 12px;
+      border-radius: 18px 18px 18px 6px;
+      background: rgba(255,255,255,.92);
+      color: #245b61;
+      font-size: 13px;
+      line-height: 1.45;
+      box-shadow: 0 10px 24px rgba(49,81,90,.14);
+    }
+
+    .speech.show {
+      display: block;
+      animation: pop .18s ease-out;
+    }
+
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(8px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .hero-text {
+      position: relative;
+      z-index: 2;
+      max-width: 68%;
+    }
+
+    .hero-text span {
+      display: inline-flex;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      color: var(--mint-dark);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .hero-text h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #245b61;
+    }
+
+    .hero-text p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(49,81,90,.72);
+    }
+
+    .timer-card,
+    .panel-card {
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: 28px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.74);
+      box-shadow: var(--shadow);
+    }
+
+    .status {
+      text-align: center;
+      min-height: 21px;
+      font-size: 13px;
+      color: rgba(49,81,90,.68);
+    }
+
+    .timer {
+      text-align: center;
+      font-size: 54px;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      font-weight: 760;
+      color: #245b61;
+      margin: 4px 0 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .primary {
+      color: white;
+      background: linear-gradient(135deg, #63b7af, #78cf9d);
+      box-shadow: 0 12px 24px rgba(99,183,175,.28);
+    }
+
+    .danger {
+      color: white;
+      background: linear-gradient(135deg, #ff9f8a, #ff7f7f);
+    }
+
+    .ghost {
+      background: rgba(255,255,255,.72);
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: rgba(49,81,90,.6);
+      padding-left: 4px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      min-height: 44px;
+      border: 0;
+      outline: 0;
+      border-radius: 16px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: rgba(255,255,255,.78);
+      box-shadow: inset 0 0 0 1px rgba(49,81,90,.06);
+    }
+
+    .custom-duration {
+      display: none;
+      margin-top: 9px;
+    }
+
+    .custom-duration.show {
+      display: block;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 17px 4px 9px;
+    }
+
+    .section-title h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #245b61;
+    }
+
+    .section-title small {
+      font-size: 12px;
+      color: rgba(49,81,90,.55);
+    }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-card {
+      padding: 14px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(255,255,255,.7);
+      box-shadow: 0 10px 28px rgba(71,136,142,.1);
+    }
+
+    .mini-card h4 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      color: #245b61;
+    }
+
+    .mini-card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(49,81,90,.68);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      min-height: 26px;
+      align-items: center;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(99,183,175,.13);
+      color: var(--mint-dark);
+      font-size: 12px;
+    }
+
+    .map {
+      width: 100%;
+      height: 230px;
+      display: block;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 22% 26%, #fff7dc 0 13px, transparent 14px),
+        radial-gradient(circle at 76% 34%, #fff7dc 0 18px, transparent 19px),
+        radial-gradient(circle at 52% 70%, #fff7dc 0 15px, transparent 16px),
+        linear-gradient(180deg, #c8f5f5, #a8e2dd);
+    }
+
+    .souvenir-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .souvenir {
+      min-height: 118px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 24px;
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 10px 28px rgba(71,136,142,.1);
+      border: 1px solid rgba(255,255,255,.72);
+      text-align: center;
+      padding: 10px;
+    }
+
+    .souvenir .emoji {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+
+    .souvenir .name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #245b61;
+    }
+
+    .souvenir .from {
+      margin-top: 4px;
+      font-size: 11px;
+      color: rgba(49,81,90,.55);
+    }
+
+    .todo-form {
+      display: grid;
+      grid-template-columns: 1fr 54px;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .todo-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .todo-item {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 9px;
+      align-items: center;
+      padding: 11px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.74);
+    }
+
+    .check {
+      width: 34px;
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      box-shadow: none;
+      background: rgba(99,183,175,.14);
+      color: var(--mint-dark);
+    }
+
+    .delete {
+      min-height: 34px;
+      padding: 0 10px;
+      box-shadow: none;
+      background: rgba(255,159,138,.14);
+      color: #d96d5f;
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 22px 10px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(49,81,90,.55);
+    }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: var(--safe-top) 18px var(--safe-bottom);
+      background: rgba(49,81,90,.18);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-mask.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 390px;
+      max-height: 78dvh;
+      overflow-y: auto;
+      padding: 17px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.95);
+      box-shadow: 0 20px 60px rgba(49,81,90,.22);
+    }
+
+    .modal h3 {
+      margin: 0 0 10px;
+      color: #245b61;
+    }
+
+    .modal p {
+      margin: 0 0 12px;
+      color: rgba(49,81,90,.68);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .char-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .char-option {
+      display: grid;
+      grid-template-columns: 46px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 20px;
+      background: rgba(99,183,175,.08);
+      text-align: left;
+    }
+
+    .char-option .avatar {
+      width: 46px;
+      height: 46px;
+    }
+
+    .selected-mark {
+      font-size: 12px;
+      color: var(--mint-dark);
+    }
+
+    .avatar-tools {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--safe-bottom) + 18px);
+      z-index: 30;
+      max-width: 86%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(36,91,97,.88);
+      color: white;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateX(-50%) translateY(16px);
+      pointer-events: none;
+      transition: .22s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 360px) {
+      .timer {
+        font-size: 46px;
+      }
+
+      .tabs {
+        gap: 5px;
+      }
+
+      .tab {
+        font-size: 11px;
+      }
+
+      .hero-text {
+        max-width: 72%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header class="topbar">
+      <h1>小岛时钟</h1>
+      <p>把专注记录成一段清新的小岛航线</p>
+    </header>
+
+    <section class="content">
+      <div class="character-card">
+        <img class="avatar" id="selectedAvatar" alt="角色头像" />
+        <div>
+          <div class="char-name" id="selectedName">请选择角色</div>
+          <div class="char-tip" id="selectedTip">专注结束后会给该角色发送记录卡片</div>
+        </div>
+        <button class="small-btn" id="chooseCharacterBtn">角色</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-view="timerView">航行</button>
+        <button class="tab" data-view="mapView">航迹</button>
+        <button class="tab" data-view="galleryView">展馆</button>
+        <button class="tab" data-view="todoView">Todo</button>
+      </div>
+
+      <section class="view active" id="timerView">
+        <div class="hero" id="hero">
+          <div class="sun"></div>
+
+          <div class="hero-text">
+            <span id="voyageLabel">今日适合专注</span>
+            <h2 id="destinationTitle">下一站：未知小岛</h2>
+            <p id="destinationDesc">岛屿在完成专注后，由你亲自命名。</p>
+          </div>
+
+          <div class="speech" id="speechBubble"></div>
+
+          <div class="palm"></div>
+          <div class="island"></div>
+          <div class="sea"></div>
+
+          <button class="boat" id="boatBtn" aria-label="点击帆船">
+            <img class="boat-avatar" id="boatAvatar" alt="航行头像" />
+            <div class="sail"></div>
+            <div class="mast"></div>
+            <div class="hull"></div>
+          </button>
+        </div>
+
+        <div class="timer-card">
+          <div class="status" id="timerStatus">准备开始专注</div>
+          <div class="timer" id="timer">25:00</div>
+
+          <div class="controls">
+            <button class="primary" id="startBtn">开始航行</button>
+            <button class="ghost" id="pauseBtn">暂停</button>
+          </div>
+
+          <div class="controls">
+            <button class="danger" id="stopBtn">中途返程</button>
+            <button class="ghost" id="resetBtn">重置</button>
+          </div>
+
+          <div class="settings">
+            <div class="field">
+              <label>专注时长</label>
+              <select id="durationSelect">
+                <option value="5">5 分钟</option>
+                <option value="15">15 分钟</option>
+                <option value="25" selected>25 分钟</option>
+                <option value="40">40 分钟</option>
+                <option value="60">60 分钟</option>
+                <option value="custom">自定义</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>专注类型</label>
+              <select id="focusTypeSelect">
+                <option value="work">工作</option>
+                <option value="study" selected>学习</option>
+                <option value="reading">阅读</option>
+                <option value="writing">写作</option>
+                <option value="exercise">运动</option>
+                <option value="chores">家务</option>
+                <option value="creative">创作</option>
+                <option value="other">其他</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="custom-duration" id="customDurationBox">
+            <div class="field">
+              <label>自定义分钟数，1 到 180 分钟</label>
+              <input id="customDurationInput" type="number" min="1" max="180" value="25" />
+            </div>
+          </div>
+
+          <div class="settings">
+            <div class="field">
+              <label>航行补给</label>
+              <input id="supplyInput" readonly value="暂无补给" />
+            </div>
+
+            <div class="field">
+              <label>记录说明</label>
+              <input readonly value="航行是专注比喻" />
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h3>最近抵达</h3>
+          <small id="statsText">0 座小岛</small>
+        </div>
+        <div class="cards" id="recentIslands"></div>
+      </section>
+
+      <section class="view" id="mapView">
+        <div class="panel-card">
+          <svg class="map" viewBox="0 0 340 230" id="mapSvg"></svg>
+        </div>
+
+        <div class="section-title">
+          <h3>小岛图鉴</h3>
+          <small>航线随机生成</small>
+        </div>
+        <div class="cards" id="islandList"></div>
+      </section>
+
+      <section class="view" id="galleryView">
+        <div class="panel-card">
+          <h3 style="margin:0 0 6px;color:#245b61;font-size:16px;">纪念品展馆</h3>
+          <p style="margin:0;font-size:13px;line-height:1.55;color:rgba(49,81,90,.68);">
+            每完成一次专注航行，就会获得一件来自未知小岛的纪念品。
+          </p>
+        </div>
+
+        <div class="section-title">
+          <h3>收藏柜</h3>
+          <small id="souvenirCount">0 件</small>
+        </div>
+        <div class="souvenir-grid" id="souvenirGrid"></div>
+      </section>
+
+      <section class="view" id="todoView">
+        <div class="panel-card">
+          <h3 style="margin:0 0 6px;color:#245b61;font-size:16px;">Todo 补给站</h3>
+          <p style="margin:0;font-size:13px;line-height:1.55;color:rgba(49,81,90,.68);">
+            完成一项任务，就能为下一次专注记录准备一份补给。
+          </p>
+
+          <form class="todo-form" id="todoForm">
+            <input id="todoInput" maxlength="40" placeholder="写下一个小任务..." />
+            <button class="primary" type="submit">＋</button>
+          </form>
+        </div>
+
+        <div class="section-title">
+          <h3>任务列表</h3>
+          <small id="todoCount">0 项待完成</small>
+        </div>
+        <div class="todo-list" id="todoList"></div>
+      </section>
+    </section>
+  </main>
+
+  <div class="modal-mask" id="characterModal">
+    <div class="modal">
+      <h3>选择陪你专注的角色</h3>
+      <div class="char-list" id="characterList"></div>
+
+      <div class="panel-card" style="margin-top:12px;box-shadow:none;">
+        <h3 style="font-size:15px;margin:0 0 6px;">自定义航行头像</h3>
+        <p>这里导入的头像只用于本 APP，不会修改小手机里的角色头像。</p>
+        <input id="avatarFileInput" type="file" accept="image/*" />
+        <div class="avatar-tools">
+          <button class="small-btn" id="saveAvatarBtn">使用图片</button>
+          <button class="small-btn" id="clearAvatarBtn">恢复原头像</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="nameIslandModal">
+    <div class="modal">
+      <h3>为新岛命名</h3>
+      <p id="nameIslandText">你完成了一段专注，发现了一座未知小岛。给它取个名字吧。</p>
+
+      <div class="field">
+        <label>岛屿名称</label>
+        <input id="islandNameInput" maxlength="16" placeholder="例如：海盐月亮屿" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="ghost" id="nameLaterBtn">稍后命名</button>
+        <button class="primary" id="saveIslandNameBtn">保存岛名</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const APP_LABEL = "小岛时钟";
+    const TAG_VOYAGE = ["island_pomodoro", "voyage"];
+    const TAG_TODO = ["island_pomodoro", "todo"];
+
+    const focusTypeLabels = {
+      work: "工作",
+      study: "学习",
+      reading: "阅读",
+      writing: "写作",
+      exercise: "运动",
+      chores: "家务",
+      creative: "创作",
+      other: "其他"
+    };
+
+    const islandTypes = [
+      { biome: "珊瑚浅滩", special: "珊瑚莓果", souvenir: "粉珊瑚书签", emoji: "🪸", color: "#ff9f8a" },
+      { biome: "雨林小岛", special: "雨露果冻", souvenir: "绿叶护身符", emoji: "🌿", color: "#78cf9d" },
+      { biome: "星砂沙洲", special: "星砂饼干", souvenir: "星砂许愿瓶", emoji: "⭐", color: "#d4bcff" },
+      { biome: "月白海滩", special: "月光椰奶", souvenir: "月白石", emoji: "🌙", color: "#f6e7b8" },
+      { biome: "贝壳礁", special: "海盐糖", souvenir: "青瓷贝壳", emoji: "🐚", color: "#9ad7e5" },
+      { biome: "柚光果岛", special: "柚子汽水", souvenir: "琥珀玻璃瓶", emoji: "🍊", color: "#ffd976" },
+      { biome: "云雾高地", special: "云朵棉糖", souvenir: "小云朵徽章", emoji: "☁️", color: "#b8ddff" },
+      { biome: "风铃岬角", special: "海风茶", souvenir: "蓝风铃吊坠", emoji: "🔔", color: "#9ad7e5" },
+      { biome: "灯塔孤屿", special: "暖灯可可", souvenir: "迷你灯塔", emoji: "🗼", color: "#ffc78e" },
+      { biome: "鲸歌海湾", special: "鲸歌汽泡水", souvenir: "鲸尾胸针", emoji: "🐋", color: "#8cc7ff" }
+    ];
+
+    const accidentEvents = [
+      "海面忽然起了软绵绵的雾，只好沿着灯塔光返程。",
+      "一群海鸥把航海图叼去研究了，小船只能先回港。",
+      "逆风把帆吹得像一朵生气的云，航行暂时中断。",
+      "补给箱在船舱里滚来滚去，只好先回港重新整理。",
+      "远处鲸鱼唱起歌，潮汐悄悄错过了出航时间。"
+    ];
+
+    const supplyPool = [
+      "海盐饭团",
+      "薄荷淡水",
+      "贝壳灯",
+      "小风帆修补包",
+      "柚子糖",
+      "星砂地图",
+      "热可可保温杯",
+      "云朵毛毯"
+    ];
+
+    const fallbackFocusLines = [
+      "先别分心，海风会替我陪着你。再坚持一小会儿。",
+      "小船还在往前走，你也继续把注意力放回眼前吧。",
+      "现在先专注，等靠岸了我再和你好好说话。",
+      "别急着看我，等你完成这段时间，我会在岛边等你。",
+      "把这一分钟交给自己吧，我会安静地陪着你。"
+    ];
+
+    const state = {
+      launchContext: null,
+      characters: [],
+      selectedCharacterId: "",
+      selectedCharacter: null,
+      customAvatars: {},
+      focusType: "study",
+      durationMode: "25",
+      customDuration: 25,
+      timer: {
+        total: 25 * 60,
+        left: 25 * 60,
+        running: false
+      },
+      timerId: null,
+      islands: [],
+      todos: [],
+      supplies: [],
+      pendingIslandId: ""
+    };
+
+    const $ = id => document.getElementById(id);
+
+    function hasSDK() {
+      return !!window.AiPhone;
+    }
+
+    function normalizeList(result) {
+      if (Array.isArray(result)) return result;
+      if (Array.isArray(result?.items)) return result.items;
+      if (Array.isArray(result?.data)) return result.data;
+      if (Array.isArray(result?.characters)) return result.characters;
+      return [];
+    }
+
+    function getCharacterName(character) {
+      return character?.name || character?.displayName || character?.nickname || "未命名角色";
+    }
+
+    function getOriginalAvatar(character) {
+      return character?.avatarUrl ||
+        character?.avatar ||
+        character?.image ||
+        character?.icon ||
+        character?.profileImage ||
+        character?.cover ||
+        "";
+    }
+
+    function getDisplayAvatar(character) {
+      if (!character) return defaultAvatarDataUrl("岛");
+      return state.customAvatars[String(character.id)] || getOriginalAvatar(character) || defaultAvatarDataUrl(getCharacterName(character));
+    }
+
+    function defaultAvatarDataUrl(name) {
+      const letter = encodeURIComponent((name || "岛").slice(0, 1));
+      return "data:image/svg+xml;utf8," +
+        `<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'>
+          <defs>
+            <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+              <stop offset='0' stop-color='%23bdebe7'/>
+              <stop offset='1' stop-color='%23ffdfc9'/>
+            </linearGradient>
+          </defs>
+          <rect width='120' height='120' rx='60' fill='url(%23g)'/>
+          <circle cx='38' cy='38' r='16' fill='rgba(255,255,255,.55)'/>
+          <text x='60' y='74' text-anchor='middle' font-size='44' font-family='sans-serif' fill='%2331515a'>${letter}</text>
+        </svg>`;
+    }
+
+    function setImageSafe(img, src, name) {
+      img.src = src || defaultAvatarDataUrl(name);
+      img.onerror = () => {
+        img.onerror = null;
+        img.src = defaultAvatarDataUrl(name);
+      };
+    }
+
+    function localKey(collection) {
+      return "island_pomodoro_" + collection;
+    }
+
+    async function dbList(collection) {
+      if (hasSDK() && window.AiPhone.db?.list) {
+        return normalizeList(await window.AiPhone.db.list(collection, { limit: 500 }));
+      }
+      return JSON.parse(localStorage.getItem(localKey(collection)) || "[]");
+    }
+
+    async function dbCreate(collection, data) {
+      if (hasSDK() && window.AiPhone.db?.create) {
+        return await window.AiPhone.db.create(collection, data);
+      }
+      const list = await dbList(collection);
+      const item = {
+        ...data,
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())
+      };
+      list.unshift(item);
+      localStorage.setItem(localKey(collection), JSON.stringify(list));
+      return item;
+    }
+
+    async function dbUpdate(collection, id, patch) {
+      if (hasSDK() && window.AiPhone.db?.update) {
+        return await window.AiPhone.db.update(collection, id, patch);
+      }
+      const list = await dbList(collection);
+      const next = list.map(item => String(item.id) === String(id) ? { ...item, ...patch } : item);
+      localStorage.setItem(localKey(collection), JSON.stringify(next));
+      return next.find(item => String(item.id) === String(id));
+    }
+
+    async function dbDelete(collection, id) {
+      if (hasSDK() && window.AiPhone.db?.delete) {
+        return await window.AiPhone.db.delete(collection, id);
+      }
+      const list = await dbList(collection);
+      localStorage.setItem(localKey(collection), JSON.stringify(list.filter(item => String(item.id) !== String(id))));
+    }
+
+    async function saveSetting(key, value) {
+      const list = await dbList("settings");
+      const old = list.find(item => item.key === key);
+      if (old) {
+        await dbUpdate("settings", old.id, { value });
+      } else {
+        await dbCreate("settings", { key, value, createdAt: new Date().toISOString() });
+      }
+    }
+
+    async function readSetting(key) {
+      const list = await dbList("settings");
+      return list.find(item => item.key === key)?.value;
+    }
+
+    async function toast(message) {
+      if (hasSDK() && window.AiPhone.ui?.toast) {
+        try {
+          await window.AiPhone.ui.toast(message);
+          return;
+        } catch (e) {}
+      }
+
+      const el = $("toast");
+      el.textContent = message;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 1700);
+    }
+
+    function getDurationMinutes() {
+      if (state.durationMode === "custom") {
+        const n = Number(state.customDuration || 25);
+        return Math.max(1, Math.min(180, Math.round(n)));
+      }
+      return Number(state.durationMode || 25);
+    }
+
+    async function saveTimerSettings() {
+      state.durationMode = $("durationSelect").value || "25";
+      state.focusType = $("focusTypeSelect").value || "study";
+
+      const custom = Number($("customDurationInput").value || 25);
+      state.customDuration = Math.max(1, Math.min(180, Math.round(custom)));
+
+      $("customDurationInput").value = state.customDuration;
+      $("customDurationBox").classList.toggle("show", state.durationMode === "custom");
+
+      await saveSetting("durationMode", state.durationMode);
+      await saveSetting("customDuration", state.customDuration);
+      await saveSetting("focusType", state.focusType);
+
+      if (!state.timer.running) resetTimer();
+      updateTimerUI();
+    }
+
+    async function loadTimerSettings() {
+      const savedMode = await readSetting("durationMode");
+      const savedCustom = await readSetting("customDuration");
+      const savedFocus = await readSetting("focusType");
+
+      if (savedMode) state.durationMode = savedMode;
+      if (savedCustom) state.customDuration = Number(savedCustom) || 25;
+      if (savedFocus && focusTypeLabels[savedFocus]) state.focusType = savedFocus;
+
+      $("durationSelect").value = state.durationMode;
+      $("customDurationInput").value = state.customDuration;
+      $("focusTypeSelect").value = state.focusType;
+      $("customDurationBox").classList.toggle("show", state.durationMode === "custom");
+
+      resetTimer();
+    }
+
+    async function loadCharacters() {
+      try {
+        if (hasSDK()) {
+          state.launchContext = await window.AiPhone.app.getLaunchContext();
+          const result = await window.AiPhone.characters.list();
+          state.characters = normalizeList(result);
+        } else {
+          state.characters = [
+            { id: "demo-1", name: "预览角色 A" },
+            { id: "demo-2", name: "预览角色 B" }
+          ];
+        }
+
+        state.customAvatars = await readSetting("customAvatars") || {};
+
+        const savedId = await readSetting("selectedCharacterId");
+        const launchId = state.launchContext?.characterId;
+        const firstId = state.characters[0]?.id;
+        const targetId = launchId || savedId || firstId;
+
+        if (targetId) {
+          await selectCharacter(targetId, false);
+        } else {
+          updateSelectedCharacterUI();
+        }
+      } catch (err) {
+        state.characters = [];
+        updateSelectedCharacterUI();
+      }
+    }
+
+    async function selectCharacter(characterId, shouldToast = true) {
+      const character = state.characters.find(c => String(c.id) === String(characterId));
+      if (!character) return;
+
+      state.selectedCharacterId = character.id;
+      state.selectedCharacter = character;
+
+      await saveSetting("selectedCharacterId", character.id);
+      updateSelectedCharacterUI();
+      renderCharacterList();
+
+      if (shouldToast) {
+        await toast("已选择：" + getCharacterName(character));
+      }
+    }
+
+    function updateSelectedCharacterUI() {
+      const character = state.selectedCharacter;
+      if (!character) {
+        $("selectedName").textContent = "请选择角色";
+        $("selectedTip").textContent = "专注结束后会给该角色发送记录卡片";
+        setImageSafe($("selectedAvatar"), defaultAvatarDataUrl("岛"), "岛");
+        setImageSafe($("boatAvatar"), defaultAvatarDataUrl("岛"), "岛");
+        return;
+      }
+
+      const name = getCharacterName(character);
+      const avatar = getDisplayAvatar(character);
+      $("selectedName").textContent = name;
+      $("selectedTip").textContent = state.customAvatars[String(character.id)] ? "正在使用自定义航行头像" : "正在使用小手机角色头像";
+      setImageSafe($("selectedAvatar"), avatar, name);
+      setImageSafe($("boatAvatar"), avatar, name);
+    }
+
+    function renderCharacterList() {
+      const box = $("characterList");
+
+      if (!state.characters.length) {
+        box.innerHTML = `<div class="empty">没有读取到角色。请先在小手机里创建角色。</div>`;
+        return;
+      }
+
+      box.innerHTML = state.characters.map(character => {
+        const name = getCharacterName(character);
+        const avatar = getDisplayAvatar(character);
+        const selected = String(character.id) === String(state.selectedCharacterId);
+
+        return `
+          <button class="char-option" data-character-id="${escapeHtml(character.id)}">
+            <img class="avatar" src="${escapeHtml(avatar)}" />
+            <div style="min-width:0;">
+              <div class="char-name">${escapeHtml(name)}</div>
+              <div class="char-tip">${state.customAvatars[String(character.id)] ? "已设置航行头像" : "使用原头像"} · ${selected ? "当前角色" : "点击选择"}</div>
+            </div>
+            <div class="selected-mark">${selected ? "✓" : ""}</div>
+          </button>
+        `;
+      }).join("");
+
+      box.querySelectorAll(".char-option").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          await selectCharacter(btn.dataset.characterId);
+        });
+      });
+    }
+
+    async function saveCustomAvatar() {
+      if (!state.selectedCharacterId) {
+        await toast("请先选择角色");
+        return;
+      }
+
+      const file = $("avatarFileInput").files?.[0];
+      if (!file) {
+        await toast("请选择一张图片");
+        return;
+      }
+
+      const dataUrl = await readFileAsDataUrl(file);
+      state.customAvatars[String(state.selectedCharacterId)] = dataUrl;
+      await saveSetting("customAvatars", state.customAvatars);
+
+      updateSelectedCharacterUI();
+      renderCharacterList();
+      await toast("已设置自定义航行头像");
+    }
+
+    async function clearCustomAvatar() {
+      if (!state.selectedCharacterId) {
+        await toast("请先选择角色");
+        return;
+      }
+
+      delete state.customAvatars[String(state.selectedCharacterId)];
+      await saveSetting("customAvatars", state.customAvatars);
+
+      updateSelectedCharacterUI();
+      renderCharacterList();
+      await toast("已恢复小手机角色头像");
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function loadData() {
+      state.islands = await dbList("islands");
+      state.todos = await dbList("todos");
+      state.supplies = await dbList("supplies");
+
+      state.islands.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      state.todos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      state.supplies.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    function randomIslandType() {
+      return islandTypes[Math.floor(Math.random() * islandTypes.length)];
+    }
+
+    function makeRandomPoint() {
+      const count = state.islands.length;
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 34 + Math.random() * 74;
+      const centerX = 170;
+      const centerY = 115;
+      let x = centerX + Math.cos(angle + count * 0.8) * radius + (Math.random() * 32 - 16);
+      let y = centerY + Math.sin(angle + count * 0.8) * radius + (Math.random() * 28 - 14);
+      x = Math.max(34, Math.min(306, x));
+      y = Math.max(36, Math.min(192, y));
+      return { x: Math.round(x), y: Math.round(y) };
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    }
+
+    function progressPercent() {
+      const done = 1 - state.timer.left / state.timer.total;
+      return Math.max(0, Math.min(100, done * 76));
+    }
+
+    function updateTimerUI() {
+      const focusLabel = focusTypeLabels[state.focusType] || "专注";
+
+      $("timer").textContent = formatTime(state.timer.left);
+      $("hero").style.setProperty("--progress", progressPercent());
+      $("supplyInput").value = state.supplies[0]?.name || "暂无补给";
+
+      if (state.timer.running) {
+        $("timerStatus").textContent = `正在进行${focusLabel}专注，小船驶向未知小岛`;
+        $("voyageLabel").textContent = "专注中";
+        $("destinationTitle").textContent = "下一站：等待命名的小岛";
+        $("destinationDesc").textContent = `保持专注`;
+        $("startBtn").textContent = "航行中...";
+      } else if (state.timer.left < state.timer.total) {
+        $("timerStatus").textContent = "小船暂时停在海面上";
+        $("voyageLabel").textContent = "可继续";
+        $("destinationTitle").textContent = "下一站：未知小岛";
+        $("destinationDesc").textContent = `继续完成这段${focusLabel}，就能为新岛命名。`;
+        $("startBtn").textContent = "继续航行";
+      } else {
+        $("timerStatus").textContent = "准备开始专注";
+        $("voyageLabel").textContent = "今日适合专注";
+        $("destinationTitle").textContent = "下一站：未知小岛";
+        $("destinationDesc").textContent = `完成${focusLabel}后，由你亲自命名。`;
+        $("startBtn").textContent = "开始航行";
+      }
+    }
+
+    function renderAll() {
+      updateTimerUI();
+      renderRecent();
+      renderIslands();
+      renderMap();
+      renderSouvenirs();
+      renderTodos();
+    }
+
+    function renderRecent() {
+      const box = $("recentIslands");
+      const list = state.islands.slice(-3).reverse();
+      $("statsText").textContent = state.islands.length + " 座小岛";
+
+      if (!list.length) {
+        box.innerHTML = `<div class="empty">还没有抵达的小岛。完成一次专注后，第一座未知小岛会出现。</div>`;
+        return;
+      }
+
+      box.innerHTML = list.map(item => `
+        <article class="mini-card">
+          <h4>${escapeHtml(item.emoji || "🏝️")} ${escapeHtml(item.name || "等待命名的小岛")}</h4>
+          <p>${escapeHtml(item.focusLabel || "专注")} ${item.duration || 25} 分钟，APP 记录为发现 ${escapeHtml(item.biome || "未知海域")}，带回「${escapeHtml(item.souvenir)}」。</p>
+          <div class="chips">
+            <span class="chip">${escapeHtml(item.characterName || "角色")}</span>
+            <span class="chip">特产 ${escapeHtml(item.special)}</span>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderIslands() {
+      const box = $("islandList");
+
+      if (!state.islands.length) {
+        box.innerHTML = `<div class="empty">航迹图还空着。完成专注后会生成航线。</div>`;
+        return;
+      }
+
+      box.innerHTML = state.islands.slice().reverse().map(item => `
+        <article class="mini-card">
+          <h4>${escapeHtml(item.emoji || "🏝️")} ${escapeHtml(item.name || "等待命名的小岛")}</h4>
+          <p>${escapeHtml(item.note || "海风把这一次专注轻轻收藏了起来。")}</p>
+          <div class="chips">
+            <span class="chip">${escapeHtml(item.focusLabel || "专注")} ${item.duration || 25} 分钟</span>
+            <span class="chip">生态 ${escapeHtml(item.biome)}</span>
+            <span class="chip">纪念品 ${escapeHtml(item.souvenir)}</span>
+          </div>
+          <div class="controls" style="grid-template-columns:1fr auto;">
+            <input id="rename-${escapeHtml(item.id)}" maxlength="16" placeholder="重新命名这座岛" />
+            <button class="small-btn" data-rename="${escapeHtml(item.id)}">改名</button>
+          </div>
+        </article>
+      `).join("");
+
+      box.querySelectorAll("[data-rename]").forEach(btn => {
+        btn.addEventListener("click", () => renameIsland(btn.dataset.rename));
+      });
+    }
+
+    function renderMap() {
+      const svg = $("mapSvg");
+      const points = state.islands.map((item, i) => ({
+        x: item.x || 40 + (i % 4) * 78,
+        y: item.y || 42 + Math.floor(i / 4) * 55,
+        item,
+        i
+      }));
+
+      let html = `
+        <defs>
+          <linearGradient id="routeGrad" x1="0" x2="1">
+            <stop offset="0%" stop-color="#63b7af"/>
+            <stop offset="100%" stop-color="#ff9f8a"/>
+          </linearGradient>
+        </defs>
+      `;
+
+      if (points.length > 1) {
+        const d = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+        html += `<path d="${d}" fill="none" stroke="url(#routeGrad)" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 8" opacity=".82"/>`;
+      }
+
+      if (!points.length) {
+        html += `
+          <text x="170" y="102" text-anchor="middle" fill="rgba(49,81,90,.58)" font-size="14">暂无航迹</text>
+          <text x="170" y="126" text-anchor="middle" fill="rgba(49,81,90,.45)" font-size="12">每座新岛都有不同坐标</text>
+        `;
+      }
+
+      points.forEach(p => {
+        html += `
+          <circle cx="${p.x}" cy="${p.y}" r="19" fill="#fff3cf" stroke="rgba(49,81,90,.12)" stroke-width="2"/>
+          <circle cx="${p.x - 4}" cy="${p.y - 4}" r="9" fill="${p.item.color || "#78cf9d"}" opacity=".9"/>
+          <text x="${p.x}" y="${p.y + 5}" text-anchor="middle" font-size="16">${escapeHtml(p.item.emoji || "🏝️")}</text>
+          <text x="${p.x}" y="${p.y + 35}" text-anchor="middle" fill="#31515a" font-size="10">${escapeHtml(String(p.item.name || "未命名").slice(0, 5))}</text>
+        `;
+      });
+
+      svg.innerHTML = html;
+    }
+
+    function renderSouvenirs() {
+      const grid = $("souvenirGrid");
+      $("souvenirCount").textContent = state.islands.length + " 件";
+
+      if (!state.islands.length) {
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1;">展馆还空着。完成专注后，纪念品会自动放进这里。</div>`;
+        return;
+      }
+
+      grid.innerHTML = state.islands.slice().reverse().map(item => `
+        <div class="souvenir">
+          <div class="emoji">${escapeHtml(item.emoji || "🎁")}</div>
+          <div class="name">${escapeHtml(item.souvenir || "未知纪念品")}</div>
+          <div class="from">${escapeHtml(item.name || "等待命名的小岛")}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderTodos() {
+      const box = $("todoList");
+      const undone = state.todos.filter(t => !t.done);
+      $("todoCount").textContent = undone.length + " 项待完成";
+
+      if (!state.todos.length) {
+        box.innerHTML = `<div class="empty">写一个小任务，完成后就能送出补给。</div>`;
+        return;
+      }
+
+      box.innerHTML = state.todos.map(item => `
+        <div class="todo-item">
+          <button class="check" data-complete="${escapeHtml(item.id)}" ${item.done ? "disabled" : ""}>${item.done ? "✓" : "○"}</button>
+          <div style="min-width:0;">
+            <div style="${item.done ? "text-decoration:line-through;opacity:.55;" : ""}font-size:14px;">
+              ${escapeHtml(item.text)}
+            </div>
+            <div style="font-size:11px;color:rgba(49,81,90,.5);margin-top:3px;">
+              ${item.done ? "已送出补给：" + escapeHtml(item.supply || "小补给") : "完成后送一份随机补给"}
+            </div>
+          </div>
+          <button class="delete" data-delete="${escapeHtml(item.id)}">删除</button>
+        </div>
+      `).join("");
+
+      box.querySelectorAll("[data-complete]").forEach(btn => {
+        btn.addEventListener("click", () => completeTodo(btn.dataset.complete));
+      });
+
+      box.querySelectorAll("[data-delete]").forEach(btn => {
+        btn.addEventListener("click", () => deleteTodo(btn.dataset.delete));
+      });
+    }
+
+    function ensureCharacterSelected() {
+      if (!state.selectedCharacterId) {
+        $("characterModal").classList.add("show");
+        toast("请先选择一个角色");
+        return false;
+      }
+      return true;
+    }
+
+    function startTimer() {
+      if (!ensureCharacterSelected()) return;
+      if (state.timer.running) return;
+
+      state.timer.running = true;
+      clearInterval(state.timerId);
+
+      state.timerId = setInterval(async () => {
+        state.timer.left -= 1;
+
+        if (state.timer.left <= 0) {
+          state.timer.left = 0;
+          clearInterval(state.timerId);
+          state.timer.running = false;
+          updateTimerUI();
+          await completeVoyage();
+          return;
+        }
+
+        updateTimerUI();
+      }, 1000);
+
+      updateTimerUI();
+    }
+
+    function pauseTimer() {
+      state.timer.running = false;
+      clearInterval(state.timerId);
+      updateTimerUI();
+    }
+
+    function resetTimer() {
+      const minutes = getDurationMinutes();
+      state.timer.total = minutes * 60;
+      state.timer.left = minutes * 60;
+      state.timer.running = false;
+      clearInterval(state.timerId);
+      updateTimerUI();
+    }
+
+    async function stopVoyage() {
+      if (!ensureCharacterSelected()) return;
+
+      if (state.timer.left === state.timer.total && !state.timer.running) {
+        await toast("还没有开始哦");
+        return;
+      }
+
+      state.timer.running = false;
+      clearInterval(state.timerId);
+
+      const event = accidentEvents[Math.floor(Math.random() * accidentEvents.length)];
+      const characterName = getCharacterName(state.selectedCharacter);
+      const focusLabel = focusTypeLabels[state.focusType] || "专注";
+
+      await sendVoyageCard({
+        success: false,
+        title: "中途返程",
+        subtitle: `${focusLabel}中断 · APP记录为返程`,
+        status: "返程",
+        body: `用户中断了本次${focusLabel}，APP 将这次中断记录为“小船中途返程”：${event}`,
+        historyText: `[环岛番茄钟APP记录：用户中断了本次${focusLabel}。这是APP里的主题化/游戏化记录，“${characterName}中途返程”只是专注中断的比喻，不代表${characterName}在现实剧情中真的离开、真的出海或真的返航。APP返程事件：${event}]`
+      });
+
+      resetTimer();
+      await toast("小船返程了，下次再出发");
+    }
+
+    async function completeVoyage() {
+      if (!ensureCharacterSelected()) return;
+
+      const type = randomIslandType();
+      const point = makeRandomPoint();
+      const supply = state.supplies[0];
+      const characterName = getCharacterName(state.selectedCharacter);
+      const duration = Math.round(state.timer.total / 60);
+      const focusLabel = focusTypeLabels[state.focusType] || "专注";
+
+      if (supply?.id) {
+        await dbDelete("supplies", supply.id);
+        state.supplies = state.supplies.filter(s => String(s.id) !== String(supply.id));
+      }
+
+      const note = await generateVoyageNote(type, supply, focusLabel);
+
+      const island = await dbCreate("islands", {
+        name: "",
+        biome: type.biome,
+        special: type.special,
+        souvenir: type.souvenir,
+        emoji: type.emoji,
+        color: type.color,
+        x: point.x,
+        y: point.y,
+        duration,
+        focusType: state.focusType,
+        focusLabel,
+        characterId: state.selectedCharacterId,
+        characterName,
+        characterAvatar: getDisplayAvatar(state.selectedCharacter),
+        supply: supply?.name || "",
+        note,
+        createdAt: new Date().toISOString()
+      });
+
+      state.islands.push(island);
+      state.pendingIslandId = island.id;
+
+      await sendVoyageCard({
+        success: true,
+        title: "抵达未知小岛",
+        subtitle: `${focusLabel}完成 · 等待命名新岛`,
+        status: `${focusLabel}完成`,
+        body: `用户完成 ${duration} 分钟${focusLabel}，APP 记录为一段环岛航行：发现一座${type.biome}，获得「${type.souvenir}」。`,
+        historyText: `[环岛番茄钟APP记录：用户完成了 ${duration} 分钟${focusLabel}。这是APP里的主题化/游戏化记录，“${characterName}航行、抵达小岛、带回纪念品”只是对用户专注成果的比喻，不代表${characterName}在现实剧情中真的离开、真的出海或真的经历了航行。APP记录为：发现一座尚未命名的新小岛，生态是${type.biome}，特产是${type.special}，纪念品是「${type.souvenir}」。${supply ? "用户此前完成Todo获得补给「" + supply.name + "」，本次被APP记录为航行补给。" : ""}]`,
+        island: {
+          name: "等待命名的小岛",
+          biome: type.biome,
+          special: type.special,
+          souvenir: type.souvenir,
+          emoji: type.emoji
+        },
+        supply
+      });
+
+      resetTimer();
+      renderAll();
+      openNameIslandModal(island);
+      await toast("完成专注，请为新岛命名");
+    }
+
+    async function generateVoyageNote(type, supply, focusLabel) {
+      if (!hasSDK() || !state.selectedCharacterId || !window.AiPhone.ai?.generate) {
+        return `你完成了一段${focusLabel}，新的${type.biome}从浪花后慢慢出现。`;
+      }
+
+      try {
+        const result = await window.AiPhone.ai.generate({
+          characterId: state.selectedCharacterId,
+          profileId: "island-pomodoro-voyage-text",
+          appTags: TAG_VOYAGE,
+          historyLimit: 4,
+          instruction: "请以当前角色自然的口吻，为用户完成一次专注生成一句清新温柔的短记录。必须符合角色人设。注意：航行、小岛、纪念品只是APP比喻，不是角色真的出海。不要超过45字，不要像系统公告。",
+          input: {
+            focusType: focusLabel,
+            biome: type.biome,
+            special: type.special,
+            souvenir: type.souvenir,
+            supply: supply?.name || "无"
+          }
+        });
+
+        return String(result?.text || "").trim().slice(0, 90) || `你完成了一段${focusLabel}，新的${type.biome}从浪花后慢慢出现。`;
+      } catch (err) {
+        return `你完成了一段${focusLabel}，新的${type.biome}从浪花后慢慢出现。`;
+      }
+    }
+
+    async function askFocusLine() {
+      if (!ensureCharacterSelected()) return;
+
+      if (!state.timer.running) {
+        showSpeech("等你开始专注后，再来点点小船吧。");
+        return;
+      }
+
+      const focusLabel = focusTypeLabels[state.focusType] || "专注";
+      let line = fallbackFocusLines[Math.floor(Math.random() * fallbackFocusLines.length)];
+
+      if (hasSDK() && window.AiPhone.ai?.generate) {
+        try {
+          const result = await window.AiPhone.ai.generate({
+            characterId: state.selectedCharacterId,
+            appTags: TAG_VOYAGE,
+            historyLimit: 4,
+            instruction: `用户正在进行${focusLabel}番茄钟，期间点了APP里的帆船。请你完全符合当前角色的人设和说话风格，用一句简短温柔的话提醒用户继续专注。注意航行只是APP比喻，不要说你真的在航行。不要超过28字，不要说教。`,
+            input: {
+              focusType: focusLabel,
+              timerLeft: formatTime(state.timer.left),
+              scene: "用户需要回到专注状态"
+            }
+          });
+
+          const text = String(result?.text || "").trim();
+          if (text) line = text.slice(0, 60);
+        } catch (err) {}
+      }
+
+      showSpeech(line);
+    }
+
+    function showSpeech(text) {
+      const bubble = $("speechBubble");
+      bubble.textContent = text;
+      bubble.classList.add("show");
+      clearTimeout(showSpeech._timer);
+      showSpeech._timer = setTimeout(() => bubble.classList.remove("show"), 4200);
+    }
+
+    function openNameIslandModal(island) {
+      $("nameIslandText").textContent = `你完成了 ${island.duration} 分钟${island.focusLabel || "专注"}，发现了一座${island.biome}，获得「${island.souvenir}」。这座岛还没有名字。`;
+      $("islandNameInput").value = "";
+      $("nameIslandModal").classList.add("show");
+    }
+
+    async function savePendingIslandName() {
+      const name = $("islandNameInput").value.trim();
+      if (!name) {
+        await toast("请先写一个岛名");
+        return;
+      }
+
+      const id = state.pendingIslandId;
+      if (!id) return;
+
+      await dbUpdate("islands", id, { name });
+      const item = state.islands.find(i => String(i.id) === String(id));
+      if (item) item.name = name;
+
+      $("nameIslandModal").classList.remove("show");
+      renderAll();
+      await toast("小岛已命名：" + name);
+    }
+
+    async function renameIsland(id) {
+      const input = $("rename-" + id);
+      const name = input?.value?.trim();
+      if (!name) {
+        await toast("先写一个岛名吧");
+        return;
+      }
+
+      await dbUpdate("islands", id, { name });
+      const item = state.islands.find(i => String(i.id) === String(id));
+      if (item) item.name = name;
+
+      renderAll();
+      await toast("小岛已改名");
+    }
+
+    async function sendVoyageCard(data) {
+      if (!hasSDK() || !state.selectedCharacterId || !window.AiPhone.chat?.sendCard) {
+        return;
+      }
+
+      const characterName = getCharacterName(state.selectedCharacter);
+      const avatar = getDisplayAvatar(state.selectedCharacter);
+      const focusLabel = focusTypeLabels[state.focusType] || "专注";
+
+      const sections = [
+        {
+          title: "专注记录",
+          rows: [
+            { label: "类型", value: focusLabel },
+            { label: "角色", value: characterName },
+            { label: "结果", value: data.status },
+            { label: "说明", value: "航行是APP比喻，不是真实出海" }
+          ],
+          chips: data.success ? ["完成专注", "未知小岛", "纪念品入馆"] : ["中途返程", "下次再出发"]
+        },
+        {
+          title: "记录内容",
+          text: data.body
+        }
+      ];
+
+      if (data.success && data.island) {
+        sections.push({
+          title: "新岛发现",
+          rows: [
+            { label: "岛屿", value: data.island.name },
+            { label: "生态", value: data.island.biome },
+            { label: "特产", value: data.island.special },
+            { label: "纪念品", value: `${data.island.emoji} ${data.island.souvenir}` },
+            { label: "补给", value: data.supply?.name || "无" }
+          ]
+        });
+      } else {
+        sections.push({
+          title: "返程事件",
+          text: data.body
+        });
+      }
+
+      try {
+        await window.AiPhone.chat.sendCard({
+          characterId: state.selectedCharacterId,
+          role: "user",
+          title: data.title,
+          body: data.body,
+          summary: data.body,
+          historyText: data.historyText,
+          tone: "soft",
+          card: {
+            appLabel: APP_LABEL,
+            title: data.title,
+            subtitle: data.subtitle,
+            status: data.status,
+            accentColor: data.success ? "#63b7af" : "#ff9f8a",
+            sections,
+            actions: [
+              { label: "查看航线" },
+              { label: "查看纪念品" }
+            ],
+            data: {
+              characterAvatar: avatar,
+              source: "island_pomodoro",
+              metaphorOnly: true
+            }
+          }
+        });
+      } catch (err) {
+        await toast("卡片发送失败");
+      }
+
+      try {
+        await window.AiPhone.chat.requestReply({
+          characterId: state.selectedCharacterId
+        });
+      } catch (err) {}
+    }
+
+    async function completeTodo(id) {
+      if (!ensureCharacterSelected()) return;
+
+      const todo = state.todos.find(t => String(t.id) === String(id));
+      if (!todo || todo.done) return;
+
+      const supply = supplyPool[Math.floor(Math.random() * supplyPool.length)];
+      const characterName = getCharacterName(state.selectedCharacter);
+
+      await dbUpdate("todos", id, {
+        done: true,
+        supply,
+        doneAt: new Date().toISOString(),
+        characterId: state.selectedCharacterId,
+        characterName
+      });
+
+      const supplyItem = await dbCreate("supplies", {
+        name: supply,
+        fromTodo: todo.text,
+        characterId: state.selectedCharacterId,
+        characterName,
+        createdAt: new Date().toISOString()
+      });
+
+      todo.done = true;
+      todo.supply = supply;
+      state.supplies.unshift(supplyItem);
+
+      await sendSupplyCard(todo.text, supply);
+      renderAll();
+      await toast("已送出补给：" + supply);
+    }
+
+    async function sendSupplyCard(todoText, supply) {
+      if (!hasSDK() || !state.selectedCharacterId || !window.AiPhone.chat?.sendCard) {
+        return;
+      }
+
+      const characterName = getCharacterName(state.selectedCharacter);
+
+      try {
+        await window.AiPhone.chat.sendCard({
+          characterId: state.selectedCharacterId,
+          role: "user",
+          title: "送出航行补给",
+          body: `用户完成 Todo「${todoText}」，APP 将它记录为获得补给「${supply}」。`,
+          summary: `用户完成 Todo「${todoText}」，获得补给「${supply}」。`,
+          historyText: `[环岛番茄钟APP记录：用户完成 Todo「${todoText}」。APP将这个任务完成记录为获得补给「${supply}」。这是游戏化比喻，不代表现实中真的给${characterName}寄送了物品。]`,
+          tone: "soft",
+          card: {
+            appLabel: APP_LABEL,
+            title: "补给已记录",
+            subtitle: `完成任务 · 获得 ${supply}`,
+            status: "补给",
+            accentColor: "#78cf9d",
+            sections: [
+              {
+                title: "Todo 记录",
+                rows: [
+                  { label: "任务", value: todoText },
+                  { label: "补给", value: supply },
+                  { label: "说明", value: "补给是APP比喻" }
+                ],
+                chips: ["任务完成", "专注支援"]
+              }
+            ]
+          }
+        });
+      } catch (err) {}
+    }
+
+    async function deleteTodo(id) {
+      await dbDelete("todos", id);
+      state.todos = state.todos.filter(t => String(t.id) !== String(id));
+      renderTodos();
+      await toast("已删除");
+    }
+
+    function bindEvents() {
+      $("chooseCharacterBtn").addEventListener("click", () => {
+        renderCharacterList();
+        $("characterModal").classList.add("show");
+      });
+
+      $("characterModal").addEventListener("click", e => {
+        if (e.target.id === "characterModal") {
+          $("characterModal").classList.remove("show");
+        }
+      });
+
+      $("saveAvatarBtn").addEventListener("click", saveCustomAvatar);
+      $("clearAvatarBtn").addEventListener("click", clearCustomAvatar);
+
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+          document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+          btn.classList.add("active");
+          $(btn.dataset.view).classList.add("active");
+        });
+      });
+
+      $("durationSelect").addEventListener("change", saveTimerSettings);
+      $("customDurationInput").addEventListener("change", saveTimerSettings);
+      $("focusTypeSelect").addEventListener("change", saveTimerSettings);
+
+      $("startBtn").addEventListener("click", startTimer);
+      $("pauseBtn").addEventListener("click", pauseTimer);
+      $("stopBtn").addEventListener("click", stopVoyage);
+      $("resetBtn").addEventListener("click", resetTimer);
+      $("boatBtn").addEventListener("click", askFocusLine);
+
+      $("saveIslandNameBtn").addEventListener("click", savePendingIslandName);
+      $("nameLaterBtn").addEventListener("click", () => {
+        $("nameIslandModal").classList.remove("show");
+        toast("可以稍后在小岛图鉴里改名");
+      });
+
+      $("todoForm").addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const text = $("todoInput").value.trim();
+        if (!text) return;
+
+        const item = await dbCreate("todos", {
+          text,
+          done: false,
+          createdAt: new Date().toISOString()
+        });
+
+        state.todos.unshift(item);
+        $("todoInput").value = "";
+        renderTodos();
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str || "").replace(/[&<>"']/g, s => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[s]));
+    }
+
+    async function boot() {
+      bindEvents();
+      await loadCharacters();
+      await loadTimerSettings();
+      await loadData();
+      renderCharacterList();
+      renderAll();
+
+      if (!state.selectedCharacterId) {
+        $("characterModal").classList.add("show");
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>
