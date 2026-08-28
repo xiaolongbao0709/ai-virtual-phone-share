@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T02:48:55.099Z",
+  "generatedAt": "2026-08-28T03:03:26.581Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 22
+      "count": 23
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -139,6 +139,22 @@
       "avatar": "",
       "ownerHash": "b187c9f8dec83db6cf467b82af2254910d4dd901c73f5da114062d4dbd32661e",
       "updatedAt": "2026-08-22T19:58:15+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "为不能识图的api配置辅助识图api",
+      "dirName": "为不能识图的api配置辅助识图api",
+      "type": "dir",
+      "path": "资源/Js插件/为不能识图的api配置辅助识图api",
+      "files": [
+        "资源/Js插件/为不能识图的api配置辅助识图api/辅助识图api，聊天主页导入插件.js"
+      ],
+      "images": [],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
+      "updatedAt": "2026-08-28T11:03:06+08:00"
     },
     {
       "folder": "Js插件",
