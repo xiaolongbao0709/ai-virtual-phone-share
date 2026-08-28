@@ -261,6 +261,7 @@ const EDITOR_CSS = `
 .nsb-demo::after{inset:0;border-width:var(--preview-edge-top) var(--preview-edge-right) var(--preview-edge-bottom) var(--preview-edge-left);border-image-source:var(--preview-image);border-image-slice:var(--preview-slice-top) var(--preview-slice-right) var(--preview-slice-bottom) var(--preview-slice-left) fill;border-image-width:var(--preview-edge-top) var(--preview-edge-right) var(--preview-edge-bottom) var(--preview-edge-left)}.nsb-bind-row,.nsb-bind-row .nsb-select,.nsb-role-picker summary,.nsb-role-option{font-size:13px!important}
 .nsb-demo:not(.user)::after{transform:scaleX(-1);transform-origin:center center}
 .nsb-role-picker summary{display:flex;align-items:center;gap:6px}
+.nsb-floating-edit{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(88px,calc(env(safe-area-inset-bottom) + 72px));z-index:2147483000;display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid rgba(255,255,255,.8);border-radius:50%;background:#6f8fb5;color:#fff;box-shadow:0 8px 24px rgba(45,64,88,.28);cursor:pointer;-webkit-tap-highlight-color:transparent}.nsb-floating-edit:active{transform:scale(.94)}.nsb-floating-edit svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nsb-unified-toolbar{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin-bottom:11px}.nsb-icon-btn{display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid #cbd5e1;border-radius:9px;background:#fff;color:#52677f;cursor:pointer}.nsb-icon-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nsb-icon-btn.primary{background:#6f8fb5;border-color:#6f8fb5;color:#fff}.nsb-icon-btn.danger{color:#b42318}.nsb-icon-btn.active{background:#fff0f0;border-color:#e4a6a6;color:#b42318}.nsb-group-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}.nsb-group-tab{border:1px solid #d7e0ea;border-radius:999px;background:#fff;color:#68788d;padding:6px 11px;font-size:12px}.nsb-group-tab.active{background:#6f8fb5;border-color:#6f8fb5;color:#fff}.nsb-group-tab.delete-selected{background:#fff0f0;border-color:#d88c8c;color:#b42318}.nsb-group-tab.delete-disabled{opacity:.45;cursor:not-allowed}.nsb-section-block{margin:12px 0}.nsb-section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;padding:0 2px;font-size:13px;font-weight:650}.nsb-skin-card{border:1px solid rgba(120,140,165,.2);border-radius:11px;background:#fff;margin:7px 0;overflow:hidden}.nsb-skin-top{display:grid;grid-template-columns:32px minmax(0,1fr) 36px;align-items:center;gap:5px;padding:7px}.nsb-chevron{display:grid;place-items:center;width:30px;height:30px;border:0;background:transparent;color:#6b7e94;transition:transform .15s}.nsb-chevron.open{transform:rotate(180deg)}.nsb-skin-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:600}.nsb-bound-tags{display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-height:31px;padding:0 10px 8px;cursor:pointer}.nsb-bound-tag{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;background:#edf3f9;color:#4d6480;font-size:11px}.nsb-bound-tag.user{background:#f9e7ef;color:#a54f73}.nsb-bound-tag .remove{margin-left:4px;font-weight:700}.nsb-unbound{font-size:11px;color:#9aa7b7}.nsb-picker-list{display:none;border-top:1px solid #e5eaf0;padding:7px 10px;max-height:220px;overflow:auto}.nsb-picker-list.open{display:block}.nsb-picker-option{display:flex;align-items:center;gap:8px;padding:7px 2px;font-size:12px}.nsb-picker-option.user{color:#a54f73}.nsb-delete-row{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;gap:5px;padding:10px}.nsb-delete-row input{width:18px;height:18px}.nsb-delete-bar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding:9px;background:rgba(248,250,252,.96);border:1px solid #d9e1ea;border-radius:11px;backdrop-filter:blur(10px)}.nsb-delete-actions{display:flex;gap:7px}.nsb-action-btn{border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#526174;padding:7px 10px}.nsb-action-btn.danger{background:#b94b4b;border-color:#b94b4b;color:#fff}.nsb-empty{padding:18px 4px;text-align:center;color:#8a98a9;font-size:12px}
 .nsb-delete-chips{display:flex;flex-wrap:wrap;gap:7px;padding:3px 0 8px}.nsb-delete-chip{display:inline-flex;align-items:center;border:1px solid #d7e0ea;border-radius:999px;background:#fff;color:#607086;padding:6px 9px;font-size:12px}.nsb-delete-chip.selected{border-color:#d88c8c;background:#fff0f0;color:#b42318}.nsb-name-dialog{width:min(390px,88vw);padding:16px;border-radius:15px;background:#fff;color:#334155;box-shadow:0 16px 46px rgba(35,48,66,.24)}.nsb-name-title{font-size:15px;font-weight:700;margin-bottom:11px}.nsb-name-input{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:9px 10px;font-size:14px}.nsb-name-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:13px}
 `;
@@ -270,7 +271,7 @@ export default {
     id: PLUGIN_ID,
     name: "自定义气泡",
     apiVersion: 1,
-    version: "0.10.9",
+    version: "0.10.10",
     author: "NEEN&GPT",
     description: "上传透明 PNG 制作自定义气泡，并按角色 ID 绑定皮肤",
   },
@@ -283,6 +284,7 @@ export default {
     let editorOpen = false;
     let currentSessionId = "";
     let voiceScanPending = false;
+    let floatingEditButton = null;
 
     ctx.ui.injectCSS(RUNTIME_CSS + MIRROR_CSS + EDITOR_CSS);
 
@@ -497,9 +499,32 @@ export default {
       }
     }
 
+    function removeFloatingEditButton() {
+      if (floatingEditButton) floatingEditButton.remove();
+      floatingEditButton = null;
+    }
+
+    function showFloatingEditButton(skinId, isNew) {
+      removeFloatingEditButton();
+      if (typeof document === "undefined" || !state.skins[skinId]) return;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "nsb-floating-edit";
+      button.setAttribute("aria-label", "继续编辑气泡");
+      button.title = "继续编辑 · " + (state.skins[skinId].name || "气泡");
+      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>';
+      button.addEventListener("click", () => {
+        removeFloatingEditButton();
+        openEditor(skinId, isNew);
+      });
+      document.body.appendChild(button);
+      floatingEditButton = button;
+    }
+
     function openEditor(skinId, isNew = false) {
       if (editorOpen) return;
       if (!skinId || !state.skins[skinId]) return;
+      removeFloatingEditButton();
       editorOpen = true;
       ctx.ui.openModal((host, { close }) => {
         const selectedId = skinId;
@@ -526,8 +551,18 @@ export default {
           if (editorClosed) return;
           editorClosed = true;
           discardEmptyNewSkin();
+          removeFloatingEditButton();
           editorOpen = false;
           close();
+        };
+        const minimizeEditor = () => {
+          if (editorClosed) return;
+          editorClosed = true;
+          editorOpen = false;
+          persist();
+          applyMounted();
+          close();
+          showFloatingEditButton(selectedId, isNew);
         };
         const saveEditor = () => {
           const current = state.skins[selectedId];
@@ -537,6 +572,7 @@ export default {
           }
           editorClosed = true;
           editorOpen = false;
+          removeFloatingEditButton();
           persist();
           refreshSettingsPanels();
           close();
@@ -808,7 +844,7 @@ export default {
           const foot = document.createElement("div");
           foot.className = "nsb-foot";
           foot.style.justifyContent = "flex-end";
-          foot.append(button("关闭", "", closeEditor), button("保存", "primary", saveEditor));
+          foot.append(button("查看聊天", "", minimizeEditor), button("关闭", "", closeEditor), button("保存", "primary", saveEditor));
           root.appendChild(foot);
         }
 
@@ -1503,6 +1539,7 @@ export default {
 
     return () => {
       if (voiceObserver) voiceObserver.disconnect();
+      removeFloatingEditButton();
       clearMounted();
       editorOpen = false;
     };
