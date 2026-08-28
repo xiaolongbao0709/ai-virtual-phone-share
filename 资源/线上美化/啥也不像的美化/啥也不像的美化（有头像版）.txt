@@ -1,0 +1,214 @@
+/* ── 标题栏：返回键 + 头像 + 在线呼吸灯 + 居左标题 ── */
+/* .page-header = 整个标题栏（含安全区） */
+/* .page-header-content = 按钮+标题那一行 */
+
+.page-header {
+  /* 背景更透 + 模糊更大 → 毛玻璃效果更明显 */
+  background: color-mix(in srgb, var(--c-header-bg) 55%, transparent);
+  backdrop-filter: blur(75px) saturate(200%);
+  -webkit-backdrop-filter: blur(70px) saturate(220%);
+  border-bottom: 0.5px solid rgba(100, 181, 246, 0.25);
+}
+
+.page-header-content {
+  position: relative; /* 让伪元素可以绝对定位 */
+  gap: 10px;
+}
+
+/* 返回键：强化「小于号」 */
+.page-back-btn {
+  color: var(--c-icon-active);
+  font-weight: 700;
+  font-size: 22px; /* 按实际观感微调 */
+  z-index: 2;
+}
+
+/* 对方头像：放在返回键右侧 */
+.page-header-content::before {
+  content: "";
+  position: absolute;
+  left: 44px;              /* 紧贴返回键右侧，按实际微调 */
+  top: 50%;
+  transform: translateY(-58%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  /* ⬇ 换成对方角色头像的图片链接 */
+  background: url("https://example.com/avatar.jpg") center/cover no-repeat;
+  background-color: #E3F2FD; /* 图片加载失败时的淡蓝底色 */
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.25);
+}
+
+/* 在线状态：绿点 + 小字 */
+/* 绿点：独立小圆，只闪它自己 */
+.page-header-content::after {
+  content: "";
+  position: absolute;
+  left: 85px;                  /* ← 左右位置 */
+  top: 77%;
+  transform: translateY(-10%); /* ← 上下位置 */
+  width: 6px;  
+  height: 6px;                 /* ← 直径，永远圆形 */
+  border-radius: 50%;          /* 关键：保证圆形 */
+  background: #22C55E;         /* 绿点颜色 */
+  animation: xf-online-breathe 2.2s ease-in-out infinite;
+}
+
+/* 小字：跟随绿点摆放 */
+.page-title {
+  position: relative;
+  margin-left: 56px;
+  margin-right: auto;
+  text-align: left;
+  font-weight: 600;
+}
+.page-title::before {
+  content: "命运连接我和你";
+  position: absolute;
+  left: 1px;            /* 相对标题，数值重新按观感调 */
+  top: 135%;            /* 垂直位置 */
+  transform: translateY(-50%);
+  color: #64B5F6;
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: transparent;
+}
+
+/* 呼吸动画 */
+@keyframes xf-online-breathe {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(34, 197, 94, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(34, 197, 94, 0.95);
+  }
+}
+
+/* 标题：居左，并让出返回键+头像的宽度 */
+.page-title {
+  margin-left: 30px;
+  margin-right: auto;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* ── 显示头像（已恢复） ── */
+.chat-msg-avatar {
+  display: block !important;
+}
+
+/* 调整气泡与头像之间的间距，防止排版过挤 */
+.chat-msg-wrapper {
+  gap: 8px !important;
+}
+
+/* ── 气泡 ── */
+.chat-bubble-role-user {
+  background: #648FBE;           /* 我方气泡颜色 */
+  color: #fff;
+  border-radius: 10px;           /* 气泡圆角 10px */
+  padding: 10px 14px;
+}
+
+.chat-bubble-role-assistant {
+  background: #F1F2F1;           /* 对方气泡颜色 */
+  color: var(--c-text-title);
+  border-radius: 10px;           /* 气泡圆角 10px */
+  padding: 10px 14px;
+}
+
+.chat-markdown {
+  color: inherit;                /* 让文字自动适配气泡前景色 */
+  font-size: 10px;               /* 字体大小 */
+  line-height: 1.7;
+}
+
+/* ═══ 气泡小尾巴（三角形） ═══ */
+.chat-bubble-role-user,
+.chat-bubble-role-assistant {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* ═══ 气泡小尾巴（三角形） ═══ */
+
+/* 1. 基础准备：必须确保气泡容器允许溢出，否则小尾巴会被截断 */
+.chat-bubble-role-user,
+.chat-bubble-role-assistant {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* 2. 我方气泡右侧小尾巴 */
+.chat-bubble-role-user::before {
+  content: "";
+  position: absolute;
+  right: -5px;                  /* 贴在气泡右侧外（-5px 与宽度 5px 对应） */
+  top: 10px;                    /* 距离气泡顶部的距离 */
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid #648FBE; /* 三角形颜色：需与我方气泡底色一致 */
+  z-index: 1;
+}
+
+/* 3. 对方气泡左侧小尾巴 */
+.chat-bubble-role-assistant::before {
+  content: "";
+  position: absolute;
+  left: -5px;                   /* 贴在气泡左侧外 */
+  top: 10px;                    /* 距离气泡顶部的距离 */
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid #F1F2F1; /* 三角形颜色：需与对方气泡底色一致 */
+  z-index: 1;
+}
+
+/* ── 隐藏非文本/语音消息的小尾巴 ── */
+.chat-msg-content-wrap:has(.chat-red-packet-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-red-packet-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-transfer-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-transfer-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-html-inline) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-html-inline) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-music-share-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-music-share-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-location-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-location-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-sticker) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-sticker) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-media-file-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-media-file-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-gift-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-gift-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-photo-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-photo-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-xhs-share-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-xhs-share-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.scan-pay-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.scan-pay-card) .chat-bubble-role-assistant::before,
+.chat-msg-content-wrap:has(.chat-app-card) .chat-bubble-role-user::before,
+.chat-msg-content-wrap:has(.chat-app-card) .chat-bubble-role-assistant::before {
+  display: none !important;
+}
+
+/* 隐藏聊天列表中或标题栏的“对方正在输入...”提示 */
+.chat-typing-status,
+.chat-status-typing,
+.chat-typing-indicator,
+[data-typing="true"],
+.typing-dots {
+  display: none !important;
+}
+
+/* ── 内心独白：隐形标识（保留点击功能） ── */
+.chat-monologue-heart {
+  opacity: 0 !important;
+  pointer-events: auto !important;
+  cursor: pointer;
+}
