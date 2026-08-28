@@ -1,0 +1,685 @@
+/* ═══ 薄巧波点主题 by 竹叶草 禁止二转 ═══ */
+
+.chat-app {
+  --c-header-bg: #F0F7F0;
+  --c-page-body-bg: #F8FAF8;
+
+  --c-bubble-self: #E8F5E8;
+  --c-bubble-other: #FFFFFF;
+  --c-card: #FFFFFF;
+  --c-card-border: #A88B7A;
+  --c-input: #F0F7F0;
+  --c-input-border: #D4C5B0;
+
+  --c-text-title: #4A3728;
+  --c-text: #8B6B4D;
+  --c-icon: #B8A08A;
+  --c-icon-active: #6B4F3A;
+}
+
+/* ═══ 聊天头像 - 巧克力边框 ═══ */
+.chat-room-wrapper [class*="avatar"] img,
+.chat-msg-avatar img,
+.avatar-wrapper img {
+  border: 2.5px solid #8B6B4D !important;
+  border-radius: 50% !important;
+  box-sizing: border-box !important;
+  transition: all 0.3s ease !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.chat-room-wrapper [class*="avatar"] img:hover,
+.chat-msg-avatar img:hover,
+.avatar-wrapper img:hover {
+  border-color: #6B4F3A !important;
+  transform: scale(1.05) !important;
+}
+
+/* ═══ 1. 标题栏 ═══ */
+.page-header {
+  background-color: var(--c-header-bg);
+  background-image: 
+    radial-gradient(circle at center, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at center, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px);
+  background-size: 30px 30px;
+  background-position: 0 10px, 15px calc(10px + 15px);
+  border-bottom: 0.5px solid var(--c-card-border);
+  padding-top: 4px;
+  padding-bottom: 4px;
+  min-height: 44px;
+}
+
+.page-header-content {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  min-height: 36px;
+  position: relative;
+}
+
+.page-header-content::before,
+.page-header-content::after {
+  display: none !important;
+}
+
+.page-title,
+.page-back-btn {
+  color: var(--c-text-title);
+}
+
+.page-title::after {
+  content: " (σ≧▽≦)σ" !important;
+  font-size: 15px;
+  font-weight: normal;
+  color: #6B4F3A;
+  margin-left: 16px;
+  display: inline-block;
+}
+
+.page-body {
+  background: var(--c-page-body-bg);
+}
+
+
+/* ═══ 2. 搜索栏 ═══ */
+.chat-search-bar {
+  background: var(--c-input);
+  border: 1px solid var(--c-input-border);
+  border-radius: 12px;
+}
+
+.chat-search-input {
+  color: var(--c-text-title);
+}
+
+.chat-search-input::placeholder {
+  color: var(--c-text);
+}
+
+
+/* ═══ 3. 底部标签栏 ═══ */
+.chat-tab-bar {
+  background: #E8F0E8;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-top: 0.5px solid var(--c-card-border);
+}
+
+.chat-tab {
+  color: #B8A08A;
+}
+
+.chat-tab-active {
+  color: #6B4F3A;
+}
+
+
+/* ═══ 4. 聊天室 - 气泡 ═══ */
+.chat-room-wrapper {
+  background: var(--c-page-body-bg);
+}
+
+.chat-bubble-role-user {
+  background-color: var(--c-bubble-self);
+  background-image: none !important;
+  border-radius: 16px 16px 4px 16px !important;
+  padding: 8px 14px !important;
+  color: #7A6A5A !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 8px rgba(139, 107, 77, 0.15);
+  font-size: 14px !important;
+  border: 1px solid var(--c-card-border);
+  position: relative;
+}
+
+.chat-bubble-role-user::before,
+.chat-bubble-role-user::after {
+  display: none !important;
+}
+
+.chat-bubble-role-assistant {
+  background: var(--c-bubble-other);
+  border-radius: 16px 16px 16px 4px !important;
+  padding: 8px 14px !important;
+  color: #7A6A5A !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--c-card-border);
+  font-size: 14px !important;
+}
+
+
+/* ═══ 5. 输入框 ═══ */
+.chat-input-bar {
+  background: var(--c-input);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-top: 0.5px solid var(--c-card-border);
+}
+
+
+/* ═══ 6. 联系人列表 ═══ */
+.contact-item {
+  border-bottom: 0.5px solid var(--c-card-border);
+  background: #FFFFFF;
+}
+
+.contact-item .contact-name,
+.contact-item .chat-contact-name,
+.contact-item [class*="name"] {
+  color: #4A3728 !important;
+  font-weight: 600 !important;
+}
+
+.contact-item .last-msg,
+.contact-item .last-message,
+.contact-item .message-preview,
+.contact-item .last-message-text,
+.contact-item [class*="last"],
+.contact-item [class*="preview"],
+.contact-item .time,
+.contact-item [class*="time"],
+.contact-item .subtitle,
+.contact-item .status,
+.contact-item .chat-preview,
+.contact-item .msg-preview {
+  color: #8B6B4D !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+}
+
+
+/* ═══ 7. 朋友圈 ═══ */
+.feed-post {
+  border-bottom: 1.5px solid #D4C5B0;
+  box-shadow: 0 1px 4px rgba(139, 107, 77, 0.10);
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+}
+
+.feed-divider {
+  height: 1px;
+  background: #D4C5B0;
+  box-shadow: 0 0 2px rgba(139, 107, 77, 0.06);
+}
+
+.moments-feed-page .feed-item,
+.moments-feed-page .feed-post {
+  border-bottom: 1.5px solid #D4C5B0 !important;
+  box-shadow: 0 1px 6px rgba(139, 107, 77, 0.08) !important;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+}
+
+.feed-comments {
+  border-top: 1px solid #E8DDD0 !important;
+  box-shadow: 0 -1px 4px rgba(139, 107, 77, 0.05);
+}
+
+.feed-comment-input,
+.feed-comment-box,
+[class*="comment"] [class*="input"] {
+  margin-top: 8px !important;
+  padding-top: 6px !important;
+  border-top: 1px solid #E8DDD0 !important;
+}
+
+.feed-comment-input input,
+.feed-comment-input textarea,
+[class*="comment"] input,
+[class*="comment"] textarea {
+  margin-top: 4px !important;
+}
+
+
+/* ═══ 8. 转账卡片 ═══ */
+.chat-bubble-role-user:has(.chat-transfer-card),
+.chat-bubble-role-assistant:has(.chat-transfer-card) {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.chat-bubble-role-user:has(.chat-transfer-card)::before,
+.chat-bubble-role-user:has(.chat-transfer-card)::after,
+.chat-bubble-role-assistant:has(.chat-transfer-card)::before,
+.chat-bubble-role-assistant:has(.chat-transfer-card)::after {
+  display: none !important;
+}
+
+.chat-transfer-card {
+  background-color: #F0F7F0 !important;
+  background-image: 
+    radial-gradient(circle at 5% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 18% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 31% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 44% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 57% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 83% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 95% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 11% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 24% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 37% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 50% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 63% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 76% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 89% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 5% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 18% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 31% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 44% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 57% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 83% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 95% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 11% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 24% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 37% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 50% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 63% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 76% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 89% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 5% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 18% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 31% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 44% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 57% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 83% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 95% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-blend-mode: normal;
+  border: 3px solid #A88B7A !important;
+  box-shadow: inset 0 0 0 1px #F0F7F0, 0 4px 16px rgba(139, 107, 77, 0.15) !important;
+  border-radius: 16px !important;
+  box-sizing: border-box !important;
+  padding: 14px 18px 2px 18px !important;
+  max-width: 260px !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  align-self: flex-end !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.chat-transfer-body {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.chat-transfer-card,
+.chat-transfer-card * {
+  color: #4A3728 !important;
+}
+
+.chat-transfer-card .amount {
+  color: #8B6B4D !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+}
+
+.chat-transfer-card .label {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding-top: 8px !important;
+  margin-top: 6px !important;
+  color: #8B6B4D !important;
+  font-size: 11px !important;
+  display: block !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.chat-transfer-card .label::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 0.8px !important;
+  background: #8B6B4D !important;
+  display: block !important;
+  z-index: 10 !important;
+}
+
+.chat-transfer-card img {
+  border-radius: 50% !important;
+  border: 2px solid #FFFFFF !important;
+  box-shadow: 0 0 0 2px #8B6B4D !important;
+}
+
+
+/* ═══ 9. 红包卡片 ═══ */
+.chat-bubble-role-user:has(.chat-red-packet-card),
+.chat-bubble-role-assistant:has(.chat-red-packet-card) {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.chat-bubble-role-user:has(.chat-red-packet-card)::before,
+.chat-bubble-role-user:has(.chat-red-packet-card)::after,
+.chat-bubble-role-assistant:has(.chat-red-packet-card)::before,
+.chat-bubble-role-assistant:has(.chat-red-packet-card)::after {
+  display: none !important;
+}
+
+.chat-red-packet-card {
+  background-color: #F0F7F0 !important;
+  background-image: 
+    radial-gradient(circle at 5% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 18% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 31% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 44% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 57% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 83% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 95% 12%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 11% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 24% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 37% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 50% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 63% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 76% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 89% 32%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 5% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 18% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 31% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 44% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 57% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 83% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 95% 52%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 11% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 24% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 37% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 50% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 63% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 76% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 89% 72%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 5% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 18% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 31% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 44% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 57% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 83% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 95% 92%, rgba(139, 107, 77, 0.25) 2.5px, transparent 2.5px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-blend-mode: normal;
+  border: 3px solid #A88B7A !important;
+  box-shadow: inset 0 0 0 1px #F0F7F0, 0 4px 16px rgba(139, 107, 77, 0.15) !important;
+  border-radius: 16px !important;
+  box-sizing: border-box !important;
+  padding: 4px 18px 2px 18px !important;
+  max-width: 260px !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  align-self: flex-start !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.chat-red-packet-body {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.chat-red-packet-card,
+.chat-red-packet-card * {
+  color: #4A3728 !important;
+}
+
+.chat-red-packet-title {
+  color: #6B4F3A !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.chat-red-packet-card .amount {
+  color: #6B4F3A !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+}
+
+.chat-red-packet-card .label {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding-top: 8px !important;
+  margin-top: 6px !important;
+  color: #8B6B4D !important;
+  font-size: 11px !important;
+  display: block !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.chat-red-packet-card .label::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 0.8px !important;
+  background: #8B6B4D !important;
+  display: block !important;
+  z-index: 10 !important;
+}
+
+
+/* ═══ 10. 底部标签透明 + 颜文字 ═══ */
+
+/* 强制覆盖所有底部标签的背景 */
+.chat-transfer-card .label,
+.chat-red-packet-card .label,
+.chat-transfer-card .ui-media-footer,
+.chat-red-packet-card .chat-red-packet-footer,
+[class*="transfer"] [class*="footer"],
+[class*="red-packet"] [class*="footer"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* 转账底部标签 - 加颜文字在最后 */
+.chat-transfer-card .label::after {
+  content: " (σ≧▽≦)σ" !important;
+  color: #6B4F3A !important;
+  font-size: 12px !important;
+  margin-left: 4px !important;
+  display: inline !important;
+}
+
+/* 红包底部标签 - 加颜文字在最前 */
+.chat-red-packet-card .label::before {
+  content: "(σ≧▽≦)σ " !important;
+  color: #6B4F3A !important;
+  font-size: 12px !important;
+  margin-right: 4px !important;
+  display: inline !important;
+}
+
+[class*="footer"],
+[class*="Footer"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+
+/* ═══ 11. 头像框 - 薄巧色 ═══ */
+.chat-msg-avatar img,
+.avatar img,
+.avatar-wrapper img,
+.contact-item img,
+.contact-avatar img,
+.feed-avatar img,
+.moments-avatar img,
+[class*="avatar"] img {
+  border: 2px solid #FFFFFF !important;
+  box-shadow: 0 0 0 2.5px #A88B7A, 0 0 0 5px rgba(139, 107, 77, 0.20), 0 4px 12px rgba(139, 107, 77, 0.15) !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  aspect-ratio: 1 / 1 !important;
+  box-sizing: border-box !important;
+}
+
+[class*="avatar"] img:hover {
+  border-color: #8B6B4D !important;
+  box-shadow: 0 0 0 2.5px #8B6B4D, 0 0 0 6px rgba(107, 79, 58, 0.12), 0 8px 24px rgba(139, 107, 77, 0.20) !important;
+}
+
+[class*="avatar"]::before,
+[class*="avatar"]::after {
+  display: none !important;
+  content: none !important;
+}
+
+
+/* ═══ 12. 评论区头像框彻底删除 ═══ */
+.feed-comment-avatar-root img,
+.feed-comment-avatar-child img,
+.feed-comment-avatar img,
+.feed-comments img,
+.feed-comment-item img,
+[class*="comment"] img,
+[class*="feed-comment"] img,
+[class*="moments"] [class*="comment"] img {
+  border: none !important;
+  border-style: none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  outline-style: none !important;
+  outline-width: 0 !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.feed-comment-avatar-root,
+.feed-comment-avatar-child,
+.feed-comment-avatar,
+[class*="comment"] [class*="avatar"] {
+  border: none !important;
+  border-style: none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.feed-comment-avatar-root {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  flex-shrink: 0 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+
+.feed-comment-avatar-child {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  flex-shrink: 0 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+
+.feed-comment-avatar-root img:hover,
+.feed-comment-avatar-child img:hover,
+[class*="comment"] img:hover {
+  transform: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+/* ═══ 13. 其他卡片美化（不含转账/红包） ═══ */
+.chat-app-card,
+.chat-thought-card,
+.chat-system-instruction-card,
+.chat-html-inline {
+  background: linear-gradient(145deg, #F0F7F0, #E8F5E8) !important;
+  border: 1.5px solid #A88B7A !important;
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
+  box-shadow: 0 4px 16px rgba(139, 107, 77, 0.12) !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.chat-app-card-title,
+.chat-thought-card-title,
+.chat-system-instruction-title {
+  color: #6B4F3A !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+}
+
+.chat-app-card-body,
+.chat-thought-body,
+.chat-system-instruction-body,
+.chat-html-inline {
+  color: #4A3728 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.chat-app-card img,
+.chat-thought-card img,
+.chat-system-instruction-card img {
+  border-radius: 50% !important;
+  border: 2px solid #FFFFFF !important;
+  box-shadow: 0 0 0 2px #A88B7A !important;
+}
+
+
+/* ═══ 14. 包含卡片的气泡偏移（对方距离改近） ═══ */
+
+/* 自己发的消息（右侧）保持原样 */
+.chat-bubble-role-user:has(.chat-transfer-card),
+.chat-bubble-role-user:has(.chat-red-packet-card),
+.chat-bubble-role-user:has(.chat-app-card),
+.chat-bubble-role-user:has(.chat-thought-card),
+.chat-bubble-role-user:has(.chat-system-instruction-card),
+.chat-bubble-role-user:has(.chat-html-inline) {
+  transform: translateX(-30px) translateY(10px) !important;
+}
+
+/* 对方发的消息（左侧） */
+.chat-bubble-role-assistant:has(.chat-transfer-card),
+.chat-bubble-role-assistant:has(.chat-red-packet-card),
+.chat-bubble-role-assistant:has(.chat-app-card),
+.chat-bubble-role-assistant:has(.chat-thought-card),
+.chat-bubble-role-assistant:has(.chat-system-instruction-card),
+.chat-bubble-role-assistant:has(.chat-html-inline) {
+  transform: translateX(5px) translateY(10px) !important;
+}
+
+
+/* ═══ 15. 转账/红包卡片气泡偏移恢复原样 ═══ */
+
+/* 自己发的消息（右侧）- 转账/红包气泡恢复原位 */
+.chat-bubble-role-user:has(.chat-transfer-card),
+.chat-bubble-role-user:has(.chat-red-packet-card) {
+  transform: none !important;
+}
+
+/* 对方发的消息（左侧）- 转账/红包气泡恢复原位 */
+.chat-bubble-role-assistant:has(.chat-transfer-card),
+.chat-bubble-role-assistant:has(.chat-red-packet-card) {
+  transform: none !important;
+}
