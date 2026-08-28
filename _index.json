@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T11:41:14.182Z",
+  "generatedAt": "2026-08-28T11:44:51.377Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 53
+      "count": 54
     },
     {
       "name": "应用bug改善",
@@ -1650,6 +1650,24 @@
       "avatar": "",
       "ownerHash": "eee1ff3396b8bafaeaff7dc7209679503c680ddedfc96481ece03b322fd8e867",
       "updatedAt": "2026-08-27T14:40:21+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "小岛时钟",
+      "dirName": "小岛时钟",
+      "type": "dir",
+      "path": "资源/应用/小岛时钟",
+      "files": [
+        "资源/应用/小岛时钟/小岛时钟.html",
+        "资源/应用/小岛时钟/小岛时钟.json",
+        "资源/应用/小岛时钟/小岛时钟预设.json"
+      ],
+      "images": [],
+      "description": "一个简陋的番茄钟",
+      "author": "Khalilah",
+      "avatar": "",
+      "ownerHash": "3b2ec651ad1405938e448749951310a2a116dd422b84a87c2e25c611edd1200c",
+      "updatedAt": "2026-08-28T19:44:29+08:00"
     },
     {
       "folder": "应用",
