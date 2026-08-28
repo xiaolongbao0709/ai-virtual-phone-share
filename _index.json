@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T01:38:24.516Z",
+  "generatedAt": "2026-08-28T01:57:45.987Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -2769,14 +2769,13 @@
       ],
       "images": [
         "资源/线上美化/薄巧波点主题/1000021351.jpg",
-        "资源/线上美化/薄巧波点主题/1000021472.jpg",
         "资源/线上美化/薄巧波点主题/1000021477.jpg"
       ],
       "description": "不可二转二改\n导入聊天主页CSS使用",
       "author": "竹叶草草",
       "avatar": "资源/线上美化/薄巧波点主题/.avatar.png",
       "ownerHash": "8a040f68caf05d1b1e5de3056e748f42220d65d67704df8798b5e1477066bcd6",
-      "updatedAt": "2026-08-28T09:38:04+08:00"
+      "updatedAt": "2026-08-28T09:57:25+08:00"
     },
     {
       "folder": "线上美化",
