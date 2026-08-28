@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T11:44:51.377Z",
+  "generatedAt": "2026-08-28T11:55:00.683Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -53,7 +53,7 @@
     },
     {
       "name": "游戏",
-      "count": 5
+      "count": 6
     },
     {
       "name": "特调材料",
@@ -2352,6 +2352,22 @@
       "avatar": "",
       "ownerHash": "88f102e0ef217cea73fe5b268e0c11999ebe72de7ee6c86765148d0313569196",
       "updatedAt": "2026-08-12T10:24:45+02:00"
+    },
+    {
+      "folder": "游戏",
+      "name": "总裁手记",
+      "dirName": "总裁手记",
+      "type": "dir",
+      "path": "资源/游戏/总裁手记",
+      "files": [
+        "资源/游戏/总裁手记/总裁手记byKhalilah.html"
+      ],
+      "images": [],
+      "description": "",
+      "author": "Khalilah",
+      "avatar": "资源/游戏/总裁手记/.avatar.png",
+      "ownerHash": "3b2ec651ad1405938e448749951310a2a116dd422b84a87c2e25c611edd1200c",
+      "updatedAt": "2026-08-28T19:54:35+08:00"
     },
     {
       "folder": "游戏",
