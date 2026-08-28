@@ -1,0 +1,82 @@
+{
+  "sdkVersion": "1.0",
+  "id": "island-pomodoro.sailing.focus",
+  "name": "小岛时钟",
+  "version": "1.0.0",
+  "author": "一个神秘的女子",
+  "description": "清新海岛主题番茄钟。选择角色一起进行游戏化专注航行，完成专注后发现未知小岛、命名岛屿、收集纪念品；Todo 完成后可送出补给。",
+  "icon": "icon.png",
+  "entry": "index.html",
+  "permissions": [
+    "app.data.read",
+    "app.data.write",
+    "characters.read",
+    "ai.generate",
+    "chat.sendCard",
+    "chat.requestReply",
+    "ui.toast"
+  ],
+  "resources": {
+    "presets": [
+      "presets.json"
+    ]
+  },
+  "extensions": {
+    "chat": {
+      "directives": [
+        {
+          "id": "island-pomodoro-voyage",
+          "label": "环岛番茄钟记录",
+          "tags": [
+            "island_pomodoro",
+            "voyage"
+          ],
+          "syntax": "[环岛番茄钟APP记录:类型:结果:说明]",
+          "description": "用于记录用户在环岛番茄钟 APP 中完成或中断专注。航行、小岛、纪念品都是游戏化比喻。",
+          "title": "环岛番茄钟",
+          "status": "专注记录",
+          "accentColor": "#63b7af",
+          "actions": [
+            {
+              "label": "查看航线"
+            },
+            {
+              "label": "查看纪念品"
+            }
+          ]
+        }
+      ],
+      "plusActions": [
+        {
+          "id": "open-island-pomodoro",
+          "label": "环岛番茄钟",
+          "entry": "main",
+          "presentation": "fullscreen",
+          "directiveId": "island-pomodoro-voyage",
+          "tags": [
+            "island_pomodoro",
+            "voyage"
+          ],
+          "description": "打开环岛番茄钟，开始一段游戏化专注航行。"
+        }
+      ]
+    },
+    "prompt": {
+      "profiles": [
+        {
+          "id": "island-pomodoro-voyage-text",
+          "label": "环岛番茄钟航行短文",
+          "description": "为用户完成专注生成一段符合角色人设的清新短句。注意航行是比喻。",
+          "history": "recent",
+          "output": "plain_text",
+          "appTags": [
+            "island_pomodoro",
+            "voyage"
+          ],
+          "enableWorldBooks": false,
+          "enableRegexes": false
+        }
+      ]
+    }
+  }
+}
