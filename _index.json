@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T04:11:40.469Z",
+  "generatedAt": "2026-08-28T04:33:50.057Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 23
+      "count": 24
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -104,6 +104,24 @@
       "avatar": "资源/Js插件/PNG角色卡解析/.avatar.png",
       "ownerHash": "ede8199ada8254a22c3c124c5e367a30a98e15e62456b916541c8f03bc4af34b",
       "updatedAt": "2026-08-23T12:48:45+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "[彩虹]自定义气泡插件",
+      "dirName": "[彩虹]自定义气泡插件",
+      "type": "dir",
+      "path": "资源/Js插件/[彩虹]自定义气泡插件",
+      "files": [
+        "资源/Js插件/[彩虹]自定义气泡插件/float-custom-bubbles-v0.10.9.js"
+      ],
+      "images": [
+        "资源/Js插件/[彩虹]自定义气泡插件/IMG_0733.jpeg"
+      ],
+      "description": "主要是因为我嫌一个个写css太麻烦……所以折腾了一个插件。\n=ᗜωᗜ=是自定义气泡的工具，可以给不同角色设置不同气泡。\n只需要上传透明png就可实现气泡自由。\n只适配了文本和语音显示效果，不太确定其他小组件会不会有bug。\n✅二改自用\n❌二传二改\n\n\n气泡生图可以",
+      "author": "neen",
+      "avatar": "资源/Js插件/[彩虹]自定义气泡插件/.avatar.png",
+      "ownerHash": "c2cb363b5cf48540a0cce6011e7c92874b79c871f9a59acc2c876fade97fb44c",
+      "updatedAt": "2026-08-28T12:33:26+08:00"
     },
     {
       "folder": "Js插件",
