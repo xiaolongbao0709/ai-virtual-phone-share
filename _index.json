@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T02:26:35.447Z",
+  "generatedAt": "2026-08-28T02:48:01.191Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 25
+      "count": 26
     },
     {
       "name": "线上聊天状态栏",
@@ -2356,6 +2356,25 @@
       "avatar": "资源/线上美化/[雪花]os小雨滴by小池/.avatar.png",
       "ownerHash": "6a08d4fbb179025747de726b73fc09d681a2a7d30e74d9d35f57f31a77b70b8d",
       "updatedAt": "2026-08-27T10:46:01+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "[雪花]蓝色波点主题",
+      "dirName": "[雪花]蓝色波点主题",
+      "type": "dir",
+      "path": "资源/线上美化/[雪花]蓝色波点主题",
+      "files": [
+        "资源/线上美化/[雪花]蓝色波点主题/蓝白波点主题by竹叶草.txt"
+      ],
+      "images": [
+        "资源/线上美化/[雪花]蓝色波点主题/1000021490.jpg",
+        "资源/线上美化/[雪花]蓝色波点主题/1000021492.jpg"
+      ],
+      "description": "不可二改二转\n导入聊天主页css使用\n部分卡片可能会出现遮挡头像问题\n可以选择找小卷修复一下",
+      "author": "竹叶草草",
+      "avatar": "资源/线上美化/[雪花]蓝色波点主题/.avatar.png",
+      "ownerHash": "8a040f68caf05d1b1e5de3056e748f42220d65d67704df8798b5e1477066bcd6",
+      "updatedAt": "2026-08-28T10:47:37+08:00"
     },
     {
       "folder": "线上美化",
