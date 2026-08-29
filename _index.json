@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-29T20:32:22.092Z",
+  "generatedAt": "2026-08-29T20:48:06.191Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 26
+      "count": 27
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -154,6 +154,20 @@
       "avatar": "资源/Js插件/[星星]更换全局聊天背景的小插件[星星]/.avatar.png",
       "ownerHash": "64c4b53d46f5e3372d7b9038e518cf7a93df9d8da983094a12c2ab652f65ac8b",
       "updatedAt": "2026-08-24T21:59:53+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "[雪花]便捷语音输入",
+      "dirName": "[雪花]便捷语音输入",
+      "type": "dir",
+      "path": "资源/Js插件/[雪花]便捷语音输入",
+      "files": [],
+      "images": [],
+      "description": "[大]功能：[/大]\n[大]1.[粗]长按[/粗]输入框开启录音，松手转文字（可选择转文字后直接发送）[/大]\n[大]2.可自主开启聊天室[粗]悬浮球[/粗]，点按开始录音[/大]\n*：groq有免费额度但需要开🔮，推荐使用硅基流动 有其他bug可以先试试让小坊改",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
+      "updatedAt": "2026-08-30T04:47:40+08:00"
     },
     {
       "folder": "Js插件",
