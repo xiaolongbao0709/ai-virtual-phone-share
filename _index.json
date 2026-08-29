@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-29T18:01:41.453Z",
+  "generatedAt": "2026-08-29T20:32:22.092Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 55
+      "count": 56
     },
     {
       "name": "应用bug改善",
@@ -1262,6 +1262,22 @@
       "avatar": "资源/应用/[小猫]粒粒bo（直播APP）/.avatar.png",
       "ownerHash": "a02bf8a587d9990fbf065d9b20fc36f0b36d652b2197b11fbc2c2f9901167385",
       "updatedAt": "2026-08-28T23:26:02+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "[幽灵]token看板",
+      "dirName": "[幽灵]token看板",
+      "type": "dir",
+      "path": "资源/应用/[幽灵]token看板",
+      "files": [
+        "资源/应用/[幽灵]token看板/token.tracker-1.0.0 (1).zip"
+      ],
+      "images": [],
+      "description": "每次去设置开悬浮球有点不方便所以肘了 可以看到记忆/上下文/世界书这些的token占比 还有一个可以快捷计算按量价格的功能",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
+      "updatedAt": "2026-08-30T04:31:54+08:00"
     },
     {
       "folder": "应用",
