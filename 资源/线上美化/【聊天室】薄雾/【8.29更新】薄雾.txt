@@ -1,0 +1,1585 @@
+﻿:root {
+  /* 顶部身份文案 */
+  --char-id: "@char_id";
+  --signature-text: "说到底，是月亮照见了人心里藏不住的东西";
+
+  /* 头像装饰文案 */
+  --assistant-avatar-label: "Possession: ";
+  --user-avatar-label: "Silence: ";
+
+  /* 心声按钮文案 */
+  --monologue-text: "That's why I'm with you.";
+
+  /* 双方气泡配色 */
+  --bubble-assistant-bg: rgba(255, 255, 255, 0.03);
+  --bubble-assistant-border: #D1D5DB;
+  --bubble-assistant-text: #4B5563;
+  --bubble-user-bg: #252525;
+  --bubble-user-border: #3F3F46;
+  --bubble-user-text: #F9FAFB;
+
+  /* 底部栏文案与数字 */
+  --bottom-bar-label: "F L O A T P H O N E";
+  --offline-edit-text: "编辑于 今天13:14";
+  --offline-side-text: "浮岛";
+  --comment-count: "32";
+  --like-count: "1.3k";
+  --favorite-count: "128";
+  --share-count: "0";
+
+  /* 触发 AI 回复按钮图片链接 */
+  --trigger-btn-image-url: url("https://i.ibb.co/hJ6gkpMD/IMG-20260408-220056.jpg");
+
+  /* 返回线上模式头像图片链接 */
+  --avatar-online-1: url("https://bee-reg-ab.imagency.cn/mr/2483/26/cfb65806866a16aaf378494cdbf492ae.jpg");
+  --avatar-online-2: url("https://i.ibb.co/Q71C39fL/IMG-20260627-181713.jpg");
+
+  /* 线下模式用户昵称下方展示的账号ID */
+  --offline-user-handle: "@user_id";
+}
+
+/* ==================== 顶部栏 ==================== */
+
+/* 顶部栏毛玻璃底色 */
+.page-header {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* 返回按钮样式 */
+.page-header-content > .page-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  width: auto;
+  color: #666;
+}
+
+/* 返回按钮 SVG 尺寸 */
+.page-header-content > .page-back-btn svg {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+/* 返回按钮文字 */
+.page-header-content > .page-back-btn::after {
+  content: "Back";
+  font-size: 18px;
+  line-height: 1;
+  white-space: nowrap;
+  position: relative;
+  left: -3px;
+  top: 1px;
+}
+
+/* 更多按钮基础样式 */
+.page-header-right .page-back-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+}
+
+/* 隐藏更多按钮原生图标 */
+.page-header-right .page-back-btn svg {
+  display: none !important;
+}
+
+/* 更多按钮三点图标 */
+.page-header-right .page-back-btn::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"><circle cx="5" cy="12" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="19" cy="12" r="1.75"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"><circle cx="5" cy="12" r="1.75"/><circle cx="12" cy="12" r="1.75"/><circle cx="19" cy="12" r="1.75"/></svg>');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* 更多按钮悬浮效果 */
+.page-header-right .page-back-btn:hover {
+  background-color: rgba(143, 178, 200, 0.12);
+}
+
+/* 更多按钮按压效果 */
+.page-header-right .page-back-btn:active {
+  background-color: rgba(143, 178, 200, 0.22);
+  transform: scale(0.92);
+}
+
+/* 顶部栏下方延长 */
+.page-header-content {
+  position: relative;
+  padding-bottom: 40px;
+}
+
+/* 昵称容器基准 */
+.page-title {
+  position: relative;
+  line-height: 1.1;
+}
+
+/* 昵称下方 @char_id */
+.page-title::before {
+  content: var(--char-id);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 1px;
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: normal;
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* 昵称下方个签台词（含引号） */
+.page-title::after {
+  content: var(--signature-text);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 22px;
+  font-size: 16px;
+  font-weight: normal;
+  color: #4b5563;
+  white-space: nowrap;
+  line-height: 1.5;
+  padding: 0 22px;
+  background-image:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23cbd5e1"><path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621-.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/></svg>'),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23cbd5e1"><path d="M19.417 6.679C20.447 7.773 21 9 21 10.989c0 3.5-2.457 6.637-6.03 8.188l-.893-1.378c3.335-1.804 3.987-4.145 4.247-5.621-.537.278-1.24.375-1.929.311-1.804-.167-3.226-1.648-3.226-3.489a3.5 3.5 0 0 1 3.5-3.5c1.073 0 2.099.49 2.748 1.179zm-10 0C10.447 7.773 11 9 11 10.989c0 3.5-2.457 6.637-6.03 8.188l-.893-1.378c3.335-1.804 3.987-4.145 4.247-5.621-.537.278-1.24.375-1.929.311-1.804-.167-3.226-1.648-3.226-3.489a3.5 3.5 0 0 1 3.5-3.5c1.073 0 2.099.49 2.748 1.179z"/></svg>');
+  background-repeat: no-repeat, no-repeat;
+  background-position: left 2px top 1px, right 2px bottom 2px;
+  background-size: 14px 14px;
+  pointer-events: none;
+}
+
+/* ==================== 聊天页面相关内容 ==================== */
+
+/* 消息包装器布局 */
+.chat-msg-wrapper[data-role="assistant"] {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.chat-msg-wrapper[data-role="user"] {
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+/* 头像样式 */
+.chat-msg-avatar {
+  position: relative;
+  overflow: visible !important;
+  border-radius: 15px !important;
+}
+
+.chat-msg-avatar > * {
+  border-radius: 15px !important;
+}
+
+/* 用户头像装饰文字 */
+.chat-msg-wrapper[data-role="user"] .chat-msg-avatar::before {
+  content: var(--user-avatar-label);
+  position: absolute;
+  bottom: 0;
+  right: 100%;
+  margin-right: 6px;
+  font-size: 13px;
+  color: #9CA3AF;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* AI头像装饰文字 */
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-avatar::after {
+  content: var(--assistant-avatar-label);
+  position: absolute;
+  bottom: 0;
+  left: 100%;
+  margin-left: 6px;
+  font-size: 13px;
+  color: #9CA3AF;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* AI 普通文本气泡 */
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble) {
+  background-color: var(--bubble-assistant-bg);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border: 1px solid var(--bubble-assistant-border);
+  border-radius: 20px;
+  color: var(--bubble-assistant-text);
+  padding: 5px 10px;
+}
+
+/* 用户普通文本气泡 */
+.chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble) {
+  background-color: var(--bubble-user-bg);
+  border: 1px solid var(--bubble-user-border);
+  border-radius: 20px;
+  color: var(--bubble-user-text);
+  padding: 5px 10px;
+}
+
+/* 连续发言隐藏头像 */
+.chat-msg-wrapper[data-consecutive] .chat-msg-avatar {
+  display: none;
+}
+
+/* 关闭框架默认间距 */
+.chat-scroll-anchored > .flex.flex-col.gap-4 {
+  gap: 0 !important;
+}
+
+/* 消息间距控制 */
+.chat-msg-wrapper {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.chat-msg-wrapper[data-role="system"] {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.chat-msg-wrapper[data-role="user"],
+.chat-msg-wrapper[data-role="assistant"] {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* 连续发言间距 */
+.chat-msg-wrapper[data-consecutive] {
+  margin-top: -13px;
+}
+
+/* 分组间距 */
+.chat-msg-wrapper[data-role="assistant"]:not([data-consecutive]),
+.chat-msg-wrapper[data-role="user"]:not([data-consecutive]) {
+  margin-top: 14px;
+}
+
+/* 心声按钮 */
+.chat-monologue-heart {
+  margin-left: 0 !important;
+  align-self: flex-start !important;
+  margin-top: 2px !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* 心声按钮文字 */
+.chat-monologue-heart::after {
+  content: var(--monologue-text);
+  font-size: 11px;
+  color: #9CA3AF;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
+/* 心声按钮按压效果（不变大） */
+.chat-monologue-heart:active,
+.chat-monologue-heart:focus-visible {
+  transform: none !important;
+}
+
+/* 隐藏内心独白胶带 */
+.chat-thought-tape-left,
+.chat-thought-tape-right {
+  display: none;
+}
+
+/* 内心独白卡片容器 */
+.chat-thought-card {
+  background: var(--bubble-assistant-bg);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border: 1px solid var(--bubble-assistant-border);
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  align-self: flex-start !important;
+  margin-top: 0 !important;
+  margin-left: 0px !important;
+  width: 100% !important;
+}
+
+/* 内心独白标题替换 */
+.chat-thought-title {
+  font-size: 0;
+}
+
+.chat-thought-title::before {
+  content: "Inner Monologue";
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bubble-assistant-text);
+}
+
+/* 内心独白正文 */
+.chat-thought-body {
+  color: var(--bubble-assistant-text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 内心独白签名 */
+.chat-thought-sig {
+  text-align: right;
+  color: #9CA3AF;
+  font-size: 12px;
+  margin-top: 10px;
+  font-style: italic;
+}
+
+/* 普通气泡相对定位 */
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble),
+.chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble) {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* 引用条预览 */
+.chat-quote-preview {
+  position: absolute;
+  top: 1px;
+  max-width: 120px;
+  margin: 0 !important;
+  background: none !important;
+  border: none !important;
+  padding: 0;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--c-text, #797E85);
+  z-index: 2;
+}
+
+.chat-quote-preview::before {
+  content: "回覆";
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--c-icon, #A0A3A8);
+  letter-spacing: 0.5px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+/* AI引用条位置 */
+.chat-bubble-role-assistant .chat-quote-preview {
+  left: calc(100% + 8px);
+  color: var(--c-text, #797E85);
+}
+
+/* 用户引用条位置 */
+.chat-bubble-role-user .chat-quote-preview {
+  right: calc(100% + 8px);
+  color: #6B7280;
+}
+
+.chat-bubble-role-user .chat-quote-preview::before {
+  color: #9CA3AF;
+}
+
+/* 去除系统消息背景 */
+.chat-sys-msg {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 系统消息时间戳 */
+span.chat-sys-msg {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  overflow: visible;
+}
+
+/* 语音转文字气泡 */
+.chat-msg-wrapper[data-role="user"] .voice-msg-text-bubble,
+.chat-msg-wrapper[data-role="assistant"] .voice-msg-text-bubble {
+  margin-top: 2px !important;
+  margin-bottom: 0 !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(1px) !important;
+  -webkit-backdrop-filter: blur(1px) !important;
+  border-radius: 10px;
+  padding: 6px 18px !important;
+  position: relative;
+  border: none !important;
+}
+
+/* 语音气泡左引号 */
+.chat-msg-wrapper[data-role="user"] .voice-msg-text-bubble::before,
+.chat-msg-wrapper[data-role="assistant"] .voice-msg-text-bubble::before {
+  content: "❝";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  font-size: 16px;
+  color: rgba(0,0,0,0.3);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* 语音气泡右引号 */
+.chat-msg-wrapper[data-role="user"] .voice-msg-text-bubble::after,
+.chat-msg-wrapper[data-role="assistant"] .voice-msg-text-bubble::after {
+  content: "❞";
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  font-size: 16px;
+  color: rgba(0,0,0,0.3);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* 语音转文字独立间距 */
+.chat-msg-wrapper:has(.voice-msg-text-bubble) {
+  margin-top: -2px !important;
+  margin-bottom: 0 !important;
+}
+
+/* ==================== 底部栏 ==================== */
+
+/* 底部栏毛玻璃底色 */
+.chat-input-bar {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* 输入框基础样式 */
+.chat-input-bar .chat-input-textarea {
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  outline: none;
+  padding: 6px 11px 12px;
+  font-size: 16px;
+  color: #252525;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+  margin-top: -2px;
+  line-height: 1.4;
+}
+
+/* 输入框占位符 */
+.chat-input-bar .chat-input-textarea::placeholder {
+  color: var(--c-text, #797E85);
+  opacity: 0.55;
+}
+
+/* 按钮操作区域 */
+.chat-input-bar .chat-input-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 10px 6px;
+  background: transparent;
+  --line-left: 162px;
+}
+
+/* 操作区左侧字母 */
+.chat-input-bar .chat-input-actions::before {
+  content: var(--bottom-bar-label);
+  position: absolute;
+  top: 0;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--c-text, #797E85);
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 1;
+  font-weight: bold;
+}
+
+/* 操作区下框线 */
+.chat-input-bar .chat-input-actions::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--line-left);
+  right: 0;
+  height: 1px;
+  background: var(--c-text, #797E85);
+  z-index: 0;
+}
+
+/* 普通按钮基础样式 */
+.chat-input-bar .chat-input-actions .ui-bare-btn {
+  flex: 0 0 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 2px;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: var(--c-text, #797E85);
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.1s ease;
+}
+
+/* 普通按钮悬浮 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:hover {
+  color: #252525;
+}
+
+/* 普通按钮按压 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:active {
+  color: #252525;
+  transform: scale(0.92);
+}
+
+/* 普通按钮禁用 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 触发 AI 回复按钮样式 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M9.937 15.5"]) {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background-color: transparent;
+  background-image: var(--trigger-btn-image-url);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 50%;
+  border: none;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* 隐藏触发按钮原始图标 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M9.937 15.5"]) svg {
+  display: none;
+}
+
+/* 触发按钮悬浮 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M9.937 15.5"]):hover {
+  opacity: 0.8;
+}
+
+/* 触发按钮按压 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M9.937 15.5"]):active {
+  opacity: 0.6;
+  transform: scale(0.92);
+}
+
+/* 触发按钮外部呼吸边框 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M9.937 15.5"])::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  border: 2px solid rgba(209, 213, 219, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: trigger-border-pulse 2s ease-in-out infinite;
+}
+
+@keyframes trigger-border-pulse {
+  0%, 100% {
+    border-color: rgba(209, 213, 219, 0.2);
+  }
+  50% {
+    border-color: rgba(209, 213, 219, 0.8);
+  }
+}
+
+/* 隐藏引用条下框线 */
+.chat-quote-bar {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* 线下模式按钮 */
+.chat-input-bar .chat-input-actions .chat-offline-toggle {
+  margin-right: auto;
+  position: relative;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(7px);
+  --icon-drop: 4px;
+}
+
+/* 线下模式按钮图标尺寸 */
+.chat-input-bar .chat-input-actions .chat-offline-toggle svg {
+  width: 12px;
+  height: 12px;
+  transform: translateY(var(--icon-drop));
+}
+
+/* 线下模式按钮上方小字 */
+.chat-input-bar .chat-input-actions .chat-offline-toggle::before {
+  content: var(--offline-edit-text);
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  font-size: 12px;
+  color: var(--c-text, #797E85);
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* 线下模式按钮右侧小字 */
+.chat-input-bar .chat-input-actions .chat-offline-toggle::after {
+  content: var(--offline-side-text);
+  position: absolute;
+  left: calc(100% + 4px);
+  top: calc(50% + var(--icon-drop));
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--c-text, #797E85);
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* 底部栏互动按钮隐藏原生图标 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2) svg,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3) svg,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4) svg,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5) svg {
+  display: none !important;
+}
+
+/* 底部栏互动按钮垂直排列 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2),
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3),
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4),
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5) {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 2px !important;
+  min-width: 24px;
+}
+
+/* 互动按钮图标容器 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2)::before,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3)::before,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4)::before,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5)::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+}
+
+/* 互动按钮数字样式 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2)::after,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3)::after,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4)::after,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5)::after {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--c-text, #797E85);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* 评论按钮图标 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2)::before {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14a3 3 0 0 1-3 3H7.5L3.7 20.2A1 1 0 0 1 2 19.4V6a3 3 0 0 1 3-3h13a3 3 0 0 1 3 3z"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14a3 3 0 0 1-3 3H7.5L3.7 20.2A1 1 0 0 1 2 19.4V6a3 3 0 0 1 3-3h13a3 3 0 0 1 3 3z"/></svg>');
+}
+
+/* 评论按钮数字 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2)::after {
+  content: var(--comment-count);
+}
+
+/* 点赞按钮图标 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3)::before {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l6.3 6.3a1 1 0 0 0 1.4 0Z"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l6.3 6.3a1 1 0 0 0 1.4 0Z"/></svg>');
+}
+
+/* 点赞按钮数字 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3)::after {
+  content: var(--like-count);
+}
+
+/* 点赞按钮按压变色 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3):active::before {
+  background-color: #e11d48 !important;
+}
+
+/* 收藏按钮图标 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4)::before {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-6.3-4.2a1.2 1.2 0 0 0-1.4 0L5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-6.3-4.2a1.2 1.2 0 0 0-1.4 0L5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>');
+}
+
+/* 收藏按钮数字 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4)::after {
+  content: var(--favorite-count);
+}
+
+/* 转发按钮图标 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5)::before {
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h5a1 1 0 0 1 1 1v5"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h5a1 1 0 0 1 1 1v5"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>');
+}
+
+/* 转发按钮文字（隐藏） */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5)::after {
+  content: "分享至";
+  visibility: visible;
+  pointer-events: none;
+}
+
+/* ==================== 上下文菜单 ==================== */
+
+/* 菜单容器 */
+.ctx-menu.chat-floating-ctx-menu {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(16px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+  border: 1px solid rgba(209, 213, 219, 0.75) !important;
+  border-radius: 13px !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08) !important;
+  padding: 5px !important;
+  min-width: 148px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  z-index: 999 !important;
+}
+
+/* 菜单内部结构 */
+.ctx-menu.chat-floating-ctx-menu .flex {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  gap: 1px !important;
+}
+
+/* 菜单分组分割线 */
+.ctx-menu.chat-floating-ctx-menu .flex:not(:last-of-type) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  padding-bottom: 3px !important;
+  margin-bottom: 3px !important;
+}
+
+/* 菜单按钮基础样式（文字左、图标右） */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;   /* 改为两端对齐 */
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 7px !important;
+  color: #374151 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.3px;
+  padding: 7px 10px !important;
+  line-height: 1.2 !important;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 菜单按钮图标（移到右侧） */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  order: 2;                /* 排到文字之后 */
+  margin-left: 9px;        /* 与文字间距 */
+  margin-right: 0;         /* 去掉原有右边距 */
+  flex-shrink: 0;
+  background-color: transparent;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.75;
+}
+
+/* 菜单按钮按压 */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn:active {
+  background: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 危险按钮样式 */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn.ctx-menu-btn-danger {
+  color: #9E5A5A !important;
+}
+
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn.ctx-menu-btn-danger:active {
+  background: rgba(158, 90, 90, 0.1) !important;
+}
+
+/* ==================== 图标分配（区分新旧菜单） ==================== */
+
+/* 旧菜单：包含“引用”“多选”的菜单（第二组有4个按钮） */
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(1)::before {
+  /* 复制 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(2)::before {
+  /* 编辑回复 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(3)::before {
+  /* 重试以下 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(1)::before {
+  /* 引用 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(2)::before {
+  /* 多选 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(3)::before {
+  /* 删除 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)::before {
+  /* 删除以下 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>');
+}
+
+/* 新菜单：不含“引用”“多选”的菜单（第二组只有2个按钮） */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(1)::before {
+  /* 复制 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(2)::before {
+  /* 编辑 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(3)::before {
+  /* 重试以下 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(1)::before {
+  /* 删除 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
+}
+
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(2)::before {
+  /* 删除以下 */
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>');
+}
+
+/* 菜单定位三角 */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-triangle {
+  border-top-color: rgba(255, 255, 255, 0.88) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.88) !important;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.04));
+}
+
+/* ==================== 转账卡片 ==================== */
+
+/* 媒体气泡重置 */
+.chat-bubble-media:has(.chat-transfer-card) {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* 支票外层卡片 */
+.chat-transfer-card {
+  width: 250px !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(209, 213, 219, 0.8) !important;
+  background: #FDFDFD !important;
+  box-shadow: none !important;
+  position: relative !important;
+}
+
+/* 隐藏默认 emoji */
+.chat-transfer-body > .shrink-0,
+.chat-red-packet-body > .shrink-0 {
+  display: none !important;
+}
+
+/* 支票头部 */
+.chat-transfer-body {
+  background: transparent !important;
+  padding: 12px 14px 8px !important;
+  position: relative;
+  display: flex;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 2px !important;
+}
+
+/* 支票顶部银行小标 */
+.chat-transfer-body::before {
+  content: "STAATSBANK // VOUCHER-089";
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #797E85;
+  margin-bottom: 4px;
+}
+
+/* 金额文字 */
+.chat-transfer-body .ts-24 {
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  color: #252525 !important;
+  letter-spacing: 0.5px;
+  line-height: 1.1 !important;
+}
+
+/* 金额下方备注 */
+.chat-transfer-body .ui-text-white-85,
+.chat-transfer-body .ts-13 {
+  display: block !important;
+  font-size: 13px !important;
+  color: #6B7280 !important;
+  margin-top: 4px !important;
+  line-height: 1.4 !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+/* 备注前缀 */
+.chat-transfer-body .ui-text-white-85::before,
+.chat-transfer-body .ts-13::before {
+  content: "VERMERK: ";
+  display: inline !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #9CA3AF !important;
+  letter-spacing: 0.05em;
+  margin-right: 2px;
+}
+
+/* 支票中下部 */
+.chat-transfer-card .ui-media-footer {
+  background: transparent !important;
+  position: relative;
+  padding: 72px 14px 10px !important;
+  border-top: 1px dashed rgba(0, 0, 0, 0.12) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+/* 支票条款文字 */
+.chat-transfer-card .ui-media-footer::before {
+  content: "Zahlungsanweisung gültig. Der Betrag wird dem Empfängerkonto gutgeschrieben.";
+  position: absolute;
+  top: 8px;
+  left: 14px;
+  right: 14px;
+  font-size: 10px;
+  color: #8C8C8C;
+  line-height: 1.35;
+  letter-spacing: 0.1px;
+}
+
+/* 支票查看按钮 */
+.chat-transfer-card .ui-media-footer::after {
+  content: "BELEG ANSEHEN ↗";
+  position: absolute;
+  top: 40px;
+  left: 14px;
+  right: 14px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #F0F0F0;
+  background: #252525;
+  border: 1px solid #252525;
+  padding: 5px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.1s ease, opacity 0.1s ease, background-color 0.1s ease;
+}
+
+/* 未收款卡片按压效果 */
+.chat-transfer-card:not(:has(.bg-opened-gradient)):active .ui-media-footer::after {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+/* 隐藏默认元信息 */
+.chat-transfer-card .ui-media-footer span {
+  font-size: 0 !important;
+  display: none !important;
+}
+
+/* 显示第一个 span */
+.chat-transfer-card .ui-media-footer span:first-child {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding-top: 4px;
+}
+
+/* 左下角档案批号 */
+.chat-transfer-card .ui-media-footer span:first-child::before {
+  content: "REF: #8911-BLN";
+  font-size: 9px !important;
+  color: #9CA3AF;
+  letter-spacing: 0.05em;
+}
+
+/* 右下角状态印章（未收款） */
+.chat-transfer-card .ui-media-footer span:first-child::after {
+  content: "[ AUSSTEHEND ]";
+  font-size: 9px !important;
+  font-weight: 700;
+  color: #6B7280;
+  letter-spacing: 0.05em;
+}
+
+/* 已收款按钮样式 */
+.chat-transfer-card:has(.bg-opened-gradient) .ui-media-footer::after {
+  content: "ABGERECHNET ✓";
+  background: #F3F4F6 !important;
+  color: #6B7280 !important;
+  border-color: #E5E7EB !important;
+  font-weight: 500;
+}
+
+/* 已收款印章 */
+.chat-transfer-card:has(.bg-opened-gradient) .ui-media-footer span:first-child::after {
+  content: "[ ERLEDIGT ]";
+  color: #9E5A5A !important;
+  opacity: 0.9;
+}
+
+/* 已收款金额弱化 */
+.chat-transfer-card:has(.bg-opened-gradient) .chat-transfer-body .ts-24 {
+  color: #4B5563 !important;
+}
+
+/* ==================== 引用条（输入框上方） ==================== */
+
+/* 引用条基础样式 */
+.chat-quote-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 24px;
+  padding: 6px 8px 6px 12px;
+  background-color: #F3F4F6;
+  border-radius: 10px;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* 引用条左侧竖条 */
+.chat-quote-bar::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  margin-right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 90%;
+  width: 4px;
+  background-color: #C2C2C2;
+  border-radius: 2px;
+}
+
+/* 引用条文字 */
+.chat-quote-bar .flex-1 {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #4B5563;
+}
+
+/* 引用条关闭按钮 */
+.chat-quote-bar button {
+  font-size: 8px !important;
+  line-height: 1;
+  padding: 2px;
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+/* ==================== 特殊菜单（无分组横向） ==================== */
+
+/* 特殊菜单容器 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex)) {
+  flex-direction: row !important;
+  width: auto !important;
+  min-width: auto !important;
+  padding: 5px 8px !important;
+  align-items: stretch;
+  gap: 0 !important;
+  overflow: hidden;
+}
+
+/* 特殊菜单按钮 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex)) .ctx-menu-btn {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  padding: 6px 12px !important;
+  justify-content: center !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+}
+
+/* 特殊菜单第一个按钮去分割线 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex)) .ctx-menu-btn:first-child {
+  border-left: none !important;
+}
+
+/* 隐藏特殊菜单图标占位 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex)) .ctx-menu-btn::before {
+  display: none !important;
+}
+
+/* 特殊菜单右侧装饰按钮 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex))::after {
+  content: "";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 36px;
+  border-left: 1px solid rgba(0, 0, 0, 0.12) !important;
+  cursor: default;
+  background-color: #9CA3AF;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>') center / 16px 16px no-repeat;
+  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>') center / 16px 16px no-repeat;
+}
+
+/* ==================== 返回线上模式按钮 ==================== */
+
+/* 按钮容器 */
+.chat-input-bar .chat-input-actions button[aria-label="返回线上模式"],
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M21 15a4"]) {
+  margin-right: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  position: relative !important;
+  padding: 0 !important;
+  width: auto !important;
+  height: 26px !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* 隐藏原始气泡路径 */
+.chat-input-bar .chat-input-actions button[aria-label="返回线上模式"] svg path,
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M21 15a4"]) svg path {
+  display: none !important;
+}
+
+/* 第一个头像 */
+.chat-input-bar .chat-input-actions button[aria-label="返回线上模式"]::before,
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M21 15a4"])::before {
+  content: "";
+  display: inline-block;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  background: var(--avatar-online-1) no-repeat center center / cover !important;
+  border: 1px solid #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+/* 第二个头像 */
+.chat-input-bar .chat-input-actions button[aria-label="返回线上模式"] svg,
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M21 15a4"]) svg {
+  display: block !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  background: var(--avatar-online-2) no-repeat center center / cover !important;
+  border: 1px solid #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-left: -8px !important;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+}
+
+/* 第三个圆形（+3） */
+.chat-input-bar .chat-input-actions button[aria-label="返回线上模式"]::after,
+.chat-input-bar .chat-input-actions .ui-bare-btn:has(svg path[d^="M21 15a4"])::after {
+  content: "+3";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  background-color: #FFFFFF !important;
+  color: #4B5563 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  border: 1px solid #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-left: -8px !important;
+  position: relative;
+  z-index: 3;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* 双语消息气泡 */
+.chat-bilingual-block {
+  position: relative;
+}
+
+/* 将切换按钮变为透明覆盖层，点击文本即触发 */
+.chat-bilingual-toggle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font-size: 0;          /* 隐藏原有文字 */
+}
+
+/* 翻译文本样式 */
+.chat-bilingual-section-translation .chat-markdown-paragraph {
+  font-style: normal !important;
+  font-size: 15px !important;
+}
+
+.page-header {
+  position: relative;   /* 确保有定位上下文 */
+  overflow: visible;    /* 防止被裁剪 */
+}
+
+.chat-typing-indicator {
+  position: fixed;
+  top: 120px;                  /* 根据顶部栏实际高度调整 */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  white-space: nowrap;
+}
+
+/* 1. 网格布局：头像在左，右侧为昵称与副标题上下列 */
+.chat-offline-entry {
+  display: grid !important;
+  grid-template-columns: auto 1fr !important;
+  align-items: center !important;
+  row-gap: 10px !important;
+  column-gap: 10px !important;
+}
+
+/* 2. 头像保持大尺寸（36px）并垂直居中 */
+.chat-offline-avatar {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.chat-offline-avatar img,
+.chat-offline-avatar svg {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* 3. 昵称容器：上下排列，隐藏所有背景 */
+.chat-offline-label-row,
+.chat-offline-entry[data-role="user"] .chat-offline-label {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* 4. 主昵称字体大小 16px */
+.chat-offline-label {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* 5. 用户下方 */
+.chat-offline-entry[data-role="user"] .chat-offline-label::after {
+  content: var(--offline-user-handle);
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #9CA3AF !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* 6. 角色端下方 */
+.chat-offline-entry[data-role="assistant"] .chat-offline-label-row::after {
+  content: "Replying to \00a0@你";
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+  color: transparent !important;
+  background: linear-gradient(
+    to right,
+    #9CA3AF 0,
+    #9CA3AF calc(100% - 2.4em),
+    #8FB2C8 calc(100% - 2.4em),
+    #8FB2C8 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+/* 7. 思考过程按钮：隐藏时钟图标、14px、单行居左无边框底色 */
+.chat-reasoning-trigger {
+  grid-column: 1 / span 2 !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 4px 0 !important;
+  box-sizing: border-box !important;
+  Antigravity: pointer !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  outline: none !important;
+}
+
+/* 隐藏时钟 SVG 图标 */
+.chat-reasoning-trigger svg.lucide-clock,
+.chat-reasoning-trigger .lucide-clock {
+  display: none !important;
+}
+
+/* 保留右侧箭头或通用图标样式 */
+.chat-reasoning-trigger-icon:not(.lucide-clock) {
+  flex-shrink: 0 !important;
+  width: 15px !important;
+  height: 15px !important;
+  color: #9CA3AF !important;
+}
+
+.chat-reasoning-trigger-text {
+  flex: 1 !important;
+  min-width: 0 !important;
+  font-size: 15px !important;
+  line-height: 1.4 !important;
+  color: #9CA3AF !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  text-align: left !important;
+}
+
+/* 8. 正文通栏展示 */
+.chat-offline-text {
+  grid-column: 1 / span 2 !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+/* 9. 摘要组件：去背景、上方细分割线、通栏 */
+.chat-offline-summary-fold {
+  grid-column: 1 / span 2 !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  padding-top: 8px !important;
+  margin-top: 6px !important;
+  box-shadow: none !important;
+}
+
+.chat-offline-summary-fold summary {
+  background: transparent !important;
+  color: #9CA3AF !important;
+  font-size: 16px !important;
+  list-style: none !important;
+  list-style-type: none !important;
+  Antigravity: pointer !important;
+  user-select: none !important;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.chat-offline-summary-fold summary::-webkit-details-marker,
+.chat-offline-summary-fold summary::marker,
+.chat-offline-summary-fold summary::before,
+.chat-offline-summary-fold summary::after,
+.chat-offline-summary-fold summary svg,
+.chat-offline-summary-fold summary [class*="icon"],
+.chat-offline-summary-fold summary [class*="chevron"],
+.chat-offline-summary-fold summary [class*="arrow"] {
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.chat-offline-summary-content {
+  background: transparent !important;
+  padding: 6px 0 0 0 !important;
+}
+
+/* 10. 说话文本浅色背景 */
+.chat-offline-body q,
+.chat-offline-paragraph q {
+  display: inline !important;
+  background-color: rgba(125, 125, 125, 0.12) !important;
+  padding: 2px 6px !important;
+  margin: 0 2px !important;
+  border-radius: 4px !important;
+}
