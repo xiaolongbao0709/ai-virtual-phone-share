@@ -1544,7 +1544,7 @@ span.chat-sys-msg {
 .chat-offline-summary-fold summary {
   background: transparent !important;
   color: #9CA3AF !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   list-style: none !important;
   list-style-type: none !important;
   Antigravity: pointer !important;
@@ -1574,12 +1574,20 @@ span.chat-sys-msg {
   padding: 6px 0 0 0 !important;
 }
 
-/* 10. 说话文本浅色背景 */
+/* 说话文本 */
 .chat-offline-body q,
 .chat-offline-paragraph q {
   display: inline !important;
-  background-color: rgba(125, 125, 125, 0.12) !important;
-  padding: 2px 6px !important;
-  margin: 0 2px !important;
-  border-radius: 4px !important;
+  font-weight: 600 !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* 双方正文非说话文本 */
+.chat-offline-entry .chat-offline-text,
+.chat-offline-paragraph,
+.chat-markdown-paragraph {
+  font-size: 17px !important;
+  font-weight: 400 !important;
 }
