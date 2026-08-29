@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-29T14:52:07.960Z",
+  "generatedAt": "2026-08-29T17:56:27.990Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -53,7 +53,7 @@
     },
     {
       "name": "游戏",
-      "count": 7
+      "count": 8
     },
     {
       "name": "特调材料",
@@ -2384,6 +2384,20 @@
       "avatar": "资源/消息列表美化/仿ins主页/.avatar.png",
       "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
       "updatedAt": "2026-08-17T19:42:39+08:00"
+    },
+    {
+      "folder": "游戏",
+      "name": "[花]狼人杀",
+      "dirName": "[花]狼人杀",
+      "type": "dir",
+      "path": "资源/游戏/[花]狼人杀",
+      "files": [],
+      "images": [],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "b5df577df5ea8dbd6ff4a7d8da3ced66c76bf6d59a016c03e47047f7f9099b50",
+      "updatedAt": "2026-08-30T01:56:03+08:00"
     },
     {
       "folder": "游戏",
