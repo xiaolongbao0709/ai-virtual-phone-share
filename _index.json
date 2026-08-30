@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T16:49:56.398Z",
+  "generatedAt": "2026-08-30T16:54:01.002Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -2170,7 +2170,7 @@
     },
     {
       "folder": "应用",
-      "name": "自习室",
+      "name": "[音符]自习室",
       "dirName": "自习室",
       "type": "dir",
       "path": "资源/应用/自习室",
@@ -2182,7 +2182,7 @@
       "author": "那一天",
       "avatar": "",
       "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
-      "updatedAt": "2026-08-31T00:17:33+08:00"
+      "updatedAt": "2026-08-31T00:53:34+08:00"
     },
     {
       "folder": "应用",
