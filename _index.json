@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-29T23:50:38.719Z",
+  "generatedAt": "2026-08-30T01:37:30.303Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 27
+      "count": 28
     },
     {
       "name": "线上聊天状态栏",
@@ -2853,6 +2853,25 @@
       "avatar": "资源/线上美化/奶蓝芝士[星星]/.avatar.png",
       "ownerHash": "bf65bc1c732341505dc056c65d6ad17b6862e2c1f0cdf99f70af36a873b438aa",
       "updatedAt": "2026-08-19T18:00:12+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "新艺术风",
+      "dirName": "新艺术风",
+      "type": "dir",
+      "path": "资源/线上美化/新艺术风",
+      "files": [
+        "资源/线上美化/新艺术风/新艺术风.txt"
+      ],
+      "images": [
+        "资源/线上美化/新艺术风/Collage_20260830_093257.jpg",
+        "资源/线上美化/新艺术风/Collage_20260830_093311.jpg"
+      ],
+      "description": "用DeepSeek写的，支持2改2传",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "744a240a9e75b6e391e9c765bf223c2b145a918023a693736b053f6ab2b9a321",
+      "updatedAt": "2026-08-30T09:37:05+08:00"
     },
     {
       "folder": "线上美化",
