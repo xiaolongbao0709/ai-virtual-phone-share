@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T10:10:30.673Z",
+  "generatedAt": "2026-08-30T10:11:05.478Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1954,7 +1954,6 @@
       "type": "dir",
       "path": "资源/应用/景匣",
       "files": [
-        "资源/应用/景匣/IMG_7281.asset.jpeg",
         "资源/应用/景匣/景匣_一景多页_2.5.0.zip"
       ],
       "images": [
@@ -1965,7 +1964,7 @@
       "author": "yzy",
       "avatar": "资源/应用/景匣/.avatar.png",
       "ownerHash": "c84f1904fa7b68c212c91bc5fda2055472af121e6c8f64740a348e1eb138a112",
-      "updatedAt": "2026-08-30T18:10:01+08:00"
+      "updatedAt": "2026-08-30T18:10:37+08:00"
     },
     {
       "folder": "应用",
