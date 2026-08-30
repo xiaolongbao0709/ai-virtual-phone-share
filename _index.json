@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T14:20:07.316Z",
+  "generatedAt": "2026-08-30T14:21:12.727Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -65,7 +65,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 11
+      "count": 12
     },
     {
       "name": "线下正则",
@@ -3343,6 +3343,26 @@
       "avatar": "",
       "ownerHash": "0ffce5bd289863ee9a5da25317d422cc3b3ebe42a4b3a0fa8e44b0b9443fc92b",
       "updatedAt": "2026-08-26T15:56:18+08:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "仿X主页",
+      "dirName": "仿X主页",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/仿X主页",
+      "files": [
+        "资源/线上聊天状态栏/仿X主页/仿推特主页状态栏by白咪饭.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/仿X主页/IMG_1867.png",
+        "资源/线上聊天状态栏/仿X主页/IMG_1868.png",
+        "资源/线上聊天状态栏/仿X主页/IMG_1869.png"
+      ],
+      "description": "跟小助手做的，点击头像有心声\n在输出契约✅后面可以改头像跟背景图",
+      "author": "白咪饭",
+      "avatar": "",
+      "ownerHash": "2df22f4332d991025ff8bdc44bfd1e60b11f54cdf952e93af836e1418b0ad7a1",
+      "updatedAt": "2026-08-30T22:20:44+08:00"
     },
     {
       "folder": "线上聊天状态栏",
