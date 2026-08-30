@@ -74,7 +74,7 @@ export default {
         id: "avatar-frame",
         name: "头像框",
         apiVersion: 1,
-        version: "1.0.0",
+        version: "1.0.2",
         description: "头像框美化。支持自定义上传素材、缩放与位移微调（每个框独立记忆）、按单个聊天单独设置、对方与我分别配置。",
         permissions: ["ui", "storage"],
     },
@@ -286,44 +286,56 @@ html[data-avframe="1"] .chat-msg-avatar > img {
             } catch (e) { ctx.system.log("聊天快照失败", e); }
         }
 
-        /** 取某个作用范围的快照：优先该会话自己的，其次最近一次进过的聊天室 */
-        const snapshotFor = (scope) =>
-            ctx.system.storage.get(SNAP_PREFIX + scope)
-            || ctx.system.storage.get(SNAP_PREFIX + "last")
-            || null;
+        const snapOf = (k) => ctx.system.storage.get(SNAP_PREFIX + k) || null;
 
-        /** 预览素材：优先该会话快照，其次插件 API，最后退化成示例 */
+        /**
+         * 预览素材。分两种情况：
+         *  · 该会话进过聊天室 → 用它自己的快照，文字/头像/配色全都是真的；
+         *  · 没进过 → 文字与头像改从插件 API 取「该会话」的真实数据，
+         *    只有配色借用最近一次进过的聊天室（会话级 customCSS 只在聊天室挂载时存在，
+         *    设置页读不到，没法凭空还原）。
+         * 之前这里回退时连文字头像一起借用，导致切换作用范围看起来毫无变化。
+         */
         function sampleChat(scope) {
-            const snap = snapshotFor(scope);
-            let aText = (snap && snap.aText) || "";
-            let uText = (snap && snap.uText) || "";
-            let aAvatar = (snap && snap.aAvatar) || "";
-            let uAvatar = (snap && snap.uAvatar) || "";
-            if (!aText || !uText || !aAvatar) {
-                try {
-                    for (const sess of ctx.data.sessions.list()) {
-                        const msgs = ctx.data.messages.list(sess.id).filter(
-                            (m) => m && typeof m.content === "string" && m.content.trim() && !m.mediaType);
-                        const lastA = [...msgs].reverse().find((m) => m.role === "assistant");
-                        const lastU = [...msgs].reverse().find((m) => m.role === "user");
-                        if (!lastA && !lastU) continue;
-                        if (!aText && lastA) aText = lastA.content;
-                        if (!uText && lastU) uText = lastU.content;
-                        if (!aAvatar && sess.contactId) {
-                            const c = ctx.data.characters.get(sess.contactId);
-                            if (c && c.avatar) aAvatar = c.avatar;
-                        }
-                        break;
-                    }
-                } catch (e) { ctx.system.log("预览取数失败", e); }
+            const exact = scope !== GLOBAL ? snapOf(scope) : null;
+            const last = snapOf("last");
+            if (exact) {
+                return {
+                    aText: exact.aText || "刚忙完，怎么了？",
+                    uText: exact.uText || "在吗",
+                    aAvatar: exact.aAvatar || PLACEHOLDER,
+                    uAvatar: exact.uAvatar || PLACEHOLDER,
+                    theme: exact.theme || null,
+                    borrowedTheme: false,
+                };
             }
+            let aText = "", uText = "", aAvatar = "";
+            try {
+                const sessions = ctx.data.sessions.list();
+                const sess = scope !== GLOBAL
+                    ? sessions.find((x) => x.id === scope)
+                    : sessions[0];
+                if (sess) {
+                    const msgs = ctx.data.messages.list(sess.id).filter(
+                        (m) => m && typeof m.content === "string" && m.content.trim() && !m.mediaType);
+                    const lastA = [...msgs].reverse().find((m) => m.role === "assistant");
+                    const lastU = [...msgs].reverse().find((m) => m.role === "user");
+                    if (lastA) aText = lastA.content;
+                    if (lastU) uText = lastU.content;
+                    // session.contactId 存的其实是 characterId
+                    const c = ctx.data.characters.get(sess.contactId);
+                    if (c && c.avatar) aAvatar = c.avatar;
+                }
+            } catch (e) { ctx.system.log("预览取数失败", e); }
             const clip = (t) => (t.length > 24 ? t.slice(0, 24) + "…" : t);
             return {
                 aText: clip(aText || "刚忙完，怎么了？"),
                 uText: clip(uText || "在吗"),
                 aAvatar: aAvatar || PLACEHOLDER,
-                uAvatar: uAvatar || PLACEHOLDER,
-                theme: (snap && snap.theme) || null,
+                // 「我」的头像与会话无关，任意快照里的都能用
+                uAvatar: (last && last.uAvatar) || ctx.system.storage.get("avatarUser") || PLACEHOLDER,
+                theme: (last && last.theme) || null,
+                borrowedTheme: !!(last && last.theme),
             };
         }
 
@@ -428,6 +440,9 @@ html[data-avframe="1"] .chat-msg-avatar > img {
                 scopeSel.addEventListener("change", () => {
                     curScope = scopeSel.value;
                     chat = sampleChat(curScope);
+                    // 头像也要跟着换——stage 是复用的，不改 src 的话会一直显示上一个会话的人
+                    A.img.src = chat.aAvatar;
+                    U.img.src = chat.uAvatar;
                     // 必须回写变量：replaceWith 之后原变量仍指向已脱离文档的旧节点，
                     // 后面 paintPreview 拿它做高亮会失效。
                     const nA = makeRow("assistant", chat.aText, A.stage);
@@ -501,7 +516,7 @@ html[data-avframe="1"] .chat-msg-avatar > img {
                         + "background-size:contain;background-repeat:no-repeat;background-position:center;pointer-events:none");
                     stage.append(img, layer);
                     bindDrag(stage, role);
-                    return { stage, layer };
+                    return { stage, layer, img };
                 }
                 // 用宿主真实的 class 搭预览，样式由 styles/chat.css 提供，
                 // 跟聊天室里长得一样；utility 类照抄 chat-room.tsx:6027 的写法。
@@ -532,7 +547,9 @@ html[data-avframe="1"] .chat-msg-avatar > img {
                 let rowU = makeRow("user", chat.uText, U.stage);
                 const readout = el("div",
                     "font:11px/1.6 ui-monospace,SFMono-Regular,monospace;color:var(--c-text,#797e85);text-align:center");
-                previewCard.append(rowA, rowU, readout);
+                const themeNote = el("div",
+                    "font-size:10px;color:var(--c-icon,#a0a3a8);text-align:center");
+                previewCard.append(rowA, rowU, readout, themeNote);
 
                 // ── 滑块 ──
                 function slider(label, key, min, max, step) {
@@ -738,6 +755,9 @@ html[data-avframe="1"] .chat-msg-avatar > img {
                     if (chat.theme) {
                         Object.entries(chat.theme).forEach(([k, v]) => previewCard.style.setProperty(k, v));
                     }
+                    themeNote.textContent = chat.borrowedTheme
+                        ? "该聊天还没进过，配色沿用最近一次；进一次聊天室后就会用它自己的"
+                        : "";
                 }
 
                 function paintPreview() {
