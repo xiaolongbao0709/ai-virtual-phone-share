@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T02:45:34.919Z",
+  "generatedAt": "2026-08-30T02:52:13.728Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -17,7 +17,7 @@
     },
     {
       "name": "全局主题",
-      "count": 2
+      "count": 3
     },
     {
       "name": "剧情预设及正则",
@@ -983,6 +983,22 @@
       "avatar": "",
       "ownerHash": "88f102e0ef217cea73fe5b268e0c11999ebe72de7ee6c86765148d0313569196",
       "updatedAt": "2026-08-20T22:26:34+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "˚₊· 雾屿旧序 ·͙⋆",
+      "dirName": "˚₊· 雾屿旧序 ·͙⋆",
+      "type": "dir",
+      "path": "资源/全局主题/˚₊· 雾屿旧序 ·͙⋆",
+      "files": [
+        "资源/全局主题/˚₊· 雾屿旧序 ·͙⋆/float˚₊· 雾屿旧序 ·͙⋆ .zip"
+      ],
+      "images": [],
+      "description": "谢谢喜欢，可二改",
+      "author": "毛血旺",
+      "avatar": "",
+      "ownerHash": "236ecc192be0d623afb290c5cc467a13575a1a2edd0456b3c04869f0825cefab",
+      "updatedAt": "2026-08-29T09:19:12+08:00"
     },
     {
       "folder": "剧情预设及正则",
