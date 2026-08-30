@@ -1,0 +1,314 @@
+<style>
+/* 临境 · 深夜模式 */
+:root {
+  --night-bg: #000000;
+  --night-panel: #111113;
+  --night-panel-2: #1a1a1d;
+  --night-soft: #242428;
+  --night-line: rgba(255, 255, 255, 0.10);
+  --night-line-strong: rgba(255, 255, 255, 0.17);
+  --night-text: #f2f2f4;
+  --night-subtext: #a1a1a8;
+  --night-muted: #696970;
+}
+
+/* 页面 */
+html,
+body,
+.main {
+  background: var(--night-bg) !important;
+  color: var(--night-text) !important;
+  color-scheme: dark !important;
+}
+
+.main {
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(255, 255, 255, 0.055),
+      transparent 280px
+    ),
+    #000000 !important;
+}
+
+/* 顶栏 */
+.topbar {
+  background: rgba(0, 0, 0, 0.88) !important;
+  border-bottom: 1px solid var(--night-line) !important;
+  backdrop-filter: blur(18px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(130%) !important;
+}
+
+.topbar-title {
+  color: var(--night-text) !important;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "PingFang SC",
+    sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+}
+
+.icon-button {
+  color: var(--night-text) !important;
+  background: var(--night-panel-2) !important;
+  border: 1px solid var(--night-line) !important;
+  border-radius: 50% !important;
+}
+
+.icon-button:active {
+  background: var(--night-soft) !important;
+  transform: scale(0.94);
+}
+
+.icon-button svg,
+.topbar svg {
+  color: var(--night-text) !important;
+  stroke: currentColor !important;
+}
+
+/* 当前目录信息 */
+.scene-strip {
+  margin: 8px 14px 4px !important;
+  padding: 10px 13px !important;
+  color: var(--night-subtext) !important;
+  background: var(--night-panel) !important;
+  border: 1px solid var(--night-line) !important;
+  border-radius: 15px !important;
+  box-shadow: none !important;
+}
+
+.scene-kind {
+  padding: 4px 9px !important;
+  color: #d8d8dc !important;
+  background: var(--night-soft) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+
+/* 互动记录 */
+.timeline {
+  padding: 16px 15px 38px !important;
+  background: transparent !important;
+  scrollbar-color: #343439 transparent;
+}
+
+.timeline::-webkit-scrollbar {
+  width: 3px;
+}
+
+.timeline::-webkit-scrollbar-thumb {
+  background: #343439;
+  border-radius: 99px;
+}
+
+.empty-scene {
+  color: var(--night-subtext) !important;
+  background: var(--night-panel) !important;
+  border: 1px solid var(--night-line) !important;
+  border-radius: 22px !important;
+  box-shadow: none !important;
+}
+
+/* 用户消息 */
+.user-turn {
+  max-width: 86% !important;
+  margin-left: auto !important;
+  padding: 12px 15px 13px !important;
+  color: #ffffff !important;
+  background: #29292d !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 20px 20px 6px 20px !important;
+  box-shadow: none !important;
+}
+
+.user-turn .turn-head {
+  color: #98989f !important;
+}
+
+/* 角色回复 */
+.assistant-turn {
+  padding: 17px 16px 9px !important;
+  color: var(--night-text) !important;
+  background: var(--night-panel) !important;
+  border: 1px solid var(--night-line) !important;
+  border-radius: 22px !important;
+  box-shadow: none !important;
+}
+
+.assistant-turn .turn-content {
+  color: #e8e8eb !important;
+  font-family:
+    "Songti SC",
+    "STSong",
+    Georgia,
+    serif !important;
+  font-size: 15px !important;
+  line-height: 2.05 !important;
+  letter-spacing: 0.012em !important;
+}
+
+.assistant-turn .turn-content p {
+  margin: 0 0 1.12em !important;
+}
+
+.assistant-turn .turn-content p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 消息头部 */
+.turn-head {
+  color: var(--night-muted) !important;
+}
+
+.turn-author {
+  color: #c9c9ce !important;
+  font-weight: 550 !important;
+}
+
+.turn-menu {
+  color: var(--night-subtext) !important;
+  background: transparent !important;
+  border-radius: 50% !important;
+}
+
+.turn-menu:active {
+  background: var(--night-soft) !important;
+}
+
+/* 生成状态 */
+.waiting-turn {
+  padding: 14px 15px !important;
+  color: var(--night-subtext) !important;
+  background: var(--night-panel) !important;
+  border: 1px dashed var(--night-line-strong) !important;
+  border-radius: 19px !important;
+}
+
+.waiting-dots i {
+  width: 4px !important;
+  height: 4px !important;
+  background: #b2b2b8 !important;
+}
+
+.waiting-stop {
+  color: #d1d1d5 !important;
+  background: var(--night-soft) !important;
+  border: 0 !important;
+  border-radius: 11px !important;
+}
+
+.generation-state {
+  color: var(--night-subtext) !important;
+  background: var(--night-panel-2) !important;
+  border-radius: 999px !important;
+}
+
+.generation-notice {
+  color: var(--night-subtext) !important;
+  background: var(--night-panel) !important;
+  border: 1px solid var(--night-line) !important;
+  border-radius: 17px !important;
+}
+
+/* 输入栏 */
+.composer {
+  margin: 0 11px 9px !important;
+  padding: 7px 7px calc(7px + var(--safe-bottom)) !important;
+  background: rgba(18, 18, 20, 0.96) !important;
+  border: 1px solid var(--night-line-strong) !important;
+  border-radius: 25px !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.46) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+.composer-box {
+  background: transparent !important;
+}
+
+.composer textarea {
+  color: var(--night-text) !important;
+  background: transparent !important;
+  caret-color: #ffffff !important;
+  padding-left: 12px !important;
+}
+
+.composer textarea::placeholder {
+  color: #696970 !important;
+}
+
+.send-button {
+  color: #111113 !important;
+  background: #f2f2f4 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  box-shadow: none !important;
+}
+
+.send-button svg {
+  color: #111113 !important;
+  stroke: currentColor !important;
+}
+
+.send-button:active {
+  background: #d8d8dc !important;
+  transform: scale(0.93);
+}
+
+.send-button:disabled {
+  color: #66666c !important;
+  background: #29292d !important;
+  opacity: 1 !important;
+}
+
+/* 常见弹窗与菜单 */
+.modal,
+.dialog,
+.sheet,
+.popover,
+.context-menu {
+  color: var(--night-text) !important;
+  background: #171719 !important;
+  border: 1px solid var(--night-line-strong) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.68) !important;
+}
+
+.modal-backdrop,
+.overlay {
+  background: rgba(0, 0, 0, 0.68) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+input,
+textarea,
+select {
+  color: var(--night-text) !important;
+  background: var(--night-panel-2) !important;
+  border-color: var(--night-line-strong) !important;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 顶部夜间标记 */
+.limen-night-mark {
+  margin: 0 17px 1px;
+  color: #525258;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-align: right;
+  user-select: none;
+}
+</style>
+
+<div class="limen-night-mark">AFTER DARK</div>
