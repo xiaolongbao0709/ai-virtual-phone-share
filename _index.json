@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T03:10:37.308Z",
+  "generatedAt": "2026-08-30T03:28:42.908Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 56
+      "count": 57
     },
     {
       "name": "应用bug改善",
@@ -2094,6 +2094,22 @@
       "avatar": "",
       "ownerHash": "d2ca8f7dfcde423b0c70bbf439302b75e0c7030422d18da3a5c1ba930f9f7e83",
       "updatedAt": "2026-08-29T16:13:43+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "让ta来填填问卷吧~[蝴蝶结]",
+      "dirName": "让ta来填填问卷吧~[蝴蝶结]",
+      "type": "dir",
+      "path": "资源/应用/让ta来填填问卷吧~[蝴蝶结]",
+      "files": [
+        "资源/应用/让ta来填填问卷吧~[蝴蝶结]/app.questionnaire.workshop-1.3.0.zip"
+      ],
+      "images": [],
+      "description": "[星星]和ta一起填问卷，看看ta的回应吧(*^ω^*)\n单人模式就是让ta自己填，双人模式就是和ta一起填，你填完之后，最底端会出现一个按钮，点击之后就可以生成ta的反应了。\n点击填问卷的页面，划到最下面，一键生成ta的回应。\n完成之后可以选择转发到聊天室，这样就能记入他的记忆了。也可以单纯的收藏(不计入记忆)，删除或者重新生成。\n\n\nbug的xhs反馈:42927243163",
+      "author": "南柯",
+      "avatar": "资源/应用/让ta来填填问卷吧~[蝴蝶结]/.avatar.png",
+      "ownerHash": "cdec925f9e2d6a79f64c584d0e0286f334fd96c5312717c1b5659b9dc42955d3",
+      "updatedAt": "2026-08-30T11:28:18+08:00"
     },
     {
       "folder": "应用",
