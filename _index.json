@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T03:09:04.350Z",
+  "generatedAt": "2026-08-30T03:10:37.308Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -283,7 +283,6 @@
       "type": "dir",
       "path": "资源/Js插件/导出聊天中的语音",
       "files": [
-        "资源/Js插件/导出聊天中的语音/ad2f6924b45e480a89295acf5593c7e5.mjs",
         "资源/Js插件/导出聊天中的语音/语音导出.mjs"
       ],
       "images": [],
@@ -291,7 +290,7 @@
       "author": "鱼头柿饼",
       "avatar": "",
       "ownerHash": "ccaecc009bf4a4f670f01f93005ebb7e60c8d958fe2449025a41e1609ae3e4cd",
-      "updatedAt": "2026-08-30T11:08:42+08:00"
+      "updatedAt": "2026-08-30T11:10:14+08:00"
     },
     {
       "folder": "Js插件",
