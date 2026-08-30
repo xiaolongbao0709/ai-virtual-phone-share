@@ -1,0 +1,26 @@
+{
+  "name": "去油腻称呼",
+  "description": "",
+  "rules": [
+    {
+      "id": "rule_1788067577410_15wb",
+      "scriptName": "替换油腻称呼为用户名",
+      "findRegex": "/丫头|家伙|女人|小子|祖宗|妖精|小财迷|小骗子|小傻瓜|小没良心的|小笨蛋|小馋猫|小可爱/g",
+      "replaceString": "{{user}}",
+      "tags": [
+        "chat",
+        "text"
+      ],
+      "disabled": false,
+      "placement": [
+        2
+      ],
+      "markdownOnly": false,
+      "promptOnly": false,
+      "historyOnly": false,
+      "substituteRegex": 2,
+      "runOnEdit": false,
+      "trimStrings": []
+    }
+  ]
+}
