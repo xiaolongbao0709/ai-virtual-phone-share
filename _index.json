@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T01:37:30.303Z",
+  "generatedAt": "2026-08-30T02:45:34.919Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 27
+      "count": 28
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -275,6 +275,22 @@
       "avatar": "资源/Js插件/多选发图/.avatar.png",
       "ownerHash": "ff57dccf982a00ed402e4dcdeb333036bb0a95391ca1f65879d78a5f731a08be",
       "updatedAt": "2026-08-22T19:53:13+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "导出聊天中的语音",
+      "dirName": "导出聊天中的语音",
+      "type": "dir",
+      "path": "资源/Js插件/导出聊天中的语音",
+      "files": [
+        "资源/Js插件/导出聊天中的语音/ad2f6924b45e480a89295acf5593c7e5.mjs"
+      ],
+      "images": [],
+      "description": "因为有些语音真的太好听了，想要导出来好好回味，就让豆包写了这个，很简陋，可以随意使用",
+      "author": "鱼头柿饼",
+      "avatar": "",
+      "ownerHash": "ccaecc009bf4a4f670f01f93005ebb7e60c8d958fe2449025a41e1609ae3e4cd",
+      "updatedAt": "2026-08-30T10:45:07+08:00"
     },
     {
       "folder": "Js插件",
