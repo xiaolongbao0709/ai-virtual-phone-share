@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T19:31:33.376Z",
+  "generatedAt": "2026-08-30T20:23:08.224Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 29
+      "count": 30
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -170,6 +170,22 @@
       "avatar": "",
       "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
       "updatedAt": "2026-08-30T04:49:11+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "docx或者TXT文档导入",
+      "dirName": "docx或者TXT文档导入",
+      "type": "dir",
+      "path": "资源/Js插件/docx或者TXT文档导入",
+      "files": [
+        "资源/Js插件/docx或者TXT文档导入/float插件导入docx或者TXT文档悬浮球.js"
+      ],
+      "images": [],
+      "description": "开启之后在手机边缘会有一个自动吸附的悬浮球灰条，点击输入栏(只要能输入文字的任何输入栏)再点击悬浮球就能够导入",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "3967d5a76a764e87279d7c473db3bfd56975b7c9e64323f3cdfa9de1f773ddad",
+      "updatedAt": "2026-08-31T04:22:42+08:00"
     },
     {
       "folder": "Js插件",
