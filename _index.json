@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-30T05:13:57.015Z",
+  "generatedAt": "2026-08-30T06:29:47.715Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -21,7 +21,7 @@
     },
     {
       "name": "剧情预设及正则",
-      "count": 2
+      "count": 3
     },
     {
       "name": "小剧场",
@@ -1022,6 +1022,22 @@
       "avatar": "资源/剧情预设及正则/[幽灵]简约黑白剧情模式预设及正则[蘑菇]/.avatar.png",
       "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
       "updatedAt": "2026-08-14T05:31:10+08:00"
+    },
+    {
+      "folder": "剧情预设及正则",
+      "name": "去聊天油腻称呼",
+      "dirName": "去聊天油腻称呼",
+      "type": "dir",
+      "path": "资源/剧情预设及正则/去聊天油腻称呼",
+      "files": [
+        "资源/剧情预设及正则/去聊天油腻称呼/去油腻称呼.json"
+      ],
+      "images": [],
+      "description": "不是很多，但把经常出现的给换成user名字了",
+      "author": "鱼头柿饼",
+      "avatar": "",
+      "ownerHash": "ccaecc009bf4a4f670f01f93005ebb7e60c8d958fe2449025a41e1609ae3e4cd",
+      "updatedAt": "2026-08-30T14:29:21+08:00"
     },
     {
       "folder": "剧情预设及正则",
