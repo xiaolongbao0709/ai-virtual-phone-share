@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T11:18:19.168Z",
+  "generatedAt": "2026-08-31T11:26:55.669Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1360,8 +1360,6 @@
         "资源/应用/[太阳]课程表/schedule.app-1.0.0 (1).zip"
       ],
       "images": [
-        "资源/应用/[太阳]课程表/Screenshot_20260831_182938.jpg",
-        "资源/应用/[太阳]课程表/Screenshot_20260831_182947_com.microsoft.emmx.jpg",
         "资源/应用/[太阳]课程表/Screenshot_20260831_183035.jpg",
         "资源/应用/[太阳]课程表/Screenshot_20260831_190217.jpg"
       ],
@@ -1369,7 +1367,7 @@
       "author": "那一天",
       "avatar": "",
       "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
-      "updatedAt": "2026-08-31T19:17:47+08:00"
+      "updatedAt": "2026-08-31T19:26:29+08:00"
     },
     {
       "folder": "应用",
