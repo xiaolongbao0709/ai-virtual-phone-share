@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T17:21:02.831Z",
+  "generatedAt": "2026-08-31T17:21:59.337Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -2762,12 +2762,14 @@
       "files": [
         "资源/游戏/偷喝奶茶[笑脸]/偷喝奶茶.json"
       ],
-      "images": [],
+      "images": [
+        "资源/游戏/偷喝奶茶[笑脸]/IMG_3331.jpeg"
+      ],
       "description": "一款偷喝char奶茶的小游戏！\n有三种难度可以选。被ta发现/喝得太急会失败",
       "author": "空想纪行",
       "avatar": "",
       "ownerHash": "e0072eb568bfbfcd8c14e306b8d125f8733ad9fe2d5f00a94139b052bee4c4f9",
-      "updatedAt": "2026-08-31T21:19:47+08:00"
+      "updatedAt": "2026-09-01T01:21:26+08:00"
     },
     {
       "folder": "游戏",
