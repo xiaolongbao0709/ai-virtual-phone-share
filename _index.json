@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T14:51:31.700Z",
+  "generatedAt": "2026-08-31T14:56:21.455Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 29
+      "count": 30
     },
     {
       "name": "线上聊天状态栏",
@@ -3348,6 +3348,20 @@
       "avatar": "资源/线上美化/线上美化/.avatar.png",
       "ownerHash": "bf65bc1c732341505dc056c65d6ad17b6862e2c1f0cdf99f70af36a873b438aa",
       "updatedAt": "2026-08-13T15:54:02+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "苹果果方全套字体",
+      "dirName": "苹果果方全套字体",
+      "type": "dir",
+      "path": "资源/线上美化/苹果果方全套字体",
+      "files": [],
+      "images": [],
+      "description": "下载到本地，解压，选择自己想要的那个，一般用准这个型号就可以，可恶啊文件太大了只能云盘了\n【超级会员V6】通过百度网盘分享的文件：苹果果方全套字体\n链接：https://pan.baidu.com/s/1j0gwU1cqNvpBf6jYpt8x1A?pwd=2223 \n复制这段内容打开「百度网盘APP 即可获取」",
+      "author": "sansan12306",
+      "avatar": "",
+      "ownerHash": "bfd242983a24e61048a1cd7085da78d2b8f6721110629b794d9262aba0f32286",
+      "updatedAt": "2026-08-31T22:55:53+08:00"
     },
     {
       "folder": "线上美化",
