@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T05:51:47.589Z",
+  "generatedAt": "2026-08-31T06:14:59.771Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3074,12 +3074,10 @@
       "type": "dir",
       "path": "资源/线上美化/复古QQ六色by小池",
       "files": [
-        "资源/线上美化/复古QQ六色by小池/【float】QQ复古蓝by小池.pages",
-        "资源/线上美化/复古QQ六色by小池/【float】复古qq灰by小池.pages",
-        "资源/线上美化/复古QQ六色by小池/【float】复古qq粉by小池.pages",
-        "资源/线上美化/复古QQ六色by小池/【float】复古qq紫by小池.pages",
-        "资源/线上美化/复古QQ六色by小池/【float】复古qq绿by小池.pages",
-        "资源/线上美化/复古QQ六色by小池/【float】复古qq黑by小池.pages"
+        "资源/线上美化/复古QQ六色by小池/【float】复古qq灰by小池.txt",
+        "资源/线上美化/复古QQ六色by小池/【float】复古qq紫by小池.txt",
+        "资源/线上美化/复古QQ六色by小池/【float】复古qq绿by小池.txt",
+        "资源/线上美化/复古QQ六色by小池/【float】复古qq黑by小池.txt"
       ],
       "images": [
         "资源/线上美化/复古QQ六色by小池/109899222C05BDEB8BD67227433916F8.png",
@@ -3090,7 +3088,7 @@
       "author": "@Dol0re3_",
       "avatar": "资源/线上美化/复古QQ六色by小池/.avatar.png",
       "ownerHash": "6a08d4fbb179025747de726b73fc09d681a2a7d30e74d9d35f57f31a77b70b8d",
-      "updatedAt": "2026-08-31T13:51:19+08:00"
+      "updatedAt": "2026-08-31T14:14:31+08:00"
     },
     {
       "folder": "线上美化",
