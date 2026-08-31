@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T08:44:12.151Z",
+  "generatedAt": "2026-08-31T08:45:40.593Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -2044,7 +2044,7 @@
     },
     {
       "folder": "应用",
-      "name": "时光相册[星星]",
+      "name": "时光相册[星星]更新2.0",
       "dirName": "时光相册[星星]",
       "type": "dir",
       "path": "资源/应用/时光相册[星星]",
@@ -2059,7 +2059,7 @@
       "author": "走路的盖欧卡",
       "avatar": "",
       "ownerHash": "8194ca4cadd8437b2a87bbeb59ffe73512a37716ba19413823ef8a8e8ee262ba",
-      "updatedAt": "2026-08-31T16:43:37+08:00"
+      "updatedAt": "2026-08-31T16:45:15+08:00"
     },
     {
       "folder": "应用",
