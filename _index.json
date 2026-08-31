@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T02:11:35.603Z",
+  "generatedAt": "2026-08-31T02:26:00.762Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -69,6 +69,10 @@
     },
     {
       "name": "线下正则",
+      "count": 1
+    },
+    {
+      "name": "预设",
       "count": 1
     }
   ],
@@ -3528,6 +3532,20 @@
       "avatar": "资源/线下正则/去除线下频繁破折号/.avatar.png",
       "ownerHash": "f3b0893a7fe329736590ea476236375fd1017e0f5a65a5d8361c030d7e6b03fc",
       "updatedAt": "2026-08-11T06:53:13+02:00"
+    },
+    {
+      "folder": "预设",
+      "name": "https://github.com/xiaolongbao0709/ai-virtual-phone.git",
+      "dirName": "httpsgithub.comxiaolongbao0709ai-virtual-phone.git",
+      "type": "dir",
+      "path": "资源/预设/httpsgithub.comxiaolongbao0709ai-virtual-phone.git",
+      "files": [],
+      "images": [],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "d7747c84d620871be5ba4343741763a3aaba442fc436e2e0a63b703f2825a462",
+      "updatedAt": "2026-08-31T10:25:32+08:00"
     }
   ]
 }
