@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T16:40:18.965Z",
+  "generatedAt": "2026-08-31T16:45:40.104Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 66
+      "count": 67
     },
     {
       "name": "应用bug改善",
@@ -1930,6 +1930,22 @@
       "avatar": "",
       "ownerHash": "a23807a14f5ac32180dd3716ae5e2a4fcf2c310bf68068bfb104a4ca3d941e0b",
       "updatedAt": "2026-08-14T15:18:29+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "外卖1",
+      "dirName": "外卖1",
+      "type": "dir",
+      "path": "资源/应用/外卖1",
+      "files": [
+        "资源/应用/外卖1/waimai.demo-2.0.0.zip"
+      ],
+      "images": [],
+      "description": "更新了代付，角色给user代付，user给角色代付",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "f0b52b508e38c8c8b3baed8318d0b6bdad0debd25d8ed3bde63cdc5f44a368b9",
+      "updatedAt": "2026-09-01T00:45:08+08:00"
     },
     {
       "folder": "应用",
