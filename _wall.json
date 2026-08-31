@@ -1,0 +1,222 @@
+{
+  "updatedAt": "2026-08-31T14:42:46Z",
+  "items": [
+    {
+      "number": 161,
+      "title": "Feature/novelai image generation",
+      "contributor": "colerith",
+      "mergedAt": "2026-08-31T10:08:48Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/161"
+    },
+    {
+      "number": 169,
+      "title": "feat(preset): 预设多选(右滑进入/点行切换选中) + 按App高亮/仅显示/折叠；SwipeActionRow 支持右滑回调；优化预设条目渲染拖拽",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-30T16:59:13Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/169"
+    },
+    {
+      "number": 167,
+      "title": "Feature/新增工坊附件上传功能+优化编辑消息为修改消息",
+      "contributor": "huaxingdictionar-art",
+      "mergedAt": "2026-08-30T16:32:28Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/167"
+    },
+    {
+      "number": 158,
+      "title": "单独的角色卡图像清晰优化",
+      "contributor": "什锦杂货铺",
+      "mergedAt": "2026-08-30T07:05:58Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/158"
+    },
+    {
+      "number": 155,
+      "title": "A: fix(chat) 引擎核心修复+日志分流+会话级流式+善后完善（基于最新 main 重切版）",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-29T02:55:46Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/155"
+    },
+    {
+      "number": 157,
+      "title": "C: feat(chat) 配套功能+善后完善（基于最新 main 重切版）",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-29T02:55:45Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/157"
+    },
+    {
+      "number": 156,
+      "title": "B: feat(chat/工坊) UI层+工坊接入+善后完善（基于最新 main 重切版）",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-29T02:55:45Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/156"
+    },
+    {
+      "number": 150,
+      "title": "minimax语音新增音调调节功能",
+      "contributor": "什锦杂货铺。",
+      "mergedAt": "2026-08-23T14:47:53Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/150"
+    },
+    {
+      "number": 151,
+      "title": "工坊app侧边栏对话记录新增重命名对话+置顶功能",
+      "contributor": "什锦杂货铺",
+      "mergedAt": "2026-08-23T14:37:35Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/151"
+    },
+    {
+      "number": 149,
+      "title": "V2优化版表情包改名+备注",
+      "contributor": "什锦杂货铺",
+      "mergedAt": "2026-08-23T14:25:09Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/149"
+    },
+    {
+      "number": 141,
+      "title": "基础底层件：统一 LLM 请求出口、流式预览净化、调用日志存储加固、流式生成开关与 serverProxy 字段",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-19T15:55:53Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/141"
+    },
+    {
+      "number": 135,
+      "title": "fix(qa) 修复小坊/工坊输入框点击黑屏：消息列表 content-visibility 懒渲染 + QaMessageItem memo",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-19T15:09:38Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/135"
+    },
+    {
+      "number": 134,
+      "title": "feat(reading) 阅读体验优化：PDF 渲染防闪烁/性能优化 + TXT 导入乱码编码优化",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-19T14:31:19Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/134"
+    },
+    {
+      "number": 129,
+      "title": "feat(chat): 支持表情包组改名与备注",
+      "contributor": "什锦杂货铺",
+      "mergedAt": "2026-08-19T11:40:34Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/129"
+    },
+    {
+      "number": 118,
+      "title": "阅读器优化（二）：配套样式 styles/chat.css（内含一处非贡献的菜单美化，可直接删除）",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-16T19:43:02Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/118"
+    },
+    {
+      "number": 115,
+      "title": "聊天窗口自动触发AI回复(聊天设置页开启)",
+      "contributor": "但求一睡君莫笑",
+      "mergedAt": "2026-08-16T19:43:02Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/115"
+    },
+    {
+      "number": 114,
+      "title": "feat(memory): 允许用户自定义勾选短期记忆的数据来源",
+      "contributor": "meltedfox02",
+      "mergedAt": "2026-08-16T19:43:02Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/114"
+    },
+    {
+      "number": 117,
+      "title": "阅读器优化（一）：悬浮球拖动与位置记忆、连续滚动阅读、批注预生成与失败重试、TXT 导入段落解析增强",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-16T19:43:02Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/117"
+    },
+    {
+      "number": 112,
+      "title": "正则界面复制与 iframe 预览优化 + 小坊聊天复制/编辑 + 正则 historyOnly 标记",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-16T19:43:02Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/112"
+    },
+    {
+      "number": 111,
+      "title": "正则规则新增「仅历史消息」开关（historyOnly）+ 小卷正则工具支持深度控制与仅历史消息",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-16T19:43:02Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/111"
+    },
+    {
+      "number": 106,
+      "title": "fix: 同步安卓状态栏颜色并修复助手控件",
+      "contributor": "Sanjs333",
+      "mergedAt": "2026-08-15T09:20:06Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/106"
+    },
+    {
+      "number": 108,
+      "title": "提示词查看器支持线下聊天提示词预览",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-15T09:17:37Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/108"
+    },
+    {
+      "number": 110,
+      "title": "feat: 添加角色卡版本历史与小卷的自动备份",
+      "contributor": "什锦杂货铺",
+      "mergedAt": "2026-08-15T09:17:29Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/110"
+    },
+    {
+      "number": 109,
+      "title": "feat(语音): 为 Minimax 增加按配置保存的语速调节",
+      "contributor": "什锦杂货铺",
+      "mergedAt": "2026-08-15T09:17:19Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/109"
+    },
+    {
+      "number": 105,
+      "title": "feat: 适配沉浸/非沉浸显示模式并完善聊天 Enter 发送",
+      "contributor": "Sanjs333",
+      "mergedAt": "2026-08-14T21:57:36Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/105"
+    },
+    {
+      "number": 104,
+      "title": "feat(小卷): 增加多会话管理功能",
+      "contributor": "什锦杂货铺",
+      "mergedAt": "2026-08-14T17:11:40Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/104"
+    },
+    {
+      "number": 100,
+      "title": "feat(mascot): 小卷新增角色世界套件并支持简量人设 briefPersona",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-14T17:11:32Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/100"
+    },
+    {
+      "number": 101,
+      "title": "feat(chat): 聊天输入框新增表情包搜索联想组件",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-14T17:11:24Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/101"
+    },
+    {
+      "number": 102,
+      "title": "fix(qa-github): 读取 GitHub 文件兼容 raw 响应形态，修复已贡献文件无法读取/编辑的 bug",
+      "contributor": "温铎",
+      "mergedAt": "2026-08-14T17:11:16Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/102"
+    },
+    {
+      "number": 99,
+      "title": "docs: 补充成年审核密钥保管与重置说明",
+      "contributor": "Deepseek",
+      "mergedAt": "2026-08-14T17:11:08Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/99"
+    },
+    {
+      "number": 98,
+      "title": "docs: resource-hub 补充投稿前阅读约定说明",
+      "contributor": "deepseek",
+      "mergedAt": "2026-08-13T19:58:45Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/98"
+    }
+  ]
+}

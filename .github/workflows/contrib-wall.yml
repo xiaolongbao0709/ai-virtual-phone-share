@@ -1,0 +1,78 @@
+# 贡献墙静态快照：把主仓库已采纳的社区贡献（已合并的 community PR + 打了
+# 「已采纳」标签的关闭 PR）汇总成根目录 _wall.json。
+#
+# 为什么要这份快照：小手机客户端此前从浏览器直连 GitHub Search API 读贡献墙，
+# 未鉴权 search 限额每 IP 每分钟仅 10 次，且大陆网络直连 api.github.com 不稳，
+# 贡献墙经常整面报"读取失败"。存成静态文件后客户端走集市同款 jsDelivr 三镜像
+# 读取——国内可达、免限流、不花 Netlify 函数额度。
+#
+# 触发：每 6 小时定时 + 手动 Run workflow（合并社区 PR 后想立即上墙就手动跑一次）。
+# 只有条目真的变化才提交，不产生空提交。
+name: contrib-wall
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 汇总已采纳的社区贡献
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const upstream = "xiaolongbao0709/ai-virtual-phone";
+            // 与客户端 lib/community-contrib.ts 的 fetchMergedContributions 同口径
+            const queries = [
+              `repo:${upstream} is:pr is:merged label:community`,
+              `repo:${upstream} is:pr is:closed is:unmerged label:已采纳`,
+            ];
+            const seen = new Set();
+            const items = [];
+            for (const q of queries) {
+              const res = await github.rest.search.issuesAndPullRequests({
+                q, sort: "updated", order: "desc", per_page: 100,
+              });
+              for (const item of res.data.items) {
+                if (seen.has(item.number)) continue;
+                seen.add(item.number);
+                const body = String(item.body || "");
+                const match = body.match(/^贡献者[:：]\s*([^\n（(]+)/m);
+                items.push({
+                  number: item.number,
+                  title: String(item.title || ""),
+                  contributor: (match ? match[1].trim() : (item.user && item.user.login) || "匿名") || "匿名",
+                  mergedAt: String((item.pull_request && item.pull_request.merged_at) || item.closed_at || ""),
+                  url: String(item.html_url || ""),
+                });
+              }
+            }
+            items.sort((a, b) => String(b.mergedAt).localeCompare(String(a.mergedAt)));
+
+            const fs = require("fs");
+            // updatedAt 不参与变更比较：只有条目变了才写文件，避免定时任务空提交
+            let prev = null;
+            try { prev = JSON.stringify(JSON.parse(fs.readFileSync("_wall.json", "utf8")).items); } catch { /* 首次生成 */ }
+            if (prev === JSON.stringify(items)) {
+              core.info(`贡献墙无变化（${items.length} 条），跳过提交`);
+              return;
+            }
+            fs.writeFileSync("_wall.json", JSON.stringify({ updatedAt: new Date().toISOString(), items }, null, 2) + "\n");
+            core.info(`贡献墙更新为 ${items.length} 条`);
+      - name: 有变化才提交
+        run: |
+          if git diff --quiet -- _wall.json && git ls-files --error-unmatch _wall.json >/dev/null 2>&1; then
+            echo "无变化，跳过"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add _wall.json
+          git commit -m "贡献墙快照更新"
+          git push
