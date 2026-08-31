@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T14:06:09.254Z",
+  "generatedAt": "2026-08-31T14:14:03.734Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -57,7 +57,7 @@
     },
     {
       "name": "特调材料",
-      "count": 1
+      "count": 2
     },
     {
       "name": "线上美化",
@@ -2848,6 +2848,24 @@
       "avatar": "",
       "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
       "updatedAt": "2026-08-21T14:08:05+08:00"
+    },
+    {
+      "folder": "特调材料",
+      "name": "沈霁（人设）",
+      "dirName": "沈霁（人设）",
+      "type": "dir",
+      "path": "资源/特调材料/沈霁（人设）",
+      "files": [
+        "资源/特调材料/沈霁（人设）/沈霁 (2).json"
+      ],
+      "images": [
+        "资源/特调材料/沈霁（人设）/1000083882.jpg"
+      ],
+      "description": "自己写的，小苦瓜人设，恋爱后有点阴湿，可以二改，欢迎来玩",
+      "author": "倚枫歌",
+      "avatar": "",
+      "ownerHash": "0ffce5bd289863ee9a5da25317d422cc3b3ebe42a4b3a0fa8e44b0b9443fc92b",
+      "updatedAt": "2026-08-31T22:13:35+08:00"
     },
     {
       "folder": "线上美化",
