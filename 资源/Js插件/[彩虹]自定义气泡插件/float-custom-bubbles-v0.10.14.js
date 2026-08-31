@@ -43,7 +43,40 @@ function normalizeSkin(raw) {
     },
     edgeScale: safeNumber(raw && raw.edgeScale, 0.6, 0.05, 2),
     textColor: String(raw && raw.textColor || "#4b5563"),
+    fontData: String(raw && raw.fontData || ""),
+    fontName: String(raw && raw.fontName || ""),
+    fontMime: String(raw && raw.fontMime || ""),
+    fontSizeAdjust: safeNumber(raw && raw.fontSizeAdjust, 0, -5, 5),
   };
+}
+
+function fontFamilyForSkin(skin) {
+  const suffix = String(skin && skin.id || "skin").replace(/[^a-zA-Z0-9_-]/g, "");
+  return `nsb-font-${suffix || "skin"}`;
+}
+
+function fontFormatForSkin(skin) {
+  const name = String(skin && skin.fontName || "").toLowerCase();
+  const mime = String(skin && skin.fontMime || "").toLowerCase();
+  if (mime.includes("woff2") || name.endsWith(".woff2")) return "woff2";
+  if (mime.includes("woff") || name.endsWith(".woff")) return "woff";
+  if (mime.includes("opentype") || name.endsWith(".otf")) return "opentype";
+  return "truetype";
+}
+
+function fontDataToBuffer(dataUrl) {
+  const source = String(dataUrl || "");
+  const comma = source.indexOf(",");
+  if (comma < 0) throw new Error("字体数据无效");
+  const meta = source.slice(0, comma);
+  const payload = source.slice(comma + 1);
+  if (/;base64/i.test(meta)) {
+    const binary = atob(payload);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+    return bytes.buffer;
+  }
+  return new TextEncoder().encode(decodeURIComponent(payload)).buffer;
 }
 
 function normalizeState(raw) {
@@ -148,15 +181,55 @@ function clearBubbleWrapper(bubble) {
   delete bubble.dataset.nineSliceBubbleWrapper;
 }
 
+function clearBubbleFont(bubble) {
+  if (!bubble) return;
+  const targets = [];
+  if (bubble.dataset && bubble.dataset.nineSliceBubbleFont === "1") targets.push(bubble);
+  if (bubble.querySelectorAll) targets.push(...bubble.querySelectorAll('[data-nine-slice-bubble-font="1"]'));
+  for (const target of targets) {
+    const previous = target.dataset.nineSliceBubblePrevFont || "";
+    const priority = target.dataset.nineSliceBubblePrevFontPriority || "";
+    if (previous) target.style.setProperty("font-family", previous, priority);
+    else target.style.removeProperty("font-family");
+    delete target.dataset.nineSliceBubbleFont;
+    delete target.dataset.nineSliceBubblePrevFont;
+    delete target.dataset.nineSliceBubblePrevFontPriority;
+  }
+}
+
+function applyBubbleFont(bubble, skin) {
+  clearBubbleFont(bubble);
+  if (!bubble || !skin || !skin.fontData) return;
+  const family = `"${fontFamilyForSkin(skin)}"`;
+  const selector = [
+    ".chat-markdown",
+    ".chat-markdown *:not(style):not(script):not(svg):not(path):not(button):not(input)",
+    ".chat-bilingual-content",
+    ".chat-bilingual-content *:not(style):not(script):not(svg):not(path):not(button):not(input)",
+    ".chat-quote-preview",
+    ".voice-msg-dur",
+  ].join(",");
+  const targets = new Set();
+  if (bubble.matches && bubble.matches(".chat-markdown,.chat-bilingual-content,.chat-quote-preview,.voice-msg-dur")) targets.add(bubble);
+  if (bubble.querySelectorAll) bubble.querySelectorAll(selector).forEach(target => targets.add(target));
+  for (const target of targets) {
+    target.dataset.nineSliceBubbleFont = "1";
+    target.dataset.nineSliceBubblePrevFont = target.style.getPropertyValue("font-family");
+    target.dataset.nineSliceBubblePrevFontPriority = target.style.getPropertyPriority("font-family");
+    target.style.setProperty("font-family", family, "important");
+  }
+}
+
 function clearBubbleSkin(bubble) {
   if (!bubble) return;
+  clearBubbleFont(bubble);
   delete bubble.dataset.nineSliceBubbleSkin;
   delete bubble.dataset.nineSliceBubbleRole;
   [
     "--nsb-image", "--nsb-slice-top", "--nsb-slice-right", "--nsb-slice-bottom", "--nsb-slice-left",
     "--nsb-edge-top", "--nsb-edge-right", "--nsb-edge-bottom", "--nsb-edge-left",
     "--nsb-pad-top", "--nsb-pad-right", "--nsb-pad-bottom", "--nsb-pad-left",
-    "--nsb-text-color",
+    "--nsb-text-color", "--nsb-font-family", "--nsb-font-size-adjust",
   ].forEach(name => bubble.style.removeProperty(name));
 }
 
@@ -184,6 +257,9 @@ function applySkinToBubble(bubble, skin, role) {
   bubble.style.setProperty("--nsb-pad-bottom", `${p.bottom}px`);
   bubble.style.setProperty("--nsb-pad-left", `${p.left}px`);
   bubble.style.setProperty("--nsb-text-color", skin.textColor);
+  bubble.style.setProperty("--nsb-font-family", skin.fontData ? `"${fontFamilyForSkin(skin)}"` : "inherit");
+  bubble.style.setProperty("--nsb-font-size-adjust", `${skin.fontSizeAdjust}px`);
+  applyBubbleFont(bubble, skin);
 }
 
 const RUNTIME_CSS = `
@@ -206,6 +282,22 @@ const RUNTIME_CSS = `
 [data-nine-slice-bubble-skin="1"][data-nine-slice-bubble-role="user"] {
   min-height: 0 !important;
   height: auto !important;
+}
+[data-nine-slice-bubble-skin="1"].chat-markdown,
+[data-nine-slice-bubble-skin="1"].chat-bilingual-section,
+[data-nine-slice-bubble-skin="1"] .chat-markdown,
+[data-nine-slice-bubble-skin="1"] .chat-bilingual-content,
+[data-nine-slice-bubble-skin="1"].voice-msg-bubble .voice-msg-dur,
+[data-nine-slice-bubble-skin="1"] .voice-msg-dur {
+  font-family: var(--nsb-font-family, inherit) !important;
+}
+[data-nine-slice-bubble-skin="1"].chat-markdown,
+[data-nine-slice-bubble-skin="1"] > .chat-markdown,
+[data-nine-slice-bubble-skin="1"] > .chat-bilingual-content,
+[data-nine-slice-bubble-skin="1"] > .chat-bilingual-section,
+[data-nine-slice-bubble-skin="1"] > .chat-quote-preview,
+[data-nine-slice-bubble-skin="1"].voice-msg-bubble .voice-msg-dur {
+  font-size: calc(1em + var(--nsb-font-size-adjust, 0px)) !important;
 }
 [data-nine-slice-bubble-wrapper="user"] {
   overflow: visible !important;
@@ -236,7 +328,8 @@ const RUNTIME_CSS = `
 `;
 
 const MIRROR_CSS = `
-[data-nine-slice-bubble-wrapper="voice"] {
+[data-nine-slice-bubble-wrapper="voice"],
+[data-nine-slice-bubble-wrapper="quote"] {
   overflow: visible !important;
   background: transparent !important;
   background-image: none !important;
@@ -271,7 +364,7 @@ export default {
     id: PLUGIN_ID,
     name: "自定义气泡",
     apiVersion: 1,
-    version: "0.10.10",
+    version: "0.10.14",
     author: "NEEN&GPT",
     description: "上传透明 PNG 制作自定义气泡，并按角色 ID 绑定皮肤",
   },
@@ -285,8 +378,43 @@ export default {
     let currentSessionId = "";
     let voiceScanPending = false;
     let floatingEditButton = null;
+    let fontCssCleanup = null;
+    const loadedFontFaces = new Map();
 
     ctx.ui.injectCSS(RUNTIME_CSS + MIRROR_CSS + EDITOR_CSS);
+
+    function refreshFontCSS() {
+      if (typeof fontCssCleanup === "function") fontCssCleanup();
+      fontCssCleanup = null;
+      if (typeof document !== "undefined" && document.fonts) {
+        for (const face of loadedFontFaces.values()) {
+          try { document.fonts.delete(face); } catch (_) {}
+        }
+      }
+      loadedFontFaces.clear();
+      const fontSkins = Object.values(state.skins).filter(skin => skin.fontData);
+      if (typeof FontFace === "function" && typeof document !== "undefined" && document.fonts) {
+        for (const skin of fontSkins) {
+          try {
+            const family = fontFamilyForSkin(skin);
+            const face = new FontFace(family, fontDataToBuffer(skin.fontData), { display: "swap" });
+            document.fonts.add(face);
+            loadedFontFaces.set(skin.id, face);
+            face.load()
+              .then(() => applyMounted())
+              .catch(error => ctx.system.log("[自定义气泡] 字体加载失败", skin.fontName || skin.id, error));
+          } catch (error) {
+            ctx.system.log("[自定义气泡] 字体注册失败", skin.fontName || skin.id, error);
+          }
+        }
+        return;
+      }
+      const css = fontSkins
+        .map(skin => `@font-face{font-family:"${fontFamilyForSkin(skin)}";src:url("${escapeCssUrl(skin.fontData)}") format("${fontFormatForSkin(skin)}");font-display:swap;}`)
+        .join("\n");
+      if (css) fontCssCleanup = ctx.ui.injectCSS(css);
+    }
+    refreshFontCSS();
 
     const persist = () => ctx.system.storage.set(STORAGE_KEY, state);
     const enabled = () => true;
@@ -340,8 +468,8 @@ export default {
         }
         const role = meta.message && meta.message.role;
         const skin = chooseSkin(meta);
-        if (skin && meta.outerBubble && bubble !== meta.outerBubble && (role === "user" || meta.isVoice)) {
-          meta.outerBubble.dataset.nineSliceBubbleWrapper = meta.isVoice ? "voice" : "user";
+        if (skin && meta.outerBubble && bubble !== meta.outerBubble && (role === "user" || meta.isVoice || meta.isQuote)) {
+          meta.outerBubble.dataset.nineSliceBubbleWrapper = meta.isVoice ? "voice" : (meta.isQuote ? "quote" : "user");
         } else {
           clearBubbleWrapper(meta.outerBubble);
         }
@@ -407,7 +535,7 @@ export default {
       };
     });
 
-    function findMessageForVoice(messageId) {
+    function findMessageById(messageId) {
       const findInSession = sessionId => {
         if (!sessionId) return null;
         try {
@@ -435,7 +563,7 @@ export default {
         const outerBubble = voice.closest('[data-msg-id][class*="chat-bubble-role-"]');
         if (!outerBubble) continue;
         const messageId = String(outerBubble.dataset.msgId || "");
-        const found = findMessageForVoice(messageId);
+        const found = findMessageById(messageId);
         if (!found) continue;
         const meta = { message: found.message, sessionId: found.sessionId, outerBubble, isVoice: true };
         const skin = chooseSkin(meta);
@@ -446,6 +574,19 @@ export default {
         }
         mounted.set(voice, meta);
         applySkinToBubble(voice, skin, found.message.role);
+      }
+      for (const quote of document.querySelectorAll(".chat-quote-message")) {
+        const outerBubble = quote.closest('[data-msg-id][class*="chat-bubble-role-"]');
+        if (!outerBubble) continue;
+        const messageId = String(outerBubble.dataset.msgId || "");
+        const found = findMessageById(messageId);
+        if (!found || found.message.mediaType !== "quote") continue;
+        const meta = { message: found.message, sessionId: found.sessionId, outerBubble, isQuote: true };
+        const skin = chooseSkin(meta);
+        if (skin) outerBubble.dataset.nineSliceBubbleWrapper = "quote";
+        else clearBubbleWrapper(outerBubble);
+        mounted.set(quote, meta);
+        applySkinToBubble(quote, skin, found.message.role);
       }
       applyMounted();
     }
@@ -803,6 +944,75 @@ export default {
             visualRow.append(scaleLabel, scaleRange, scaleInput, colorLabel, colorInput);
             main.appendChild(visualRow);
 
+            const fontRow = document.createElement("div");
+            fontRow.className = "nsb-row wrap";
+            const fontLabel = document.createElement("label");
+            fontLabel.textContent = "气泡字体";
+            const fontInput = input("file", "", "nsb-file");
+            fontInput.accept = ".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2,application/font-woff,application/font-sfnt";
+            fontInput.style.display = "none";
+            const fontButton = button(selected.fontData ? "更换字体" : "选择字体", "", () => fontInput.click());
+            const fontName = document.createElement("span");
+            fontName.className = "nsb-muted";
+            fontName.textContent = selected.fontName || "默认字体";
+            fontInput.addEventListener("change", () => {
+              const file = fontInput.files && fontInput.files[0];
+              if (!file) return;
+              if (file.size > 25 * 1024 * 1024) {
+                ctx.ui.toast("字体文件不能超过 25 MB，超大字体建议转换为 WOFF2");
+                return;
+              }
+              const reader = new FileReader();
+              reader.onload = () => {
+                selected.fontData = String(reader.result || "");
+                selected.fontName = file.name;
+                selected.fontMime = file.type || "";
+                refreshFontCSS();
+                persist();
+                applyMounted();
+                render();
+              };
+              reader.onerror = () => ctx.ui.toast("字体读取失败");
+              reader.readAsDataURL(file);
+            });
+            fontRow.append(fontLabel, fontButton, fontName, fontInput);
+            if (selected.fontData) {
+              fontRow.append(button("恢复默认", "", () => {
+                selected.fontData = "";
+                selected.fontName = "";
+                selected.fontMime = "";
+                refreshFontCSS();
+                persist();
+                applyMounted();
+                render();
+              }));
+            }
+            main.appendChild(fontRow);
+
+            const fontSizeRow = document.createElement("div");
+            fontSizeRow.className = "nsb-row wrap";
+            const fontSizeLabel = document.createElement("label");
+            fontSizeLabel.textContent = "字体大小";
+            const fontSizeRange = document.createElement("input");
+            fontSizeRange.type = "range";
+            fontSizeRange.min = "-5"; fontSizeRange.max = "5"; fontSizeRange.step = "0.5";
+            fontSizeRange.value = String(selected.fontSizeAdjust);
+            fontSizeRange.style.width = "min(260px,45vw)";
+            const fontSizeInput = input("number", selected.fontSizeAdjust, "nsb-input nsb-num");
+            fontSizeInput.min = "-5"; fontSizeInput.max = "5"; fontSizeInput.step = "0.5";
+            const syncFontSize = (source, target) => {
+              selected.fontSizeAdjust = safeNumber(source.value, selected.fontSizeAdjust, -5, 5);
+              target.value = String(selected.fontSizeAdjust);
+              schedulePreview();
+            };
+            fontSizeRange.addEventListener("input", () => syncFontSize(fontSizeRange, fontSizeInput));
+            fontSizeInput.addEventListener("input", () => syncFontSize(fontSizeInput, fontSizeRange));
+            const commitFontSize = () => { persist(); applyMounted(); };
+            fontSizeRange.addEventListener("change", commitFontSize);
+            fontSizeInput.addEventListener("change", commitFontSize);
+            fontSizeRow.append(fontSizeLabel, fontSizeRange, fontSizeInput);
+            main.appendChild(fontSizeRow);
+
             const previewTitle = document.createElement("div");
             previewTitle.className = "nsb-section-title";
             previewTitle.textContent = "拉伸预览";
@@ -832,6 +1042,8 @@ export default {
               for (const demo of demos) {
                 demo.style.padding = `${selected.padding.top}px ${selected.padding.right}px ${selected.padding.bottom}px ${selected.padding.left}px`;
                 demo.style.color = selected.textColor;
+                demo.style.fontFamily = selected.fontData ? `"${fontFamilyForSkin(selected)}"` : "";
+                demo.style.fontSize = selected.fontSizeAdjust ? `calc(1em + ${selected.fontSizeAdjust}px)` : "";
                 demo.style.minWidth = `${(s.left + s.right) * scale}px`;
                 demo.style.minHeight = `${(s.top + s.bottom) * scale}px`;
                 demo.style.setProperty("border-width", "0");
@@ -900,6 +1112,7 @@ export default {
             reader.onload = () => {
               try {
                 state = normalizeState(JSON.parse(String(reader.result)));
+                refreshFontCSS();
                 persist(); applyMounted(); renderSettings();
                 ctx.ui.toast("气泡皮肤配置已导入");
               } catch (_) { ctx.ui.toast("导入失败：不是有效的配置文件"); }
@@ -1217,6 +1430,7 @@ export default {
           expandedSkins.delete(skinId);
           deleteSelection.delete(skinId);
         }
+        refreshFontCSS();
         persist();
         applyMounted();
       };
@@ -1236,6 +1450,7 @@ export default {
           reader.onload = () => {
             try {
               state = normalizeState(JSON.parse(String(reader.result)));
+              refreshFontCSS();
               activeGroup = "all";
               deleteMode = false;
               groupDeleteMode = false;
@@ -1540,6 +1755,13 @@ export default {
     return () => {
       if (voiceObserver) voiceObserver.disconnect();
       removeFloatingEditButton();
+      if (typeof fontCssCleanup === "function") fontCssCleanup();
+      if (typeof document !== "undefined" && document.fonts) {
+        for (const face of loadedFontFaces.values()) {
+          try { document.fonts.delete(face); } catch (_) {}
+        }
+      }
+      loadedFontFaces.clear();
       clearMounted();
       editorOpen = false;
     };
