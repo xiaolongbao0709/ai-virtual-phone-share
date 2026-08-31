@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T12:36:03.570Z",
+  "generatedAt": "2026-08-31T12:57:18.870Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -69,6 +69,10 @@
     },
     {
       "name": "线下正则",
+      "count": 1
+    },
+    {
+      "name": "表情包",
       "count": 1
     },
     {
@@ -3651,6 +3655,24 @@
       "avatar": "资源/线下正则/去除线下频繁破折号/.avatar.png",
       "ownerHash": "f3b0893a7fe329736590ea476236375fd1017e0f5a65a5d8361c030d7e6b03fc",
       "updatedAt": "2026-08-11T06:53:13+02:00"
+    },
+    {
+      "folder": "表情包",
+      "name": "nuko像素猫——来源于网络",
+      "dirName": "nuko像素猫——来源于网络",
+      "type": "dir",
+      "path": "资源/表情包/nuko像素猫——来源于网络",
+      "files": [
+        "资源/表情包/nuko像素猫——来源于网络/nuko像素猫——来源gzh.-WPS Office(2).docx"
+      ],
+      "images": [
+        "资源/表情包/nuko像素猫——来源于网络/45407.jpg"
+      ],
+      "description": "",
+      "author": "KK",
+      "avatar": "资源/表情包/nuko像素猫——来源于网络/.avatar.png",
+      "ownerHash": "6282160018481cd1e72c1d048cde54f68f685dc043a3f0bb414518f03418a3cd",
+      "updatedAt": "2026-08-31T20:56:48+08:00"
     },
     {
       "folder": "预设",
