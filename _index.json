@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T03:08:51.293Z",
+  "generatedAt": "2026-08-31T03:19:39.345Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 62
+      "count": 63
     },
     {
       "name": "应用bug改善",
@@ -1588,6 +1588,26 @@
       "avatar": "资源/应用/collect/.avatar.png",
       "ownerHash": "c84f1904fa7b68c212c91bc5fda2055472af121e6c8f64740a348e1eb138a112",
       "updatedAt": "2026-08-31T00:49:32+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "ink杂志",
+      "dirName": "ink杂志",
+      "type": "dir",
+      "path": "资源/应用/ink杂志",
+      "files": [
+        "资源/应用/ink杂志/ink.journal-1.0.0.zip"
+      ],
+      "images": [
+        "资源/应用/ink杂志/1000113463.jpg",
+        "资源/应用/ink杂志/1000113465.jpg",
+        "资源/应用/ink杂志/1000113466.jpg"
+      ],
+      "description": "喜欢看易立竞和港媒，就让gemini flash3和小坊做了一个。我没有把易立竞和港媒内置，让豆包生成风格自己保存进个人界面就可以，可以分享给角色。",
+      "author": "垃圾创造者",
+      "avatar": "",
+      "ownerHash": "d2ca8f7dfcde423b0c70bbf439302b75e0c7030422d18da3a5c1ba930f9f7e83",
+      "updatedAt": "2026-08-31T11:19:09+08:00"
     },
     {
       "folder": "应用",
