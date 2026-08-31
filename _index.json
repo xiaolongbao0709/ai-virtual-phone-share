@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T04:05:53.050Z",
+  "generatedAt": "2026-08-31T04:36:49.996Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 63
+      "count": 64
     },
     {
       "name": "应用bug改善",
@@ -2025,6 +2025,25 @@
       "avatar": "",
       "ownerHash": "10fcb4810a7e1f79fb4f735a8aab71691dd662edd6c01043ea5cef63af474106",
       "updatedAt": "2026-08-27T23:32:11+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "时光相册[星星]",
+      "dirName": "时光相册[星星]",
+      "type": "dir",
+      "path": "资源/应用/时光相册[星星]",
+      "files": [
+        "资源/应用/时光相册[星星]/shiguang.album-1.0.0.zip"
+      ],
+      "images": [
+        "资源/应用/时光相册[星星]/IMG_4562.jpeg",
+        "资源/应用/时光相册[星星]/IMG_4564.jpeg"
+      ],
+      "description": "生成角色照片、用户肖像与双人合照，并以沉浸式照片图库收藏作品。",
+      "author": "走路的盖欧卡",
+      "avatar": "",
+      "ownerHash": "8194ca4cadd8437b2a87bbeb59ffe73512a37716ba19413823ef8a8e8ee262ba",
+      "updatedAt": "2026-08-31T12:36:21+08:00"
     },
     {
       "folder": "应用",
