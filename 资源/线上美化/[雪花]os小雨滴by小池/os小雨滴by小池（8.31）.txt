@@ -61,8 +61,8 @@
     /* 底图上方透明输入框 */
     --bear-float-input-left: 5%;
     --bear-float-input-right: 5%;
-    --bear-float-input-top: 12%;
-    --bear-float-input-height: 28%;
+    --bear-float-input-top-fixed: clamp(13px, 3.6vw, 15px);
+    --bear-float-input-height-fixed: clamp(30px, 8.4vw, 35px);
 
     /* 底栏六个真实按钮点击热区
        1 线下模式 -> 图上的麦克风
@@ -72,8 +72,8 @@
        5 Send     -> 图上的笑脸
        6 Reply    -> 图上的最右 +
     */
-    --bear-float-btn-top: 48%;
-    --bear-float-btn-height: 38%;
+    --bear-float-btn-top-fixed: clamp(52px, 14.4vw, 60px);
+    --bear-float-btn-height-fixed: clamp(41px, 11.4vw, 48px);
     --bear-float-btn-width: 11%;
 
     --bear-float-btn-1-left: 5.8%;
@@ -577,12 +577,12 @@
 
     left: var(--bear-float-input-left) !important;
     right: var(--bear-float-input-right) !important;
-    top: var(--bear-float-input-top) !important;
+    top: var(--bear-float-input-top-fixed) !important;
 
     width: auto !important;
-    height: var(--bear-float-input-height) !important;
-    min-height: var(--bear-float-input-height) !important;
-    max-height: var(--bear-float-input-height) !important;
+    height: var(--bear-float-input-height-fixed) !important;
+    min-height: var(--bear-float-input-height-fixed) !important;
+    max-height: var(--bear-float-input-height-fixed) !important;
 
     margin: 0 !important;
     padding: 0 15px !important;
@@ -643,10 +643,10 @@
 .chat-input-actions > .ui-bare-btn {
     position: absolute !important;
 
-    top: var(--bear-float-btn-top) !important;
+    top: var(--bear-float-btn-top-fixed) !important;
 
     width: var(--bear-float-btn-width) !important;
-    height: var(--bear-float-btn-height) !important;
+    height: var(--bear-float-btn-height-fixed) !important;
     min-width: 0 !important;
     min-height: 0 !important;
 
@@ -761,7 +761,17 @@
     background: #FFFFFF !important;
     border-top: 1px solid #E6E6E6 !important;
 
-    z-index: 2 !important;
+    z-index: 20 !important;
+    pointer-events: auto !important;
+}
+
+/* Plus 菜单功能项压在透明输入框上方，防止照片墙点击穿透到 textarea */
+.chat-input-bar.chat-room-main-pane > .chat-plus-menu .chat-plus-menu-item,
+.chat-input-bar.chat-room-main-pane > .chat-plus-menu button {
+    position: relative !important;
+    z-index: 21 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
 }
 
 /* Plus 菜单后面可能跟插件 toolbar。
