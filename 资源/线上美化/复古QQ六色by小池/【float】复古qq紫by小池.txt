@@ -45,22 +45,32 @@
     --bear-qq-user-bubble-soft-end: #F2EFFF; /* 🦭 User 气泡上半部提亮过渡色（按参考图吸色） */
 
     --bear-qq-bubble-radius: 18px; /* 🦭 气泡圆角 */
-    --bear-qq-bubble-border-width: 1.2px; /* 🦭 气泡描边宽度 */
+    --bear-qq-bubble-border-width: 0.7px; /* 🦭 气泡描边宽度 */
     --bear-qq-ai-bubble-padding: 5px 12px 6px 12px; /* 🦭 AI 气泡内边距 */
     --bear-qq-user-bubble-padding: 5px 12px 6px 12px; /* 🦭 User 气泡内边距 */
     --bear-qq-bubble-inner-shadow: inset 0 1px 0 rgba(255,255,255,.82), inset 0 -1px 2px rgba(0,0,0,.045), inset 0 -6px 10px rgba(255,255,255,.08); /* 🦭 气泡内层金属阴影 */
     --bear-qq-bubble-outer-shadow: 0 1px 1px rgba(0,0,0,.045); /* 🦭 气泡外层阴影 */
 
-    --bear-qq-ai-tail-image: url("https://imgbed.heliar.top/i/qunczDF9irGgRCpN_IMG_6168.webp"); /* 🦭 AI 气泡尾巴贴图 */
-    --bear-qq-user-tail-image: url("https://imgbed.heliar.top/i/yAYQqGGezzaNL6Zt_IMG_6191.webp"); /* 🦭 User 气泡尾巴贴图 */
-    --bear-qq-ai-tail-width: 9.6px; /* 🦭 AI 气泡尾巴宽度 */
-    --bear-qq-ai-tail-height: 12px; /* 🦭 AI 气泡尾巴高度 */
-    --bear-qq-ai-tail-left: 0.9px; /* 🦭 AI 气泡尾巴左右位置，负数更往左 */
-    --bear-qq-ai-tail-bottom: -5.5px; /* 🦭 AI 气泡尾巴上下位置，负数更往下 */
-    --bear-qq-user-tail-width: 10px; /* 🦭 User 气泡尾巴宽度 */
-    --bear-qq-user-tail-height: 14px; /* 🦭 User 气泡尾巴高度 */
-    --bear-qq-user-tail-right: 0.2px; /* 🦭 User 气泡尾巴左右位置，负数更往右 */
-    --bear-qq-user-tail-bottom: -5px; /* 🦭 User 气泡尾巴上下位置，负数更往下 */
+    --bear-qq-ai-tail-image: url("data:image/svg+xml;utf8,<svg width='16' height='18' viewBox='32.484 17.5 15.515 17.5' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='40.2415' y1='17.5' x2='40.2415' y2='35' gradientUnits='userSpaceOnUse'><stop offset='0' stop-color='%23E6E5E8'/><stop offset='0.55' stop-color='%23E6E5E8'/><stop offset='1' stop-color='%23E8E8EA'/></linearGradient></defs><path d='M38.484,17.5c0,8.75,1,13.5-6,17.5C51.484,35,52.484,17.5,38.484,17.5z' fill='url(%23g)'/></svg>"); /* 🦭 AI 小尾巴 SVG（上层） */
+    --bear-qq-user-tail-image: url("data:image/svg+xml;utf8,<svg width='16' height='18' viewBox='32.485 17.5 15.515 17.5' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='40.2425' y1='17.5' x2='40.2425' y2='35' gradientUnits='userSpaceOnUse'><stop offset='0' stop-color='%23EAE5F4'/><stop offset='0.55' stop-color='%23EAE5F4'/><stop offset='1' stop-color='%23E5E0EF'/></linearGradient></defs><path d='M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z' fill='url(%23g)'/></svg>"); /* 🦭 User 小尾巴 SVG（上层） */
+    --bear-qq-ai-tail-width: 9.6px; /* 🦭 AI 小尾巴宽度 */
+    --bear-qq-ai-tail-height: 12px; /* 🦭 AI 小尾巴高度 */
+    --bear-qq-ai-tail-left: 0px; /* 🦭 AI 小尾巴左右位置 */
+    --bear-qq-ai-tail-bottom: -4.8px; /* 🦭 AI 小尾巴上下位置 */
+    --bear-qq-user-tail-width: 10px; /* 🦭 User 小尾巴宽度 */
+    --bear-qq-user-tail-height: 13.6px; /* 🦭 User 小尾巴高度 */
+    --bear-qq-user-tail-right: 0px; /* 🦭 User 小尾巴左右位置 */
+    --bear-qq-user-tail-bottom: -5px; /* 🦭 User 小尾巴上下位置 */
+    --bear-qq-ai-tail-outer-image: url("data:image/svg+xml;utf8,<svg width='16' height='18' viewBox='32.484 17.5 15.515 17.5' xmlns='http://www.w3.org/2000/svg'><path d='M38.484,17.5c0,8.75,1,13.5-6,17.5C51.484,35,52.484,17.5,38.484,17.5z' fill='%237D7D7F' stroke='%237D7D7F' stroke-width='1.7' stroke-linejoin='round'/></svg>"); /* 🦭 AI 描边尾巴 SVG（下层） */
+    --bear-qq-user-tail-outer-image: url("data:image/svg+xml;utf8,<svg width='16' height='18' viewBox='32.485 17.5 15.515 17.5' xmlns='http://www.w3.org/2000/svg'><path d='M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z' fill='%23B7B1C1' stroke='%23B7B1C1' stroke-width='1.7' stroke-linejoin='round'/></svg>"); /* 🦭 User 描边尾巴 SVG（下层） */
+    --bear-qq-ai-tail-outer-width: 9.6px; /* 🦭 AI 大尾巴宽度 */
+    --bear-qq-ai-tail-outer-height: 12px; /* 🦭 AI 大尾巴高度 */
+    --bear-qq-ai-tail-outer-left: 0px; /* 🦭 AI 大尾巴左右位置 */
+    --bear-qq-ai-tail-outer-bottom: -4.8px; /* 🦭 AI 大尾巴上下位置 */
+    --bear-qq-user-tail-outer-width: 10px; /* 🦭 User 大尾巴宽度 */
+    --bear-qq-user-tail-outer-height: 13.6px; /* 🦭 User 大尾巴高度 */
+    --bear-qq-user-tail-outer-right: 0px; /* 🦭 User 大尾巴左右位置 */
+    --bear-qq-user-tail-outer-bottom: -5px; /* 🦭 User 大尾巴上下位置 */
     --bear-qq-quote-bg: #EEEEEE; /* 🦭 AI / 默认气泡内引用卡片底色 */
     --bear-qq-user-quote-bg: #DFDAEE; /* 🦭 User 气泡内引用卡片底色，跟随紫色气泡 */
     --bear-qq-quote-name-color: #4F4F4F; /* 🦭 被引用方备注颜色 */
@@ -130,11 +140,11 @@
 
     --bear-float-input-left: var(--bear-qq-theme-input-left);
     --bear-float-input-right: var(--bear-qq-theme-input-right);
-    --bear-float-input-top: var(--bear-qq-theme-input-top);
-    --bear-float-input-height: var(--bear-qq-theme-input-height);
+    --bear-float-input-top-fixed: clamp(10px, 2.85vw, 12px);
+    --bear-float-input-height-fixed: clamp(25px, 7.05vw, 30px);
 
-    --bear-float-btn-top: 48%;
-    --bear-float-btn-height: 38%;
+    --bear-float-btn-top-fixed: clamp(52px, 14.4vw, 60px);
+    --bear-float-btn-height-fixed: clamp(41px, 11.4vw, 48px);
     --bear-float-btn-width: 11%;
     --bear-float-btn-1-left: 5.8%;
     --bear-float-btn-2-left: 22.0%;
@@ -613,12 +623,12 @@
 
     left: var(--bear-float-input-left) !important;
     right: var(--bear-float-input-right) !important;
-    top: var(--bear-float-input-top) !important;
+    top: var(--bear-float-input-top-fixed) !important;
 
     width: auto !important;
-    height: var(--bear-float-input-height) !important;
-    min-height: var(--bear-float-input-height) !important;
-    max-height: var(--bear-float-input-height) !important;
+    height: var(--bear-float-input-height-fixed) !important;
+    min-height: var(--bear-float-input-height-fixed) !important;
+    max-height: var(--bear-float-input-height-fixed) !important;
 
     margin: 0 !important;
     padding: 0 15px !important;
@@ -679,10 +689,10 @@
 .chat-input-actions > .ui-bare-btn {
     position: absolute !important;
 
-    top: var(--bear-float-btn-top) !important;
+    top: var(--bear-float-btn-top-fixed) !important;
 
     width: var(--bear-float-btn-width) !important;
-    height: var(--bear-float-btn-height) !important;
+    height: var(--bear-float-btn-height-fixed) !important;
     min-width: 0 !important;
     min-height: 0 !important;
 
@@ -780,7 +790,8 @@
     border-top: 1px solid #E6E6E6 !important;
 
     overflow: hidden !important;
-    z-index: 2 !important;
+    z-index: 20 !important;
+    pointer-events: auto !important;
 }
 
 /* Plus 菜单：它是打开菜单时第一个普通流元素 */
@@ -797,7 +808,17 @@
     background: #FFFFFF !important;
     border-top: 1px solid #E6E6E6 !important;
 
-    z-index: 2 !important;
+    z-index: 20 !important;
+    pointer-events: auto !important;
+}
+
+/* Plus 菜单功能项必须压在透明输入框上方，避免点击穿透到 textarea 后弹出键盘 */
+.chat-input-bar.chat-room-main-pane > .chat-plus-menu .chat-plus-menu-item,
+.chat-input-bar.chat-room-main-pane > .chat-plus-menu button {
+    position: relative !important;
+    z-index: 21 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
 }
 
 /* Plus 菜单后面可能跟插件 toolbar。
@@ -975,29 +996,51 @@
         var(--bear-qq-user-bubble-bottom) 100%) !important;
 }
 
-/* 顶部高光并入气泡本身，不再单独绘制白色悬浮条 */
-.chat-msg-wrapper[data-role="user"] [data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::before,
-.chat-msg-wrapper[data-role="assistant"] [data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::before {
-    content: none !important;
-    display: none !important;
-    background: none !important;
-    box-shadow: none !important;
+/* ============================================================
+   双层 SVG 尾巴 · Float
+   层级严格按 UWU：
+   父级安全堆叠上下文
+      └─ 大尾巴 ::after  z-index:-1
+      └─ 气泡主体         正常层
+      └─ 小尾巴 ::before z-index:2
+   ============================================================ */
+
+/* 父级建立安全堆叠上下文，避免大尾巴 z-index:-1 掉到聊天室背景后面 */
+.chat-msg-wrapper[data-role="assistant"]:has([data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))) .chat-msg-content-wrap,
+.chat-msg-wrapper[data-role="user"]:has([data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))) .chat-msg-content-wrap {
+    position: relative !important;
+    isolation: isolate !important;
+    z-index: 0 !important;
+    overflow: visible !important;
 }
 
-/* 独立尾巴 */
-.chat-msg-wrapper[data-role="assistant"] [data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after,
-.chat-msg-wrapper[data-role="user"] [data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+/* 气泡本体不建立自己的 stacking context，让 ::after 能真正压到主体下面 */
+.chat-msg-wrapper[data-role="assistant"] [data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble)),
+.chat-msg-wrapper[data-role="user"] [data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble)) {
+    position: relative !important;
+    isolation: auto !important;
+    z-index: auto !important;
+    overflow: visible !important;
+}
+
+/* 小尾巴：压在气泡主体上面 */
+.chat-msg-wrapper[data-role="assistant"] [data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::before,
+.chat-msg-wrapper[data-role="user"] [data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::before {
     content: "" !important;
     position: absolute !important;
     display: block !important;
     background-repeat: no-repeat !important;
-    background-position: center !important;
-    background-size: contain !important;
+    background-position: center center !important;
+    background-size: 100% 100% !important;
+    border: none !important;
+    box-shadow: none !important;
     pointer-events: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     z-index: 2 !important;
 }
 
-.chat-msg-wrapper[data-role="assistant"] [data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+.chat-msg-wrapper[data-role="assistant"] [data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::before {
     width: var(--bear-qq-ai-tail-width) !important;
     height: var(--bear-qq-ai-tail-height) !important;
     left: var(--bear-qq-ai-tail-left) !important;
@@ -1006,13 +1049,48 @@
     background-image: var(--bear-qq-ai-tail-image) !important;
 }
 
-.chat-msg-wrapper[data-role="user"] [data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+.chat-msg-wrapper[data-role="user"] [data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::before {
     width: var(--bear-qq-user-tail-width) !important;
     height: var(--bear-qq-user-tail-height) !important;
     right: var(--bear-qq-user-tail-right) !important;
     left: auto !important;
     bottom: var(--bear-qq-user-tail-bottom) !important;
     background-image: var(--bear-qq-user-tail-image) !important;
+}
+
+/* 大尾巴：压到气泡主体下面 */
+.chat-msg-wrapper[data-role="assistant"] [data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after,
+.chat-msg-wrapper[data-role="user"] [data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+    content: "" !important;
+    position: absolute !important;
+    display: block !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    background-size: 100% 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    pointer-events: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: -1 !important;
+}
+
+.chat-msg-wrapper[data-role="assistant"] [data-ui="bubble-bot"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+    width: var(--bear-qq-ai-tail-outer-width) !important;
+    height: var(--bear-qq-ai-tail-outer-height) !important;
+    left: var(--bear-qq-ai-tail-outer-left) !important;
+    right: auto !important;
+    bottom: var(--bear-qq-ai-tail-outer-bottom) !important;
+    background-image: var(--bear-qq-ai-tail-outer-image) !important;
+}
+
+.chat-msg-wrapper[data-role="user"] [data-ui="bubble-user"]:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+    width: var(--bear-qq-user-tail-outer-width) !important;
+    height: var(--bear-qq-user-tail-outer-height) !important;
+    right: var(--bear-qq-user-tail-outer-right) !important;
+    left: auto !important;
+    bottom: var(--bear-qq-user-tail-outer-bottom) !important;
+    background-image: var(--bear-qq-user-tail-outer-image) !important;
 }
 
 .chat-bubble-html-preview {
