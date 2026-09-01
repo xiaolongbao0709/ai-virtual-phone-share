@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T12:51:45.937Z",
+  "generatedAt": "2026-09-01T13:02:40.115Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 68
+      "count": 69
     },
     {
       "name": "应用bug改善",
@@ -2114,6 +2114,27 @@
       "avatar": "资源/应用/情侣空间by小玉[爱心]/.avatar.png",
       "ownerHash": "b022d2f2f3bc654be53ee75c0fb6e1d8805f0115c3c39ea57a76d5a12ae8340d",
       "updatedAt": "2026-08-17T14:02:28+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "手账本",
+      "dirName": "手账本",
+      "type": "dir",
+      "path": "资源/应用/手账本",
+      "files": [
+        "资源/应用/手账本/手账本by🦭.zip"
+      ],
+      "images": [
+        "资源/应用/手账本/IMG_6814.jpeg",
+        "资源/应用/手账本/IMG_6815.png",
+        "资源/应用/手账本/IMG_6817.jpeg",
+        "资源/应用/手账本/IMG_6819.jpeg"
+      ],
+      "description": "[花]char和user都可用的手账本[花]\n具体功能：\n1.带密码锁的手账本，密码输入三次（三次都有来自char的提示或劝u手下留情）三次都错误的话，char会给出正确答案\n2.生成后的手帐可分享给任意联系人或者群聊\n3.user写好的手帐可以被char批注（此功能未经测试）\n4.素材库里内置有一些封面和内页，可自由删留\n已知bug：字体应用不成功\n[粗][红][大]注意在生成char的手帐时会调用两次api[/大][/红][/粗]",
+      "author": "🦭",
+      "avatar": "资源/应用/手账本/.avatar.png",
+      "ownerHash": "fb97e4a005ece2d3acaa890adcf557cb67003ad7e5dcfd62cb7a1767f70e2a91",
+      "updatedAt": "2026-09-01T21:02:06+08:00"
     },
     {
       "folder": "应用",
