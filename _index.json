@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T13:32:47.697Z",
+  "generatedAt": "2026-09-01T13:41:03.749Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 70
+      "count": 69
     },
     {
       "name": "应用bug改善",
@@ -1899,22 +1899,6 @@
       "avatar": "",
       "ownerHash": "2c0ad22ee709f8b746825a67b221d4326ef0840ebf95005bfe6d5572f8131cb7",
       "updatedAt": "2026-09-01T16:18:54+08:00"
-    },
-    {
-      "folder": "应用",
-      "name": "吃了么",
-      "dirName": "吃了么",
-      "type": "dir",
-      "path": "资源/应用/吃了么",
-      "files": [
-        "资源/应用/吃了么/custom-app-1.0.0.zip"
-      ],
-      "images": [],
-      "description": "一个可以点外卖的小程序",
-      "author": "酔鱼",
-      "avatar": "资源/应用/吃了么/.avatar.png",
-      "ownerHash": "cfd675f4e26db2ac2b01670f28453eb921057607ab8a303dc97fd7dd401bc94b",
-      "updatedAt": "2026-09-01T21:32:16+08:00"
     },
     {
       "folder": "应用",
