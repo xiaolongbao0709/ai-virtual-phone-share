@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T10:53:35.082Z",
+  "generatedAt": "2026-09-01T10:56:36.926Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3245,6 +3245,8 @@
         "资源/线上美化/仿qq七色by点星/仿qq(纯黑)by点星.docx"
       ],
       "images": [
+        "资源/线上美化/仿qq七色by点星/1000052809.jpg",
+        "资源/线上美化/仿qq七色by点星/1000052812.jpg",
         "资源/线上美化/仿qq七色by点星/1000053142.jpg",
         "资源/线上美化/仿qq七色by点星/1000053144.jpg",
         "资源/线上美化/仿qq七色by点星/1000053145.jpg"
@@ -3253,7 +3255,7 @@
       "author": "点星",
       "avatar": "资源/线上美化/仿qq七色by点星/.avatar.png",
       "ownerHash": "2bb862f48088a47d560c32b1bf32f991cc1921c9183a83797508fd480737c711",
-      "updatedAt": "2026-09-01T18:53:01+08:00"
+      "updatedAt": "2026-09-01T18:55:52+08:00"
     },
     {
       "folder": "线上美化",
