@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T17:40:29.461Z",
+  "generatedAt": "2026-09-01T17:57:48.199Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1499,7 +1499,7 @@
     },
     {
       "folder": "应用",
-      "name": "[太阳]课程表（pro）",
+      "name": "[太阳]课程表（pro版支持原生日程）",
       "dirName": "[太阳]课程表",
       "type": "dir",
       "path": "资源/应用/[太阳]课程表",
@@ -1514,7 +1514,7 @@
       "author": "那一天",
       "avatar": "资源/应用/[太阳]课程表/.avatar.png",
       "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
-      "updatedAt": "2026-09-02T01:40:00+08:00"
+      "updatedAt": "2026-09-02T01:57:20+08:00"
     },
     {
       "folder": "应用",
