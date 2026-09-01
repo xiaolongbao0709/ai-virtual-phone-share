@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T16:10:56.602Z",
+  "generatedAt": "2026-09-01T16:29:58.723Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 34
+      "count": 35
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -162,6 +162,24 @@
       "avatar": "资源/Js插件/[星星]更换全局聊天背景的小插件[星星]/.avatar.png",
       "ownerHash": "64c4b53d46f5e3372d7b9038e518cf7a93df9d8da983094a12c2ab652f65ac8b",
       "updatedAt": "2026-08-24T21:59:53+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "[蝴蝶结]自定义聊天主题插件",
+      "dirName": "[蝴蝶结]自定义聊天主题插件",
+      "type": "dir",
+      "path": "资源/Js插件/[蝴蝶结]自定义聊天主题插件",
+      "files": [
+        "资源/Js插件/[蝴蝶结]自定义聊天主题插件/float-interface-skins-v0.12.23.js"
+      ],
+      "images": [
+        "资源/Js插件/[蝴蝶结]自定义聊天主题插件/IMG_0822.jpeg"
+      ],
+      "description": "[粗]插件介绍：[/粗]\n可使用png图片自定义顶部栏/底部栏/背景，自由调节位置大小。\n\n可上传字体自定义界面字体效果，支持换颜色。\n搜索框可自定义圆角等效果。\n\n\n[粗]温馨提示：[/粗]\n由于本人使用的test分支，所以不能保证main分支能百分百适配，界面更改依赖于float当前实际dom，所以插件可能会因为float更新而失效。如果使用中出现bug，可以使用工坊自行修复一下～",
+      "author": "neen",
+      "avatar": "资源/Js插件/[蝴蝶结]自定义聊天主题插件/.avatar.png",
+      "ownerHash": "c2cb363b5cf48540a0cce6011e7c92874b79c871f9a59acc2c876fade97fb44c",
+      "updatedAt": "2026-09-02T00:29:26+08:00"
     },
     {
       "folder": "Js插件",
