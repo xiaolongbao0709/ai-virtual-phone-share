@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T11:48:48.942Z",
+  "generatedAt": "2026-09-01T11:49:33.649Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -53,7 +53,7 @@
     },
     {
       "name": "游戏",
-      "count": 8
+      "count": 9
     },
     {
       "name": "特调材料",
@@ -2808,6 +2808,22 @@
       "avatar": "资源/游戏/word search/.avatar.png",
       "ownerHash": "3b2ec651ad1405938e448749951310a2a116dd422b84a87c2e25c611edd1200c",
       "updatedAt": "2026-08-28T19:55:54+08:00"
+    },
+    {
+      "folder": "游戏",
+      "name": "俄罗斯方块[皇冠]",
+      "dirName": "俄罗斯方块[皇冠]",
+      "type": "dir",
+      "path": "资源/游戏/俄罗斯方块[皇冠]",
+      "files": [
+        "资源/游戏/俄罗斯方块[皇冠]/俄罗斯方块.json"
+      ],
+      "images": [],
+      "description": "",
+      "author": "漾漾不打烊✨",
+      "avatar": "",
+      "ownerHash": "9efd54662b8c3c5412eeb83106f9f92b3ba3791db8aa34ea61c3b3520a04d85d",
+      "updatedAt": "2026-09-01T19:48:58+08:00"
     },
     {
       "folder": "游戏",
