@@ -1,0 +1,21 @@
+{
+  "name": "线上旁白",
+  "description": "",
+  "rules": [
+    {
+      "id": "regex-rule-1788146863856",
+      "scriptName": "新正则规则",
+      "findRegex": "/⟦([\\s\\S]*?)⟧/g",
+      "replaceString": "<div style=\"border: 1px dashed #7398b3; border-radius: 8px; padding: 6px 10px; margin: 4px 0; font-size: 0.9em; font-style: italic; letter-spacing: 0.3px; color:#3a3a3a; font-weight:500;\">$1</div>",
+      "disabled": false,
+      "placement": [
+        2
+      ],
+      "tags": [
+        "chat",
+        "text"
+      ],
+      "markdownOnly": true
+    }
+  ]
+}
