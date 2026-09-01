@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T16:29:58.723Z",
+  "generatedAt": "2026-09-01T16:30:30.917Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 71
+      "count": 70
     },
     {
       "name": "应用bug改善",
@@ -2191,25 +2191,6 @@
       "avatar": "资源/应用/手账本/.avatar.png",
       "ownerHash": "fb97e4a005ece2d3acaa890adcf557cb67003ad7e5dcfd62cb7a1767f70e2a91",
       "updatedAt": "2026-09-01T21:02:06+08:00"
-    },
-    {
-      "folder": "应用",
-      "name": "拾光词忆",
-      "dirName": "拾光词忆",
-      "type": "dir",
-      "path": "资源/应用/拾光词忆",
-      "files": [
-        "资源/应用/拾光词忆/app.wordmaster-1.4.0.zip"
-      ],
-      "images": [
-        "资源/应用/拾光词忆/1000052493.jpg",
-        "资源/应用/拾光词忆/1000052494.jpg"
-      ],
-      "description": "在工坊搓的一个非常简陋的背单词软件。\n可以和家机一起背单词，还能让它生成记忆妙招，也可以给机分享自己的背单词进度\n\n用于学习和背单词。\n配置了各种语言包（大热门语言包，像英语日语这些）\n有默写单词功能。听单词功能（由于本人没有接入语音API，但是让坊帮搓了一个，希望有人能反映一下能不能正常听到）\n聊天室和AI聊天功能，可让家机用不同语种回复，并配有中文翻译。配置有语音，需要接有API。（不知能否正常运行）\n打卡功能。生词记忆库。",
-      "author": "nana",
-      "avatar": "资源/应用/拾光词忆/.avatar.png",
-      "ownerHash": "fea7123ab26d67be6637cde15c3bc3b5ef94a1144703c93f0af7e1e81e9c77a2",
-      "updatedAt": "2026-09-02T00:10:16+08:00"
     },
     {
       "folder": "应用",
