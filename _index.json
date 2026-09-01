@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T12:36:36.042Z",
+  "generatedAt": "2026-09-01T12:51:45.937Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 67
+      "count": 68
     },
     {
       "name": "应用bug改善",
@@ -2438,6 +2438,30 @@
       "avatar": "资源/应用/让ta来填填问卷吧~[蝴蝶结]/.avatar.png",
       "ownerHash": "cdec925f9e2d6a79f64c584d0e0286f334fd96c5312717c1b5659b9dc42955d3",
       "updatedAt": "2026-08-30T20:51:27+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "课程表",
+      "dirName": "课程表",
+      "type": "dir",
+      "path": "资源/应用/课程表",
+      "files": [
+        "资源/应用/课程表/课程表_v1.0.0.zip"
+      ],
+      "images": [
+        "资源/应用/课程表/IMG_6540.jpeg",
+        "资源/应用/课程表/IMG_6541.jpeg",
+        "资源/应用/课程表/IMG_6542.jpeg",
+        "资源/应用/课程表/IMG_6543.jpeg",
+        "资源/应用/课程表/IMG_6544.jpeg",
+        "资源/应用/课程表/IMG_6545.jpeg",
+        "资源/应用/课程表/IMG_6546.jpeg"
+      ],
+      "description": "会自动导入、能记作业、还能听懂你随口说的课表 App。具体如图",
+      "author": "觎烬",
+      "avatar": "",
+      "ownerHash": "399610b526381ffe701e1ef5470ffbbd23e0bdd78da58eed769f6ec26ac9895d",
+      "updatedAt": "2026-09-01T20:51:15+08:00"
     },
     {
       "folder": "应用",
