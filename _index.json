@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T05:30:42.954Z",
+  "generatedAt": "2026-09-01T05:59:39.477Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -65,7 +65,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 13
+      "count": 14
     },
     {
       "name": "线下正则",
@@ -3768,6 +3768,25 @@
       "avatar": "资源/线上聊天状态栏/线上仿微信美化/.avatar.png",
       "ownerHash": "610f4f4de346e85636302c26ece1f8743e84cc7417c5c77618e017ca099b9d06",
       "updatedAt": "2026-08-11T18:39:07+02:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "聊天",
+      "dirName": "聊天",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/聊天",
+      "files": [
+        "资源/线上聊天状态栏/聊天/自定义状态栏.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/聊天/1000053220.jpg",
+        "资源/线上聊天状态栏/聊天/1000053223.jpg"
+      ],
+      "description": "让小助手火速搓了一个群聊状态栏，点击头像还可以查看心声，不过那个焦虑值不确定是不是可以用",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "a0a980bbcf7eacb02a25a4eee30cdcaa20d1e0f4f546970c0848bb3f507fe01e",
+      "updatedAt": "2026-09-01T13:59:09+08:00"
     },
     {
       "folder": "线下正则",
