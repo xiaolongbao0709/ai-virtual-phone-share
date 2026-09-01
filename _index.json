@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T11:22:36.920Z",
+  "generatedAt": "2026-09-01T11:48:48.942Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -2942,6 +2942,10 @@
       "type": "dir",
       "path": "资源/特调材料/凌却邪（人设）",
       "files": [
+        "资源/特调材料/凌却邪（人设）/Screenshot_20260901_191309.asset.jpg",
+        "资源/特调材料/凌却邪（人设）/Screenshot_20260901_191313.asset.jpg",
+        "资源/特调材料/凌却邪（人设）/Screenshot_20260901_191318.asset.jpg",
+        "资源/特调材料/凌却邪（人设）/Screenshot_20260901_191324.asset.jpg",
         "资源/特调材料/凌却邪（人设）/凌却邪 (1).json",
         "资源/特调材料/凌却邪（人设）/凌却邪特调.配方.json",
         "资源/特调材料/凌却邪（人设）/盛泽世界观.json",
@@ -2952,7 +2956,7 @@
       "author": "倚枫歌",
       "avatar": "",
       "ownerHash": "0ffce5bd289863ee9a5da25317d422cc3b3ebe42a4b3a0fa8e44b0b9443fc92b",
-      "updatedAt": "2026-09-01T19:12:33+08:00"
+      "updatedAt": "2026-09-01T19:48:19+08:00"
     },
     {
       "folder": "特调材料",
