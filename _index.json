@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T11:49:33.649Z",
+  "generatedAt": "2026-09-01T12:32:48.542Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -53,7 +53,7 @@
     },
     {
       "name": "游戏",
-      "count": 9
+      "count": 10
     },
     {
       "name": "特调材料",
@@ -2950,6 +2950,22 @@
       "avatar": "",
       "ownerHash": "88f102e0ef217cea73fe5b268e0c11999ebe72de7ee6c86765148d0313569196",
       "updatedAt": "2026-08-12T10:13:58+02:00"
+    },
+    {
+      "folder": "游戏",
+      "name": "贪吃蛇[幽灵]",
+      "dirName": "贪吃蛇[幽灵]",
+      "type": "dir",
+      "path": "资源/游戏/贪吃蛇[幽灵]",
+      "files": [],
+      "images": [
+        "资源/游戏/贪吃蛇[幽灵]/IMG_5577.png"
+      ],
+      "description": "需要现在顶部【邀请搭子】处开始游戏",
+      "author": "漾漾不打烊✨",
+      "avatar": "",
+      "ownerHash": "9efd54662b8c3c5412eeb83106f9f92b3ba3791db8aa34ea61c3b3520a04d85d",
+      "updatedAt": "2026-09-01T20:32:18+08:00"
     },
     {
       "folder": "特调材料",
