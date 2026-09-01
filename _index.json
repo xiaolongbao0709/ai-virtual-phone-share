@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T13:02:40.115Z",
+  "generatedAt": "2026-09-01T13:07:30.265Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 32
+      "count": 33
     },
     {
       "name": "线上聊天状态栏",
@@ -3196,6 +3196,20 @@
       "avatar": "资源/线上美化/ins风（粉+灰）/.avatar.png",
       "ownerHash": "dce2d2c1fa83f62ffecba146d01e074745f865062ed02250d368219e96a7e22a",
       "updatedAt": "2026-08-25T12:01:26+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "ios风格图标",
+      "dirName": "ios风格图标",
+      "type": "dir",
+      "path": "资源/线上美化/ios风格图标",
+      "files": [],
+      "images": [],
+      "description": "（图太多了好像上传不了只能网盘了）\n【超级会员V6】通过百度网盘分享的文件：图标ios\n链接：https://pan.baidu.com/s/1qNnhoP9j2z9ZJxPQj9Ct5w?pwd=2223 \n复制这段内容打开「百度网盘APP 即可获取」\n如果想要别的可以去这两个网站，免费\nhttps://icon.yukonga.top\nhttps://d.subeiz.com",
+      "author": "sansan12306",
+      "avatar": "",
+      "ownerHash": "bfd242983a24e61048a1cd7085da78d2b8f6721110629b794d9262aba0f32286",
+      "updatedAt": "2026-09-01T21:06:59+08:00"
     },
     {
       "folder": "线上美化",
