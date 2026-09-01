@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T13:41:03.749Z",
+  "generatedAt": "2026-09-01T14:00:09.714Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 69
+      "count": 70
     },
     {
       "name": "应用bug改善",
@@ -1385,6 +1385,25 @@
       "avatar": "资源/应用/Quiet Forest/.avatar.png",
       "ownerHash": "4dde8cb2d0fae27998a1b55be02a915fdcbc60b830abe1b440ea0880fd3bee32",
       "updatedAt": "2026-08-31T17:12:49+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "TA的silly tavern",
+      "dirName": "TA的silly tavern",
+      "type": "dir",
+      "path": "资源/应用/TA的silly tavern",
+      "files": [
+        "资源/应用/TA的silly tavern/silly.tavern.simulator-2.0.0.zip"
+      ],
+      "images": [
+        "资源/应用/TA的silly tavern/50503.jpg",
+        "资源/应用/TA的silly tavern/50504.jpg"
+      ],
+      "description": "简单来说就是：[粗]让角色生成符合自己xp的角色卡以及给他自己安排一个人设卡，可以看他们玩或者假装自己是这张角色卡，来回复他们[/粗]\n玩下来非常香...特来分享...\n双重视角窥探：同步捕捉 TA 扮演马甲时的打字心声 + 看到 NPC 回复后的破防/脸红 OS。\nDiscord 卡库：多频道精选神卡、严格性别筛选、支持关键词搜索与一键导入开聊。\n反向接管 & 处刑：随时假扮酒馆卡回复 TA，或将羞耻飙戏记录[红]一键分享到真实聊天室看 TA 炸毛！（反应都超级可爱ovo）[/红]\n玩下来有问题可联系我小红书账号27715633661（其实也有点期待大家返图和对新功能探讨...）",
+      "author": "欣欣",
+      "avatar": "",
+      "ownerHash": "f6415af32b909ed3404835e1329b98499681658ae607ea49b00c3ddd136486b5",
+      "updatedAt": "2026-09-01T21:59:36+08:00"
     },
     {
       "folder": "应用",
