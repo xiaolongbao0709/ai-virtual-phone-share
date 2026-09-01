@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T08:30:24.189Z",
+  "generatedAt": "2026-09-01T08:39:14.188Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1752,7 +1752,7 @@
       "author": "Stella",
       "avatar": "",
       "ownerHash": "eee1ff3396b8bafaeaff7dc7209679503c680ddedfc96481ece03b322fd8e867",
-      "updatedAt": "2026-09-01T16:29:55+08:00"
+      "updatedAt": "2026-09-01T16:38:47+08:00"
     },
     {
       "folder": "应用",
