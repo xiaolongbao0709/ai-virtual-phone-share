@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T10:07:12.498Z",
+  "generatedAt": "2026-09-02T10:15:14.839Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -21,7 +21,7 @@
     },
     {
       "name": "剧情预设及正则",
-      "count": 7
+      "count": 8
     },
     {
       "name": "小剧场",
@@ -1180,6 +1180,22 @@
       "avatar": "",
       "ownerHash": "bdd62c5dd81eb1505d7fb19ac5dd35f2483ed9a5247274b4c17942419fc8893a",
       "updatedAt": "2026-09-02T17:06:22+08:00"
+    },
+    {
+      "folder": "剧情预设及正则",
+      "name": "44个八股禁词",
+      "dirName": "44个八股禁词",
+      "type": "dir",
+      "path": "资源/剧情预设及正则/44个八股禁词",
+      "files": [
+        "资源/剧情预设及正则/44个八股禁词/高频词与陈词过滤.json"
+      ],
+      "images": [],
+      "description": "一些常出现的，线上线下可以按需求自己调整。默认导入线上聊天。",
+      "author": "鱼头柿饼",
+      "avatar": "",
+      "ownerHash": "ccaecc009bf4a4f670f01f93005ebb7e60c8d958fe2449025a41e1609ae3e4cd",
+      "updatedAt": "2026-09-02T18:14:40+08:00"
     },
     {
       "folder": "剧情预设及正则",
