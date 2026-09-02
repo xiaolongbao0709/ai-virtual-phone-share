@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T09:43:46.373Z",
+  "generatedAt": "2026-09-02T09:50:43.437Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 72
+      "count": 73
     },
     {
       "name": "应用bug改善",
@@ -1465,6 +1465,27 @@
       "avatar": "资源/应用/Quiet Forest/.avatar.png",
       "ownerHash": "4dde8cb2d0fae27998a1b55be02a915fdcbc60b830abe1b440ea0880fd3bee32",
       "updatedAt": "2026-08-31T17:12:49+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "Rinbo",
+      "dirName": "Rinbo",
+      "type": "dir",
+      "path": "资源/应用/Rinbo",
+      "files": [
+        "资源/应用/Rinbo/rinbo（公开版）.bookkeeping-1.0.0.zip"
+      ],
+      "images": [
+        "资源/应用/Rinbo/IMG_2175.jpeg",
+        "资源/应用/Rinbo/IMG_2178.jpeg",
+        "资源/应用/Rinbo/IMG_2179.jpeg",
+        "资源/应用/Rinbo/IMG_2183.jpeg"
+      ],
+      "description": "[粉]Rinbo[/粉]——让你的char给你[粗]记账[/粗]吧\n【基础功能】\n1.点击[粗]+号开始记账[/粗]，[粗]双击[/粗]消息气泡可选择删除/重roll\n2.[粗]输入框左侧图标[/粗]切换手动记账/给ai发消息自动记账\n3.[粗]设置[/粗]齿轮里面可添加分类\n4.可在钱包中添加银行卡\n5.可以一边和char吐槽自己的花销一边让ta帮你记账\n\n\n[粗]其他功能[/粗]可以看🍠，[粗]不会用[/粗]的可以到我🍠账号看演示视频。\n🍠：[粗]4113541615[/粗]\n\n\n「关于功能/bug」\n→本是私用版的公开分享，出于单角色梦女角度制作，功能不能满足所有人的需求，请见谅..\n→博主不一定会修bug，如果有bug会发更新版\n\n\n【使用须知】\n❗[红]仅限float使用。[/红]可以自用二改和我分享交流。请[粗]不要[/粗]改app的名字，[粗]不要[/粗]二传或变成商业软件盈利，不然我可能会下架不再更新，欢迎美味repo，总之谢谢很好的你。",
+      "author": "海盐清",
+      "avatar": "资源/应用/Rinbo/.avatar.png",
+      "ownerHash": "bfb3e3d17651836721132248bd5c9b911d883b93bb4269afe371127e1e530ed6",
+      "updatedAt": "2026-09-02T17:50:09+08:00"
     },
     {
       "folder": "应用",
