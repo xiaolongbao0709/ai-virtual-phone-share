@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T13:23:22.943Z",
+  "generatedAt": "2026-09-02T13:52:06.732Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -73,7 +73,7 @@
     },
     {
       "name": "表情包",
-      "count": 1
+      "count": 2
     },
     {
       "name": "预设",
@@ -4328,6 +4328,24 @@
       "avatar": "资源/表情包/nuko像素猫——来源于网络/.avatar.png",
       "ownerHash": "6282160018481cd1e72c1d048cde54f68f685dc043a3f0bb414518f03418a3cd",
       "updatedAt": "2026-08-31T20:56:48+08:00"
+    },
+    {
+      "folder": "表情包",
+      "name": "月薪喵全集[小猫]",
+      "dirName": "月薪喵全集[小猫]",
+      "type": "dir",
+      "path": "资源/表情包/月薪喵全集[小猫]",
+      "files": [
+        "资源/表情包/月薪喵全集[小猫]/1788357028406_月薪喵全集.docx"
+      ],
+      "images": [
+        "资源/表情包/月薪喵全集[小猫]/Screenshot_2026_0902_214830_com.sevensix.everlasting.png"
+      ],
+      "description": "月薪喵表情包\n图源@月薪喵 🈲二🈲商 由朵朵整理\n自由改含义",
+      "author": "朵朵",
+      "avatar": "资源/表情包/月薪喵全集[小猫]/.avatar.png",
+      "ownerHash": "e26f9d5f9b5d5368ff93e21153ff68f69c154c10e838598b2dee9cefea2da1bc",
+      "updatedAt": "2026-09-02T21:51:29+08:00"
     },
     {
       "folder": "预设",
