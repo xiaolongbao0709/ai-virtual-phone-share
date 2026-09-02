@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-01T22:56:52.001Z",
+  "generatedAt": "2026-09-02T01:11:51.888Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 33
+      "count": 34
     },
     {
       "name": "线上聊天状态栏",
@@ -3479,6 +3479,32 @@
       "avatar": "",
       "ownerHash": "b187c9f8dec83db6cf467b82af2254910d4dd901c73f5da114062d4dbd32661e",
       "updatedAt": "2026-08-28T21:51:39+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "复古5s微信by小池",
+      "dirName": "复古5s微信by小池",
+      "type": "dir",
+      "path": "资源/线上美化/复古5s微信by小池",
+      "files": [
+        "资源/线上美化/复古5s微信by小池/float底栏保留贴纸回复.js",
+        "资源/线上美化/复古5s微信by小池/复古5s微信绿绿by小池.txt",
+        "资源/线上美化/复古5s微信by小池/灰灰复古5s微信by小池.txt",
+        "资源/线上美化/复古5s微信by小池/粉粉复古5s微信by小池.txt",
+        "资源/线上美化/复古5s微信by小池/蓝蓝复古5s微信by小池.txt",
+        "资源/线上美化/复古5s微信by小池/黑黑复古5s微信by小池.txt"
+      ],
+      "images": [
+        "资源/线上美化/复古5s微信by小池/CA76598DBA55C470FE72540A4CAA99C0.png",
+        "资源/线上美化/复古5s微信by小池/D356E5F11A87A02BBB30E6179C8652CC.png",
+        "资源/线上美化/复古5s微信by小池/IMG_6487.jpeg",
+        "资源/线上美化/复古5s微信by小池/IMG_6504.jpeg"
+      ],
+      "description": "🚫二改二传\np1、2是颜色展示 p3是一些特殊消息展示 基本上我记得的特殊消息都做了\n\n[粗][红][大]必须要配合我发的插件使用 不然底栏会错位[/大][/红][/粗]\n[粗][蓝][大]底栏按键位置看p4[/大][/蓝][/粗]",
+      "author": "@Dol0re3_",
+      "avatar": "资源/线上美化/复古5s微信by小池/.avatar.png",
+      "ownerHash": "6a08d4fbb179025747de726b73fc09d681a2a7d30e74d9d35f57f31a77b70b8d",
+      "updatedAt": "2026-09-02T09:11:16+08:00"
     },
     {
       "folder": "线上美化",
