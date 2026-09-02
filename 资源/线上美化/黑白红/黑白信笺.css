@@ -1,0 +1,178 @@
+/* ═══════════════════════════════════════════════════════
+   黑白信笺 · 聊天页皮肤  v1
+   贴进「全局自定义 CSS」即可。要调的地方我都标了 ← 微调
+   ═══════════════════════════════════════════════════════ */
+
+:root{
+  --skin-ink:      #0d0d0d;   /* 黑（角色气泡/爱心/边框/花体） ← 微调 */
+  --skin-paper:    #ffffff;   /* 白（你的气泡） */
+  --skin-user-txt: #111111;   /* 你气泡的字色 */
+  --skin-char-txt: #f6f5f2;   /* 角色气泡的字色 */
+  --skin-user-line:#e6e5e1;   /* 白气泡的细边（不然白底白屏看不见） */
+  --skin-red:      #e5342b;   /* 翻译红 ← 微调 */
+}
+
+/* ── 1. 气泡配色 + 小尾巴 ───────────────────────────── */
+.chat-bubble-role-user,
+.chat-bubble-role-assistant{
+  overflow: visible !important;      /* 让翻译能探出气泡 */
+  position: relative;
+  padding: 5px 14px !important;      /* ← 上下高度；数字越大越高 */
+  line-height: 1.3 !important;       /* 文字更紧凑 */
+}
+/* 你（右）：白底黑字 */
+.chat-bubble-role-user{
+  background: var(--skin-paper) !important;
+  color: var(--skin-user-txt) !important;
+  border: 1px solid var(--skin-user-line);
+}
+/* 角色（左）：黑底白字 */
+.chat-bubble-role-assistant{
+  background: var(--skin-ink) !important;
+  color: var(--skin-char-txt) !important;
+}
+/* 小尾巴已删除（气泡改成纯圆角，无三角尾） */
+
+/* ── 2. 输入框：黑线描边、内外同色、圆角 ────────────── */
+.chat-input-bar .chat-input-textarea{
+  border: 1.5px solid var(--skin-ink) !important;
+  background: transparent !important;   /* 和外面同色，无色差 */
+  border-radius: 22px !important;
+  padding-right: 46px !important;       /* 给右端的爱心让位 */
+}
+
+/* ── 3. 爱心键（“让 AI 回消息”那个）→ 实心黑爱心，浮到输入框右端 ── */
+/* 它是功能键里的第 6 个（触发 AI 回复）。生成中它会临时消失，属正常。 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(6){
+  position: absolute;
+  top: 8px;             /* ← 微调：上下（往上挪了点） */
+  right: 22px;          /* ← 微调：左右 */
+  z-index: 6;
+  width: 34px; height: 34px;
+}
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(6) svg{ display:none !important; }
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(6)::after{
+  content:"\2665";                       /* ♥ 实心 */
+  color: var(--skin-ink);
+  font-size: 24px; line-height: 1;       /* ← 微调：爱心大小 */
+}
+/* 引用消息时藏起浮着的爱心，别挡住取消引用的 ✕；取消引用后自动回来 */
+.chat-input-bar:has(.chat-quote-bar) .chat-input-actions .ui-bare-btn:nth-child(6){ display: none !important; }
+
+/* ── 4. 底栏 → 花体 “if we have each other” ───────────────────
+   前 5 个键贴花体字、藏图标；第 6 键（让AI回复）已在 §3 挪成输入框里的爱心。
+   花体本身很安全，不会让键消失。最后那句“把中间三键显示回来”是为了凑齐 5 个词——
+   万一它又让整排底栏消失，只删那一条即可，前面的花体照常。 */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(1) svg,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2) svg,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3) svg,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4) svg,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5) svg{ display:none !important; }
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(1)::after,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2)::after,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3)::after,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4)::after,
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5)::after{
+  font-family: 'Snell Roundhand','Savoye LET',cursive !important;  /* 花体写在字上 */
+  color: var(--skin-ink) !important;
+  font-size: 22px !important;   /* ← 微调：花体大小 */
+  font-weight: 400 !important;
+  line-height: 1;
+}
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(1)::after{ content:"if"; }
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2)::after{ content:"we"; }
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3)::after{ content:"have"; }
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4)::after{ content:"each"; }
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(5)::after{ content:"other"; }
+.chat-input-bar .chat-input-actions{ justify-content:space-around !important; }
+/* ↓↓↓ 只为凑齐 5 个词：把某些模式下被藏的 表情/贴纸/加号 显示回来。
+       若这一条又让底栏整排消失，删掉它即可（花体不受影响）↓↓↓ */
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(2),
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(3),
+.chat-input-bar .chat-input-actions .ui-bare-btn:nth-child(4){ display:inline-flex !important; opacity:1 !important; }
+
+/* ── 5. 翻译：常显红字、骑在气泡下沿（半贴半不贴） ──── */
+/* ⚠️ 需先在聊天设置里关掉“折叠中文翻译/双语默认收起”，翻译才会常显。 */
+.chat-bilingual-toggle,           /* 隐藏“中文/收起中文”按钮 */
+.chat-bilingual-divider{          /* 隐藏虚线分割 */
+  display:none !important;
+}
+.chat-msg-wrapper[data-role="assistant"]:has(.chat-bilingual-section-translation){
+  margin-bottom: 16px;            /* ← 紧凑：消息间距；翻译若被下条压到就把这个加大 */
+}
+.chat-bubble-role-assistant .chat-bilingual-section-translation{
+  position:absolute;
+  left:14px;                      /* 和气泡里文字左边对齐（第一个字对第一个字） */
+  top:100%;
+  transform: translateY(-0.62em); /* 只纵向：第一行骑在气泡下沿，多出的行往下走 */
+  margin:0 !important;
+  text-align:left;
+  white-space:normal;
+  line-height:1.35;
+  width: max-content;
+  max-width: 70vw;                /* ← 微调：右边能超出气泡多远才换行 */
+  opacity:1 !important;
+}
+.chat-bubble-role-assistant .chat-bilingual-section-translation,
+.chat-bubble-role-assistant .chat-bilingual-section-translation *{
+  color: var(--skin-red) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;                    /* ← 微调：翻译字号（大一点点） */
+  -webkit-text-stroke: 0.1px var(--skin-red);    /* 加粗——弱一点 */
+}
+
+/* ── 6. 红绳挂坠：他头像缠红棉绳 + 内心独白爱心变红坠 ───────────
+   第一版，怎么缠不好看直接跟我说，随便改。 */
+.chat-msg-avatar{
+  position: relative;
+  overflow: visible !important;
+  margin-top: -6px;                /* ← 头像上移，和气泡那行字齐平；负得越多越往上 */
+}
+/* 两边头像 DOM 结构不同，直接锁死图片尺寸 → 一定一样大（要改大小就改这个 40px） */
+.chat-msg-avatar img{
+  width: 40px !important; height: 40px !important;
+  object-fit: cover !important; border-radius: 50% !important; display: block;
+}
+/* 连发的消息不再重复头像：只第一条带头像（和框） */
+.chat-msg-wrapper[data-consecutive] .chat-msg-avatar{ visibility: hidden; }
+/* 头像椭圆小对话框：已按你说的去掉 */
+/* app 自带的内心独白心 → 红色 + 缩小 + 往左靠一点 */
+.chat-monologue-heart{ color:#e23b3b !important; transform: translateX(-2px); }
+.chat-monologue-heart svg{ width:18px !important; height:18px !important; }  /* 缩小 22→18；再小改这里 */
+
+/* ── 7. 语音转文字：原文保留灰框不动，只把中文翻译拎成红字骑在框边 ── */
+.voice-msg-text-bubble{ position:relative; overflow:visible !important; }  /* 灰框保持原样，只加定位 */
+.voice-msg-text-bubble .chat-bilingual-toggle,
+.voice-msg-text-bubble .chat-bilingual-divider{ display:none !important; }
+.voice-msg-text-bubble .chat-bilingual-section-translation{
+  position:absolute; left:12px; top:100%; transform:translateY(-0.62em);  /* 第一行骑在灰框下沿 */
+  margin:0 !important; text-align:left; white-space:normal; line-height:1.35;
+  width:max-content; max-width:70vw;
+}
+.voice-msg-text-bubble .chat-bilingual-section-translation,
+.voice-msg-text-bubble .chat-bilingual-section-translation *{
+  color: var(--skin-red) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  -webkit-text-stroke: 0.1px var(--skin-red);
+}
+.chat-msg-wrapper:has(.voice-msg-text-bubble .chat-bilingual-section-translation){ margin-bottom:16px; }
+
+/* ── 8. 上/下栏的硬边界 → 羽化融掉 ───────────────────────────
+   顶栏和输入栏都是磨砂玻璃(backdrop-filter)，那条突兀的线就是磨砂面的直角边。
+   给它俩各留一点渐隐区，再用 mask 把边界羽化掉；正文没被切到。
+   想让融得更宽/更窄，调下面的 16/18px 和 22/24px。 */
+.chat-app .chat-room-wrapper .page-header{
+  padding-bottom: 16px;
+  background: var(--c-page-body-bg,#FAFAFA) !important;   /* 完全不透明实色；想要半透就换回 color-mix(... N%, transparent) */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent);
+          mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent);
+}
+.chat-app .chat-room-wrapper .chat-input-bar{
+  padding-top: 22px;
+  background: var(--c-page-body-bg,#FAFAFA) !important;   /* 完全不透明实色；想要半透就换回 color-mix(... N%, transparent) */
+  -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 24px), transparent);
+          mask-image: linear-gradient(to top, #000 calc(100% - 24px), transparent);
+}
