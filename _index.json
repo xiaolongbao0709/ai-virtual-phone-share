@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T17:24:30.573Z",
+  "generatedAt": "2026-09-02T21:48:14.722Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -57,7 +57,7 @@
     },
     {
       "name": "特调材料",
-      "count": 3
+      "count": 4
     },
     {
       "name": "线上美化",
@@ -3335,6 +3335,24 @@
       "avatar": "",
       "ownerHash": "0ffce5bd289863ee9a5da25317d422cc3b3ebe42a4b3a0fa8e44b0b9443fc92b",
       "updatedAt": "2026-09-01T07:50:22+08:00"
+    },
+    {
+      "folder": "特调材料",
+      "name": "选项卡",
+      "dirName": "选项卡",
+      "type": "dir",
+      "path": "资源/特调材料/选项卡",
+      "files": [
+        "资源/特调材料/选项卡/选项卡.json"
+      ],
+      "images": [
+        "资源/特调材料/选项卡/46626.jpg"
+      ],
+      "description": "是机括，推剧情用的，我实在懒得想咋行动。可以自己控制一下输出的字数和加不加动作 选项点一下会自动发出去\n^ω^",
+      "author": "浅井 怜",
+      "avatar": "资源/特调材料/选项卡/.avatar.png",
+      "ownerHash": "6c8a4b19c00952a5cb175079671b6efba60608a7ab051d6345bceefcca74334a",
+      "updatedAt": "2026-09-03T05:47:41+08:00"
     },
     {
       "folder": "线上美化",
