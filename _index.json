@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T03:31:29.680Z",
+  "generatedAt": "2026-09-02T06:00:20.110Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -17,7 +17,7 @@
     },
     {
       "name": "全局主题",
-      "count": 3
+      "count": 4
     },
     {
       "name": "剧情预设及正则",
@@ -1123,6 +1123,22 @@
       "avatar": "",
       "ownerHash": "236ecc192be0d623afb290c5cc467a13575a1a2edd0456b3c04869f0825cefab",
       "updatedAt": "2026-08-29T09:19:12+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "雨季🌧️",
+      "dirName": "雨季🌧️",
+      "type": "dir",
+      "path": "资源/全局主题/雨季🌧️",
+      "files": [
+        "资源/全局主题/雨季🌧️/雨季.zip"
+      ],
+      "images": [],
+      "description": "谢谢宝宝们的喜欢！\n素材来源于小红书 图标来源于电子屁",
+      "author": "超级蛋挞",
+      "avatar": "",
+      "ownerHash": "cf40126a80b5c7f61990f68ac3c485df4d1b7289572165f67c1e02185ea997ab",
+      "updatedAt": "2026-09-02T13:59:45+08:00"
     },
     {
       "folder": "剧情预设及正则",
