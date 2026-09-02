@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T08:47:46.623Z",
+  "generatedAt": "2026-09-02T09:06:53.845Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -17,7 +17,7 @@
     },
     {
       "name": "全局主题",
-      "count": 4
+      "count": 5
     },
     {
       "name": "剧情预设及正则",
@@ -1144,6 +1144,26 @@
       "avatar": "",
       "ownerHash": "cf40126a80b5c7f61990f68ac3c485df4d1b7289572165f67c1e02185ea997ab",
       "updatedAt": "2026-09-02T16:05:54+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "黑色兔",
+      "dirName": "黑色兔",
+      "type": "dir",
+      "path": "资源/全局主题/黑色兔",
+      "files": [
+        "资源/全局主题/黑色兔/黑色兔.zip"
+      ],
+      "images": [
+        "资源/全局主题/黑色兔/1000042990.jpg",
+        "资源/全局主题/黑色兔/1000042991.jpg",
+        "资源/全局主题/黑色兔/1000042992.jpg"
+      ],
+      "description": "壁纸图源小红书",
+      "author": "知知",
+      "avatar": "",
+      "ownerHash": "bdd62c5dd81eb1505d7fb19ac5dd35f2483ed9a5247274b4c17942419fc8893a",
+      "updatedAt": "2026-09-02T17:06:22+08:00"
     },
     {
       "folder": "剧情预设及正则",
@@ -3854,12 +3874,14 @@
       "files": [
         "资源/线上美化/黑白红/黑白信笺.css"
       ],
-      "images": [],
+      "images": [
+        "资源/线上美化/黑白红/IMG_6590.png"
+      ],
       "description": "一个简约美化。有bug的话🍠戳我",
       "author": "觎烬",
       "avatar": "资源/线上美化/黑白红/.avatar.png",
       "ownerHash": "399610b526381ffe701e1ef5470ffbbd23e0bdd78da58eed769f6ec26ac9895d",
-      "updatedAt": "2026-09-02T16:47:14+08:00"
+      "updatedAt": "2026-09-02T17:06:22+08:00"
     },
     {
       "folder": "线上聊天状态栏",
