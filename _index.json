@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-02T08:06:28.252Z",
+  "generatedAt": "2026-09-02T08:47:46.623Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 34
+      "count": 35
     },
     {
       "name": "线上聊天状态栏",
@@ -3844,6 +3844,22 @@
       "avatar": "资源/线上美化/黑白猪/.avatar.png",
       "ownerHash": "bf65bc1c732341505dc056c65d6ad17b6862e2c1f0cdf99f70af36a873b438aa",
       "updatedAt": "2026-08-13T15:55:40+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "黑白红",
+      "dirName": "黑白红",
+      "type": "dir",
+      "path": "资源/线上美化/黑白红",
+      "files": [
+        "资源/线上美化/黑白红/黑白信笺.css"
+      ],
+      "images": [],
+      "description": "一个简约美化。有bug的话🍠戳我",
+      "author": "觎烬",
+      "avatar": "资源/线上美化/黑白红/.avatar.png",
+      "ownerHash": "399610b526381ffe701e1ef5470ffbbd23e0bdd78da58eed769f6ec26ac9895d",
+      "updatedAt": "2026-09-02T16:47:14+08:00"
     },
     {
       "folder": "线上聊天状态栏",
