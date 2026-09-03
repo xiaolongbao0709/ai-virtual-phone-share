@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-03T04:27:26.411Z",
+  "generatedAt": "2026-09-03T04:55:59.859Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 74
+      "count": 75
     },
     {
       "name": "应用bug改善",
@@ -2543,6 +2543,22 @@
       "avatar": "",
       "ownerHash": "4fd92bb153980867431d711956f20b1d2491c7b5f7ff0cccca28fecfd030b996",
       "updatedAt": "2026-08-18T15:58:31+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "浮岛词忆",
+      "dirName": "浮岛词忆",
+      "type": "dir",
+      "path": "资源/应用/浮岛词忆",
+      "files": [
+        "资源/应用/浮岛词忆/app.wordmaster-1.4.0 (2).zip"
+      ],
+      "images": [],
+      "description": "一个非常简单粗糙的学习软件\n和小坊的制作物\n有以下功能\n背单词，背文章，语种不限，可自行上传单词背诵，也可以用原本准备好的词库，本来就有的单词。\n可以让AI教你背单词背文章的小技巧\n可以和AI在聊天室里用不同的语种聊天。配有中文翻译。\n可以和AI PK背单词。\n可以默写单词。\n想要背诵相关主题的文章，可以让AI生成参考，用来学习语法，或者学习写作手法。\n可以用背单词和跟AI要的积分来投喂小猫。\n配有语音读单词、读文章，AI发的信息也有，需要接入API才行，由于本人还没有接入，不知道能不能正常运行，希望有人能反映吧。",
+      "author": "nana",
+      "avatar": "资源/应用/浮岛词忆/.avatar.png",
+      "ownerHash": "fea7123ab26d67be6637cde15c3bc3b5ef94a1144703c93f0af7e1e81e9c77a2",
+      "updatedAt": "2026-09-03T12:55:27+08:00"
     },
     {
       "folder": "应用",
