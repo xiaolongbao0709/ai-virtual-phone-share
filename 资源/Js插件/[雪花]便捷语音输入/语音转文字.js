@@ -3,9 +3,9 @@ export default {
     id: "universal-voice-input-pro",
     name: "通用语音转文字 (ASR Pro)",
     apiVersion: 1,
-    version: "1.2.0",
+    version: "1.3.0",
     author: "小坊",
-    description: "多厂商通用语音输入。精准绑定聊天室输入框长按（绝不误触设置页），支持 SiliconFlow、Groq、OpenAI 及中转，内置模型拉取与诊断。",
+    description: "多厂商通用语音输入。长按聊天打字框说话或点击极简深灰悬浮球，松手极速转文字打入输入框。支持 SiliconFlow(免翻)、Groq、OpenAI 及自定义中转，内置模型拉取与诊断。",
     permissions: ["chat.read"],
     settings: [
       {
@@ -68,7 +68,6 @@ export default {
 
   setup(ctx) {
     let currentSessionId = null;
-    let isInsideChat = false;
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
@@ -93,7 +92,6 @@ export default {
     ctx.hooks.on("session.opened", (p) => {
       if (p && p.sessionId) {
         currentSessionId = p.sessionId;
-        isInsideChat = true;
         updateUI();
       }
     });
@@ -140,7 +138,6 @@ export default {
     };
     const selectTimer = ctx.system.timers.setInterval(bindSelectWatcher, 800);
 
-    // 录音视觉反馈样式
     ctx.ui.injectCSS(`
       .xf-pro-pressing {
         outline: 2px solid rgba(160, 160, 175, 0.7) !important;
@@ -159,7 +156,6 @@ export default {
         color: #f4f4f5;
         border: 1px solid rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
         padding: 9px 18px;
         border-radius: 9999px;
         display: none;
@@ -230,7 +226,6 @@ export default {
       }
     `);
 
-    // 录音胶囊 DOM
     const capsuleEl = document.createElement("div");
     capsuleEl.className = "xf-pro-capsule";
     capsuleEl.innerHTML = `
@@ -239,7 +234,6 @@ export default {
     `;
     document.body.appendChild(capsuleEl);
 
-    // 悬浮球 DOM
     let fabWrap = document.createElement("div");
     fabWrap.className = "xf-pro-fab-wrap";
     fabWrap.innerHTML = `
@@ -247,7 +241,7 @@ export default {
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
           <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-          <line x1="12" y1="19" y2="22"></line>
+          <line x1="12" x2="12" y1="19" y2="22"></line>
         </svg>
       </div>
     `;
@@ -289,7 +283,6 @@ export default {
       return b.replace(/\/+$/, "");
     };
 
-    // 诊断与拉取面板
     ctx.ui.slot("settings.section", (container) => {
       container.style.cssText = "margin-top:14px;padding:14px;background:rgba(125,125,125,0.08);border-radius:12px;border:1px solid rgba(125,125,125,0.15);";
       container.innerHTML = `
@@ -330,7 +323,7 @@ export default {
 
           if (!res.ok) {
             const errTxt = await res.text();
-            resBox.innerHTML = `<span style="color:#ef4444;">❌ 请求失败 [HTTP ${res.status}]</span>\n${errTxt}\n\n💡 若提示 401：请核对 Key 是否正确；若使用海外服务请检查网络代理。`;
+            resBox.innerHTML = `<span style="color:#ef4444;">❌ 请求失败 [HTTP ${res.status}]</span>\n${errTxt}\n\n💡 若提示 401：请核对 Key 是否完整正确；若使用海外服务请检查网络代理。`;
             return;
           }
 
@@ -381,27 +374,17 @@ export default {
       };
     });
 
-    // ==================== 核心：精准识别聊天输入框 ====================
     const isChatRoomInput = (el) => {
       if (!el) return false;
-
-      // 绝不拦截下拉框、按钮、选择项、密码框
       if (["SELECT", "OPTION", "BUTTON"].includes(el.tagName)) return false;
       if (el.type === "checkbox" || el.type === "radio" || el.type === "password") return false;
-
-      // 绝不拦截插件管理、弹窗、设置页内部的 input
       if (el.closest(".settings-container, .modal, [role='dialog'], .xf-pro-capsule, .plugin-settings, form")) {
         return false;
       }
-
-      // 1. 优先认准原生聊天室输入框类名
       if (el.classList?.contains("chat-input-textarea")) return true;
-
-      // 2. 属于聊天室底部输入栏 .chat-input-bar
       if (el.closest(".chat-input-bar, .chat-room-main-pane") && (el.tagName === "TEXTAREA" || el.tagName === "INPUT")) {
         return true;
       }
-
       return false;
     };
 
@@ -441,7 +424,6 @@ export default {
     document.addEventListener("pointerup", handleEnd, { capture: true, passive: true });
     document.addEventListener("pointercancel", handleEnd, { capture: true, passive: true });
 
-    // 录音流程
     const startRecording = async (mode = "hold") => {
       if (isRecording) return;
       triggerMode = mode;
@@ -501,7 +483,6 @@ export default {
       }
     };
 
-    // ASR 转写提交
     async function doUniversalTranscription(blob) {
       const key = getCleanKey();
       const base = getBaseUrl();
@@ -555,16 +536,28 @@ export default {
           });
           ctx.ui.toast("已发送");
         } else {
-          // 优先填入当前激活的聊天输入框，或者根据 .chat-input-textarea 自动定位
           const target = activeInputEl || document.querySelector(".chat-input-textarea, textarea");
           if (target) {
-            if (target.isContentEditable) {
-              target.innerText = (target.innerText ? target.innerText + " " : "") + text;
+            const oldVal = target.value || "";
+            const nextVal = oldVal ? `${oldVal} ${text}` : text;
+
+            const nativeSetter =
+              Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value")?.set ||
+              Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
+
+            if (nativeSetter) {
+              nativeSetter.call(target, nextVal);
             } else {
-              target.value = (target.value ? target.value + " " : "") + text;
+              target.value = nextVal;
             }
+
             target.dispatchEvent(new Event("input", { bubbles: true }));
+            target.dispatchEvent(new Event("change", { bubbles: true }));
             target.focus();
+
+            target.style.height = "auto";
+            target.style.height = `${Math.min(target.scrollHeight, 120)}px`;
+
             ctx.ui.toast("已填入输入框");
           } else {
             await navigator.clipboard.writeText(text);
