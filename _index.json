@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-03T15:37:57.776Z",
+  "generatedAt": "2026-09-03T15:43:24.372Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -57,7 +57,7 @@
     },
     {
       "name": "特调材料",
-      "count": 4
+      "count": 5
     },
     {
       "name": "线上美化",
@@ -3373,6 +3373,27 @@
       "avatar": "",
       "ownerHash": "0ffce5bd289863ee9a5da25317d422cc3b3ebe42a4b3a0fa8e44b0b9443fc92b",
       "updatedAt": "2026-09-01T19:48:19+08:00"
+    },
+    {
+      "folder": "特调材料",
+      "name": "晏安（人设）",
+      "dirName": "晏安（人设）",
+      "type": "dir",
+      "path": "资源/特调材料/晏安（人设）",
+      "files": [
+        "资源/特调材料/晏安（人设）/晏安.docx",
+        "资源/特调材料/晏安（人设）/晏安.配方.json"
+      ],
+      "images": [
+        "资源/特调材料/晏安（人设）/1000084292.jpg",
+        "资源/特调材料/晏安（人设）/1000084293.jpg",
+        "资源/特调材料/晏安（人设）/1000084294.jpg"
+      ],
+      "description": "晏安来咯，开场白实在想不出了，就写了一版青梅竹马的，后面依旧是线上和线下的人设",
+      "author": "倚枫歌",
+      "avatar": "",
+      "ownerHash": "0ffce5bd289863ee9a5da25317d422cc3b3ebe42a4b3a0fa8e44b0b9443fc92b",
+      "updatedAt": "2026-09-03T23:42:48+08:00"
     },
     {
       "folder": "特调材料",
