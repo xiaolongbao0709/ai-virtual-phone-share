@@ -168,6 +168,50 @@ export default {
     let callKeepUntil = 0;
     let seqNet = 0;
     const netSeen = new Map();
+    // 跨通道内容指纹：fingerprint -> voiceId（网络实时版 / 消息版同内容只留一条）
+    const fpIndex = new Map();
+    // 非通话网络音频延迟入库暂存：fingerprint -> 定时器句柄（等消息通道认领）
+    const pendingNet = new Map();
+    let storeGeneration = 0; // 清空缓存时自增，作废旧暂存
+    async function blobFingerprint(blob) {
+      try {
+        const head = new Uint8Array(await blob.slice(0, Math.min(blob.size, 65536)).arrayBuffer());
+        return crc32(head).toString(16) + "-" + blob.size;
+      } catch (e) { return "fp-unknown-" + blob.size; }
+    }
+    function rebuildFpIndex() {
+      fpIndex.clear();
+      for (const m of mem.values()) if (m.fingerprint) fpIndex.set(m.fingerprint, m.id);
+    }
+    // 历史/现存重复清理：同指纹只留一条（消息版优先，同级留最早）；同消息 id 留体积最大的
+    async function dedupeStored() {
+      const byFp = new Map();
+      for (const m of mem.values()) {
+        if (!m.fingerprint) continue;
+        if (!byFp.has(m.fingerprint)) byFp.set(m.fingerprint, []);
+        byFp.get(m.fingerprint).push(m);
+      }
+      for (const arr of byFp.values()) {
+        if (arr.length < 2) continue;
+        arr.sort((a, b) => {
+          const sa = a.source === "message" ? 0 : 1, sb = b.source === "message" ? 0 : 1;
+          return sa - sb || (a.capturedAt || 0) - (b.capturedAt || 0);
+        });
+        for (const dup of arr.slice(1)) await voiceStore.remove(dup.id);
+      }
+      const byMsg = new Map();
+      for (const m of mem.values()) {
+        if (!m.messageId || String(m.messageId).indexOf("net-") === 0) continue;
+        if (!byMsg.has(m.messageId)) byMsg.set(m.messageId, []);
+        byMsg.get(m.messageId).push(m);
+      }
+      for (const arr of byMsg.values()) {
+        if (arr.length < 2) continue;
+        arr.sort((a, b) => (b.size || 0) - (a.size || 0));
+        for (const dup of arr.slice(1)) await voiceStore.remove(dup.id);
+      }
+      rebuildFpIndex();
+    }
 
     // ─────────────────────── IndexedDB 持久层 ───────────────────────
     // meta store 只存元数据（列表渲染轻量），blob store 存音频字节；
@@ -258,11 +302,17 @@ export default {
         try { return await idbGetBlob(id); } catch (e) { return null; }
       },
       async remove(id) {
+        const m = mem.get(id);
         mem.delete(id);
+        if (m && m.fingerprint && fpIndex.get(m.fingerprint) === id) fpIndex.delete(m.fingerprint);
         if (idbAlive) { try { await idbDelete(id); } catch (e) { /* 忽略 */ } }
       },
       async clear() {
         mem.clear();
+        fpIndex.clear();
+        storeGeneration++;
+        pendingNet.forEach((t) => { try { clearTimeout(t); } catch (e) { /* 忽略 */ } });
+        pendingNet.clear();
         if (idbAlive) { try { await idbClear(); } catch (e) { /* 忽略 */ } }
       },
       has(id) { return mem.has(id); },
@@ -389,6 +439,7 @@ export default {
         if (!force && prev && prev.size >= blob.size) return false;
         if (prev && !force && prev.size < blob.size) force = true;
         const mime = blob.type || resolved.mimeType || "audio/mpeg";
+        const fingerprint = await blobFingerprint(blob);
         const meta = {
           id: vid,
           messageId: String(msg.id),
@@ -403,9 +454,19 @@ export default {
           capturedAt: Date.now(),
           isCall: detectCall(msg) || inCall,
           source: "message",
+          fingerprint,
           duration: prev && prev.duration ? prev.duration : null,
         };
         await voiceStore.save(meta, blob);
+        fpIndex.set(fingerprint, vid);
+        // 同内容的网络实时版让位给消息版（修复普通语音实时/普通各抓一遍）
+        const pendingTimer = pendingNet.get(fingerprint);
+        if (pendingTimer) { try { clearTimeout(pendingTimer); } catch (e) { /* 忽略 */ } pendingNet.delete(fingerprint); }
+        for (const m of [...mem.values()]) {
+          if (m.id !== vid && m.fingerprint === fingerprint && m.source !== "message") {
+            await voiceStore.remove(m.id);
+          }
+        }
         scheduleRender();
         return true;
       } catch (e) {
@@ -493,12 +554,31 @@ export default {
     }
     async function saveNetworkBlob(blob, url, reqText, sourceTag) {
       if (!blob || blob.size < 32) return;
-      const bytes = new Uint8Array(await blob.slice(0, Math.min(blob.size, 65536)).arrayBuffer());
-      const fingerprint = crc32(bytes).toString(16) + "-" + blob.size;
+      const fingerprint = await blobFingerprint(blob);
       // 同指纹 60 秒内视为请求重试/分片重复，丢弃；超过 60 秒视为又说了相同的话，照常保留
       const now0 = Date.now();
       if (netSeen.has(fingerprint) && now0 - netSeen.get(fingerprint) < 60000) return;
       netSeen.set(fingerprint, now0);
+      // 跨通道去重：同内容已入库（消息版或已确认的实时版）直接丢弃
+      if (fpIndex.has(fingerprint)) return;
+      const inCallNow = inCall || isCallUiActive() || /(call|talk|phone)/i.test(String(url || ""));
+      // 非通话场景：延迟 8 秒入库，期间消息通道抓到同内容就丢弃实时版（避免普通语音两条）
+      if (!inCallNow) {
+        if (pendingNet.has(fingerprint)) return;
+        const gen = storeGeneration;
+        const timer = ctx.system.timers.setTimeout(() => {
+          pendingNet.delete(fingerprint);
+          if (gen !== storeGeneration || fpIndex.has(fingerprint)) return;
+          commitNetworkBlob(blob, url, reqText, sourceTag, fingerprint, false);
+        }, 8000);
+        pendingNet.set(fingerprint, timer);
+        return;
+      }
+      // 通话中没有消息通道，立即入库（挂断前缓存）
+      return commitNetworkBlob(blob, url, reqText, sourceTag, fingerprint, true);
+    }
+    async function commitNetworkBlob(blob, url, reqText, sourceTag, fingerprint, isCallNow) {
+      if (fpIndex.has(fingerprint)) return;
       const id = "net-" + fingerprint + "-" + (seqNet++).toString(36);
       const sid = state.currentSessionId || "";
       const urlExt = extFromUrl(url);
@@ -507,7 +587,7 @@ export default {
         id,
         messageId: id,
         sessionId: sid,
-        sessionTitle: sid ? sessionTitle(sid) : (inCall ? "通话录音" : "实时语音"),
+        sessionTitle: sid ? sessionTitle(sid) : (isCallNow ? "通话录音" : "实时语音"),
         role: "assistant",
         text: (reqText || "").slice(0, 120),
         mimeType: mime,
@@ -515,11 +595,12 @@ export default {
         size: blob.size,
         createdAt: Date.now(),
         capturedAt: Date.now(),
-        isCall: inCall || isCallUiActive() || /(call|talk|phone)/i.test(String(url || "")),
+        isCall: isCallNow,
         source: sourceTag,
         fingerprint,
         duration: null,
       };
+      fpIndex.set(fingerprint, id);
       await voiceStore.save(meta, blob);
       scheduleRender();
     }
@@ -1138,6 +1219,11 @@ export default {
       if (inited) return;
       inited = true;
       try { await voiceStore.loadAll(); } catch (e) { ctx.system.log("[语音缓存] 初始加载失败", e); }
+      // 重建内容指纹索引，并清理历史遗留的跨通道重复
+      try {
+        rebuildFpIndex();
+        await dedupeStored();
+      } catch (e) { ctx.system.log("[语音缓存] 重复清理失败", e); }
       updateCount();
       if (state.open) renderList();
       if (setting("startupScan", true)) {
@@ -1148,6 +1234,8 @@ export default {
 
     // ──────────────────────────── 卸载清理 ────────────────────────────
     return () => {
+      pendingNet.forEach((t) => { try { clearTimeout(t); } catch (e) { /* 忽略 */ } });
+      pendingNet.clear();
       try { els.root && els.root.remove(); } catch (e) { /* 忽略 */ }
       try { if (origFetch) window.fetch = origFetch; } catch (e) { /* 忽略 */ }
       try {
