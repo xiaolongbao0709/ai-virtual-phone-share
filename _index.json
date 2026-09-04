@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T06:38:40.775Z",
+  "generatedAt": "2026-09-04T06:41:02.033Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -4638,8 +4638,8 @@
       "description": "",
       "author": "",
       "avatar": "",
-      "ownerHash": "d7747c84d620871be5ba4343741763a3aaba442fc436e2e0a63b703f2825a462",
-      "updatedAt": "2026-08-31T10:25:32+08:00"
+      "ownerHash": "b1fb6e5837d789bce23afa8d55d136b02a8653a05245d2980a3c323e300b1042",
+      "updatedAt": "2026-09-04T14:40:29+08:00"
     },
     {
       "folder": "预设",
