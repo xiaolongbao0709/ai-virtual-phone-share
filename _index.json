@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T05:38:19.723Z",
+  "generatedAt": "2026-09-04T05:40:18.673Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -73,7 +73,7 @@
     },
     {
       "name": "表情包",
-      "count": 4
+      "count": 5
     },
     {
       "name": "预设",
@@ -4538,6 +4538,24 @@
       "avatar": "资源/表情包/nuko像素猫——来源于网络/.avatar.png",
       "ownerHash": "6282160018481cd1e72c1d048cde54f68f685dc043a3f0bb414518f03418a3cd",
       "updatedAt": "2026-08-31T20:56:48+08:00"
+    },
+    {
+      "folder": "表情包",
+      "name": "小傻子表情包",
+      "dirName": "小傻子表情包",
+      "type": "dir",
+      "path": "资源/表情包/小傻子表情包",
+      "files": [
+        "资源/表情包/小傻子表情包/小傻子表情包.docx"
+      ],
+      "images": [
+        "资源/表情包/小傻子表情包/1000039951.jpg"
+      ],
+      "description": "二改随意呀",
+      "author": "sonemo",
+      "avatar": "资源/表情包/小傻子表情包/.avatar.png",
+      "ownerHash": "b1fb6e5837d789bce23afa8d55d136b02a8653a05245d2980a3c323e300b1042",
+      "updatedAt": "2026-09-04T13:39:43+08:00"
     },
     {
       "folder": "表情包",
