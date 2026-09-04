@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T06:41:02.033Z",
+  "generatedAt": "2026-09-04T08:55:37.727Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 37
+      "count": 36
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
@@ -559,22 +559,6 @@
       "avatar": "",
       "ownerHash": "ae6a9f76a3bd53095a0492578266a36fa1bd28ecfaee0c7c7098bcba3babe02d",
       "updatedAt": "2026-08-20T19:28:22+08:00"
-    },
-    {
-      "folder": "Js插件",
-      "name": "破坏插件导致的滑动障碍插件",
-      "dirName": "破坏插件导致的滑动障碍插件",
-      "type": "dir",
-      "path": "资源/Js插件/破坏插件导致的滑动障碍插件",
-      "files": [
-        "资源/Js插件/破坏插件导致的滑动障碍插件/Code_20260903 2.js"
-      ],
-      "images": [],
-      "description": "",
-      "author": "末末",
-      "avatar": "资源/Js插件/破坏插件导致的滑动障碍插件/.avatar.png",
-      "ownerHash": "b5ad1b31d3822e30694b781f9a0721bc5b93fff92859b104499055699a7268ee",
-      "updatedAt": "2026-09-03T23:26:35+08:00"
     },
     {
       "folder": "Js插件",
