@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T05:18:09.157Z",
+  "generatedAt": "2026-09-04T05:18:48.693Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1827,7 +1827,7 @@
     },
     {
       "folder": "应用",
-      "name": "[星星]备忘录（2.0）",
+      "name": "[星星]备忘录（v2.1）",
       "dirName": "[星星]备忘录",
       "type": "dir",
       "path": "资源/应用/[星星]备忘录",
@@ -1843,7 +1843,7 @@
       "author": "那一天",
       "avatar": "资源/应用/[星星]备忘录/.avatar.png",
       "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
-      "updatedAt": "2026-09-04T13:17:37+08:00"
+      "updatedAt": "2026-09-04T13:18:12+08:00"
     },
     {
       "folder": "应用",
