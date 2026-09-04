@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T11:39:45.311Z",
+  "generatedAt": "2026-09-04T11:44:37.823Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -17,7 +17,7 @@
     },
     {
       "name": "全局主题",
-      "count": 4
+      "count": 5
     },
     {
       "name": "剧情预设及正则",
@@ -1188,6 +1188,24 @@
       "avatar": "",
       "ownerHash": "236ecc192be0d623afb290c5cc467a13575a1a2edd0456b3c04869f0825cefab",
       "updatedAt": "2026-08-29T09:19:12+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "水色",
+      "dirName": "水色",
+      "type": "dir",
+      "path": "资源/全局主题/水色",
+      "files": [
+        "资源/全局主题/水色/水色.zip"
+      ],
+      "images": [
+        "资源/全局主题/水色/889.jpeg"
+      ],
+      "description": "",
+      "author": "我不烦",
+      "avatar": "资源/全局主题/水色/.avatar.png",
+      "ownerHash": "039af75efda3b1a0ba536b59c77cc2e2603d5a91c80b5420ec4cdf75305d12d2",
+      "updatedAt": "2026-09-04T19:43:58+08:00"
     },
     {
       "folder": "全局主题",
