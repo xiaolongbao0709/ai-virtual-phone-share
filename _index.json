@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T05:25:19.067Z",
+  "generatedAt": "2026-09-04T05:32:42.571Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -73,7 +73,7 @@
     },
     {
       "name": "表情包",
-      "count": 2
+      "count": 3
     },
     {
       "name": "预设",
@@ -4502,6 +4502,24 @@
       "avatar": "资源/线下正则/去除线下频繁破折号/.avatar.png",
       "ownerHash": "f3b0893a7fe329736590ea476236375fd1017e0f5a65a5d8361c030d7e6b03fc",
       "updatedAt": "2026-08-11T06:53:13+02:00"
+    },
+    {
+      "folder": "表情包",
+      "name": "QQ企鹅",
+      "dirName": "QQ企鹅",
+      "type": "dir",
+      "path": "资源/表情包/QQ企鹅",
+      "files": [
+        "资源/表情包/QQ企鹅/QQ 企鹅表情包 by sonemo.docx"
+      ],
+      "images": [
+        "资源/表情包/QQ企鹅/1000039907.jpg"
+      ],
+      "description": "随意二改呀",
+      "author": "sonemo",
+      "avatar": "资源/表情包/QQ企鹅/.avatar.png",
+      "ownerHash": "b1fb6e5837d789bce23afa8d55d136b02a8653a05245d2980a3c323e300b1042",
+      "updatedAt": "2026-09-04T13:32:06+08:00"
     },
     {
       "folder": "表情包",
