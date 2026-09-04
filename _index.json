@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T13:31:50.363Z",
+  "generatedAt": "2026-09-04T14:41:25.000Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 81
+      "count": 82
     },
     {
       "name": "应用bug改善",
@@ -2406,6 +2406,24 @@
       "avatar": "",
       "ownerHash": "3b2ec651ad1405938e448749951310a2a116dd422b84a87c2e25c611edd1200c",
       "updatedAt": "2026-08-28T19:44:29+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "广播剧",
+      "dirName": "广播剧",
+      "type": "dir",
+      "path": "资源/应用/广播剧",
+      "files": [
+        "资源/应用/广播剧/workshop.radio-drama-1.0.0.zip"
+      ],
+      "images": [
+        "资源/应用/广播剧/IMG_4616.png"
+      ],
+      "description": "1 iOS无法调节音效音量，只能提前调好音量再导入。\n2 循环环境音会被短音效打断后再恢复播放。\n3 没有测试过minimax是否可用，应该是可以的。",
+      "author": "走路的盖欧卡",
+      "avatar": "",
+      "ownerHash": "8194ca4cadd8437b2a87bbeb59ffe73512a37716ba19413823ef8a8e8ee262ba",
+      "updatedAt": "2026-09-04T22:40:45+08:00"
     },
     {
       "folder": "应用",
