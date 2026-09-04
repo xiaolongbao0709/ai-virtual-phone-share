@@ -1,0 +1,618 @@
+/*
+  临境 · 浮光夜航 1.0
+  适配 Limen / 临境 v1.1.12
+  直接在“美化当前互动 → 导入文件”中选择本 CSS，预览后保存。
+  纯 CSS；不包含脚本、外部资源，也不会修改正文、模型请求或记忆。
+*/
+
+:root {
+  color-scheme: dark !important;
+  --paper: #08080a !important;
+  --surface: #111114 !important;
+  --soft: #17171c !important;
+  --soft-2: #202027 !important;
+  --ink: #ededf1 !important;
+  --muted: #a1a1aa !important;
+  --faint: #73737d !important;
+  --line: #292930 !important;
+  --danger: #e18a96 !important;
+  --night-panel: #111114 !important;
+  --night-panel-2: #19191e !important;
+  --night-text: #ededf1 !important;
+  --night-subtext: #9b9ba5 !important;
+  --night-line: #2b2b33 !important;
+  --dialogue-ink: #fafafd !important;
+  --dialogue-weight: 650 !important;
+  --dialogue-bg: #2b2b38 !important;
+  --dialogue-radius: 5px !important;
+  --fg-font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --fg-rim: inset 0 1px 0 rgba(255,255,255,.035), 0 12px 34px rgba(0,0,0,.16);
+}
+
+html,
+body,
+.app-shell,
+.main,
+.timeline {
+  background: #08080a !important;
+  color: #ededf1 !important;
+}
+
+body {
+  font-family: var(--fg-font) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  color: #ffffff !important;
+  background: #454555 !important;
+}
+
+/* 顶栏与场景信息 */
+.topbar {
+  background: rgba(8,8,10,.88) !important;
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+}
+
+.topbar-title,
+.door-title {
+  color: #f2f2f5 !important;
+}
+
+.topbar-kicker,
+.door-kicker {
+  color: #8f8f99 !important;
+}
+
+.icon-button {
+  color: #c5c5cc !important;
+}
+
+.topbar .icon-button,
+.door-topbar .icon-button {
+  border: 1px solid #28282f !important;
+  background: linear-gradient(145deg, #17171b, #101013) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.icon-button:active,
+.scene-tools button:active {
+  background: #222229 !important;
+}
+
+.people-count {
+  border-color: #08080a !important;
+  background: #ededf1 !important;
+  color: #101014 !important;
+}
+
+.scene-strip {
+  border-color: #292930 !important;
+  background: linear-gradient(110deg, #121215 25%, #0d0d10) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025) !important;
+  color: #9a9aa4 !important;
+}
+
+.scene-strip .svg-icon {
+  color: #85858f !important;
+}
+
+.scene-strip-divider {
+  background: #34343d !important;
+}
+
+.scene-kind {
+  border-color: #303038 !important;
+  background: #19191e !important;
+  color: #b7b7c0 !important;
+}
+
+.scene-tools button,
+.compact-actions button {
+  border: 1px solid #2a2a32 !important;
+  background: #141418 !important;
+  color: #bdbdc5 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+/* 阅读区：保留 Aa 中选择的飞花宋体与字号 */
+.timeline {
+  background:
+    radial-gradient(115% 62% at 50% -18%, rgba(72,72,88,.13), transparent 58%),
+    #08080a !important;
+}
+
+.turn-author {
+  color: #c9c9d0 !important;
+}
+
+.turn-time,
+.turn-menu {
+  color: #777781 !important;
+}
+
+.assistant-turn {
+  border-color: #25252c !important;
+  background: linear-gradient(155deg, #121216 0, #0f0f12 72%) !important;
+  box-shadow: var(--fg-rim) !important;
+}
+
+.assistant-turn .turn-head {
+  border-bottom-color: #24242b !important;
+}
+
+.assistant-turn .turn-author {
+  border-color: #2b2b33 !important;
+  background: #17171c !important;
+  color: #d7d7dc !important;
+}
+
+.assistant-turn .turn-content,
+.user-turn .turn-content {
+  color: #d3d3d9 !important;
+}
+
+.assistant-turn.is-draft {
+  border-color: #484852 !important;
+}
+
+.user-turn {
+  border-color: #303038 !important;
+  background: linear-gradient(150deg, #1d1d23, #17171c) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.turn-content .dialogue-quote,
+.reading-preview .dialogue-quote {
+  color: var(--dialogue-ink) !important;
+  background: var(--dialogue-bg) !important;
+  box-shadow: inset 0 -1px 0 #4a4a5d !important;
+}
+
+.user-turn .dialogue-quote {
+  background: #343443 !important;
+  box-shadow: inset 0 -1px 0 #55556a !important;
+}
+
+.empty-scene {
+  border-color: #27272e !important;
+  background: linear-gradient(145deg, #131317 45%, #0d0d10) !important;
+  box-shadow: var(--fg-rim) !important;
+}
+
+.empty-scene-title {
+  color: #e5e5e9 !important;
+}
+
+.empty-scene-eyebrow,
+.empty-scene-text,
+.empty-scene-note {
+  color: #91919b !important;
+}
+
+.empty-scene-note {
+  border-top-color: #2b2b33 !important;
+}
+
+.waiting-turn {
+  border-color: #292930 !important;
+  background: linear-gradient(120deg, #141418, #0f0f12) !important;
+  color: #aaaab3 !important;
+}
+
+.waiting-dots i {
+  background: #b6b6c0 !important;
+}
+
+.waiting-stop,
+.generation-notice button {
+  border-color: #303038 !important;
+  background: #19191e !important;
+  color: #c6c6ce !important;
+}
+
+.generation-state {
+  border-color: #2d2d35 !important;
+  background: #1a1a20 !important;
+  color: #aaaab4 !important;
+}
+
+.generation-notice {
+  border-color: #292930 !important;
+  background: #121216 !important;
+  color: #9f9fa9 !important;
+}
+
+.memory-state {
+  color: #df8c98 !important;
+}
+
+/* 输入栏 */
+.composer {
+  border-color: #303038 !important;
+  background: #101013 !important;
+  box-shadow: 0 0 0 4px #0c0c0f, inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+
+.composer-box {
+  background: #101013 !important;
+}
+
+.composer textarea {
+  background: transparent !important;
+  color: #e5e5e9 !important;
+  caret-color: #f4f4f7 !important;
+}
+
+.composer textarea::placeholder {
+  color: #74747e !important;
+}
+
+#mainView #composer:focus-within {
+  border-color: #5a5a68 !important;
+  box-shadow: 0 0 0 4px #17171d, inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+
+.send-button {
+  border-color: #eeeeF2 !important;
+  background: linear-gradient(145deg, #f5f5f7, #d8d8df) !important;
+  color: #151519 !important;
+  box-shadow: inset 0 1px 0 #ffffff !important;
+}
+
+.send-button:not(:disabled):not(.is-unready):active {
+  background: #c8c8d0 !important;
+}
+
+.send-button.is-unready,
+.send-button:disabled {
+  border-color: #2b2b32 !important;
+  background: #202027 !important;
+  color: #666670 !important;
+  box-shadow: none !important;
+}
+
+/* 侧栏、弹窗与设置 */
+.scrim,
+.sheet-backdrop,
+.dialog-backdrop {
+  background: rgba(0,0,0,.68) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.drawer,
+.drawer-list,
+.sheet,
+.sheet-head,
+.sheet-body,
+.sheet-actions,
+.dialog {
+  background: #101013 !important;
+  color: #dedee3 !important;
+}
+
+.drawer,
+.sheet,
+.dialog {
+  border-color: #2b2b33 !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.45) !important;
+}
+
+.drawer-head,
+.sheet-head,
+.sheet-actions {
+  border-color: #292930 !important;
+}
+
+.sheet-head {
+  background: linear-gradient(120deg, #151519, #101013) !important;
+}
+
+.drawer-title,
+.sheet-title,
+.dialog-title,
+.field-label,
+.section-title {
+  color: #e6e6ea !important;
+}
+
+.drawer-subtitle,
+.sheet-subtitle,
+.dialog-message,
+.field-help,
+.choice-note,
+.narration-option small,
+.book-copy small,
+.beauty-card-meta {
+  color: #95959f !important;
+}
+
+.drawer-label {
+  color: #777781 !important;
+}
+
+.space-button,
+.space-symbol,
+.drawer-add,
+.action-row,
+.choice-row,
+.override-card,
+.book-row,
+.narration-option,
+.director-rule,
+.beauty-folder {
+  border-color: #2b2b33 !important;
+  background: #141418 !important;
+  color: #cfcfd5 !important;
+}
+
+.space-button.is-active {
+  border-color: #3c3c47 !important;
+  background: linear-gradient(120deg, #202027, #17171c) !important;
+  box-shadow: inset 3px 0 0 #bdbdc8 !important;
+}
+
+.space-title,
+.choice-name,
+.override-name,
+.book-copy {
+  color: #d9d9de !important;
+}
+
+.space-note {
+  color: #8f8f99 !important;
+}
+
+.choice-row.is-selected,
+.narration-option.is-selected {
+  border-color: #555562 !important;
+  background: #202027 !important;
+  box-shadow: inset 3px 0 0 #c8c8d0 !important;
+}
+
+.choice-row.is-selected .choice-mark {
+  border-color: #ededf1 !important;
+  background: #ededf1 !important;
+  color: #17171b !important;
+}
+
+.segmented {
+  border-color: #292930 !important;
+  background: #17171c !important;
+}
+
+.segment {
+  background: transparent !important;
+  color: #9696a0 !important;
+}
+
+.segment.is-selected {
+  background: #303039 !important;
+  color: #f0f0f3 !important;
+  box-shadow: inset 0 0 0 1px #484854 !important;
+}
+
+.text-input,
+.text-area,
+.code-area,
+select,
+option {
+  border-color: #303038 !important;
+  background: #17171c !important;
+  color: #dedee4 !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.22) !important;
+}
+
+.text-input::placeholder,
+.text-area::placeholder {
+  color: #6f6f79 !important;
+}
+
+.inline-note,
+.director-message,
+.beauty-card {
+  border-color: #292930 !important;
+  background: #18181d !important;
+  color: #aaaab4 !important;
+}
+
+.compact-actions.director-send-actions,
+.section-title {
+  border-color: #292930 !important;
+}
+
+.director-remember,
+.sheet-actions .primary,
+.dialog-actions .primary {
+  border-color: #e7e7eb !important;
+  background: #e7e7eb !important;
+  color: #17171b !important;
+}
+
+.sheet-actions button,
+.dialog-actions button,
+.beauty-card button,
+.beauty-save-row button {
+  border-color: #303038 !important;
+  background: #18181d !important;
+  color: #c7c7cf !important;
+}
+
+.sheet-actions .danger {
+  border-color: #57373e !important;
+  color: #e18a96 !important;
+}
+
+.dialog-actions .danger {
+  border-color: #a95866 !important;
+  background: #a95866 !important;
+  color: #ffffff !important;
+}
+
+.reading-control button,
+.reading-preview {
+  border-color: #303038 !important;
+  background: #151519 !important;
+  color: #cfcfd6 !important;
+}
+
+.reading-control input,
+.book-row input {
+  accent-color: #c6c6cf !important;
+}
+
+.toast {
+  border-color: #4b4b56 !important;
+  background: #ededf1 !important;
+  color: #17171b !important;
+  box-shadow: 0 14px 38px rgba(0,0,0,.35) !important;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #777786 !important;
+  outline-offset: 3px !important;
+}
+
+button:disabled {
+  opacity: .5 !important;
+}
+
+/* “门”也进入同一套夜色，不留下白色断层。 */
+.door-view {
+  background:
+    radial-gradient(80% 44% at 50% 8%, rgba(70,70,82,.16), transparent 70%),
+    #08080a !important;
+  color: #ededf1 !important;
+}
+
+.door-topbar {
+  background: rgba(8,8,10,.86) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.door-room-no,
+.door-last-seen,
+.door-status-sub,
+.door-trace {
+  color: #85858f !important;
+}
+
+.door-clock,
+.door-status-main {
+  color: #dedee4 !important;
+}
+
+.door-wall-line {
+  background: #222228 !important;
+}
+
+.door-frame {
+  background: #020203 !important;
+}
+
+.door-panel {
+  border-color: #3b3b43 !important;
+  background: linear-gradient(90deg, #27272d, #202025 55%, #19191d) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.025) !important;
+}
+
+.door-number {
+  color: #9f9fa8 !important;
+}
+
+.door-peephole {
+  border-color: #65656f !important;
+  background: #050506 !important;
+}
+
+.door-handle,
+.door-handle::after {
+  background: #aaaab2 !important;
+}
+
+.door-object.is-lit .door-light-gap {
+  background: #d8d8e7 !important;
+  box-shadow: 0 2px 16px 2px rgba(184,184,220,.38) !important;
+}
+
+.door-status,
+.door-action,
+.door-empty button {
+  border-color: #2b2b33 !important;
+  background: #121216 !important;
+  color: #d0d0d6 !important;
+}
+
+.door-empty-mark {
+  border-color: #bdbdc5 !important;
+}
+
+.door-empty-mark::after {
+  background: #bdbdc5 !important;
+}
+
+.door-empty h2 {
+  color: #e4e4e8 !important;
+}
+
+.door-empty p {
+  color: #90909a !important;
+}
+
+.door-moment {
+  background: rgba(5,5,6,.94) !important;
+  color: #efeff2 !important;
+}
+
+.door-moment-kind,
+.door-afterword {
+  color: #8f8f99 !important;
+}
+
+.door-moment-close {
+  background: #19191e !important;
+  color: #d7d7dc !important;
+}
+
+.door-moment-actions button {
+  border-color: #454550 !important;
+  color: #d8d8de !important;
+}
+
+.door-moment-actions button.primary {
+  border-color: #ededf1 !important;
+  background: #ededf1 !important;
+  color: #151519 !important;
+}
+
+/* 细滚动条仅在支持的设备显示。 */
+* {
+  scrollbar-color: #383842 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #383842;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
