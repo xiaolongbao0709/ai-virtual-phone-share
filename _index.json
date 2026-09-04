@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T05:18:48.693Z",
+  "generatedAt": "2026-09-04T05:25:19.067Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 77
+      "count": 78
     },
     {
       "name": "应用bug改善",
@@ -2895,6 +2895,24 @@
       "avatar": "",
       "ownerHash": "10fcb4810a7e1f79fb4f735a8aab71691dd662edd6c01043ea5cef63af474106",
       "updatedAt": "2026-09-02T02:37:27+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "高中",
+      "dirName": "高中",
+      "type": "dir",
+      "path": "资源/应用/高中",
+      "files": [
+        "资源/应用/高中/高中_v1.7.0.zip"
+      ],
+      "images": [
+        "资源/应用/高中/IMG_7437.jpeg"
+      ],
+      "description": "好崩溃。高考加油。\n-bug反馈找xhs，同名",
+      "author": "yzy",
+      "avatar": "资源/应用/高中/.avatar.png",
+      "ownerHash": "c84f1904fa7b68c212c91bc5fda2055472af121e6c8f64740a348e1eb138a112",
+      "updatedAt": "2026-09-04T13:24:44+08:00"
     },
     {
       "folder": "应用",
