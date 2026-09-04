@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T12:18:31.014Z",
+  "generatedAt": "2026-09-04T12:35:10.848Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "预设",
-      "count": 2
+      "count": 1
     }
   ],
   "entries": [
@@ -4622,24 +4622,6 @@
       "avatar": "",
       "ownerHash": "b1fb6e5837d789bce23afa8d55d136b02a8653a05245d2980a3c323e300b1042",
       "updatedAt": "2026-09-04T14:40:29+08:00"
-    },
-    {
-      "folder": "预设",
-      "name": "萌（丑）猫合集",
-      "dirName": "萌（丑）猫合集",
-      "type": "dir",
-      "path": "资源/预设/萌（丑）猫合集",
-      "files": [
-        "资源/预设/萌（丑）猫合集/萌猫合集表情包.docx"
-      ],
-      "images": [
-        "资源/预设/萌（丑）猫合集/1000039974.jpg"
-      ],
-      "description": "随意二改呀",
-      "author": "sonemo",
-      "avatar": "资源/预设/萌（丑）猫合集/.avatar.png",
-      "ownerHash": "b1fb6e5837d789bce23afa8d55d136b02a8653a05245d2980a3c323e300b1042",
-      "updatedAt": "2026-09-04T13:36:09+08:00"
     }
   ]
 }
