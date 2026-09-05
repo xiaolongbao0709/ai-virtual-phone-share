@@ -1,0 +1,1716 @@
+/*
+  临境 · 透页阅读 / Reader Glass
+  适配 Limen / 临境 v1.1.12
+  风格：高通透毛玻璃 / 阅读器书页 / 灰白低饱和
+
+  =========================
+  图片替换区（方便二改）
+  =========================
+
+  【头像链接放这里】
+  图源作者：还给我。
+  默认头像：
+  https://i.postimg.cc/zBG3Dfft/IMG-7436.jpg
+
+  【背景图链接放这里】
+  默认背景：
+  https://i.postimg.cc/bJjhN6Y1/IMG-7474.jpg
+
+  说明：纯 CSS，不改正文、不改模型请求、不改记忆。
+*/
+
+:root {
+  color-scheme: light !important;
+
+  --mm-avatar: url("https://i.postimg.cc/zBG3Dfft/IMG-7436.jpg");
+  --mm-bg: url("https://i.postimg.cc/bJjhN6Y1/IMG-7474.jpg");
+
+  --paper: #f3f3f1 !important;
+  --surface: rgba(255,255,255,.58) !important;
+  --soft: rgba(245,245,243,.62) !important;
+  --soft-2: rgba(233,233,230,.68) !important;
+  --ink: #3d3d3a !important;
+  --muted: #7f7f7a !important;
+  --faint: #a7a7a1 !important;
+  --line: rgba(88,88,82,.12) !important;
+  --danger: #9f6f76 !important;
+
+  --dialogue-ink: #383835 !important;
+  --dialogue-weight: 580 !important;
+  --dialogue-bg: rgba(255,255,255,.54) !important;
+  --dialogue-radius: 12px !important;
+
+  --mm-glass: rgba(255,255,255,.52);
+  --mm-glass-strong: rgba(255,255,255,.68);
+  --mm-glass-line: rgba(255,255,255,.78);
+  --mm-shadow: 0 14px 44px rgba(80,80,74,.09);
+  --mm-shadow-soft: 0 7px 24px rgba(72,72,68,.065);
+  --mm-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+html,
+body,
+.app-shell,
+.main {
+  min-height: 100% !important;
+  background: #f4f4f2 !important;
+  color: var(--ink) !important;
+}
+
+body {
+  font-family: var(--mm-font) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 整体背景：图片 + 淡灰白雾层 */
+.app-shell,
+.main {
+  position: relative;
+  isolation: isolate;
+}
+
+.app-shell::before,
+.main::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(250,250,248,.71), rgba(247,247,245,.79)),
+    var(--mm-bg);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  filter: saturate(.18) contrast(.86) brightness(1.1);
+  transform: scale(1.015);
+}
+
+.app-shell::after,
+.main::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .20;
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(255,255,255,.98) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 72% 44%, rgba(90,90,85,.16) 0 .7px, transparent 1px);
+  background-size: 7px 7px, 9px 9px;
+  mix-blend-mode: multiply;
+}
+
+::selection {
+  color: #2f2f2c !important;
+  background: rgba(203,203,198,.58) !important;
+}
+
+/* =========================
+   顶部头像卡：参考示例里的玻璃名片
+   ========================= */
+.topbar {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  min-height: 118px !important;
+  margin: 14px 16px 8px !important;
+  padding: 22px 54px 18px 104px !important;
+  border: 1px solid rgba(255,255,255,.74) !important;
+  border-radius: 27px !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.62), rgba(238,238,235,.45)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.94),
+    inset 0 -1px 0 rgba(255,255,255,.25),
+    var(--mm-shadow) !important;
+  backdrop-filter: blur(24px) saturate(82%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(82%) brightness(1.05) !important;
+  overflow: hidden !important;
+}
+
+/* 头像 */
+.topbar::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 68px;
+  height: 68px;
+  border-radius: 15px;
+  background-image:
+    linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)),
+    var(--mm-avatar);
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(.88) contrast(.92) brightness(1.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.76),
+    0 8px 18px rgba(69,69,65,.08);
+}
+
+/* 右上角小圆点 */
+.topbar::after {
+  content: "";
+  position: absolute;
+  right: 24px;
+  top: 23px;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: rgba(92,92,88,.58);
+  box-shadow: 0 0 0 4px rgba(255,255,255,.14);
+}
+
+/* 标题改成更短的展示字 */
+.topbar-title {
+  font-size: 0 !important;
+  line-height: 1 !important;
+  color: transparent !important;
+}
+
+.topbar-title::after {
+  content: "Dawnline";
+  display: inline-block;
+  color: #5c5c58 !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: 25px !important;
+  font-weight: 400 !important;
+  letter-spacing: -.035em !important;
+  line-height: 1.05 !important;
+}
+
+.topbar-kicker {
+  position: relative;
+  margin-top: 9px !important;
+  max-width: 92% !important;
+  font-size: 0 !important;
+  color: transparent !important;
+}
+
+.topbar-kicker::before {
+  content: "“";
+  position: absolute;
+  left: -8px;
+  top: -23px;
+  color: rgba(88,88,83,.34);
+  font-family: Georgia, serif;
+  font-size: 43px;
+  line-height: 1;
+}
+
+.topbar-kicker::after {
+  content: "别无所求，只想被阳光晒透";
+  display: block;
+  padding: 9px 0 0 8px;
+  border-top: 1px solid rgba(95,95,90,.12);
+  color: #969690 !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  letter-spacing: .11em !important;
+  line-height: 1.7 !important;
+  white-space: normal;
+}
+
+.topbar .icon-button,
+.door-topbar .icon-button {
+  border: 1px solid rgba(255,255,255,.64) !important;
+  background: rgba(255,255,255,.28) !important;
+  color: #767671 !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.icon-button:active,
+.scene-tools button:active {
+  background: rgba(230,230,227,.70) !important;
+}
+
+/* 场景信息：像透明纸条 */
+.scene-strip {
+  margin: 3px 18px 10px !important;
+  border: 1px solid rgba(255,255,255,.58) !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.34) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.72) !important;
+  color: #8c8c87 !important;
+  backdrop-filter: blur(16px) saturate(72%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(72%) !important;
+}
+
+.scene-strip .svg-icon,
+.scene-kind,
+.turn-time,
+.turn-menu {
+  color: #9a9a94 !important;
+}
+
+.scene-strip-divider {
+  background: rgba(90,90,84,.12) !important;
+}
+
+.scene-kind,
+.scene-tools button,
+.compact-actions button {
+  border-color: rgba(110,110,103,.11) !important;
+  background: rgba(255,255,255,.30) !important;
+  color: #83837e !important;
+  box-shadow: none !important;
+}
+
+/* =========================
+   阅读区：白雾纸张，不再是一张张硬卡
+   ========================= */
+.timeline {
+  background: transparent !important;
+  padding: 8px 15px 126px !important;
+}
+
+.assistant-turn,
+.user-turn,
+.empty-scene,
+.waiting-turn,
+.generation-notice {
+  border: 1px solid rgba(255,255,255,.48) !important;
+  background: rgba(255,255,255,.29) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.56),
+    var(--mm-shadow-soft) !important;
+  backdrop-filter: blur(17px) saturate(72%) !important;
+  -webkit-backdrop-filter: blur(17px) saturate(72%) !important;
+}
+
+.assistant-turn,
+.user-turn {
+  border-radius: 20px !important;
+}
+
+.assistant-turn .turn-head {
+  border-bottom-color: rgba(95,95,90,.08) !important;
+}
+
+.turn-author {
+  color: #686863 !important;
+}
+
+.assistant-turn .turn-author {
+  border-color: rgba(105,105,99,.10) !important;
+  background: rgba(255,255,255,.32) !important;
+  color: #6d6d68 !important;
+}
+
+.assistant-turn .turn-content,
+.user-turn .turn-content {
+  color: #565652 !important;
+  line-height: 1.94 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.46);
+}
+
+.user-turn {
+  background: rgba(236,236,232,.42) !important;
+}
+
+.turn-content .dialogue-quote,
+.reading-preview .dialogue-quote,
+.user-turn .dialogue-quote {
+  color: #464642 !important;
+  background: rgba(255,255,255,.46) !important;
+  border: 1px solid rgba(255,255,255,.54) !important;
+  box-shadow: inset 0 -1px 0 rgba(105,105,99,.07) !important;
+}
+
+.empty-scene-title {
+  color: #666661 !important;
+}
+
+.empty-scene-eyebrow,
+.empty-scene-text,
+.empty-scene-note,
+.generation-notice,
+.waiting-turn,
+.generation-state {
+  color: #92928c !important;
+}
+
+.waiting-dots i {
+  background: #9b9b95 !important;
+}
+
+.waiting-stop,
+.generation-notice button,
+.generation-state {
+  border-color: rgba(100,100,94,.11) !important;
+  background: rgba(255,255,255,.35) !important;
+  color: #888883 !important;
+}
+
+.memory-state {
+  color: #9c777e !important;
+}
+
+/* =========================
+   最下面：把输入区做成示例里的“写字儿”玻璃条
+   ========================= */
+.composer {
+  position: sticky !important;
+  bottom: 14px !important;
+  z-index: 25 !important;
+  width: calc(100% - 32px) !important;
+  margin: 10px 16px 14px !important;
+  padding: 5px !important;
+  border: 1px solid rgba(255,255,255,.80) !important;
+  border-radius: 22px !important;
+  background: rgba(255,255,255,.54) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.94),
+    0 13px 34px rgba(73,73,68,.11) !important;
+  backdrop-filter: blur(25px) saturate(82%) brightness(1.04) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(82%) brightness(1.04) !important;
+}
+
+.composer-box {
+  min-height: 48px !important;
+  border-radius: 17px !important;
+  background: rgba(255,255,255,.30) !important;
+}
+
+.composer textarea {
+  background: transparent !important;
+  color: #555550 !important;
+  caret-color: #686864 !important;
+  line-height: 1.62 !important;
+}
+
+.composer textarea::placeholder {
+  color: #a4a49e !important;
+}
+
+#mainView #composer:focus-within {
+  border-color: rgba(255,255,255,.93) !important;
+  background: rgba(255,255,255,.66) !important;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 15px 40px rgba(72,72,67,.13) !important;
+}
+
+.send-button {
+  border: 1px solid rgba(98,98,92,.10) !important;
+  background: rgba(91,91,86,.86) !important;
+  color: #f7f7f5 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.17) !important;
+}
+
+.send-button:not(:disabled):not(.is-unready):active {
+  background: rgba(75,75,71,.92) !important;
+}
+
+.send-button.is-unready,
+.send-button:disabled {
+  border-color: transparent !important;
+  background: rgba(160,160,154,.22) !important;
+  color: rgba(255,255,255,.88) !important;
+  box-shadow: none !important;
+}
+
+/* =========================
+   抽屉 / 弹窗：统一成奶灰玻璃
+   ========================= */
+.scrim,
+.sheet-backdrop,
+.dialog-backdrop {
+  background: rgba(210,210,205,.34) !important;
+  backdrop-filter: blur(10px) saturate(65%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(65%) !important;
+}
+
+.drawer,
+.drawer-list,
+.sheet,
+.sheet-head,
+.sheet-body,
+.sheet-actions,
+.dialog {
+  background: rgba(247,247,244,.82) !important;
+  color: #5d5d58 !important;
+  backdrop-filter: blur(24px) saturate(82%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(82%) !important;
+}
+
+.drawer,
+.sheet,
+.dialog {
+  border-color: rgba(255,255,255,.78) !important;
+  box-shadow: 0 28px 80px rgba(74,74,69,.14) !important;
+}
+
+.drawer-head,
+.sheet-head,
+.sheet-actions,
+.section-title,
+.compact-actions.director-send-actions {
+  border-color: rgba(101,101,95,.10) !important;
+}
+
+.sheet-head {
+  background: rgba(255,255,255,.30) !important;
+}
+
+.drawer-title,
+.sheet-title,
+.dialog-title,
+.field-label,
+.section-title,
+.space-title,
+.choice-name,
+.override-name,
+.book-copy {
+  color: #60605b !important;
+}
+
+.drawer-subtitle,
+.sheet-subtitle,
+.dialog-message,
+.field-help,
+.choice-note,
+.narration-option small,
+.book-copy small,
+.beauty-card-meta,
+.drawer-label,
+.space-note {
+  color: #999993 !important;
+}
+
+.space-button,
+.space-symbol,
+.drawer-add,
+.action-row,
+.choice-row,
+.override-card,
+.book-row,
+.narration-option,
+.director-rule,
+.beauty-folder,
+.inline-note,
+.director-message,
+.beauty-card {
+  border-color: rgba(106,106,99,.10) !important;
+  background: rgba(255,255,255,.36) !important;
+  color: #73736e !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.50) !important;
+}
+
+.space-button.is-active,
+.choice-row.is-selected,
+.narration-option.is-selected {
+  border-color: rgba(104,104,98,.18) !important;
+  background: rgba(226,226,222,.58) !important;
+  box-shadow: inset 3px 0 0 rgba(104,104,99,.44) !important;
+}
+
+.choice-row.is-selected .choice-mark {
+  border-color: #777772 !important;
+  background: #777772 !important;
+  color: #f6f6f4 !important;
+}
+
+.segmented {
+  border-color: rgba(105,105,99,.10) !important;
+  background: rgba(225,225,221,.55) !important;
+}
+
+.segment {
+  background: transparent !important;
+  color: #95958f !important;
+}
+
+.segment.is-selected {
+  background: rgba(255,255,255,.73) !important;
+  color: #62625d !important;
+  box-shadow: inset 0 0 0 1px rgba(105,105,99,.08) !important;
+}
+
+.text-input,
+.text-area,
+.code-area,
+select,
+option {
+  border-color: rgba(103,103,97,.11) !important;
+  background: rgba(255,255,255,.52) !important;
+  color: #64645f !important;
+  box-shadow: inset 0 1px 2px rgba(78,78,74,.04) !important;
+}
+
+.text-input::placeholder,
+.text-area::placeholder {
+  color: #aaaaa4 !important;
+}
+
+.director-remember,
+.sheet-actions .primary,
+.dialog-actions .primary {
+  border-color: #71716c !important;
+  background: #71716c !important;
+  color: #f8f8f6 !important;
+}
+
+.sheet-actions button,
+.dialog-actions button,
+.beauty-card button,
+.beauty-save-row button,
+.reading-control button,
+.reading-preview {
+  border-color: rgba(105,105,99,.10) !important;
+  background: rgba(255,255,255,.44) !important;
+  color: #74746f !important;
+}
+
+.sheet-actions .danger {
+  border-color: rgba(157,103,112,.30) !important;
+  color: #9d6770 !important;
+}
+
+.dialog-actions .danger {
+  border-color: #9d6770 !important;
+  background: #9d6770 !important;
+  color: #fff !important;
+}
+
+.reading-control input,
+.book-row input {
+  accent-color: #84847e !important;
+}
+
+.toast {
+  border-color: rgba(255,255,255,.74) !important;
+  background: rgba(247,247,244,.88) !important;
+  color: #61615c !important;
+  box-shadow: 0 14px 38px rgba(78,78,73,.13) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(104,104,99,.38) !important;
+  outline-offset: 3px !important;
+}
+
+button:disabled {
+  opacity: .52 !important;
+}
+
+/* “门”页面也保持同一层灰白雾感 */
+.door-view {
+  background: transparent !important;
+  color: #5f5f5a !important;
+}
+
+.door-topbar {
+  background: rgba(255,255,255,.40) !important;
+  backdrop-filter: blur(20px) saturate(75%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(75%) !important;
+}
+
+.door-room-no,
+.door-last-seen,
+.door-status-sub,
+.door-trace,
+.door-moment-kind,
+.door-afterword {
+  color: #969690 !important;
+}
+
+.door-clock,
+.door-status-main,
+.door-empty h2 {
+  color: #64645f !important;
+}
+
+.door-wall-line {
+  background: rgba(105,105,99,.12) !important;
+}
+
+.door-frame {
+  background: rgba(181,181,176,.20) !important;
+}
+
+.door-panel {
+  border-color: rgba(121,121,114,.20) !important;
+  background: linear-gradient(95deg, rgba(222,222,218,.76), rgba(237,237,233,.66), rgba(215,215,210,.66)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.62), var(--mm-shadow-soft) !important;
+}
+
+.door-number {
+  color: #777772 !important;
+}
+
+.door-peephole {
+  border-color: rgba(104,104,98,.35) !important;
+  background: #a1a19b !important;
+}
+
+.door-handle,
+.door-handle::after {
+  background: #8f8f89 !important;
+}
+
+.door-object.is-lit .door-light-gap {
+  background: #f2efe6 !important;
+  box-shadow: 0 2px 18px 3px rgba(220,213,190,.35) !important;
+}
+
+.door-status,
+.door-action,
+.door-empty button {
+  border-color: rgba(105,105,99,.11) !important;
+  background: rgba(255,255,255,.40) !important;
+  color: #74746f !important;
+}
+
+.door-empty p {
+  color: #999993 !important;
+}
+
+.door-moment {
+  background: rgba(244,244,241,.89) !important;
+  color: #5f5f5a !important;
+  backdrop-filter: blur(26px) saturate(80%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(80%) !important;
+}
+
+.door-moment-close,
+.door-moment-actions button {
+  border-color: rgba(104,104,98,.12) !important;
+  background: rgba(255,255,255,.38) !important;
+  color: #73736e !important;
+}
+
+.door-moment-actions button.primary {
+  border-color: #71716c !important;
+  background: #71716c !important;
+  color: #f8f8f6 !important;
+}
+
+/* 细滚动条 */
+* {
+  scrollbar-color: rgba(112,112,106,.32) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(112,112,106,.28);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 小屏微调 */
+@media (max-width: 430px) {
+  .topbar {
+    min-height: 110px !important;
+    margin: 10px 12px 7px !important;
+    padding: 18px 46px 16px 91px !important;
+    border-radius: 24px !important;
+  }
+
+  .topbar::before {
+    left: 17px;
+    top: 18px;
+    width: 61px;
+    height: 61px;
+    border-radius: 14px;
+  }
+
+  .topbar-title::after {
+    font-size: 23px !important;
+  }
+
+  .topbar-kicker::after {
+    font-size: 10.5px !important;
+    letter-spacing: .08em !important;
+  }
+
+  .scene-strip {
+    margin-left: 14px !important;
+    margin-right: 14px !important;
+  }
+
+  .timeline {
+    padding-left: 11px !important;
+    padding-right: 11px !important;
+  }
+
+  .composer {
+    width: calc(100% - 24px) !important;
+    margin-left: 12px !important;
+    margin-right: 12px !important;
+    bottom: 10px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
+
+/* ============================================================
+   v1.1 · 参考图贴近版
+   - 顶部功能标题全部隐藏，只保留“美化”按钮
+   - 场景信息条隐藏
+   - 第一块毛玻璃重新排版为头像 / 标题 / 引语 / 美化按钮
+   - 输入框改成底部细长玻璃写字条
+   ============================================================ */
+
+/* 顶部只留下第一张毛玻璃名片 */
+.topbar {
+  position: sticky !important;
+  top: 10px !important;
+  min-height: 104px !important;
+  margin: 10px 18px 12px !important;
+  padding: 18px 58px 16px 96px !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(255,255,255,.70) !important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.58), rgba(244,244,241,.40)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 10px 34px rgba(82,82,76,.07) !important;
+  backdrop-filter: blur(28px) saturate(72%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(72%) brightness(1.05) !important;
+}
+
+.topbar::before {
+  left: 18px !important;
+  top: 18px !important;
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 13px !important;
+}
+
+.topbar::after {
+  right: 19px !important;
+  top: 17px !important;
+  width: 9px !important;
+  height: 9px !important;
+  background: rgba(92,92,88,.48) !important;
+}
+
+/* 隐藏原“线下 / 真实时间线 / 共同记忆”等功能标题内容 */
+.topbar-title,
+.topbar-kicker {
+  display: block !important;
+}
+
+.topbar-title {
+  margin: 0 !important;
+}
+
+.topbar-title::after {
+  content: "Dawnline" !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: 22px !important;
+  font-weight: 400 !important;
+  letter-spacing: -.025em !important;
+  color: rgba(78,78,74,.82) !important;
+}
+
+.topbar-kicker {
+  margin-top: 4px !important;
+  max-width: calc(100% - 6px) !important;
+}
+
+.topbar-kicker::before {
+  left: -4px !important;
+  top: -17px !important;
+  font-size: 34px !important;
+  color: rgba(90,90,84,.22) !important;
+}
+
+.topbar-kicker::after {
+  content: "别无所求，只想被阳光晒透" !important;
+  padding: 7px 0 0 7px !important;
+  border-top: 1px solid rgba(100,100,94,.10) !important;
+  color: rgba(115,115,109,.62) !important;
+  font-size: 9.5px !important;
+  letter-spacing: .10em !important;
+  line-height: 1.55 !important;
+}
+
+/*
+  顶栏按钮顺序按临境 v1.1.12：菜单 / 美化 / 人物。
+  这里只保留中间那个“美化”按钮，并缩到玻璃卡右下侧。
+*/
+.topbar .icon-button {
+  display: none !important;
+}
+
+.topbar .icon-button:nth-of-type(2) {
+  display: inline-flex !important;
+  position: absolute !important;
+  right: 18px !important;
+  bottom: 16px !important;
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  min-height: 31px !important;
+  padding: 0 !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(255,255,255,.62) !important;
+  background: rgba(255,255,255,.20) !important;
+  color: rgba(87,87,82,.64) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.topbar .icon-button:nth-of-type(2) .svg-icon,
+.topbar .icon-button:nth-of-type(2) svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+/* 第二张功能条彻底移除，参考图不保留 */
+.scene-strip {
+  display: none !important;
+}
+
+/* 中央阅读区变成“一整张雾玻璃纸”，不再像卡片列表 */
+.timeline {
+  margin: 0 18px 96px !important;
+  padding: 24px 22px 96px !important;
+  border: 1px solid rgba(255,255,255,.46) !important;
+  border-radius: 29px !important;
+  background: rgba(255,255,255,.20) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.56),
+    0 10px 34px rgba(80,80,74,.035) !important;
+  backdrop-filter: blur(17px) saturate(64%) !important;
+  -webkit-backdrop-filter: blur(17px) saturate(64%) !important;
+}
+
+.assistant-turn,
+.user-turn,
+.empty-scene,
+.waiting-turn,
+.generation-notice {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.assistant-turn .turn-head,
+.user-turn .turn-head {
+  border: 0 !important;
+  opacity: .48 !important;
+}
+
+/* 底部：参考图那种很轻、很窄的“写字儿”白色玻璃条 */
+.composer {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  transform: translateX(-50%) !important;
+  z-index: 40 !important;
+  width: min(72vw, 420px) !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+  padding: 3px 4px 3px 14px !important;
+  border-radius: 17px !important;
+  border: 1px solid rgba(255,255,255,.68) !important;
+  background: rgba(255,255,255,.48) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 9px 28px rgba(80,80,74,.07) !important;
+  backdrop-filter: blur(27px) saturate(72%) brightness(1.04) !important;
+  -webkit-backdrop-filter: blur(27px) saturate(72%) brightness(1.04) !important;
+}
+
+.composer-box {
+  min-height: 36px !important;
+  height: 36px !important;
+  border: 0 !important;
+  border-radius: 13px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.composer textarea {
+  min-height: 34px !important;
+  max-height: 88px !important;
+  padding: 7px 38px 6px 0 !important;
+  font-size: 13px !important;
+  line-height: 20px !important;
+  color: rgba(76,76,71,.78) !important;
+}
+
+.composer textarea::placeholder {
+  color: rgba(108,108,102,.47) !important;
+  font-size: 12.5px !important;
+  letter-spacing: .01em !important;
+}
+
+#mainView #composer:focus-within {
+  width: min(78vw, 450px) !important;
+  border-color: rgba(255,255,255,.84) !important;
+  background: rgba(255,255,255,.60) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.96),
+    0 10px 31px rgba(80,80,74,.09) !important;
+}
+
+.send-button {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  min-height: 31px !important;
+  border-radius: 11px !important;
+  border: 0 !important;
+  background: rgba(130,130,124,.12) !important;
+  color: rgba(90,90,85,.42) !important;
+  box-shadow: none !important;
+}
+
+.send-button .svg-icon,
+.send-button svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.send-button:not(:disabled):not(.is-unready) {
+  background: rgba(104,104,98,.70) !important;
+  color: rgba(255,255,255,.88) !important;
+}
+
+@media (max-width: 430px) {
+  .topbar {
+    margin: 8px 14px 10px !important;
+    min-height: 98px !important;
+    padding: 16px 52px 14px 88px !important;
+    border-radius: 25px !important;
+  }
+
+  .topbar::before {
+    left: 16px !important;
+    top: 17px !important;
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .topbar-title::after {
+    font-size: 21px !important;
+  }
+
+  .topbar-kicker::after {
+    font-size: 9px !important;
+  }
+
+  .topbar .icon-button:nth-of-type(2) {
+    right: 15px !important;
+    bottom: 14px !important;
+  }
+
+  .timeline {
+    margin: 0 14px 92px !important;
+    padding: 22px 18px 86px !important;
+    border-radius: 25px !important;
+  }
+
+  .composer {
+    width: 70vw !important;
+    bottom: calc(13px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #mainView #composer:focus-within {
+    width: 80vw !important;
+  }
+}
+
+/* ============================================================
+   v1.2 · 侧边栏入口恢复
+   - 恢复左上角“侧边栏 / 菜单”按钮
+   - 不放回毛玻璃主卡内部，悬在卡片左上方
+   - 弱化边框与底色，只留低存在感灰色图标
+   ============================================================ */
+
+/* 顶栏第一个按钮 = 侧边栏 / 菜单入口 */
+.topbar .icon-button:first-of-type {
+  display: inline-flex !important;
+  position: absolute !important;
+  left: 6px !important;
+  top: -54px !important;
+  z-index: 12 !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  background: rgba(255,255,255,.08) !important;
+  color: rgba(88,88,84,.48) !important;
+  box-shadow: none !important;
+  opacity: .88 !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+.topbar .icon-button:first-of-type .svg-icon,
+.topbar .icon-button:first-of-type svg {
+  width: 18px !important;
+  height: 18px !important;
+  stroke-width: 1.7 !important;
+}
+
+.topbar .icon-button:first-of-type:active {
+  background: rgba(120,120,114,.08) !important;
+  color: rgba(70,70,66,.66) !important;
+  transform: scale(.96) !important;
+}
+
+@media (max-width: 520px) {
+  .topbar .icon-button:first-of-type {
+    left: 4px !important;
+    top: -50px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+  }
+}
+
+/* ============================================================
+   v1.3 · 阅读区功能入口隐藏
+   - 隐藏「字号」与「导演台」两个按钮
+   - 不影响左上侧边栏入口与顶部毛玻璃中的美化按钮
+   ============================================================ */
+.reading-control,
+.scene-tools,
+.compact-actions.director-send-actions {
+  display: none !important;
+}
+
+/* v1.4：隐藏底部输入框的默认提示文字 */
+.composer textarea::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+/* ============================================================
+   v1.5 · 修正侧边栏入口 + 锁回原毛玻璃质感
+   ============================================================ */
+
+/* 菜单此前用了 top:-50px，部分 iOS WebView 会被顶栏/祖先裁掉。
+   改为固定在左上留白区，确保真正可见。 */
+.topbar {
+  overflow: visible !important;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,.58),
+    rgba(244,244,241,.40)) !important;
+  border: 1px solid rgba(255,255,255,.70) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 10px 34px rgba(82,82,76,.07) !important;
+  backdrop-filter: blur(28px) saturate(72%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(72%) brightness(1.05) !important;
+}
+
+.topbar .icon-button:first-of-type {
+  display: inline-flex !important;
+  position: fixed !important;
+  left: 24px !important;
+  top: calc(env(safe-area-inset-top, 0px) + 54px) !important;
+  z-index: 999 !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: rgba(255,255,255,.10) !important;
+  color: rgba(86,86,82,.46) !important;
+  box-shadow: none !important;
+  opacity: .9 !important;
+  transform: none !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+.topbar .icon-button:first-of-type .svg-icon,
+.topbar .icon-button:first-of-type svg {
+  width: 18px !important;
+  height: 18px !important;
+  opacity: .72 !important;
+}
+
+/* 阅读区也锁回 v1.1 的玻璃参数；v1.4 本身只该隐藏 placeholder。 */
+.timeline {
+  background: rgba(255,255,255,.20) !important;
+  border: 1px solid rgba(255,255,255,.46) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.56),
+    0 10px 34px rgba(80,80,74,.035) !important;
+  backdrop-filter: blur(17px) saturate(64%) !important;
+  -webkit-backdrop-filter: blur(17px) saturate(64%) !important;
+}
+
+.composer {
+  background: rgba(255,255,255,.48) !important;
+  border: 1px solid rgba(255,255,255,.68) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 9px 28px rgba(80,80,74,.07) !important;
+  backdrop-filter: blur(27px) saturate(72%) brightness(1.04) !important;
+  -webkit-backdrop-filter: blur(27px) saturate(72%) brightness(1.04) !important;
+}
+
+/* 继续保持：字号 / 导演台隐藏，输入提示字隐藏。 */
+.reading-control,
+.scene-tools,
+.compact-actions.director-send-actions {
+  display: none !important;
+}
+
+.composer textarea::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+/* ============================================================
+   v2.2 · 输入框修正（基于 Limen v1.1.16 实际 DOM / 选择器）
+   只改 #composer / textarea / #send，不动顶部名片、正文、背景、毛玻璃。
+
+   关键：Limen v1.1.16 内置了这些更高优先级的 !important：
+   #mainView #composer
+   #mainView #composer textarea
+   #mainView #send
+   因此必须用同级或更高 specificity 覆盖，否则“看起来根本没动”。
+   ============================================================ */
+
+/* 整条输入玻璃：缩窄、缩矮、清掉宿主 margin-bottom，让它真正往下。 */
+#mainView #composer {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: max(4px, env(safe-area-inset-bottom, 0px)) !important;
+  transform: translateX(-50%) !important;
+
+  width: min(58vw, 330px) !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+
+  margin: 0 !important;
+  padding: 2px 3px 2px 10px !important;
+  gap: 4px !important;
+  align-items: center !important;
+
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+/* 输入内容盒不再继承宿主的 44px+ 高度。 */
+#mainView #composer .composer-box {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  border-radius: 13px !important;
+  overflow: hidden !important;
+}
+
+/* 真正的 textarea：v1.1.16 原生用 ID 选择器强制 min-height:44px，
+   这里直接以相同层级覆盖。 */
+#mainView #composer textarea {
+  width: 100% !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  padding: 5px 2px 5px 0 !important;
+  margin: 0 !important;
+  overflow-y: hidden !important;
+  resize: none !important;
+
+  font-size: 12px !important;
+  line-height: 20px !important;
+}
+
+/* 继续保持空白输入条，不显示原生 placeholder。 */
+#mainView #composer textarea::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+/* 发送键一起按参考图缩成轻量小方块。 */
+#mainView #send {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  flex: 0 0 28px !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+}
+
+#mainView #send .svg-icon,
+#mainView #send svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+/* 聚焦时不再突然变宽，也不把输入条重新撑高。 */
+#mainView #composer:focus-within {
+  width: min(58vw, 330px) !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 430px) {
+  #mainView #composer,
+  #mainView #composer:focus-within {
+    width: 56vw !important;
+    bottom: max(3px, env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* ============================================================
+   v2.3 · 基于 Limen v1.1.16 实际布局修正
+   1) 隐藏左上侧边栏按钮，只保留美化按钮
+   2) Dawnline 名片改回 fixed，贴近宿主顶栏下方，不再吃 .main 的大段上方留白
+   3) 面板改成真正半透明玻璃：让背景图能透出来，而不是白色实体卡片
+   ============================================================ */
+
+/* 只留第二个按钮（美化）；第一个菜单、第三个人物都隐藏。 */
+.topbar .icon-button:first-of-type,
+.topbar .icon-button:nth-of-type(3) {
+  display: none !important;
+}
+
+.topbar .icon-button:nth-of-type(2) {
+  display: inline-flex !important;
+}
+
+/* Limen v1.1.16 原生 topbar 本来就是 fixed。
+   这里恢复 fixed，直接贴到宿主预留顶栏下面。 */
+#mainView .topbar {
+  position: fixed !important;
+  top: calc(var(--bar-top, 54px) + 8px) !important;
+  left: 18px !important;
+  right: 18px !important;
+  z-index: 30 !important;
+  margin: 0 !important;
+  min-height: 104px !important;
+  padding: 18px 58px 16px 96px !important;
+  overflow: hidden !important;
+}
+
+/* fixed 名片不参与文档流，所以给正文准确留出名片高度；
+   不再沿用原生 calc(var(--bar-top) + 58px) 那段空白。 */
+#mainView.main {
+  padding-top: calc(var(--bar-top, 54px) + 122px) !important;
+  background: transparent !important;
+}
+
+/* 背景层本身不要再铺一张不透明白纸，否则 backdrop-filter 看起来会像白底。 */
+html,
+body,
+.app-shell,
+#mainView.main {
+  background: transparent !important;
+}
+
+/* 背景图雾层稍微减淡，让玻璃后面确实能看到景物。 */
+.app-shell::before,
+.main::before {
+  background-image:
+    linear-gradient(rgba(250,250,248,.48), rgba(247,247,245,.58)),
+    var(--mm-bg) !important;
+  filter: saturate(.16) contrast(.90) brightness(1.06) !important;
+}
+
+/* 第一块：明显是玻璃，不是白卡。 */
+#mainView .topbar {
+  border: 1px solid rgba(255,255,255,.52) !important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.34), rgba(246,246,243,.17)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.72),
+    0 10px 32px rgba(78,78,72,.055) !important;
+  backdrop-filter: blur(22px) saturate(78%) brightness(1.025) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(78%) brightness(1.025) !important;
+}
+
+/* 正文整页玻璃：透明度比顶部更低，让背景轮廓能透出来。 */
+#mainView .timeline {
+  border: 1px solid rgba(255,255,255,.34) !important;
+  background: rgba(255,255,255,.115) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.38),
+    0 10px 30px rgba(78,78,72,.025) !important;
+  backdrop-filter: blur(14px) saturate(66%) brightness(1.015) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(66%) brightness(1.015) !important;
+}
+
+/* 底部输入条也统一成同一层级的玻璃。 */
+#mainView #composer {
+  border: 1px solid rgba(255,255,255,.48) !important;
+  background: rgba(255,255,255,.24) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.68),
+    0 8px 24px rgba(78,78,72,.05) !important;
+  backdrop-filter: blur(20px) saturate(72%) brightness(1.02) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(72%) brightness(1.02) !important;
+}
+
+#mainView #composer .composer-box {
+  background: transparent !important;
+}
+
+/* ============================================================
+   v2.4 · 更通透的雾玻璃
+   只降低玻璃白度、提高背景模糊；文字颜色保持清晰。
+   ============================================================ */
+
+/* 背景上的白雾也减轻一点，避免“玻璃已经透明但底下还是白”的感觉。 */
+.app-shell::before,
+.main::before {
+  background-image:
+    linear-gradient(rgba(250,250,248,.30), rgba(247,247,245,.38)),
+    var(--mm-bg) !important;
+  filter: saturate(.18) contrast(.91) brightness(1.035) !important;
+}
+
+/* Dawnline：高模糊 + 低白度。 */
+#mainView .topbar {
+  border-color: rgba(255,255,255,.30) !important;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,.17),
+    rgba(248,248,246,.075)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.42),
+    0 10px 30px rgba(70,70,66,.035) !important;
+  backdrop-filter: blur(30px) saturate(72%) brightness(1.01) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(72%) brightness(1.01) !important;
+}
+
+/* 正文：最通透，但用更强 blur 保证字后面不会花。 */
+#mainView .timeline {
+  border-color: rgba(255,255,255,.20) !important;
+  background: rgba(255,255,255,.055) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.22),
+    0 8px 26px rgba(70,70,66,.018) !important;
+  backdrop-filter: blur(24px) saturate(58%) brightness(1.005) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(58%) brightness(1.005) !important;
+}
+
+/* 输入条：比正文稍微实一点，确保输入时仍容易辨认。 */
+#mainView #composer {
+  border-color: rgba(255,255,255,.28) !important;
+  background: rgba(255,255,255,.105) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.38),
+    0 7px 22px rgba(70,70,66,.03) !important;
+  backdrop-filter: blur(28px) saturate(64%) brightness(1.01) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(64%) brightness(1.01) !important;
+}
+
+/* 玻璃更透以后稍微锁深正文颜色，避免浅背景上发灰。 */
+#mainView .timeline .turn-content,
+#mainView .timeline .mix-prose,
+#mainView .timeline .mix-para,
+#mainView #composer textarea {
+  color: rgba(63,63,61,.88) !important;
+}
+
+/* v2.5 — milky glass transparency matched to reference */
+#mainView .topbar {
+  background: rgba(255,255,255,.28) !important;
+  backdrop-filter: blur(16px) saturate(85%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(85%) !important;
+  border-color: rgba(255,255,255,.32) !important;
+}
+#mainView .timeline,
+#mainView .assistant-turn,
+#mainView .user-turn {
+  background: rgba(255,255,255,.22) !important;
+  backdrop-filter: blur(16px) saturate(85%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(85%) !important;
+  border-color: rgba(255,255,255,.26) !important;
+}
+#mainView #composer {
+  background: rgba(255,255,255,.25) !important;
+  backdrop-filter: blur(16px) saturate(85%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(85%) !important;
+  border-color: rgba(255,255,255,.32) !important;
+}
+
+
+/* ============================================================
+   v3 · Reader Glass / 阅读器式互动
+   背景图替换位置：
+   --mm-bg: url("https://i.postimg.cc/bJjhN6Y1/IMG-7474.jpg");
+   ↑ 以后只改这里的链接即可。
+
+   目标：
+   - 背景尽量透，不用厚白卡遮图
+   - user / char 都像阅读器里的“书页段落”，而不是聊天气泡
+   - 保证正文清晰
+   ============================================================ */
+
+:root {
+  /* 背景图：这里方便二改 */
+  --mm-bg: url("https://i.postimg.cc/bJjhN6Y1/IMG-7474.jpg") !important;
+
+  /* 阅读器玻璃参数：白度很低，主要靠 blur 保证可读性 */
+  --reader-glass: rgba(255,255,255,.075);
+  --reader-glass-user: rgba(255,255,255,.105);
+  --reader-line: rgba(255,255,255,.23);
+  --reader-ink: rgba(48,48,46,.90);
+  --reader-muted: rgba(76,76,72,.58);
+}
+
+/* 背景几乎不盖白雾：让原图真正露出来。 */
+.app-shell::before,
+.main::before {
+  background-image:
+    linear-gradient(rgba(250,250,248,.08), rgba(247,247,245,.12)),
+    var(--mm-bg) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  filter: saturate(.42) contrast(.94) brightness(1.02) !important;
+}
+
+/* 颗粒再轻一点，避免糊住新背景。 */
+.app-shell::after,
+.main::after {
+  opacity: .08 !important;
+}
+
+/* Dawnline 顶栏也改成更通透的玻璃。 */
+#mainView .topbar {
+  background: linear-gradient(135deg,
+    rgba(255,255,255,.115),
+    rgba(255,255,255,.045)) !important;
+  border-color: rgba(255,255,255,.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.30),
+    0 10px 30px rgba(54,54,50,.025) !important;
+  backdrop-filter: blur(18px) saturate(78%) brightness(1.015) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(78%) brightness(1.015) !important;
+}
+
+/* 阅读区本身不再是一整张明显白卡，只提供一层很浅的整体玻璃。 */
+#mainView .timeline {
+  padding: 18px 14px 96px !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  border-radius: 30px !important;
+  background: rgba(255,255,255,.025) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    0 12px 36px rgba(50,50,46,.018) !important;
+  backdrop-filter: blur(10px) saturate(70%) brightness(1.005) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(70%) brightness(1.005) !important;
+}
+
+/* -------------------------
+   CHAR：像一页阅读器正文
+   ------------------------- */
+#mainView .assistant-turn {
+  position: relative !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 0 18px !important;
+  padding: 22px 22px 24px !important;
+  border: 1px solid var(--reader-line) !important;
+  border-radius: 22px !important;
+  background: var(--reader-glass) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    0 8px 26px rgba(55,55,50,.018) !important;
+  backdrop-filter: blur(14px) saturate(72%) brightness(1.005) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(72%) brightness(1.005) !important;
+  overflow: hidden !important;
+}
+
+/* 阅读器页眉：极淡，不抢正文。 */
+#mainView .assistant-turn .turn-head {
+  min-height: 0 !important;
+  margin: 0 0 14px !important;
+  padding: 0 0 9px !important;
+  border-bottom: 1px solid rgba(80,80,75,.10) !important;
+  color: var(--reader-muted) !important;
+  opacity: .68 !important;
+}
+
+#mainView .assistant-turn .turn-author {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--reader-muted) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
+}
+
+#mainView .assistant-turn .turn-time,
+#mainView .assistant-turn .turn-menu {
+  color: rgba(76,76,72,.42) !important;
+}
+
+/* 正文像电子阅读器：窄一点的字面、较大的行距。 */
+#mainView .assistant-turn .turn-content {
+  color: var(--reader-ink) !important;
+  font-size: 15.5px !important;
+  line-height: 2.02 !important;
+  letter-spacing: .035em !important;
+  font-weight: 400 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.22) !important;
+}
+
+#mainView .assistant-turn .turn-content p {
+  margin: 0 0 1.18em !important;
+}
+
+#mainView .assistant-turn .turn-content p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* -------------------------
+   USER：不是聊天气泡，而是“读者批注页”
+   ------------------------- */
+#mainView .user-turn {
+  position: relative !important;
+  width: 88% !important;
+  max-width: 620px !important;
+  margin: 8px 0 20px auto !important;
+  padding: 17px 19px 18px !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
+  border-radius: 20px !important;
+  background: var(--reader-glass-user) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    0 7px 22px rgba(55,55,50,.015) !important;
+  backdrop-filter: blur(14px) saturate(72%) brightness(1.005) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(72%) brightness(1.005) !important;
+  overflow: hidden !important;
+}
+
+/* 左侧像书签/批注线，不做传统聊天尾巴。 */
+#mainView .user-turn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 15px;
+  bottom: 15px;
+  width: 2px;
+  border-radius: 99px;
+  background: rgba(86,86,80,.22);
+}
+
+#mainView .user-turn .turn-head {
+  min-height: 0 !important;
+  margin: 0 0 9px !important;
+  padding: 0 !important;
+  opacity: .52 !important;
+}
+
+#mainView .user-turn .turn-author,
+#mainView .user-turn .turn-time,
+#mainView .user-turn .turn-menu {
+  color: rgba(76,76,72,.52) !important;
+  font-size: 9.5px !important;
+  letter-spacing: .12em !important;
+}
+
+#mainView .user-turn .turn-content {
+  color: rgba(55,55,52,.88) !important;
+  font-size: 14.5px !important;
+  line-height: 1.92 !important;
+  letter-spacing: .025em !important;
+  font-weight: 400 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+/* 对白高亮改成“阅读器划线/荧光笔”，不再是实体色块。 */
+#mainView .turn-content .dialogue-quote,
+#mainView .reading-preview .dialogue-quote,
+#mainView .user-turn .dialogue-quote {
+  color: rgba(43,43,41,.93) !important;
+  background: linear-gradient(to bottom,
+    transparent 54%,
+    rgba(255,255,255,.30) 54%,
+    rgba(255,255,255,.30) 94%,
+    transparent 94%) !important;
+  box-shadow: none !important;
+  border-radius: 2px !important;
+  font-weight: 560 !important;
+  padding: 0 .08em !important;
+}
+
+/* 等待/草稿也不要突然变成实体卡。 */
+#mainView .waiting-turn,
+#mainView .generation-notice,
+#mainView .assistant-turn.is-draft {
+  background: rgba(255,255,255,.07) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(12px) saturate(70%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(70%) !important;
+}
+
+/* 输入条继续小而通透。 */
+#mainView #composer {
+  background: rgba(255,255,255,.085) !important;
+  border-color: rgba(255,255,255,.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    0 7px 22px rgba(45,45,42,.022) !important;
+  backdrop-filter: blur(16px) saturate(72%) brightness(1.005) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(72%) brightness(1.005) !important;
+}
+
+#mainView #composer .composer-box,
+#mainView #composer textarea {
+  background: transparent !important;
+}
+
+/* 小屏手机：让书页留一点左右呼吸。 */
+@media (max-width: 430px) {
+  #mainView .timeline {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  #mainView .assistant-turn {
+    padding: 19px 17px 21px !important;
+    border-radius: 20px !important;
+  }
+
+  #mainView .user-turn {
+    width: 90% !important;
+    padding: 15px 16px 16px !important;
+  }
+}
