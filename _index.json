@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-05T07:20:32.521Z",
+  "generatedAt": "2026-09-05T08:20:19.184Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3082,12 +3082,12 @@
     },
     {
       "folder": "应用",
-      "name": "𝓐𝓶𝓸𝓻𝓮",
+      "name": "𝓐𝓶𝓸𝓻𝓮（更新v2.0.1）",
       "dirName": "𝓐𝓶𝓸𝓻𝓮",
       "type": "dir",
       "path": "资源/应用/𝓐𝓶𝓸𝓻𝓮",
       "files": [
-        "资源/应用/𝓐𝓶𝓸𝓻𝓮/amore.astrology.v2-2.0.0.zip"
+        "资源/应用/𝓐𝓶𝓸𝓻𝓮/amore.astrology.v2-2.0.1.zip"
       ],
       "images": [
         "资源/应用/𝓐𝓶𝓸𝓻𝓮/IMG_2245.jpeg",
@@ -3101,7 +3101,7 @@
       "author": "海盐清",
       "avatar": "资源/应用/𝓐𝓶𝓸𝓻𝓮/.avatar.png",
       "ownerHash": "bfb3e3d17651836721132248bd5c9b911d883b93bb4269afe371127e1e530ed6",
-      "updatedAt": "2026-09-05T13:59:40+08:00"
+      "updatedAt": "2026-09-05T16:19:43+08:00"
     },
     {
       "folder": "应用bug改善",
