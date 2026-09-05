@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-05T09:21:32.747Z",
+  "generatedAt": "2026-09-05T09:23:34.191Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3935,8 +3935,6 @@
       "type": "dir",
       "path": "资源/线上美化/仿Kakotalk_by小池",
       "files": [
-        "资源/线上美化/仿Kakotalk_by小池/6B1FD4B2B2C279E11BCEE5A85DE101F0.asset.png",
-        "资源/线上美化/仿Kakotalk_by小池/IMG_7053.asset.png",
         "资源/线上美化/仿Kakotalk_by小池/float底栏保留贴纸回复.js",
         "资源/线上美化/仿Kakotalk_by小池/【float】kakotalk_by小池.txt"
       ],
@@ -3948,7 +3946,7 @@
       "author": "@Dol0re3_",
       "avatar": "资源/线上美化/仿Kakotalk_by小池/.avatar.png",
       "ownerHash": "6a08d4fbb179025747de726b73fc09d681a2a7d30e74d9d35f57f31a77b70b8d",
-      "updatedAt": "2026-09-05T17:20:57+08:00"
+      "updatedAt": "2026-09-05T17:22:58+08:00"
     },
     {
       "folder": "线上美化",
