@@ -1,0 +1,26 @@
+{
+  "name": "气泡切分规则",
+  "description": "",
+  "rules": [
+    {
+      "id": "rule_1788622003698_v3mi",
+      "scriptName": "单换行自动切分多气泡",
+      "findRegex": "/(?<!\\n)\\n(?!\\n)/g",
+      "replaceString": "\n\n",
+      "tags": [
+        "chat",
+        "text"
+      ],
+      "disabled": false,
+      "placement": [
+        2
+      ],
+      "markdownOnly": true,
+      "promptOnly": false,
+      "historyOnly": false,
+      "substituteRegex": 0,
+      "runOnEdit": false,
+      "trimStrings": []
+    }
+  ]
+}
