@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-05T15:57:50.760Z",
+  "generatedAt": "2026-09-05T19:17:22.631Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 86
+      "count": 87
     },
     {
       "name": "应用bug改善",
@@ -2529,6 +2529,28 @@
       "avatar": "资源/应用/手账本/.avatar.png",
       "ownerHash": "fb97e4a005ece2d3acaa890adcf557cb67003ad7e5dcfd62cb7a1767f70e2a91",
       "updatedAt": "2026-09-01T21:02:06+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "扭蛋机[小猫]",
+      "dirName": "扭蛋机[小猫]",
+      "type": "dir",
+      "path": "资源/应用/扭蛋机[小猫]",
+      "files": [
+        "资源/应用/扭蛋机[小猫]/parallel.world.gacha-1.6.0 (2).zip"
+      ],
+      "images": [
+        "资源/应用/扭蛋机[小猫]/1000052702.jpg",
+        "资源/应用/扭蛋机[小猫]/1000052704.jpg",
+        "资源/应用/扭蛋机[小猫]/1000052705.jpg",
+        "资源/应用/扭蛋机[小猫]/1000052706.jpg",
+        "资源/应用/扭蛋机[小猫]/1000052707.jpg"
+      ],
+      "description": "快来扭蛋机玩平行世界吧！超多随机可能\n扭蛋随机关系，随机身份，随机主题！\n有4个扭蛋机：\n①平行世界if\n②小恶魔，多角恋的平行世界if\n③小白兔。磕cp的（无主角）\n④日常向。原人设关于一些日常向的扭蛋\n\n\n有论坛，看其他人是如何磕你和ai的cp，或者是你的家产的cp的。\n可以给AI分享扭蛋，还有分享论坛帖子。\n大概就这么多功能。",
+      "author": "nana",
+      "avatar": "资源/应用/扭蛋机[小猫]/.avatar.png",
+      "ownerHash": "fea7123ab26d67be6637cde15c3bc3b5ef94a1144703c93f0af7e1e81e9c77a2",
+      "updatedAt": "2026-09-06T03:16:46+08:00"
     },
     {
       "folder": "应用",
