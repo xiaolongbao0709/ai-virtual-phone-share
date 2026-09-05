@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-05T09:24:27.123Z",
+  "generatedAt": "2026-09-05T09:26:23.205Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 37
+      "count": 36
     },
     {
       "name": "线上聊天状态栏",
@@ -3927,26 +3927,6 @@
       "avatar": "资源/线上美化/【聊天室】青苹果2.0/.avatar.png",
       "ownerHash": "d23c4a5877ea9d4ad2c2109fd88c648da108f59ebf8d61b80ea0c3aa25fd4ce9",
       "updatedAt": "2026-08-17T14:13:37+08:00"
-    },
-    {
-      "folder": "线上美化",
-      "name": "仿Kakaotalk_by小池",
-      "dirName": "仿Kakotalk_by小池",
-      "type": "dir",
-      "path": "资源/线上美化/仿Kakotalk_by小池",
-      "files": [
-        "资源/线上美化/仿Kakotalk_by小池/float底栏保留贴纸回复.js",
-        "资源/线上美化/仿Kakotalk_by小池/【float】kakaotalk_by小池.txt"
-      ],
-      "images": [
-        "资源/线上美化/仿Kakotalk_by小池/6B1FD4B2B2C279E11BCEE5A85DE101F0.png",
-        "资源/线上美化/仿Kakotalk_by小池/IMG_7053.png"
-      ],
-      "description": "🚫二改二传一个简单的仿kkt默认主题\n[粗][红][大]必须要配合插件使用！之前用过我做的复古vx的可以不用下，底栏最右侧的按钮是发送[/大][/红][/粗]\n[粗][蓝][小]配套背景图在p2[/小][/蓝][/粗]",
-      "author": "@Dol0re3_",
-      "avatar": "资源/线上美化/仿Kakotalk_by小池/.avatar.png",
-      "ownerHash": "6a08d4fbb179025747de726b73fc09d681a2a7d30e74d9d35f57f31a77b70b8d",
-      "updatedAt": "2026-09-05T17:23:52+08:00"
     },
     {
       "folder": "线上美化",
