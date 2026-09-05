@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-05T14:49:48.816Z",
+  "generatedAt": "2026-09-05T15:47:31.368Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -58,6 +58,10 @@
     {
       "name": "特调材料",
       "count": 5
+    },
+    {
+      "name": "线上正则",
+      "count": 1
     },
     {
       "name": "线上美化",
@@ -3682,6 +3686,22 @@
       "avatar": "资源/特调材料/选项卡/.avatar.png",
       "ownerHash": "6c8a4b19c00952a5cb175079671b6efba60608a7ab051d6345bceefcca74334a",
       "updatedAt": "2026-09-03T05:47:41+08:00"
+    },
+    {
+      "folder": "线上正则",
+      "name": "消息气泡拆分",
+      "dirName": "消息气泡拆分",
+      "type": "dir",
+      "path": "资源/线上正则/消息气泡拆分",
+      "files": [
+        "资源/线上正则/消息气泡拆分/气泡切分规则.json"
+      ],
+      "images": [],
+      "description": "解决本应拆分成几个气泡发送但却因掉格式而被放到了一个气泡里的问题。",
+      "author": "薄雾林",
+      "avatar": "资源/线上正则/消息气泡拆分/.avatar.png",
+      "ownerHash": "4dde8cb2d0fae27998a1b55be02a915fdcbc60b830abe1b440ea0880fd3bee32",
+      "updatedAt": "2026-09-05T23:46:55+08:00"
     },
     {
       "folder": "线上美化",
