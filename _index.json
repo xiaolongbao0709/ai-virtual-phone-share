@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-05T09:26:23.205Z",
+  "generatedAt": "2026-09-05T09:28:06.256Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "线上美化",
-      "count": 36
+      "count": 37
     },
     {
       "name": "线上聊天状态栏",
@@ -3681,6 +3681,25 @@
       "avatar": "资源/特调材料/选项卡/.avatar.png",
       "ownerHash": "6c8a4b19c00952a5cb175079671b6efba60608a7ab051d6345bceefcca74334a",
       "updatedAt": "2026-09-03T05:47:41+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "Kakaotalk_by小池",
+      "dirName": "Kakaotalk_by小池",
+      "type": "dir",
+      "path": "资源/线上美化/Kakaotalk_by小池",
+      "files": [
+        "资源/线上美化/Kakaotalk_by小池/float底栏保留贴纸回复.js",
+        "资源/线上美化/Kakaotalk_by小池/【float】kakaotalk_by小池.txt"
+      ],
+      "images": [
+        "资源/线上美化/Kakaotalk_by小池/5330A193EB02F7F1AD3F6307533CD06E.png"
+      ],
+      "description": "🚫二改二传\n一个简单的仿kkt 背景图需要自己找\n[粗][红][大]必须配合插件使用！！之前下过的宝宝可以不用下[/大][/红][/粗]",
+      "author": "@Dol0re3_",
+      "avatar": "资源/线上美化/Kakaotalk_by小池/.avatar.png",
+      "ownerHash": "6a08d4fbb179025747de726b73fc09d681a2a7d30e74d9d35f57f31a77b70b8d",
+      "updatedAt": "2026-09-05T17:27:27+08:00"
     },
     {
       "folder": "线上美化",
