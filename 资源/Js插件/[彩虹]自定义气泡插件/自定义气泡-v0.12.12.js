@@ -7,6 +7,8 @@ const DEFAULT_STATE = {
   groups: {},
   skins: {},
   characterBindings: {},
+  sidebarEnabled: true,
+  sidebarTop: null,
 };
 
 function cloneDefaultState() {
@@ -42,6 +44,9 @@ function normalizeSkin(raw) {
       left: safeNumber(padding.left, 14),
     },
     edgeScale: safeNumber(raw && raw.edgeScale, 0.6, 0.05, 2),
+    offsetY: safeNumber(raw && raw.offsetY, 0, -40, 40),
+    offsetX: safeNumber(raw && raw.offsetX, 0, -40, 40),
+    imageOpacity: safeNumber(raw && raw.imageOpacity, 1, 0, 1),
     textColor: String(raw && raw.textColor || "#4b5563"),
     fontData: String(raw && raw.fontData || ""),
     fontName: String(raw && raw.fontName || ""),
@@ -79,10 +84,303 @@ function fontDataToBuffer(dataUrl) {
   return new TextEncoder().encode(decodeURIComponent(payload)).buffer;
 }
 
+function dataUrlToBytes(dataUrl) {
+  const source = String(dataUrl || "");
+  const comma = source.indexOf(",");
+  if (comma < 0) throw new Error("图片数据无效");
+  const meta = source.slice(0, comma);
+  const payload = source.slice(comma + 1);
+  const mime = (meta.match(/^data:([^;,]+)/i) || [])[1] || "image/png";
+  if (/;base64/i.test(meta)) {
+    const binary = atob(payload);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+    return { bytes, mime };
+  }
+  return { bytes: new TextEncoder().encode(decodeURIComponent(payload)), mime };
+}
+
+function bytesToDataUrl(bytes, mime) {
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + chunkSize));
+  }
+  return `data:${mime || "image/png"};base64,${btoa(binary)}`;
+}
+
+function resizeImageToHeight(image, targetHeight = 150) {
+  const sourceWidth = Number(image && image.naturalWidth) || 0;
+  const sourceHeight = Number(image && image.naturalHeight) || 0;
+  if (!sourceWidth || !sourceHeight) throw new Error("无法读取图片尺寸");
+  const height = Math.max(1, Math.round(targetHeight));
+  const width = Math.max(1, Math.round(sourceWidth * height / sourceHeight));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d", { alpha: true });
+  if (!context) throw new Error("当前浏览器无法缩放图片");
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = "high";
+  context.clearRect(0, 0, width, height);
+  context.drawImage(image, 0, 0, width, height);
+  return { image: canvas.toDataURL("image/png"), width, height };
+}
+
+function imageExtension(mime) {
+  const value = String(mime || "").toLowerCase();
+  if (value.includes("webp")) return "webp";
+  if (value.includes("jpeg") || value.includes("jpg")) return "jpg";
+  if (value.includes("gif")) return "gif";
+  return "png";
+}
+
+function imageMimeFromPath(path) {
+  const value = String(path || "").toLowerCase();
+  if (value.endsWith(".webp")) return "image/webp";
+  if (value.endsWith(".jpg") || value.endsWith(".jpeg")) return "image/jpeg";
+  if (value.endsWith(".gif")) return "image/gif";
+  return "image/png";
+}
+
+function fontExtension(name, mime) {
+  const match = String(name || "").toLowerCase().match(/\.(woff2|woff|otf|ttf)$/);
+  if (match) return match[1];
+  const value = String(mime || "").toLowerCase();
+  if (value.includes("woff2")) return "woff2";
+  if (value.includes("woff")) return "woff";
+  if (value.includes("opentype")) return "otf";
+  return "ttf";
+}
+
+function fontMimeFromPath(path) {
+  const value = String(path || "").toLowerCase();
+  if (value.endsWith(".woff2")) return "font/woff2";
+  if (value.endsWith(".woff")) return "font/woff";
+  if (value.endsWith(".otf")) return "font/otf";
+  return "font/ttf";
+}
+
+const ZIP_CRC_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let n = 0; n < 256; n += 1) {
+    let c = n;
+    for (let k = 0; k < 8; k += 1) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+    table[n] = c >>> 0;
+  }
+  return table;
+})();
+
+function zipCrc32(bytes) {
+  let crc = 0xffffffff;
+  for (const byte of bytes) crc = ZIP_CRC_TABLE[(crc ^ byte) & 0xff] ^ (crc >>> 8);
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function zipDosTime(date = new Date()) {
+  const year = Math.max(1980, date.getFullYear());
+  return {
+    time: (date.getHours() << 11) | (date.getMinutes() << 5) | (date.getSeconds() >> 1),
+    date: ((year - 1980) << 9) | ((date.getMonth() + 1) << 5) | date.getDate(),
+  };
+}
+
+function makeZip(files) {
+  const encoder = new TextEncoder();
+  const parts = [];
+  const centralParts = [];
+  const stamp = zipDosTime();
+  let offset = 0;
+  for (const file of files) {
+    const name = encoder.encode(file.name);
+    const data = file.data instanceof Uint8Array ? file.data : new Uint8Array(file.data);
+    const crc = zipCrc32(data);
+    const local = new Uint8Array(30);
+    const lv = new DataView(local.buffer);
+    lv.setUint32(0, 0x04034b50, true);
+    lv.setUint16(4, 20, true);
+    lv.setUint16(6, 0x0800, true);
+    lv.setUint16(8, 0, true);
+    lv.setUint16(10, stamp.time, true);
+    lv.setUint16(12, stamp.date, true);
+    lv.setUint32(14, crc, true);
+    lv.setUint32(18, data.length, true);
+    lv.setUint32(22, data.length, true);
+    lv.setUint16(26, name.length, true);
+    const central = new Uint8Array(46);
+    const cv = new DataView(central.buffer);
+    cv.setUint32(0, 0x02014b50, true);
+    cv.setUint16(4, 20, true);
+    cv.setUint16(6, 20, true);
+    cv.setUint16(8, 0x0800, true);
+    cv.setUint16(10, 0, true);
+    cv.setUint16(12, stamp.time, true);
+    cv.setUint16(14, stamp.date, true);
+    cv.setUint32(16, crc, true);
+    cv.setUint32(20, data.length, true);
+    cv.setUint32(24, data.length, true);
+    cv.setUint16(28, name.length, true);
+    cv.setUint32(42, offset, true);
+    parts.push(local, name, data);
+    centralParts.push(central, name);
+    offset += local.length + name.length + data.length;
+  }
+  const centralOffset = offset;
+  const centralSize = centralParts.reduce((sum, part) => sum + part.length, 0);
+  const end = new Uint8Array(22);
+  const ev = new DataView(end.buffer);
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, files.length, true);
+  ev.setUint16(10, files.length, true);
+  ev.setUint32(12, centralSize, true);
+  ev.setUint32(16, centralOffset, true);
+  return new Blob([...parts, ...centralParts, end], { type: "application/zip" });
+}
+
+async function unzipEntries(file) {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let endOffset = -1;
+  for (let i = bytes.length - 22; i >= Math.max(0, bytes.length - 65557); i -= 1) {
+    if (view.getUint32(i, true) === 0x06054b50) { endOffset = i; break; }
+  }
+  if (endOffset < 0) throw new Error("不是有效的 ZIP 文件");
+  const count = view.getUint16(endOffset + 10, true);
+  let cursor = view.getUint32(endOffset + 16, true);
+  const decoder = new TextDecoder();
+  const entries = new Map();
+  for (let index = 0; index < count; index += 1) {
+    if (view.getUint32(cursor, true) !== 0x02014b50) throw new Error("ZIP 目录损坏");
+    const method = view.getUint16(cursor + 10, true);
+    const compressedSize = view.getUint32(cursor + 20, true);
+    const nameLength = view.getUint16(cursor + 28, true);
+    const extraLength = view.getUint16(cursor + 30, true);
+    const commentLength = view.getUint16(cursor + 32, true);
+    const localOffset = view.getUint32(cursor + 42, true);
+    const name = decoder.decode(bytes.subarray(cursor + 46, cursor + 46 + nameLength));
+    if (view.getUint32(localOffset, true) !== 0x04034b50) throw new Error("ZIP 文件项损坏");
+    const localNameLength = view.getUint16(localOffset + 26, true);
+    const localExtraLength = view.getUint16(localOffset + 28, true);
+    const dataStart = localOffset + 30 + localNameLength + localExtraLength;
+    const compressed = bytes.slice(dataStart, dataStart + compressedSize);
+    let data;
+    if (method === 0) {
+      data = compressed;
+    } else if (method === 8 && typeof DecompressionStream === "function") {
+      const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      data = new Uint8Array(await new Response(stream).arrayBuffer());
+    } else {
+      throw new Error("不支持此 ZIP 压缩方式");
+    }
+    entries.set(name, data);
+    cursor += 46 + nameLength + extraLength + commentLength;
+  }
+  return entries;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1200);
+}
+
+function buildBubblePackage(state, skinIds) {
+  const selectedIds = new Set(skinIds.map(String));
+  const groups = {};
+  const skins = {};
+  const files = [];
+  for (const skinId of selectedIds) {
+    const skin = state.skins[skinId];
+    if (!skin) continue;
+    const exported = JSON.parse(JSON.stringify(skin));
+    if (skin.groupId && state.groups[skin.groupId]) {
+      groups[skin.groupId] = JSON.parse(JSON.stringify(state.groups[skin.groupId]));
+    }
+    if (skin.image) {
+      const image = dataUrlToBytes(skin.image);
+      const path = `images/${String(skin.id).replace(/[^a-zA-Z0-9_-]/g, "_")}.${imageExtension(image.mime)}`;
+      exported.image = path;
+      exported.imageMime = image.mime;
+      files.push({ name: path, data: image.bytes });
+    }
+    if (skin.fontData) {
+      const path = `fonts/${String(skin.id).replace(/[^a-zA-Z0-9_-]/g, "_")}.${fontExtension(skin.fontName, skin.fontMime)}`;
+      exported.fontData = path;
+      files.push({ name: path, data: new Uint8Array(fontDataToBuffer(skin.fontData)) });
+    }
+    skins[skinId] = exported;
+  }
+  const characterBindings = {};
+  for (const [characterId, skinId] of Object.entries(state.characterBindings)) {
+    if (selectedIds.has(skinId)) characterBindings[characterId] = skinId;
+  }
+  const config = {
+    packageType: "float-custom-bubbles",
+    packageVersion: 1,
+    groups,
+    skins,
+    userSkinId: selectedIds.has(state.userSkinId) ? state.userSkinId : "",
+    characterBindings,
+  };
+  files.unshift({ name: "config.json", data: new TextEncoder().encode(JSON.stringify(config, null, 2)) });
+  return makeZip(files);
+}
+
+async function mergeBubblePackage(file, state) {
+  const entries = await unzipEntries(file);
+  const configBytes = entries.get("config.json");
+  if (!configBytes) throw new Error("ZIP 内缺少 config.json");
+  const config = JSON.parse(new TextDecoder().decode(configBytes));
+  if (!config || config.packageType !== "float-custom-bubbles" || !config.skins) {
+    throw new Error("不是自定义气泡资源包");
+  }
+  const groupIdMap = new Map();
+  for (const [oldId, group] of Object.entries(config.groups || {})) {
+    let nextId = oldId;
+    if (state.groups[nextId] && state.groups[nextId].name !== String(group && group.name || "")) {
+      nextId = uid().replace("skin-", "group-");
+    }
+    if (!state.groups[nextId]) state.groups[nextId] = { id: nextId, name: String(group && group.name || "未命名分组") };
+    groupIdMap.set(oldId, nextId);
+  }
+  const skinIdMap = new Map();
+  for (const [oldId, rawSkin] of Object.entries(config.skins || {})) {
+    const raw = { ...rawSkin };
+    if (raw.image) {
+      const imageBytes = entries.get(String(raw.image));
+      if (!imageBytes) throw new Error(`缺少气泡图片：${raw.image}`);
+      raw.image = bytesToDataUrl(imageBytes, raw.imageMime || imageMimeFromPath(raw.image));
+    }
+    delete raw.imageMime;
+    if (raw.fontData) {
+      const fontBytes = entries.get(String(raw.fontData));
+      if (!fontBytes) throw new Error(`缺少气泡字体：${raw.fontData}`);
+      raw.fontData = bytesToDataUrl(fontBytes, raw.fontMime || fontMimeFromPath(raw.fontData));
+    }
+    const nextId = state.skins[oldId] ? uid() : oldId;
+    raw.id = nextId;
+    raw.groupId = raw.groupId ? (groupIdMap.get(raw.groupId) || "") : "";
+    state.skins[nextId] = normalizeSkin(raw);
+    skinIdMap.set(oldId, nextId);
+  }
+  if (config.userSkinId && skinIdMap.has(config.userSkinId)) {
+    state.userSkinId = skinIdMap.get(config.userSkinId);
+  }
+  for (const [characterId, oldSkinId] of Object.entries(config.characterBindings || {})) {
+    if (skinIdMap.has(oldSkinId)) state.characterBindings[characterId] = skinIdMap.get(oldSkinId);
+  }
+  return skinIdMap.size;
+}
+
 function normalizeState(raw) {
   const state = cloneDefaultState();
   if (!raw || typeof raw !== "object") return state;
   state.userSkinId = String(raw.userSkinId || "");
+  state.sidebarEnabled = raw.sidebarEnabled !== false;
+  state.sidebarTop = raw.sidebarTop == null ? null : safeNumber(raw.sidebarTop, null, 8, 9999);
   if (raw.groups && typeof raw.groups === "object") {
     for (const [id, value] of Object.entries(raw.groups)) {
       if (!id) continue;
@@ -224,12 +522,14 @@ function clearBubbleSkin(bubble) {
   if (!bubble) return;
   clearBubbleFont(bubble);
   delete bubble.dataset.nineSliceBubbleSkin;
+  delete bubble.dataset.nineSliceBubbleSkinId;
   delete bubble.dataset.nineSliceBubbleRole;
   [
     "--nsb-image", "--nsb-slice-top", "--nsb-slice-right", "--nsb-slice-bottom", "--nsb-slice-left",
     "--nsb-edge-top", "--nsb-edge-right", "--nsb-edge-bottom", "--nsb-edge-left",
     "--nsb-pad-top", "--nsb-pad-right", "--nsb-pad-bottom", "--nsb-pad-left",
     "--nsb-text-color", "--nsb-font-family", "--nsb-font-size-adjust",
+    "--nsb-offset-x", "--nsb-offset-y", "--nsb-image-opacity",
   ].forEach(name => bubble.style.removeProperty(name));
 }
 
@@ -242,6 +542,7 @@ function applySkinToBubble(bubble, skin, role) {
   const p = skin.padding;
   const scale = skin.edgeScale;
   bubble.dataset.nineSliceBubbleSkin = "1";
+  bubble.dataset.nineSliceBubbleSkinId = skin.id;
   bubble.dataset.nineSliceBubbleRole = role === "user" ? "user" : "assistant";
   bubble.style.setProperty("--nsb-image", `url("${escapeCssUrl(skin.image)}")`);
   bubble.style.setProperty("--nsb-slice-top", String(s.top));
@@ -256,6 +557,10 @@ function applySkinToBubble(bubble, skin, role) {
   bubble.style.setProperty("--nsb-pad-right", `${p.right}px`);
   bubble.style.setProperty("--nsb-pad-bottom", `${p.bottom}px`);
   bubble.style.setProperty("--nsb-pad-left", `${p.left}px`);
+  const horizontalOffset = role === "user" ? -skin.offsetX : skin.offsetX;
+  bubble.style.setProperty("--nsb-offset-x", `${horizontalOffset}px`);
+  bubble.style.setProperty("--nsb-offset-y", `${skin.offsetY}px`);
+  bubble.style.setProperty("--nsb-image-opacity", String(skin.imageOpacity));
   bubble.style.setProperty("--nsb-text-color", skin.textColor);
   bubble.style.setProperty("--nsb-font-family", skin.fontData ? `"${fontFamilyForSkin(skin)}"` : "inherit");
   bubble.style.setProperty("--nsb-font-size-adjust", `${skin.fontSizeAdjust}px`);
@@ -275,6 +580,7 @@ const RUNTIME_CSS = `
   color: var(--nsb-text-color) !important;
   padding: var(--nsb-pad-top) var(--nsb-pad-right) var(--nsb-pad-bottom) var(--nsb-pad-left) !important;
   animation: none !important;
+  transform: translate(var(--nsb-offset-x, 0px), var(--nsb-offset-y, 0px)) !important;
   box-sizing: border-box !important;
   min-width: calc(var(--nsb-edge-left) + var(--nsb-edge-right)) !important;
   min-height: calc(var(--nsb-edge-top) + var(--nsb-edge-bottom)) !important;
@@ -290,6 +596,16 @@ const RUNTIME_CSS = `
 [data-nine-slice-bubble-skin="1"].voice-msg-bubble .voice-msg-dur,
 [data-nine-slice-bubble-skin="1"] .voice-msg-dur {
   font-family: var(--nsb-font-family, inherit) !important;
+}
+[data-nine-slice-bubble-skin="1"] .voice-msg-icon,
+[data-nine-slice-bubble-skin="1"] .voice-msg-dur {
+  color: var(--nsb-text-color) !important;
+}
+[data-nine-slice-bubble-skin="1"] .voice-msg-bar {
+  background: var(--nsb-text-color) !important;
+}
+[data-nine-slice-bubble-skin="1"] .voice-msg-icon-shell {
+  background: color-mix(in srgb, var(--nsb-text-color) 14%, transparent) !important;
 }
 [data-nine-slice-bubble-skin="1"].chat-markdown,
 [data-nine-slice-bubble-skin="1"] > .chat-markdown,
@@ -323,6 +639,7 @@ const RUNTIME_CSS = `
   border-image-slice: var(--nsb-slice-top) var(--nsb-slice-right) var(--nsb-slice-bottom) var(--nsb-slice-left) fill !important;
   border-image-width: var(--nsb-edge-top) var(--nsb-edge-right) var(--nsb-edge-bottom) var(--nsb-edge-left) !important;
   border-image-repeat: stretch !important;
+  opacity: var(--nsb-image-opacity, 1) !important;
   background: transparent !important;
 }
 `;
@@ -345,18 +662,44 @@ const MIRROR_CSS = `
 `;
 
 const EDITOR_CSS = `
+.nsb-delete-chip.export-selected{border-color:#cf79a3;background:#f9e1ec;color:#8f3f67;box-shadow:0 0 0 1px rgba(207,121,163,.16)}.nsb-sidebar-panel .nsb-icon-btn.export-active{background:#d184aa;border-color:#d184aa;color:#fff}
+.nsb-sidebar-panel::before{content:"";position:absolute;left:88px;top:11px;bottom:11px;width:1px;background:rgba(218,159,188,.35);pointer-events:none}.nsb-sidebar-panel>.nsb-group-tabs,.nsb-sidebar-panel>.nsb-group-tools{border-right:0!important}.nsb-sidebar-panel>.nsb-group-tools{padding:7px 7px 7px 0!important;align-items:center}
+.nsb-editor .nsb-compact-control{display:grid!important;grid-template-columns:52px minmax(0,1fr) 48px;gap:7px;align-items:center}.nsb-editor .nsb-compact-control label{min-width:0!important}.nsb-editor .nsb-compact-control input[type="range"]{width:100%!important;min-width:0}.nsb-editor .nsb-compact-control .nsb-num{width:48px!important;padding:6px 5px}
 .nsb-editor{font-family:system-ui,-apple-system,sans-serif;color:#263241;width:min(920px,96vw);height:calc(100vh - 28px);height:calc(100dvh - 28px);max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#f8fafc;border-radius:18px;padding:18px 18px 28px;box-sizing:border-box}
 .nsb-editor *{box-sizing:border-box}.nsb-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.nsb-title{font-size:18px;font-weight:750}.nsb-close,.nsb-btn{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:8px 12px;color:#334155;cursor:pointer}.nsb-btn.primary{background:#5f7fa8;color:white;border-color:#5f7fa8}.nsb-btn.danger{color:#b42318}.nsb-grid{display:grid;grid-template-columns:minmax(210px,260px) minmax(0,1fr);gap:16px}.nsb-side,.nsb-main,.nsb-card{background:#fff;border:1px solid #dce4ee;border-radius:14px;padding:13px}.nsb-row{display:flex;gap:8px;align-items:center;margin:8px 0}.nsb-row.wrap{flex-wrap:wrap}.nsb-row label{font-size:12px;color:#64748b;min-width:58px}.nsb-input,.nsb-select{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:7px 9px;background:white;color:#27364a}.nsb-num{width:72px}.nsb-list{display:flex;flex-direction:column;gap:6px;margin:10px 0}.nsb-skin-item{border:1px solid #dce4ee;border-radius:10px;padding:9px;background:#fff;text-align:left;cursor:pointer}.nsb-skin-item.active{border-color:#6f91ba;background:#edf4fb}.nsb-muted{font-size:11px;color:#77869a;line-height:1.45}.nsb-section-title{font-size:13px;font-weight:700;margin:14px 0 7px}.nsb-stage{position:relative;display:inline-block;max-width:100%;line-height:0;background:repeating-conic-gradient(#eef2f6 0 25%,#fff 0 50%) 0/16px 16px;border:1px solid #d8e0ea;touch-action:none}.nsb-stage img{display:block;max-width:100%;max-height:330px;object-fit:contain}.nsb-line{position:absolute;background:#f04438;z-index:3;touch-action:none}.nsb-line.v{top:0;bottom:0;width:2px;cursor:ew-resize}.nsb-line.h{left:0;right:0;height:2px;cursor:ns-resize}.nsb-control-grid{display:grid;grid-template-columns:repeat(4,minmax(72px,1fr));gap:8px}.nsb-control-grid label{font-size:11px;color:#64748b}.nsb-control-grid input{margin-top:4px}.nsb-preview{padding:24px;background:#edf2f7;border-radius:12px;display:flex;flex-direction:column;gap:14px;overflow:hidden}.nsb-demo{position:relative;isolation:isolate;align-self:flex-start;max-width:72%;padding:10px 14px;color:#46576d}.nsb-demo.user{align-self:flex-end}.nsb-demo::after{content:"";position:absolute;inset:0;z-index:-1;border-style:solid;border-color:transparent;border-image-repeat:stretch}.nsb-binding{display:grid;grid-template-columns:minmax(100px,1fr) minmax(140px,1.2fr);gap:7px;align-items:center;margin:7px 0}.nsb-foot{display:flex;justify-content:space-between;gap:10px;margin-top:14px}.nsb-file{font-size:12px;max-width:100%}@media(max-width:700px){.nsb-grid{grid-template-columns:1fr}.nsb-control-grid{grid-template-columns:repeat(2,1fr)}.nsb-editor{padding:12px}.nsb-side{order:2}}
 .nsb-foot{padding-bottom:max(8px,env(safe-area-inset-bottom))}@media(max-width:700px){.nsb-editor{padding-bottom:24px}}
 .nsb-grid.single{grid-template-columns:minmax(0,1fr)}.nsb-settings-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;background:#eef2f7;border-radius:11px;margin-bottom:12px}.nsb-settings-tab{border:0;border-radius:8px;padding:8px;background:transparent;color:#64748b}.nsb-settings-tab.active{background:#fff;color:#334155;box-shadow:0 1px 4px rgba(51,65,85,.12)}.nsb-library-head,.nsb-library-row{display:flex;align-items:center;justify-content:space-between;gap:10px}.nsb-library-head{margin:5px 0 8px;font-weight:700}.nsb-library-row{padding:10px 0;border-bottom:1px solid rgba(120,140,165,.16)}.nsb-library-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nsb-mini-actions{display:flex;gap:6px;flex-shrink:0}.nsb-mini-btn{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:6px 9px;color:#475569}.nsb-mini-btn.primary{background:#6f8fb5;color:#fff;border-color:#6f8fb5}.nsb-mini-btn.danger{color:#b42318}.nsb-role-picker{border:1px solid #d7e0ea;border-radius:10px;background:#fff}.nsb-role-picker summary{cursor:pointer;padding:8px 10px;font-size:12px;color:#526174;list-style:none}.nsb-role-picker summary::-webkit-details-marker{display:none}.nsb-role-options{max-height:190px;overflow:auto;border-top:1px solid #e2e8f0;padding:6px}.nsb-role-option{display:flex;align-items:center;gap:8px;padding:7px 5px;font-size:12px}.nsb-bind-row{display:grid;grid-template-columns:minmax(90px,1fr) minmax(150px,1.35fr);gap:8px;align-items:start;margin:9px 0}
-.nsb-library-tools{display:flex;gap:6px;flex-wrap:wrap}.nsb-basic-row{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(110px,160px) auto;gap:8px;align-items:center;margin:8px 0 12px}.nsb-slider-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}.nsb-slider-item{display:grid;grid-template-columns:24px minmax(0,1fr) 64px;gap:6px;align-items:center;font-size:12px;color:#64748b}.nsb-slider-item input[type="range"]{width:100%;min-width:0}.nsb-slider-item input[type="number"]{width:64px;padding:6px 7px;border:1px solid #cbd5e1;border-radius:8px;color:#334155;background:#fff}.nsb-group{border:1px solid rgba(120,140,165,.18);border-radius:11px;margin:10px 0;padding:0 10px}.nsb-group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;font-weight:650}.nsb-group-actions{display:flex;gap:5px}.nsb-role-summary{display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-height:18px}.nsb-role-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:999px;background:#edf3f9;color:#4d6480;font-size:11px}.nsb-role-placeholder{color:#78879a}.nsb-role-arrow{margin-left:auto}@media(max-width:680px){.nsb-library-head{align-items:flex-start;flex-direction:column}.nsb-basic-row{grid-template-columns:auto minmax(0,1fr) auto}.nsb-basic-row .nsb-select{grid-column:2}.nsb-basic-row .nsb-file-button{grid-column:3;grid-row:1/3}.nsb-slider-grid{grid-template-columns:1fr}}
+.nsb-library-tools{display:flex;gap:6px;flex-wrap:wrap}.nsb-basic-row{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(110px,160px) auto;gap:8px;align-items:center;margin:8px 0 12px}.nsb-slider-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}.nsb-slider-item{display:grid;grid-template-columns:24px minmax(0,1fr) 48px;gap:6px;align-items:center;font-size:12px;color:#64748b}.nsb-slider-item input[type="range"]{width:100%;min-width:0}.nsb-slider-item input[type="number"]{width:48px;padding:6px 5px;border:1px solid #cbd5e1;border-radius:8px;color:#334155;background:#fff}.nsb-group{border:1px solid rgba(120,140,165,.18);border-radius:11px;margin:10px 0;padding:0 10px}.nsb-group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;font-weight:650}.nsb-group-actions{display:flex;gap:5px}.nsb-role-summary{display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-height:18px}.nsb-role-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:999px;background:#edf3f9;color:#4d6480;font-size:11px}.nsb-role-placeholder{color:#78879a}.nsb-role-arrow{margin-left:auto}@media(max-width:680px){.nsb-library-head{align-items:flex-start;flex-direction:column}.nsb-basic-row{grid-template-columns:auto minmax(0,1fr) auto}.nsb-basic-row .nsb-select{grid-column:2}.nsb-basic-row .nsb-file-button{grid-column:3;grid-row:1/3}.nsb-slider-grid{grid-template-columns:1fr}}
 .nsb-line{pointer-events:none!important;cursor:default!important}
-.nsb-demo::after{inset:0;border-width:var(--preview-edge-top) var(--preview-edge-right) var(--preview-edge-bottom) var(--preview-edge-left);border-image-source:var(--preview-image);border-image-slice:var(--preview-slice-top) var(--preview-slice-right) var(--preview-slice-bottom) var(--preview-slice-left) fill;border-image-width:var(--preview-edge-top) var(--preview-edge-right) var(--preview-edge-bottom) var(--preview-edge-left)}.nsb-bind-row,.nsb-bind-row .nsb-select,.nsb-role-picker summary,.nsb-role-option{font-size:13px!important}
+.nsb-demo::after{inset:0;border-width:var(--preview-edge-top) var(--preview-edge-right) var(--preview-edge-bottom) var(--preview-edge-left);border-image-source:var(--preview-image);border-image-slice:var(--preview-slice-top) var(--preview-slice-right) var(--preview-slice-bottom) var(--preview-slice-left) fill;border-image-width:var(--preview-edge-top) var(--preview-edge-right) var(--preview-edge-bottom) var(--preview-edge-left);opacity:var(--preview-opacity,1)}.nsb-bind-row,.nsb-bind-row .nsb-select,.nsb-role-picker summary,.nsb-role-option{font-size:13px!important}
 .nsb-demo:not(.user)::after{transform:scaleX(-1);transform-origin:center center}
 .nsb-role-picker summary{display:flex;align-items:center;gap:6px}
 .nsb-floating-edit{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(88px,calc(env(safe-area-inset-bottom) + 72px));z-index:2147483000;display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid rgba(255,255,255,.8);border-radius:50%;background:#6f8fb5;color:#fff;box-shadow:0 8px 24px rgba(45,64,88,.28);cursor:pointer;-webkit-tap-highlight-color:transparent}.nsb-floating-edit:active{transform:scale(.94)}.nsb-floating-edit svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nsb-unified-toolbar{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin-bottom:11px}.nsb-icon-btn{display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid #cbd5e1;border-radius:9px;background:#fff;color:#52677f;cursor:pointer}.nsb-icon-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nsb-icon-btn.primary{background:#6f8fb5;border-color:#6f8fb5;color:#fff}.nsb-icon-btn.danger{color:#b42318}.nsb-icon-btn.active{background:#fff0f0;border-color:#e4a6a6;color:#b42318}.nsb-group-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}.nsb-group-tab{border:1px solid #d7e0ea;border-radius:999px;background:#fff;color:#68788d;padding:6px 11px;font-size:12px}.nsb-group-tab.active{background:#6f8fb5;border-color:#6f8fb5;color:#fff}.nsb-group-tab.delete-selected{background:#fff0f0;border-color:#d88c8c;color:#b42318}.nsb-group-tab.delete-disabled{opacity:.45;cursor:not-allowed}.nsb-section-block{margin:12px 0}.nsb-section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;padding:0 2px;font-size:13px;font-weight:650}.nsb-skin-card{border:1px solid rgba(120,140,165,.2);border-radius:11px;background:#fff;margin:7px 0;overflow:hidden}.nsb-skin-top{display:grid;grid-template-columns:32px minmax(0,1fr) 36px;align-items:center;gap:5px;padding:7px}.nsb-chevron{display:grid;place-items:center;width:30px;height:30px;border:0;background:transparent;color:#6b7e94;transition:transform .15s}.nsb-chevron.open{transform:rotate(180deg)}.nsb-skin-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:600}.nsb-bound-tags{display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-height:31px;padding:0 10px 8px;cursor:pointer}.nsb-bound-tag{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;background:#edf3f9;color:#4d6480;font-size:11px}.nsb-bound-tag.user{background:#f9e7ef;color:#a54f73}.nsb-bound-tag .remove{margin-left:4px;font-weight:700}.nsb-unbound{font-size:11px;color:#9aa7b7}.nsb-picker-list{display:none;border-top:1px solid #e5eaf0;padding:7px 10px;max-height:220px;overflow:auto}.nsb-picker-list.open{display:block}.nsb-picker-option{display:flex;align-items:center;gap:8px;padding:7px 2px;font-size:12px}.nsb-picker-option.user{color:#a54f73}.nsb-delete-row{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;gap:5px;padding:10px}.nsb-delete-row input{width:18px;height:18px}.nsb-delete-bar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding:9px;background:rgba(248,250,252,.96);border:1px solid #d9e1ea;border-radius:11px;backdrop-filter:blur(10px)}.nsb-delete-actions{display:flex;gap:7px}.nsb-action-btn{border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#526174;padding:7px 10px}.nsb-action-btn.danger{background:#b94b4b;border-color:#b94b4b;color:#fff}.nsb-empty{padding:18px 4px;text-align:center;color:#8a98a9;font-size:12px}
-.nsb-delete-chips{display:flex;flex-wrap:wrap;gap:7px;padding:3px 0 8px}.nsb-delete-chip{display:inline-flex;align-items:center;border:1px solid #d7e0ea;border-radius:999px;background:#fff;color:#607086;padding:6px 9px;font-size:12px}.nsb-delete-chip.selected{border-color:#d88c8c;background:#fff0f0;color:#b42318}.nsb-name-dialog{width:min(390px,88vw);padding:16px;border-radius:15px;background:#fff;color:#334155;box-shadow:0 16px 46px rgba(35,48,66,.24)}.nsb-name-title{font-size:15px;font-weight:700;margin-bottom:11px}.nsb-name-input{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:9px 10px;font-size:14px}.nsb-name-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:13px}
+.nsb-delete-chips{display:flex;flex-wrap:wrap;gap:7px;padding:3px 0 8px}.nsb-delete-chip{display:inline-flex;align-items:center;border:1px solid #d7e0ea;border-radius:999px;background:#fff;color:#607086;padding:6px 9px;font-size:12px}.nsb-delete-chip.selected{border-color:#d88c8c;background:#fff0f0;color:#b42318}.nsb-name-dialog{width:min(390px,88vw);padding:16px;border:1px solid rgba(225,174,199,.66);border-radius:15px;background:rgba(255,242,248,.94);color:#4e435a;box-shadow:0 18px 48px rgba(111,61,86,.24),inset 0 1px 0 rgba(255,255,255,.84);backdrop-filter:blur(24px) saturate(1.14);-webkit-backdrop-filter:blur(24px) saturate(1.14);font-family:system-ui,-apple-system,sans-serif;font-size:12px}.nsb-name-title{font-size:12px;font-weight:700;margin-bottom:10px;color:#6f4f60}.nsb-name-input{width:100%;height:32px;border:1px solid rgba(218,158,187,.48);border-radius:8px;padding:0 8px;background:rgba(255,255,255,.72);color:#334155;font:400 12px/1.2 system-ui,-apple-system,sans-serif;outline:none}.nsb-name-input:focus{border-color:#d184aa;box-shadow:0 0 0 2px rgba(209,132,170,.16)}.nsb-name-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px}.nsb-name-dialog .nsb-icon-btn{width:32px;height:32px;border-color:rgba(218,158,187,.48);background:rgba(255,255,255,.72);color:#8f5571}.nsb-name-dialog .nsb-icon-btn.primary{background:#d184aa;border-color:#d184aa;color:#fff}
+.nsb-sidebar-handle{position:fixed;right:0;top:38vh;z-index:2147483000;width:24px;height:64px;padding:0;border:1px solid rgba(255,255,255,.62);border-right:0;border-radius:12px 0 0 12px;background:linear-gradient(180deg,rgba(190,168,222,.84),rgba(151,121,189,.8));color:#fff;box-shadow:-4px 7px 20px rgba(86,61,118,.24);backdrop-filter:blur(14px) saturate(1.18);-webkit-backdrop-filter:blur(14px) saturate(1.18);cursor:pointer}.nsb-sidebar-handle svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.nsb-sidebar-handle[hidden],.nsb-sidebar-panel[hidden]{display:none!important}
+.nsb-sidebar-panel{position:fixed;right:32px;top:12vh;z-index:2147482999;width:min(720px,calc(100vw - 44px));max-height:76vh;overflow:auto;overscroll-behavior:contain;padding:15px 15px 18px;display:grid;grid-template-columns:112px minmax(0,1fr);gap:10px 16px;border:1px solid rgba(194,175,214,.62);border-radius:18px;background:rgba(246,240,251,.76);box-shadow:0 18px 50px rgba(74,51,99,.25),inset 0 1px 0 rgba(255,255,255,.82);backdrop-filter:blur(24px) saturate(1.18);-webkit-backdrop-filter:blur(24px) saturate(1.18);font-family:system-ui,-apple-system,sans-serif;color:#433950;box-sizing:border-box}
+.nsb-sidebar-panel>.nsb-unified-toolbar{grid-column:2;grid-row:1;margin:0 42px 2px 0}.nsb-sidebar-panel>.nsb-group-tabs{grid-column:1;grid-row:1/span 60;display:flex;flex-direction:column;align-items:stretch;gap:8px;margin:0;padding:0 12px 76px 0;border-right:1px solid rgba(176,151,201,.32)}.nsb-sidebar-panel>.nsb-group-tabs .nsb-group-tab{width:100%;min-height:40px;background:rgba(255,255,255,.46);border-color:rgba(181,160,204,.42);color:#70617d}.nsb-sidebar-panel>.nsb-group-tabs .nsb-group-tab.active{background:linear-gradient(135deg,rgba(169,143,202,.93),rgba(139,110,177,.91));border-color:rgba(137,107,174,.72);color:#fff;box-shadow:0 5px 14px rgba(105,76,137,.2)}.nsb-sidebar-panel>.nsb-section-block{grid-column:2;margin:0 0 4px}.nsb-sidebar-panel .nsb-section-head{color:#5e506c}.nsb-sidebar-panel .nsb-skin-card{background:rgba(255,255,255,.52);border-color:rgba(183,162,204,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.68);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.nsb-sidebar-panel .nsb-picker-list{border-color:rgba(183,162,204,.3)}.nsb-sidebar-panel .nsb-icon-btn{background:rgba(255,255,255,.58);border-color:rgba(181,159,203,.46);color:#665777;backdrop-filter:blur(8px)}.nsb-sidebar-panel .nsb-icon-btn.primary{background:#9a78ba;border-color:#9a78ba;color:#fff}.nsb-sidebar-panel input{accent-color:#9a78ba}.nsb-sidebar-close{position:absolute;right:14px;top:14px;width:34px!important;height:34px!important}.nsb-sidebar-empty{grid-column:2;padding:30px;text-align:center;color:#897b96;font-size:12px}
+.nsb-sidebar-toggle{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 2px;color:#4e435a;font-size:14px}.nsb-switch{position:relative;width:46px;height:27px;flex:none}.nsb-switch input{position:absolute;opacity:0;pointer-events:none}.nsb-switch-track{position:absolute;inset:0;border-radius:999px;background:#c9c0d0;transition:.18s}.nsb-switch-track::after{content:"";position:absolute;left:3px;top:3px;width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 2px 7px rgba(48,35,60,.2);transition:.18s}.nsb-switch input:checked+.nsb-switch-track{background:#9a78ba}.nsb-switch input:checked+.nsb-switch-track::after{transform:translateX(19px)}
+.nsb-editor{background:rgba(247,242,251,.9);border:1px solid rgba(194,175,214,.58);box-shadow:0 18px 54px rgba(72,53,93,.25);backdrop-filter:blur(24px) saturate(1.14);-webkit-backdrop-filter:blur(24px) saturate(1.14)}.nsb-editor .nsb-main{background:rgba(255,255,255,.56);border-color:rgba(184,163,205,.38)}.nsb-editor :is(.nsb-input,.nsb-select,.nsb-btn){background:rgba(255,255,255,.7);border-color:rgba(183,162,204,.46)}.nsb-editor .nsb-btn.primary{background:#9a78ba;border-color:#9a78ba;color:#fff}.nsb-editor input[type=range]{accent-color:#9a78ba}
+@media(max-width:620px){.nsb-sidebar-handle{width:22px;height:58px}.nsb-sidebar-panel{right:28px;top:8vh;width:calc(100vw - 38px);max-height:82vh;grid-template-columns:88px minmax(0,1fr);gap:8px 10px;padding:11px}.nsb-sidebar-panel>.nsb-group-tabs{padding-right:8px}.nsb-sidebar-panel>.nsb-group-tabs .nsb-group-tab{padding:6px 5px;font-size:11px}.nsb-sidebar-panel>.nsb-unified-toolbar{margin-right:38px}.nsb-sidebar-panel .nsb-icon-btn{width:34px;height:34px}}
+.nsb-editor-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;margin:12px 0 9px;border-bottom:2px solid rgba(213,139,174,.35)}.nsb-editor-tab{min-width:0;border:0;border-radius:9px 9px 0 0;padding:8px 2px;background:transparent;color:#8c7180;font-size:12px;white-space:nowrap;cursor:pointer}.nsb-editor-tab.active{background:rgba(255,255,255,.68);color:#8f3f67;font-weight:700;box-shadow:0 -1px 7px rgba(139,65,101,.08)}.nsb-editor-page[hidden]{display:none!important}
+.nsb-sidebar-handle{background:linear-gradient(180deg,rgba(231,167,197,.9),rgba(196,111,153,.87));box-shadow:-4px 7px 20px rgba(126,61,92,.23);touch-action:none;user-select:none;cursor:grab}.nsb-sidebar-handle:active{cursor:grabbing}.nsb-sidebar-panel{width:min(560px,calc(100vw - 44px));grid-template-columns:100px minmax(0,1fr);border-color:rgba(225,174,199,.66);background:rgba(255,241,248,.79);box-shadow:0 18px 48px rgba(111,61,86,.24),inset 0 1px 0 rgba(255,255,255,.84)}.nsb-sidebar-panel.compact{width:min(390px,calc(100vw - 44px));grid-template-columns:78px minmax(0,1fr);padding:11px;gap:8px 10px}.nsb-sidebar-panel.compact>.nsb-unified-toolbar{gap:4px;margin-right:70px}.nsb-sidebar-panel.compact .nsb-icon-btn{width:31px;height:31px}.nsb-sidebar-panel.compact .nsb-skin-top{grid-template-columns:27px minmax(0,1fr) 32px;padding:5px}.nsb-sidebar-panel.compact .nsb-bound-tags{padding:0 7px 6px}.nsb-sidebar-panel.compact>.nsb-group-tabs{padding-right:7px}.nsb-sidebar-panel.compact>.nsb-group-tabs .nsb-group-tab{min-height:34px;padding:5px 4px;font-size:10px}.nsb-sidebar-panel>.nsb-group-tabs{border-right-color:rgba(218,159,188,.35)}.nsb-sidebar-panel>.nsb-group-tabs .nsb-group-tab{border-color:rgba(221,165,192,.46);color:#8a6578}.nsb-sidebar-panel>.nsb-group-tabs .nsb-group-tab.active{background:linear-gradient(135deg,rgba(223,145,183,.95),rgba(193,105,149,.93));border-color:rgba(190,101,145,.72);box-shadow:0 5px 14px rgba(138,70,104,.19)}.nsb-sidebar-panel .nsb-skin-card{border-color:rgba(222,166,193,.4)}.nsb-sidebar-panel .nsb-icon-btn{border-color:rgba(219,159,188,.48);color:#865d72}.nsb-sidebar-panel .nsb-icon-btn.primary{background:#d184aa;border-color:#d184aa}.nsb-sidebar-panel input{accent-color:#d184aa}.nsb-sidebar-size{position:absolute;right:52px;top:14px;width:34px!important;height:34px!important}.nsb-sidebar-panel.compact .nsb-sidebar-size,.nsb-sidebar-panel.compact .nsb-sidebar-close{top:11px}.nsb-sidebar-panel.compact .nsb-sidebar-size{right:48px}.nsb-sidebar-panel.compact .nsb-sidebar-close{right:10px}
+.nsb-switch input:checked+.nsb-switch-track{background:#d184aa}.nsb-floating-edit{background:#d184aa}.nsb-editor{border-color:rgba(225,174,199,.62);background:rgba(255,242,248,.92);box-shadow:0 18px 54px rgba(111,61,86,.24)}.nsb-editor .nsb-main{border-color:rgba(220,163,191,.4)}.nsb-editor :is(.nsb-input,.nsb-select,.nsb-btn){border-color:rgba(218,158,187,.48)}.nsb-editor .nsb-btn.primary{background:#d184aa;border-color:#d184aa}.nsb-editor input[type=range]{accent-color:#d184aa}
+.nsb-editor :is(.nsb-compact-control .nsb-num,.nsb-slider-item input[type="number"]){width:48px!important;height:32px!important;min-height:32px!important;margin:0!important;padding:0 5px!important;border:1px solid rgba(218,158,187,.48)!important;border-radius:8px!important;background:rgba(255,255,255,.72)!important;box-shadow:none!important;color:#334155!important;font-family:system-ui,-apple-system,sans-serif!important;font-size:12px!important;font-weight:400!important;line-height:1.2!important}
+.nsb-editor .nsb-font-btn{height:32px!important;min-height:32px!important;padding:0 9px!important;border-radius:8px!important;font-size:12px!important;line-height:1.2!important;white-space:nowrap}
+.nsb-editor .nsb-basic-row>label{font-size:12px!important}.nsb-editor .nsb-basic-row :is(.nsb-input,.nsb-select,.nsb-file-button){height:32px!important;min-height:32px!important;padding:0 8px!important;border-radius:8px!important;font-size:12px!important;line-height:1.2!important}
+.nsb-editor{font-size:12px}.nsb-editor :is(.nsb-row label,.nsb-muted,.nsb-section-title,.nsb-editor-tab,.nsb-slider-item,.nsb-input,.nsb-select,.nsb-btn){font-size:12px!important}
+.nsb-editor-shell{position:fixed;right:32px;top:8vh;z-index:2147482999;width:min(560px,calc(100vw - 44px));max-height:84vh;background:transparent}.nsb-editor-shell[hidden]{display:none!important}.nsb-editor-shell.compact{width:min(390px,calc(100vw - 44px))}.nsb-editor-shell .nsb-editor{width:100%;height:auto;max-height:84vh;padding:48px 12px 18px;overflow:auto;border-radius:17px}.nsb-editor-shell .nsb-main{padding:11px}.nsb-editor-size{position:absolute;right:14px;top:12px;z-index:4;width:34px;height:34px;background:rgba(255,255,255,.68);border-color:rgba(218,158,187,.48);color:#8f5571}.nsb-editor-size svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nsb-editor-shell.compact .nsb-basic-row{grid-template-columns:auto minmax(0,1fr) auto}.nsb-editor-shell.compact .nsb-basic-row .nsb-select{grid-column:2}.nsb-editor-shell.compact .nsb-basic-row .nsb-file-button{grid-column:3;grid-row:1/3}.nsb-editor-shell.compact .nsb-slider-grid{grid-template-columns:1fr}.nsb-editor-shell.compact .nsb-preview{padding:14px}.nsb-editor-shell.compact .nsb-demo{max-width:92%}
+@media(max-width:620px){.nsb-sidebar-panel{width:min(500px,calc(100vw - 38px));grid-template-columns:82px minmax(0,1fr)}.nsb-sidebar-panel.compact{width:min(350px,calc(100vw - 38px));grid-template-columns:70px minmax(0,1fr)}}
+@media(max-width:620px){.nsb-editor-shell{right:28px;width:min(500px,calc(100vw - 38px))}.nsb-editor-shell.compact{width:min(350px,calc(100vw - 38px))}.nsb-editor-shell .nsb-editor{max-height:86vh}}
+.nsb-sidebar-panel,.nsb-sidebar-panel.compact{width:min(390px,calc(100vw - 44px));grid-template-columns:78px minmax(0,1fr);padding:11px;gap:8px 10px}.nsb-sidebar-panel.compact>.nsb-unified-toolbar{margin-right:38px}.nsb-sidebar-size,.nsb-editor-size{display:none!important}
+.nsb-editor-shell,.nsb-editor-shell.compact{width:min(390px,calc(100vw - 44px))}.nsb-editor-shell .nsb-editor{padding-top:58px}.nsb-editor-actions{position:absolute;right:14px;top:12px;z-index:4;display:flex;gap:7px}.nsb-editor-action{display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid rgba(218,158,187,.48);border-radius:9px;background:rgba(255,255,255,.72);color:#8f5571;cursor:pointer}.nsb-editor-action.primary{background:#d184aa;border-color:#d184aa;color:#fff}.nsb-editor-action svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:620px){.nsb-sidebar-panel,.nsb-sidebar-panel.compact,.nsb-editor-shell,.nsb-editor-shell.compact{width:min(350px,calc(100vw - 38px))}}
+.nsb-sidebar-panel,.nsb-sidebar-panel.compact{height:min(72vh,680px);padding-bottom:70px}.nsb-sidebar-close,.nsb-unified-toolbar{display:none!important}.nsb-group-tools{position:absolute;left:10px;bottom:12px;z-index:6;width:68px;display:flex;justify-content:space-between;gap:5px}.nsb-bubble-tools{position:absolute;left:88px;right:10px;bottom:12px;z-index:6;display:flex;justify-content:center;gap:12px;padding:7px;border:1px solid rgba(222,166,193,.34);border-radius:12px;background:rgba(255,246,250,.76);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.nsb-group-tools .nsb-icon-btn,.nsb-bubble-tools .nsb-icon-btn{width:32px;height:32px}.nsb-sidebar-panel>.nsb-group-tabs{padding-bottom:62px}.nsb-sidebar-panel>.nsb-section-block:last-of-type{margin-bottom:54px}
+.nsb-plugin-settings{display:flex;flex-direction:column;gap:8px}.nsb-plugin-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:0 2px 10px}.nsb-plugin-tool{display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid rgba(218,158,187,.48);border-radius:9px;background:rgba(255,255,255,.72);color:#8f5571;cursor:pointer}.nsb-plugin-tool svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nsb-sidebar-panel,.nsb-sidebar-panel.compact{grid-template-columns:78px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;height:min(72vh,680px);padding:11px;overflow:hidden}.nsb-sidebar-panel>.nsb-group-tabs{grid-column:1;grid-row:1;min-height:0;margin:0;padding:0 7px 8px 0;overflow-y:auto;align-self:stretch;border-right:1px solid rgba(218,159,188,.35)}.nsb-sidebar-content{grid-column:2;grid-row:1;min-width:0;min-height:0;padding:0 2px 10px;overflow-y:auto;overscroll-behavior:contain}.nsb-sidebar-content>.nsb-section-block{margin:0 0 8px}.nsb-sidebar-content>.nsb-section-block:last-child{margin-bottom:0}.nsb-group-tools{position:static;grid-column:1;grid-row:2;align-self:end;width:auto;padding:8px 7px 0 0;border-right:1px solid rgba(218,159,188,.35)}.nsb-bubble-tools{position:static;grid-column:2;grid-row:2;align-self:end;margin:0;padding:7px}.nsb-sidebar-panel>.nsb-group-tabs .nsb-group-tab.delete-selected{background:#c9588e!important;border-color:#a83e70!important;color:#fff!important;box-shadow:0 0 0 2px rgba(201,88,142,.2),0 5px 13px rgba(125,46,84,.22)!important}.nsb-sidebar-panel>.nsb-group-tabs .nsb-group-tab.delete-disabled{background:rgba(255,255,255,.28)!important;border-color:rgba(205,184,195,.35)!important;color:#b6a7af!important;opacity:.55}
+.nsb-confirm-message{color:#765d6a;line-height:1.55}.nsb-name-dialog .nsb-icon-btn.danger{background:#c9588e;border-color:#c9588e;color:#fff}
 `;
 
 export default {
@@ -364,7 +707,7 @@ export default {
     id: PLUGIN_ID,
     name: "自定义气泡",
     apiVersion: 1,
-    version: "0.10.14",
+    version: "0.12.12",
     author: "NEEN&GPT",
     description: "上传透明 PNG 制作自定义气泡，并按角色 ID 绑定皮肤",
   },
@@ -378,6 +721,8 @@ export default {
     let currentSessionId = "";
     let voiceScanPending = false;
     let floatingEditButton = null;
+    let sidebarLibraryCleanup = null;
+    let activeEditorHost = null;
     let fontCssCleanup = null;
     const loadedFontFaces = new Map();
 
@@ -474,6 +819,14 @@ export default {
           clearBubbleWrapper(meta.outerBubble);
         }
         applySkinToBubble(bubble, skin, role);
+      }
+    }
+
+    function previewSkinTextColor(skinId, color) {
+      for (const bubble of mounted.keys()) {
+        if (!bubble.isConnected) continue;
+        if (bubble.dataset.nineSliceBubbleSkinId !== skinId) continue;
+        bubble.style.setProperty("--nsb-text-color", color);
       }
     }
 
@@ -667,21 +1020,28 @@ export default {
       if (!skinId || !state.skins[skinId]) return;
       removeFloatingEditButton();
       editorOpen = true;
-      ctx.ui.openModal((host, { close }) => {
+      const host = document.createElement("div");
+      host.className = "nsb-editor-shell compact";
+      (document.body || document.documentElement).appendChild(host);
+      activeEditorHost = host;
+      sidebarOpen = true;
+      syncSidebarUi();
+      const close = () => {
+        host.remove();
+        if (activeEditorHost === host) activeEditorHost = null;
+        sidebarOpen = true;
+        syncSidebarUi();
+      };
+      {
         const selectedId = skinId;
 
-        host.style.width = "min(920px, 96vw)";
-        host.style.maxWidth = "96vw";
-        host.style.maxHeight = "calc(100dvh - 16px)";
-        host.style.padding = "0";
-        host.style.overflow = "visible";
-        host.style.background = "transparent";
-        host.style.boxShadow = "none";
         const root = document.createElement("div");
         root.className = "nsb-editor";
         host.appendChild(root);
 
+
         let editorClosed = false;
+        let editorTab = "overall";
         const discardEmptyNewSkin = () => {
           if (!isNew || !state.skins[selectedId] || state.skins[selectedId].image) return;
           delete state.skins[selectedId];
@@ -696,15 +1056,6 @@ export default {
           editorOpen = false;
           close();
         };
-        const minimizeEditor = () => {
-          if (editorClosed) return;
-          editorClosed = true;
-          editorOpen = false;
-          persist();
-          applyMounted();
-          close();
-          showFloatingEditButton(selectedId, isNew);
-        };
         const saveEditor = () => {
           const current = state.skins[selectedId];
           if (!current || !current.image) {
@@ -718,6 +1069,25 @@ export default {
           refreshSettingsPanels();
           close();
         };
+
+        const editorActions = document.createElement("div");
+        editorActions.className = "nsb-editor-actions";
+        const saveButton = document.createElement("button");
+        saveButton.type = "button";
+        saveButton.className = "nsb-editor-action primary";
+        saveButton.title = "保存";
+        saveButton.setAttribute("aria-label", "保存");
+        saveButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5h10a1.5 1.5 0 0 1 1.5 1.5v14l-6.5-4-6.5 4V6A1.5 1.5 0 0 1 7 4.5Z"/><path d="M12 7.5v5M9.5 10h5"/></svg>';
+        saveButton.addEventListener("click", saveEditor);
+        const closeButton = document.createElement("button");
+        closeButton.type = "button";
+        closeButton.className = "nsb-editor-action";
+        closeButton.title = "关闭";
+        closeButton.setAttribute("aria-label", "关闭");
+        closeButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>';
+        closeButton.addEventListener("click", closeEditor);
+        editorActions.append(saveButton, closeButton);
+        host.appendChild(editorActions);
 
         function input(type, value, className = "nsb-input") {
           const el = document.createElement("input");
@@ -773,6 +1143,15 @@ export default {
                 updatePreview();
               });
             };
+            let liveFrame = 0;
+            const scheduleLivePreview = () => {
+              schedulePreview();
+              if (liveFrame) return;
+              liveFrame = requestAnimationFrame(() => {
+                liveFrame = 0;
+                applyMounted();
+              });
+            };
             const nameRow = document.createElement("div");
             nameRow.className = "nsb-basic-row";
             const nameLabel = document.createElement("label");
@@ -787,24 +1166,26 @@ export default {
             fileInput.addEventListener("change", () => {
               const file = fileInput.files && fileInput.files[0];
               if (!file) return;
-              const replacingExistingImage = Boolean(selected.image);
               const reader = new FileReader();
               reader.onload = () => {
                 const img = new Image();
                 img.onload = () => {
-                  selected.image = String(reader.result);
-                  selected.width = img.naturalWidth;
-                  selected.height = img.naturalHeight;
-                  if (!selected.slice.top || selected.slice.top >= img.naturalHeight / 2) selected.slice.top = Math.round(img.naturalHeight * .25);
-                  if (!selected.slice.bottom || selected.slice.bottom >= img.naturalHeight / 2) selected.slice.bottom = Math.round(img.naturalHeight * .25);
-                  if (!selected.slice.left || selected.slice.left >= img.naturalWidth / 2) selected.slice.left = Math.round(img.naturalWidth * .25);
-                  if (!selected.slice.right || selected.slice.right >= img.naturalWidth / 2) selected.slice.right = Math.round(img.naturalWidth * .25);
-                  if (!replacingExistingImage) {
-                    const fixedVerticalPixels = selected.slice.top + selected.slice.bottom;
-                    selected.edgeScale = fixedVerticalPixels > 0
-                      ? Math.min(1, Math.max(0.05, 44 / fixedVerticalPixels))
-                      : 0.6;
+                  let resized;
+                  try {
+                    resized = resizeImageToHeight(img, 150);
+                  } catch (error) {
+                    ctx.system.log("[自定义气泡] 图片缩放失败", error);
+                    ctx.ui.toast("图片缩放失败，请换一张图片重试");
+                    return;
                   }
+                  selected.image = resized.image;
+                  selected.width = resized.width;
+                  selected.height = resized.height;
+                  if (!selected.slice.top || selected.slice.top >= resized.height / 2) selected.slice.top = Math.round(resized.height * .25);
+                  if (!selected.slice.bottom || selected.slice.bottom >= resized.height / 2) selected.slice.bottom = Math.round(resized.height * .25);
+                  if (!selected.slice.left || selected.slice.left >= resized.width / 2) selected.slice.left = Math.round(resized.width * .25);
+                  if (!selected.slice.right || selected.slice.right >= resized.width / 2) selected.slice.right = Math.round(resized.width * .25);
+                  selected.edgeScale = 0.5;
                   persist(); applyMounted(); render();
                 };
                 img.src = String(reader.result);
@@ -862,10 +1243,29 @@ export default {
               requestAnimationFrame(positionLines);
             }
 
-            function pairedControls(titleText, object, entries, onPreview) {
-              const titleEl = document.createElement("div");
-              titleEl.className = "nsb-section-title";
-              titleEl.textContent = titleText;
+            const editorTabs = document.createElement("div");
+            editorTabs.className = "nsb-editor-tabs";
+            const editorPages = {};
+            const syncEditorTabs = () => {
+              for (const [key, page] of Object.entries(editorPages)) page.hidden = key !== editorTab;
+              editorTabs.querySelectorAll(".nsb-editor-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === editorTab));
+            };
+            for (const [key, label] of [["overall", "整体调整"], ["slice", "切割线"], ["padding", "内边距"], ["font", "字体"]]) {
+              const tab = document.createElement("button");
+              tab.type = "button";
+              tab.className = "nsb-editor-tab";
+              tab.dataset.tab = key;
+              tab.textContent = label;
+              tab.addEventListener("click", () => { editorTab = key; syncEditorTabs(); });
+              editorTabs.appendChild(tab);
+              const page = document.createElement("div");
+              page.className = "nsb-editor-page";
+              editorPages[key] = page;
+            }
+            main.append(editorTabs, editorPages.overall, editorPages.slice, editorPages.padding, editorPages.font);
+            syncEditorTabs();
+
+            function pairedControls(titleText, object, entries, onPreview, page) {
               const box = document.createElement("div");
               box.className = "nsb-slider-grid";
               for (const entry of entries) {
@@ -896,7 +1296,7 @@ export default {
                 item.append(name, range, number);
                 box.appendChild(item);
               }
-              main.append(titleEl, box);
+              page.appendChild(box);
             }
 
             const labels = { top: "上", bottom: "下", left: "左", right: "右" };
@@ -907,51 +1307,58 @@ export default {
               min: 0,
               max: Math.max(1, /top|bottom/.test(key) ? selected.height || 200 : selected.width || 400),
               step: 1,
-            })), schedulePreview);
+            })), schedulePreview, editorPages.slice);
             pairedControls("文字内边距", selected.padding, orderedKeys.map(key => ({
               key,
               label: labels[key],
               min: 0,
               max: 200,
               step: 1,
-            })), schedulePreview);
+            })), schedulePreview, editorPages.padding);
 
-            const visualRow = document.createElement("div");
-            visualRow.className = "nsb-row wrap";
-            const scaleLabel = document.createElement("label");
-            scaleLabel.textContent = "图片大小";
-            const scaleRange = document.createElement("input");
-            scaleRange.type = "range";
-            scaleRange.min = "0.05"; scaleRange.max = "2"; scaleRange.step = "0.05"; scaleRange.value = String(selected.edgeScale);
-            scaleRange.style.width = "min(260px,45vw)";
-            const scaleInput = input("number", selected.edgeScale, "nsb-input nsb-num");
-            scaleInput.step = "0.05"; scaleInput.min = "0.05"; scaleInput.max = "2";
-            const syncScale = (source, target) => {
-              selected.edgeScale = safeNumber(source.value, selected.edgeScale, .05, 2);
-              target.value = String(selected.edgeScale);
-              schedulePreview();
-            };
-            scaleRange.addEventListener("input", () => syncScale(scaleRange, scaleInput));
-            scaleInput.addEventListener("input", () => syncScale(scaleInput, scaleRange));
-            const commitScale = () => { persist(); applyMounted(); };
-            scaleRange.addEventListener("change", commitScale);
-            scaleInput.addEventListener("change", commitScale);
-            const colorLabel = document.createElement("label");
-            colorLabel.textContent = "文字颜色";
-            const colorInput = input("color", selected.textColor, "nsb-input");
-            colorInput.style.width = "52px";
-            colorInput.addEventListener("input", () => { selected.textColor = colorInput.value; persist(); applyMounted(); updatePreview(); });
-            visualRow.append(scaleLabel, scaleRange, scaleInput, colorLabel, colorInput);
-            main.appendChild(visualRow);
+            function overallControl(labelText, getValue, setValue, min, max, step) {
+              const row = document.createElement("div");
+              row.className = "nsb-row nsb-compact-control";
+              const label = document.createElement("label");
+              label.textContent = labelText;
+              const range = document.createElement("input");
+              range.type = "range";
+              range.min = String(min);
+              range.max = String(max);
+              range.step = String(step);
+              range.value = String(getValue());
+              const number = input("number", getValue(), "nsb-input nsb-num");
+              number.min = String(min);
+              number.max = String(max);
+              number.step = String(step);
+              const sync = (source, target) => {
+                const value = safeNumber(source.value, getValue(), min, max);
+                setValue(value);
+                target.value = String(value);
+                scheduleLivePreview();
+              };
+              range.addEventListener("input", () => sync(range, number));
+              number.addEventListener("input", () => sync(number, range));
+              const commit = () => { persist(); applyMounted(); };
+              range.addEventListener("change", commit);
+              number.addEventListener("change", commit);
+              row.append(label, range, number);
+              editorPages.overall.appendChild(row);
+            }
+
+            overallControl("大小", () => selected.edgeScale, value => { selected.edgeScale = value; }, .05, 2, .05);
+            overallControl("上下", () => selected.offsetY, value => { selected.offsetY = value; }, -40, 40, 1);
+            overallControl("左右", () => selected.offsetX, value => { selected.offsetX = value; }, -40, 40, 1);
+            overallControl("透明", () => Math.round(selected.imageOpacity * 100), value => { selected.imageOpacity = value / 100; }, 0, 100, 1);
 
             const fontRow = document.createElement("div");
             fontRow.className = "nsb-row wrap";
             const fontLabel = document.createElement("label");
-            fontLabel.textContent = "气泡字体";
+            fontLabel.textContent = "字体";
             const fontInput = input("file", "", "nsb-file");
             fontInput.accept = ".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2,application/font-woff,application/font-sfnt";
             fontInput.style.display = "none";
-            const fontButton = button(selected.fontData ? "更换字体" : "选择字体", "", () => fontInput.click());
+            const fontButton = button(selected.fontData ? "更换字体" : "选择字体", "nsb-font-btn", () => fontInput.click());
             const fontName = document.createElement("span");
             fontName.className = "nsb-muted";
             fontName.textContent = selected.fontName || "默认字体";
@@ -977,7 +1384,7 @@ export default {
             });
             fontRow.append(fontLabel, fontButton, fontName, fontInput);
             if (selected.fontData) {
-              fontRow.append(button("恢复默认", "", () => {
+              fontRow.append(button("恢复默认", "nsb-font-btn", () => {
                 selected.fontData = "";
                 selected.fontName = "";
                 selected.fontMime = "";
@@ -987,17 +1394,16 @@ export default {
                 render();
               }));
             }
-            main.appendChild(fontRow);
+            editorPages.font.appendChild(fontRow);
 
             const fontSizeRow = document.createElement("div");
-            fontSizeRow.className = "nsb-row wrap";
+            fontSizeRow.className = "nsb-row nsb-compact-control";
             const fontSizeLabel = document.createElement("label");
-            fontSizeLabel.textContent = "字体大小";
+            fontSizeLabel.textContent = "大小";
             const fontSizeRange = document.createElement("input");
             fontSizeRange.type = "range";
             fontSizeRange.min = "-5"; fontSizeRange.max = "5"; fontSizeRange.step = "0.5";
             fontSizeRange.value = String(selected.fontSizeAdjust);
-            fontSizeRange.style.width = "min(260px,45vw)";
             const fontSizeInput = input("number", selected.fontSizeAdjust, "nsb-input nsb-num");
             fontSizeInput.min = "-5"; fontSizeInput.max = "5"; fontSizeInput.step = "0.5";
             const syncFontSize = (source, target) => {
@@ -1011,11 +1417,34 @@ export default {
             fontSizeRange.addEventListener("change", commitFontSize);
             fontSizeInput.addEventListener("change", commitFontSize);
             fontSizeRow.append(fontSizeLabel, fontSizeRange, fontSizeInput);
-            main.appendChild(fontSizeRow);
+            editorPages.font.appendChild(fontSizeRow);
+
+            const fontColorRow = document.createElement("div");
+            fontColorRow.className = "nsb-row wrap";
+            const colorLabel = document.createElement("label");
+            colorLabel.textContent = "文字颜色";
+            const colorInput = input("color", selected.textColor, "nsb-input");
+            colorInput.style.width = "52px";
+            let colorFrame = 0;
+            colorInput.addEventListener("input", () => {
+              selected.textColor = colorInput.value;
+              schedulePreview();
+              if (colorFrame) return;
+              colorFrame = requestAnimationFrame(() => {
+                colorFrame = 0;
+                previewSkinTextColor(selected.id, selected.textColor);
+              });
+            });
+            colorInput.addEventListener("change", () => {
+              persist();
+              applyMounted();
+            });
+            fontColorRow.append(colorLabel, colorInput);
+            editorPages.font.appendChild(fontColorRow);
 
             const previewTitle = document.createElement("div");
             previewTitle.className = "nsb-section-title";
-            previewTitle.textContent = "拉伸预览";
+            previewTitle.textContent = "预览";
             const preview = document.createElement("div");
             preview.className = "nsb-preview";
             preview.style.setProperty("--preview-image", `url("${escapeCssUrl(selected.image)}")`);
@@ -1039,11 +1468,14 @@ export default {
               preview.style.setProperty("--preview-edge-right", `${s.right * scale}px`);
               preview.style.setProperty("--preview-edge-bottom", `${s.bottom * scale}px`);
               preview.style.setProperty("--preview-edge-left", `${s.left * scale}px`);
+              preview.style.setProperty("--preview-opacity", String(selected.imageOpacity));
               for (const demo of demos) {
                 demo.style.padding = `${selected.padding.top}px ${selected.padding.right}px ${selected.padding.bottom}px ${selected.padding.left}px`;
                 demo.style.color = selected.textColor;
                 demo.style.fontFamily = selected.fontData ? `"${fontFamilyForSkin(selected)}"` : "";
                 demo.style.fontSize = selected.fontSizeAdjust ? `calc(1em + ${selected.fontSizeAdjust}px)` : "";
+                const horizontalOffset = demo.classList.contains("user") ? -selected.offsetX : selected.offsetX;
+                demo.style.transform = `translate(${horizontalOffset}px, ${selected.offsetY}px)`;
                 demo.style.minWidth = `${(s.left + s.right) * scale}px`;
                 demo.style.minHeight = `${(s.top + s.bottom) * scale}px`;
                 demo.style.setProperty("border-width", "0");
@@ -1053,11 +1485,6 @@ export default {
 
           }
 
-          const foot = document.createElement("div");
-          foot.className = "nsb-foot";
-          foot.style.justifyContent = "flex-end";
-          foot.append(button("查看聊天", "", minimizeEditor), button("关闭", "", closeEditor), button("保存", "primary", saveEditor));
-          root.appendChild(foot);
         }
 
         render();
@@ -1065,7 +1492,7 @@ export default {
           if (!editorClosed) discardEmptyNewSkin();
           editorOpen = false;
         };
-      });
+      }
     }
 
     false && ctx.ui.slot("settings.section", (el) => {
@@ -1099,6 +1526,9 @@ export default {
           }));
         }
         box.appendChild(tabs);
+        const content = document.createElement("div");
+        content.className = "nsb-sidebar-content";
+        box.appendChild(content);
 
         if (activeTab === "library") {
           const importInput = document.createElement("input");
@@ -1346,19 +1776,92 @@ export default {
       };
     });
 
-    ctx.ui.slot("settings.section", (el) => {
+    const sidebarHandle = document.createElement("button");
+    sidebarHandle.type = "button";
+    sidebarHandle.className = "nsb-sidebar-handle";
+    sidebarHandle.title = "打开自定义气泡";
+    sidebarHandle.setAttribute("aria-label", "打开自定义气泡");
+    sidebarHandle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+    const sidebarPanel = document.createElement("div");
+    sidebarPanel.className = "nsb-sidebar-panel";
+    sidebarPanel.setAttribute("role", "dialog");
+    sidebarPanel.setAttribute("aria-label", "自定义气泡管理侧边栏");
+    let sidebarOpen = false;
+    const clampSidebarTop = value => Math.max(8, Math.min(window.innerHeight - (sidebarHandle.offsetHeight || 64) - 8, value));
+    const positionSidebarPanel = () => {
+      const target = activeEditorHost || sidebarPanel;
+      if (!sidebarOpen || target.hidden) return;
+      const handleRect = sidebarHandle.getBoundingClientRect();
+      const panelHeight = target.offsetHeight || 320;
+      target.style.top = `${Math.max(8, Math.min(handleRect.top, window.innerHeight - panelHeight - 8))}px`;
+    };
+    const syncSidebarUi = () => {
+      sidebarHandle.hidden = !state.sidebarEnabled;
+      sidebarPanel.hidden = !state.sidebarEnabled || !sidebarOpen || !!activeEditorHost;
+      if (activeEditorHost) activeEditorHost.hidden = !state.sidebarEnabled || !sidebarOpen;
+      sidebarPanel.classList.add("compact");
+      if (activeEditorHost) activeEditorHost.classList.add("compact");
+      sidebarHandle.setAttribute("aria-expanded", sidebarOpen ? "true" : "false");
+      sidebarHandle.innerHTML = sidebarOpen
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>';
+      if (sidebarOpen) requestAnimationFrame(positionSidebarPanel);
+    };
+    (document.body || document.documentElement).append(sidebarHandle, sidebarPanel);
+    if (state.sidebarTop != null) sidebarHandle.style.top = `${clampSidebarTop(state.sidebarTop)}px`;
+    let sidebarDragY = null;
+    let sidebarDragTop = 0;
+    let sidebarDragMoved = false;
+    let suppressSidebarClick = false;
+    sidebarHandle.addEventListener("pointerdown", event => {
+      sidebarDragY = event.clientY;
+      sidebarDragTop = sidebarHandle.getBoundingClientRect().top;
+      sidebarDragMoved = false;
+      try { sidebarHandle.setPointerCapture(event.pointerId); } catch (_) {}
+    });
+    sidebarHandle.addEventListener("pointermove", event => {
+      if (sidebarDragY == null) return;
+      const delta = event.clientY - sidebarDragY;
+      if (Math.abs(delta) > 5) sidebarDragMoved = true;
+      if (!sidebarDragMoved) return;
+      const top = clampSidebarTop(sidebarDragTop + delta);
+      sidebarHandle.style.top = `${top}px`;
+      positionSidebarPanel();
+    });
+    sidebarHandle.addEventListener("pointerup", () => {
+      if (sidebarDragMoved) {
+        state.sidebarTop = clampSidebarTop(sidebarHandle.getBoundingClientRect().top);
+        persist();
+        suppressSidebarClick = true;
+      }
+      sidebarDragY = null;
+    });
+    sidebarHandle.addEventListener("pointercancel", () => { sidebarDragY = null; });
+    sidebarHandle.addEventListener("click", () => {
+      if (suppressSidebarClick) { suppressSidebarClick = false; return; }
+      sidebarOpen = !sidebarOpen;
+      syncSidebarUi();
+    });
+    const onSidebarResize = () => {
+      const top = clampSidebarTop(sidebarHandle.getBoundingClientRect().top);
+      sidebarHandle.style.top = `${top}px`;
+      positionSidebarPanel();
+    };
+    window.addEventListener("resize", onSidebarResize);
+
+    {
       let alive = true;
       let characters = [];
       let charactersLoaded = false;
       let activeGroup = "all";
       let deleteMode = false;
+      let exportMode = false;
       let groupDeleteMode = false;
       const expandedSkins = new Set();
       const deleteSelection = new Set();
+      const exportSelection = new Set();
       const groupDeleteSelection = new Set();
-      const box = document.createElement("div");
-      box.style.cssText = "padding:12px;border:1px solid rgba(120,140,165,.24);border-radius:12px;margin-top:10px;";
-      el.appendChild(box);
+      const box = sidebarPanel;
 
       const icons = {
         imagePlus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
@@ -1371,6 +1874,8 @@ export default {
         chevron: '<svg viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"/></svg>',
         close: '<svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>',
         check: '<svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>',
+        expand: '<svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>',
+        shrink: '<svg viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>',
       };
 
       const iconButton = (icon, label, onClick, className = "") => {
@@ -1418,6 +1923,28 @@ export default {
         });
       };
 
+      const openConfirmDialog = (message, onConfirm) => {
+        ctx.ui.openModal((host, { close }) => {
+          host.style.cssText = "width:auto;max-width:92vw;padding:0;background:transparent;box-shadow:none;overflow:visible;";
+          const dialog = document.createElement("div");
+          dialog.className = "nsb-name-dialog";
+          const title = document.createElement("div");
+          title.className = "nsb-name-title";
+          title.textContent = "确认删除";
+          const text = document.createElement("div");
+          text.className = "nsb-confirm-message";
+          text.textContent = message;
+          const actions = document.createElement("div");
+          actions.className = "nsb-name-actions";
+          actions.append(
+            iconButton("close", "取消", close),
+            iconButton("trash", "确认删除", () => { onConfirm(); close(); }, "danger")
+          );
+          dialog.append(title, text, actions);
+          host.appendChild(dialog);
+        });
+      };
+
       const skinGroupKey = skin => skin.groupId || "default";
 
       const deleteSkinIds = ids => {
@@ -1429,6 +1956,7 @@ export default {
           }
           expandedSkins.delete(skinId);
           deleteSelection.delete(skinId);
+          exportSelection.delete(skinId);
         }
         refreshFontCSS();
         persist();
@@ -1441,36 +1969,32 @@ export default {
 
         const importInput = document.createElement("input");
         importInput.type = "file";
-        importInput.accept = "application/json,.json";
+        importInput.accept = ".zip,application/zip,application/x-zip-compressed";
         importInput.style.display = "none";
-        importInput.addEventListener("change", () => {
+        importInput.addEventListener("change", async () => {
           const file = importInput.files && importInput.files[0];
           if (!file) return;
-          const reader = new FileReader();
-          reader.onload = () => {
-            try {
-              state = normalizeState(JSON.parse(String(reader.result)));
-              refreshFontCSS();
-              activeGroup = "all";
-              deleteMode = false;
-              groupDeleteMode = false;
-              deleteSelection.clear();
-              groupDeleteSelection.clear();
-              persist(); applyMounted(); renderSettings();
-              ctx.ui.toast("气泡配置已导入");
-            } catch (_) { ctx.ui.toast("导入失败：不是有效的配置文件"); }
-          };
-          reader.readAsText(file);
+          try {
+            const count = await mergeBubblePackage(file, state);
+            refreshFontCSS();
+            persist();
+            applyMounted();
+            deleteMode = false;
+            exportMode = false;
+            groupDeleteMode = false;
+            deleteSelection.clear();
+            exportSelection.clear();
+            groupDeleteSelection.clear();
+            ctx.ui.toast(`已导入 ${count} 个气泡`);
+          } catch (error) {
+            ctx.ui.toast(`导入失败：${error && error.message ? error.message : "资源包无效"}`);
+          }
+          renderSettings();
         });
 
-        const toolbar = document.createElement("div");
-        toolbar.className = "nsb-unified-toolbar";
-        toolbar.append(
-          iconButton("imagePlus", "新建气泡", () => {
-            const id = uid();
-            state.skins[id] = normalizeSkin({ id, name: "新气泡皮肤", groupId: "" });
-            persist(); renderSettings(); openEditor(id, true);
-          }, "primary"),
+        const groupTools = document.createElement("div");
+        groupTools.className = "nsb-group-tools";
+        groupTools.append(
           iconButton("folderPlus", "新建分组", () => {
             openNameDialog("新建分组", "", name => {
               const id = uid().replace("skin-", "group-");
@@ -1478,20 +2002,14 @@ export default {
               persist(); renderSettings();
             });
           }),
-          iconButton("upload", "导入配置", () => importInput.click()),
-          iconButton("download", "导出配置", () => {
-            const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url; a.download = "float-bubble-skins.json"; a.click();
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-          }),
           iconButton("folderX", "批量删除分组", () => {
             if (!groupDeleteMode) {
               groupDeleteMode = true;
               groupDeleteSelection.clear();
               deleteMode = false;
               deleteSelection.clear();
+              exportMode = false;
+              exportSelection.clear();
               renderSettings();
               return;
             }
@@ -1500,27 +2018,77 @@ export default {
               renderSettings();
               return;
             }
-            const confirmed = confirm(`确定删除选中的 ${groupDeleteSelection.size} 个分组？组内气泡会移至默认分组。`);
-            if (confirmed) {
-              for (const groupId of groupDeleteSelection) {
+            const selectedGroupIds = [...groupDeleteSelection];
+            groupDeleteMode = false;
+            groupDeleteSelection.clear();
+            renderSettings();
+            openConfirmDialog(`确定删除选中的 ${selectedGroupIds.length} 个分组？组内气泡会移至默认分组。`, () => {
+              for (const groupId of selectedGroupIds) {
                 for (const skin of Object.values(state.skins)) {
                   if (skin.groupId === groupId) skin.groupId = "";
                 }
                 delete state.groups[groupId];
               }
-              if (groupDeleteSelection.has(activeGroup)) activeGroup = "default";
+              if (selectedGroupIds.includes(activeGroup)) activeGroup = "default";
               persist();
+              renderSettings();
+            });
+          }, groupDeleteMode ? "active" : "danger")
+        );
+        box.appendChild(groupTools);
+
+        const bubbleTools = document.createElement("div");
+        bubbleTools.className = "nsb-bubble-tools";
+        bubbleTools.append(
+          iconButton("upload", "导入气泡资源包", () => importInput.click()),
+          iconButton("download", exportMode ? "确认导出所选气泡" : "选择要导出的气泡", () => {
+            if (!exportMode) {
+              exportMode = true;
+              exportSelection.clear();
+              deleteMode = false;
+              deleteSelection.clear();
+              groupDeleteMode = false;
+              groupDeleteSelection.clear();
+              renderSettings();
+              return;
             }
-            groupDeleteMode = false;
-            groupDeleteSelection.clear();
+            if (!exportSelection.size) {
+              exportMode = false;
+              renderSettings();
+              return;
+            }
+            try {
+              const blob = buildBubblePackage(state, [...exportSelection]);
+              const date = new Date();
+              const stamp = [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, "0"),
+                String(date.getDate()).padStart(2, "0"),
+              ].join("");
+              downloadBlob(blob, `float-bubbles-${stamp}.zip`);
+              ctx.ui.toast(`已导出 ${exportSelection.size} 个气泡`);
+            } catch (error) {
+              ctx.ui.toast(`导出失败：${error && error.message ? error.message : "无法生成资源包"}`);
+            }
+            exportMode = false;
+            exportSelection.clear();
             renderSettings();
-          }, groupDeleteMode ? "active" : "danger"),
+          }, exportMode ? "export-active" : ""),
+          iconButton("imagePlus", "新建气泡", () => {
+            exportMode = false;
+            exportSelection.clear();
+            const id = uid();
+            state.skins[id] = normalizeSkin({ id, name: "新气泡皮肤", groupId: "" });
+            persist(); renderSettings(); openEditor(id, true);
+          }, "primary"),
           iconButton("trash", "批量删除气泡", () => {
             if (!deleteMode) {
               deleteMode = true;
               deleteSelection.clear();
               groupDeleteMode = false;
               groupDeleteSelection.clear();
+              exportMode = false;
+              exportSelection.clear();
               renderSettings();
               return;
             }
@@ -1529,15 +2097,17 @@ export default {
               renderSettings();
               return;
             }
-            const confirmed = confirm(`确定删除选中的 ${deleteSelection.size} 个气泡？`);
-            if (confirmed) deleteSkinIds([...deleteSelection]);
+            const selectedSkinIds = [...deleteSelection];
             deleteMode = false;
             deleteSelection.clear();
             renderSettings();
-          }, deleteMode ? "active" : "danger"),
-          importInput
+            openConfirmDialog(`确定删除选中的 ${selectedSkinIds.length} 个气泡？`, () => {
+              deleteSkinIds(selectedSkinIds);
+              renderSettings();
+            });
+          }, deleteMode ? "active" : "danger")
         );
-        box.appendChild(toolbar);
+        bubbleTools.appendChild(importInput);
 
         const tabs = document.createElement("div");
         tabs.className = "nsb-group-tabs";
@@ -1572,6 +2142,10 @@ export default {
         }
         box.appendChild(tabs);
 
+        const content = document.createElement("div");
+        content.className = "nsb-sidebar-content";
+        box.appendChild(content);
+
         const allGroups = [
           { id: "default", name: "默认分组", isDefault: true },
           ...Object.values(state.groups),
@@ -1595,16 +2169,19 @@ export default {
         };
 
         const appendSkinCard = (skin, container) => {
-          if (deleteMode) {
+          if (deleteMode || exportMode) {
+            const selection = exportMode ? exportSelection : deleteSelection;
             const chip = document.createElement("button");
             chip.type = "button";
-            chip.className = "nsb-delete-chip" + (deleteSelection.has(skin.id) ? " selected" : "");
+            chip.className = "nsb-delete-chip"
+              + (selection.has(skin.id) ? " selected" : "")
+              + (exportMode && selection.has(skin.id) ? " export-selected" : "");
             const name = document.createElement("span");
             name.textContent = skin.name;
             chip.append(name);
             chip.addEventListener("click", () => {
-              if (deleteSelection.has(skin.id)) deleteSelection.delete(skin.id);
-              else deleteSelection.add(skin.id);
+              if (selection.has(skin.id)) selection.delete(skin.id);
+              else selection.add(skin.id);
               renderSettings();
             });
             container.appendChild(chip);
@@ -1711,7 +2288,7 @@ export default {
           name.textContent = group.name;
           const actions = document.createElement("div");
           actions.className = "nsb-mini-actions";
-          if (activeGroup === "all" && !group.isDefault && !deleteMode && !groupDeleteMode) {
+          if (activeGroup === "all" && !group.isDefault && !deleteMode && !exportMode && !groupDeleteMode) {
             actions.append(iconButton("pencil", "重命名分组", () => {
               openNameDialog("重命名分组", group.name, nextName => {
                 state.groups[group.id].name = nextName;
@@ -1723,8 +2300,8 @@ export default {
             head.append(name, actions);
             section.appendChild(head);
           }
-          const itemsContainer = deleteMode ? document.createElement("div") : section;
-          if (deleteMode) {
+          const itemsContainer = (deleteMode || exportMode) ? document.createElement("div") : section;
+          if (deleteMode || exportMode) {
             itemsContainer.className = "nsb-delete-chips";
             section.appendChild(itemsContainer);
           }
@@ -1738,23 +2315,60 @@ export default {
             empty.textContent = "此分组暂无气泡";
             section.appendChild(empty);
           }
-          box.appendChild(section);
+          content.appendChild(section);
         }
+        box.appendChild(bubbleTools);
       };
 
       settingsRefreshers.add(renderSettings);
       renderSettings();
       getCharacters().then(list => { characters = list; charactersLoaded = true; renderSettings(); });
-      return () => {
+      sidebarLibraryCleanup = () => {
         alive = false;
         settingsRefreshers.delete(renderSettings);
         box.remove();
       };
+    }
+
+    syncSidebarUi();
+
+    ctx.ui.slot("settings.section", (el) => {
+      const wrap = document.createElement("div");
+      wrap.className = "nsb-plugin-settings";
+      const row = document.createElement("label");
+      row.className = "nsb-sidebar-toggle";
+      const text = document.createElement("span");
+      text.textContent = "显示气泡管理侧边栏";
+      const control = document.createElement("span");
+      control.className = "nsb-switch";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = state.sidebarEnabled;
+      const track = document.createElement("span");
+      track.className = "nsb-switch-track";
+      checkbox.addEventListener("change", () => {
+        state.sidebarEnabled = checkbox.checked;
+        if (!state.sidebarEnabled) sidebarOpen = false;
+        persist();
+        syncSidebarUi();
+      });
+      control.append(checkbox, track);
+      row.append(text, control);
+
+      wrap.append(row);
+      el.appendChild(wrap);
+      return () => wrap.remove();
     });
 
     return () => {
       if (voiceObserver) voiceObserver.disconnect();
       removeFloatingEditButton();
+      if (typeof sidebarLibraryCleanup === "function") sidebarLibraryCleanup();
+      window.removeEventListener("resize", onSidebarResize);
+      if (activeEditorHost) activeEditorHost.remove();
+      activeEditorHost = null;
+      sidebarHandle.remove();
+      sidebarPanel.remove();
       if (typeof fontCssCleanup === "function") fontCssCleanup();
       if (typeof document !== "undefined" && document.fonts) {
         for (const face of loadedFontFaces.values()) {
