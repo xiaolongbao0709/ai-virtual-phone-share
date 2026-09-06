@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-06T04:16:13.020Z",
+  "generatedAt": "2026-09-06T04:16:56.499Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -29,7 +29,7 @@
     },
     {
       "name": "应用",
-      "count": 88
+      "count": 89
     },
     {
       "name": "应用bug改善",
@@ -2891,6 +2891,24 @@
       "avatar": "资源/应用/自习室/.avatar.png",
       "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
       "updatedAt": "2026-09-03T12:17:44+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "衣橱",
+      "dirName": "衣橱",
+      "type": "dir",
+      "path": "资源/应用/衣橱",
+      "files": [
+        "资源/应用/衣橱/衣橱.zip"
+      ],
+      "images": [
+        "资源/应用/衣橱/IMG_7784.png"
+      ],
+      "description": "这个可以上传图片 然后就会用你的API生成文字之后会存入你自己选择的，想让知道的char 他就会知道你会穿什么衣服 也可以全选 记得你的API在设置里要打开，让它识图 否则的话是使用不了的 llm的模型都可以 哈基米是没有问题的",
+      "author": "🌙",
+      "avatar": "",
+      "ownerHash": "b0bcef14ec2a9be74931170eb4a57aee60b0a2d36a89104a23a4be960f2fad8d",
+      "updatedAt": "2026-09-06T12:16:09+08:00"
     },
     {
       "folder": "应用",
