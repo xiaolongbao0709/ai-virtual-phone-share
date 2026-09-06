@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-06T07:32:05.497Z",
+  "generatedAt": "2026-09-06T08:06:26.048Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -13,7 +13,7 @@
     },
     {
       "name": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
-      "count": 27
+      "count": 28
     },
     {
       "name": "全局主题",
@@ -1045,6 +1045,20 @@
       "avatar": "",
       "ownerHash": "89127eca6ef72f2061913ca1106abdc1a029fe09ff0f6b54fee5aaf57c26835d",
       "updatedAt": "2026-08-23T16:00:15Z"
+    },
+    {
+      "folder": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
+      "name": "求助接入vx",
+      "dirName": "求助接入vx",
+      "type": "dir",
+      "path": "资源/bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现/求助接入vx",
+      "files": [],
+      "images": [],
+      "description": "老师我想问问 接入vx会主动发消息吗 为什么我的float还在主动发😭",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "a1c3fe104be05727d221d6c6ce6c9e1f34d4e32201e828b9d474addf6a17aeee",
+      "updatedAt": "2026-09-06T16:05:48+08:00"
     },
     {
       "folder": "bug反馈专用，请先询问小坊，无法解决后再进行反馈，反馈最好有详细情境、附图，否则无法复现",
