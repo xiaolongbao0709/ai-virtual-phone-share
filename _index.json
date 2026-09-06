@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-06T08:06:26.048Z",
+  "generatedAt": "2026-09-06T08:19:02.066Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "表情包",
-      "count": 5
+      "count": 6
     },
     {
       "name": "预设",
@@ -4896,6 +4896,24 @@
       "avatar": "资源/表情包/月薪喵全集[小猫]/.avatar.png",
       "ownerHash": "e26f9d5f9b5d5368ff93e21153ff68f69c154c10e838598b2dee9cefea2da1bc",
       "updatedAt": "2026-09-02T21:51:29+08:00"
+    },
+    {
+      "folder": "表情包",
+      "name": "比格",
+      "dirName": "比格",
+      "type": "dir",
+      "path": "资源/表情包/比格",
+      "files": [
+        "资源/表情包/比格/比格表情包——来源于网络，侵删.docx"
+      ],
+      "images": [
+        "资源/表情包/比格/45584.jpg"
+      ],
+      "description": "",
+      "author": "KK",
+      "avatar": "资源/表情包/比格/.avatar.png",
+      "ownerHash": "6282160018481cd1e72c1d048cde54f68f685dc043a3f0bb414518f03418a3cd",
+      "updatedAt": "2026-09-06T16:18:22+08:00"
     },
     {
       "folder": "表情包",
