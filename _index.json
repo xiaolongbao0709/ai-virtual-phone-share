@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-06T19:28:35.238Z",
+  "generatedAt": "2026-09-06T19:29:58.712Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1896,12 +1896,13 @@
     },
     {
       "folder": "应用",
-      "name": "[星星]备忘录（v2.1）",
+      "name": "[星星]备忘录（v3测试版+v2.1）",
       "dirName": "[星星]备忘录",
       "type": "dir",
       "path": "资源/应用/[星星]备忘录",
       "files": [
-        "资源/应用/[星星]备忘录/memo.app-2.0.0 (20).zip"
+        "资源/应用/[星星]备忘录/memo.app-2.0.0 (20).zip",
+        "资源/应用/[星星]备忘录/memo.app-2.1.0.zip"
       ],
       "images": [
         "资源/应用/[星星]备忘录/Screenshot_20260903_180827.jpg",
@@ -1912,7 +1913,7 @@
       "author": "那一天",
       "avatar": "资源/应用/[星星]备忘录/.avatar.png",
       "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
-      "updatedAt": "2026-09-07T03:27:52+08:00"
+      "updatedAt": "2026-09-07T03:29:23+08:00"
     },
     {
       "folder": "应用",
