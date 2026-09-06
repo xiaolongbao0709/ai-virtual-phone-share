@@ -3,13 +3,21 @@ const STORAGE_KEY = "state-v3";
 const MAX_FONT_FILE_BYTES = 25 * 1024 * 1024;
 
 const REGION_DEFS = [
-  { key: "appBackground", label: "应用背景", hint: "同一张图片可用于五个主界面，并可覆盖聊天室自带背景", overflow: false, targets: [["messages", "消息"], ["contacts", "联系人"], ["feeds", "动态"], ["me", "主页"], ["chatRoom", "聊天室"]] },
-  { key: "topBar", label: "顶部栏图片", hint: "同一张图片可分别用于五个界面的顶部栏", overflow: true, targets: [["me", "主页"], ["feeds", "动态"], ["contacts", "联系人"], ["messages", "消息"], ["chatRoom", "聊天"]] },
-  { key: "bottomBar", label: "底部栏图片", hint: "同一张图片可分别调节聊天输入区和应用底部栏", overflow: true, targets: [["inputBar", "聊天输入区"], ["tabBar", "应用底部栏"]] },
-  { key: "inputField", label: "输入框图片", hint: "同一张图片可用于聊天输入框、搜索框和表单输入框", targets: [["chatInput", "聊天输入框"], ["searchInput", "搜索框"], ["formInput", "表单输入框"]] },
+  { key: "appBackground", label: "背景", hint: "同一张图片可用于五个主界面，并可覆盖聊天自带背景", overflow: false, targets: [["messages", "消息"], ["contacts", "联系人"], ["feeds", "动态"], ["me", "主页"], ["chatRoom", "聊天"]] },
+  { key: "topBar", label: "顶部栏", hint: "同一张图片可分别用于五个界面的顶部栏", overflow: true, targets: [["me", "主页"], ["feeds", "动态"], ["contacts", "联系人"], ["messages", "消息"], ["chatRoom", "聊天"]] },
+  { key: "bottomBar", label: "底部栏", hint: "同一张图片可分别调节聊天界面和主界面", overflow: true, targets: [["inputBar", "聊天界面"], ["tabBar", "主界面"]] },
+  { key: "inputField", label: "图片", hint: "同一张图片可用于聊天、消息和联系人输入框", targets: [["chatInput", "聊天"], ["searchInput", "消息"], ["formInput", "联系人"]] },
 ];
 
 const IMAGE_REGION_DEFS = REGION_DEFS.filter(def => def.key !== "inputField");
+
+const BASE_TARGETS = [
+  ["messages", "消息"],
+  ["contacts", "联系人"],
+  ["feeds", "动态"],
+  ["me", "主页"],
+  ["chatRoom", "聊天"],
+];
 
 const COLOR_TARGETS = [
   { key: "activeIcon", label: "激活图标" },
@@ -20,8 +28,8 @@ const COLOR_TARGETS = [
 ];
 
 const BUTTON_STYLE_TARGETS = [
-  ["accent", "功能按钮"],
-  ["capsule", "胶囊标签"],
+  ["accent", "高亮"],
+  ["capsule", "常态"],
 ];
 
 const FONT_TARGETS = [
@@ -30,12 +38,13 @@ const FONT_TARGETS = [
   { key: "metaText", label: "辅助文字" },
   { key: "button", label: "按钮文字" },
   { key: "input", label: "输入框文字" },
+  { key: "navText", label: "图标文字" },
 ];
 
 const INPUT_STYLE_TARGETS = [
-  ["chatInput", "聊天输入框"],
-  ["searchInput", "搜索框"],
-  ["formInput", "表单输入框"],
+  ["chatInput", "聊天"],
+  ["searchInput", "消息"],
+  ["formInput", "联系人"],
 ];
 
 function colorRuleId() {
@@ -52,9 +61,10 @@ function fontRuleId() {
 
 function themeSnapshot(source) {
   return JSON.parse(JSON.stringify({
-    version: 26,
+    version: 36,
     colorsEnabled: source.colorsEnabled,
     imagesEnabled: source.imagesEnabled,
+    baseStyle: source.baseStyle,
     colorRules: source.colorRules,
     inputStyle: source.inputStyle,
     buttonStyle: source.buttonStyle,
@@ -91,16 +101,25 @@ function defaultState() {
   const regions = {};
   for (const def of REGION_DEFS) regions[def.key] = makeRegion(def);
   return {
-    version: 26,
+    version: 36,
     colorsEnabled: true,
     imagesEnabled: true,
     floatingButtonEnabled: true,
     floatingButtonTop: null,
+    baseStyle: {
+      enabled: false,
+      color: "#ffffff",
+      glassColor: "#ffffff",
+      glassOpacity: 72,
+      toolIconBackground: "#ffffff",
+      applyTargets: BASE_TARGETS.map(([key]) => key),
+    },
     inputStyle: {
       enabled: false,
       radius: 14,
       borderless: false,
       borderWidth: 1,
+      chatWidth: 100,
       borderColor: "#dadbdf",
       backgroundMode: "color",
       backgroundColor: "#ebecef",
@@ -148,12 +167,24 @@ function normalizeState(raw) {
   state.imagesEnabled = raw.imagesEnabled !== false;
   state.floatingButtonEnabled = raw.floatingButtonEnabled !== false;
   state.floatingButtonTop = raw.floatingButtonTop != null && Number.isFinite(Number(raw.floatingButtonTop)) ? Math.max(8, Number(raw.floatingButtonTop)) : null;
+  if (raw.baseStyle && typeof raw.baseStyle === "object") {
+    state.baseStyle.enabled = raw.baseStyle.enabled === true;
+    state.baseStyle.color = /^#[0-9a-f]{6}$/i.test(String(raw.baseStyle.color || "")) ? String(raw.baseStyle.color).toLowerCase() : "#ffffff";
+    state.baseStyle.glassColor = /^#[0-9a-f]{6}$/i.test(String(raw.baseStyle.glassColor || "")) ? String(raw.baseStyle.glassColor).toLowerCase() : "#ffffff";
+    state.baseStyle.glassOpacity = clamp(raw.baseStyle.glassOpacity, 72, 0, 100);
+    state.baseStyle.toolIconBackground = /^#[0-9a-f]{6}$/i.test(String(raw.baseStyle.toolIconBackground || "")) ? String(raw.baseStyle.toolIconBackground).toLowerCase() : "#ffffff";
+    if (Array.isArray(raw.baseStyle.applyTargets)) {
+      const allowed = BASE_TARGETS.map(([key]) => key);
+      state.baseStyle.applyTargets = [...new Set(raw.baseStyle.applyTargets.filter(key => allowed.includes(key)))];
+    }
+  }
   state.fontsEnabled = raw.fontsEnabled !== false;
   if (raw.inputStyle && typeof raw.inputStyle === "object") {
     state.inputStyle.enabled = raw.inputStyle.enabled === true;
     state.inputStyle.radius = clamp(raw.inputStyle.radius, 14, 0, 50);
     state.inputStyle.borderless = raw.inputStyle.borderless === true;
     state.inputStyle.borderWidth = clamp(raw.inputStyle.borderWidth, 1, 0.5, 6);
+    state.inputStyle.chatWidth = clamp(raw.inputStyle.chatWidth, 100, 40, 100);
     state.inputStyle.borderColor = /^#[0-9a-f]{6}$/i.test(String(raw.inputStyle.borderColor || "")) ? String(raw.inputStyle.borderColor).toLowerCase() : "#dadbdf";
     state.inputStyle.backgroundColor = /^#[0-9a-f]{6}$/i.test(String(raw.inputStyle.backgroundColor || "")) ? String(raw.inputStyle.backgroundColor).toLowerCase() : "#ebecef";
     state.inputStyle.backgroundOpacity = clamp(raw.inputStyle.backgroundOpacity, 100, 0, 100);
@@ -326,21 +357,25 @@ const BASE_CSS = `
 /* 贴边侧栏与半透明毛玻璃设置面板 */
 .fis-floating-button{right:0!important;top:38vh;bottom:auto!important;width:24px!important;height:64px!important;min-height:64px;padding:0!important;border:1px solid rgba(255,255,255,.55)!important;border-right:0!important;border-radius:12px 0 0 12px!important;background:linear-gradient(180deg,rgba(184,162,216,.78),rgba(145,119,184,.74))!important;box-shadow:-3px 5px 16px rgba(83,62,112,.24)!important;backdrop-filter:blur(12px) saturate(1.14);-webkit-backdrop-filter:blur(12px) saturate(1.14);cursor:grab;touch-action:none;user-select:none}
 .fis-floating-button:active{cursor:grabbing}.fis-floating-button svg{width:15px!important;height:15px!important}
-.fis-floating-panel{right:32px!important;top:38vh;bottom:auto;width:min(540px,calc(100vw - 44px))!important;max-height:min(78vh,720px);margin:0!important;padding:0!important;display:grid;grid-template-columns:118px minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden!important;border:1px solid rgba(194,175,214,.6)!important;border-radius:16px!important;background:rgba(247,242,251,.78)!important;box-shadow:0 16px 44px rgba(72,53,93,.24),inset 0 1px 0 rgba(255,255,255,.75)!important;backdrop-filter:blur(22px) saturate(1.16)!important;-webkit-backdrop-filter:blur(22px) saturate(1.16)!important}
+.fis-floating-panel{right:32px!important;top:38vh;bottom:auto;width:min(470px,calc(100vw - 44px))!important;max-height:min(78vh,720px);margin:0!important;padding:0!important;display:grid;grid-template-columns:92px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);overflow:hidden!important;border:1px solid rgba(194,175,214,.6)!important;border-radius:16px!important;background:rgba(247,242,251,.78)!important;box-shadow:0 16px 44px rgba(72,53,93,.24),inset 0 1px 0 rgba(255,255,255,.75)!important;backdrop-filter:blur(22px) saturate(1.16)!important;-webkit-backdrop-filter:blur(22px) saturate(1.16)!important}
 .fis-floating-panel[hidden]{display:none!important}
-.fis-floating-head{grid-column:1;grid-row:1;min-width:0;height:100%;box-sizing:border-box;margin:0!important;padding:11px 9px;display:flex;flex-direction:column;align-items:stretch;gap:10px;border-right:1px solid rgba(183,163,205,.38);background:linear-gradient(160deg,rgba(235,225,245,.74),rgba(217,201,234,.58))}
+.fis-floating-head{grid-column:1;grid-row:1/3;min-width:0;height:100%;box-sizing:border-box;margin:0!important;padding:11px 7px;display:flex;flex-direction:column;align-items:stretch;gap:10px;border-right:1px solid rgba(183,163,205,.38);background:linear-gradient(160deg,rgba(235,225,245,.74),rgba(217,201,234,.58))}
 .fis-floating-head .fis-page-tabs{display:flex;flex:0 0 auto;flex-direction:column;align-items:stretch;gap:6px;overflow:visible!important}
 .fis-floating-head .fis-page-tab{width:100%;min-height:38px!important;padding:8px 9px!important;border:1px solid transparent!important;border-radius:10px!important;background:rgba(255,255,255,.4)!important;color:#665775!important;text-align:left;white-space:normal}
 .fis-floating-head .fis-page-tab.active{border-color:rgba(144,116,176,.5)!important;background:linear-gradient(135deg,rgba(170,145,201,.92),rgba(139,111,174,.9))!important;color:#fff!important;box-shadow:0 4px 12px rgba(105,78,137,.2)}
-.fis-floating-head-actions{margin-top:auto;display:flex;justify-content:space-between;gap:6px}.fis-floating-head-actions .fis-icon-btn,.fis-floating-close{width:38px!important;height:34px!important;min-height:34px!important;background:rgba(255,255,255,.6)!important;border-color:rgba(182,162,204,.48)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.fis-floating-body{grid-column:2;grid-row:1;min-width:0;overflow:auto;overscroll-behavior:contain;padding:12px}
+.fis-floating-head-actions{grid-column:2;grid-row:1;margin:0;display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:9px 12px 0}.fis-floating-head-actions .fis-icon-btn,.fis-floating-close{width:38px!important;height:34px!important;min-height:34px!important;background:rgba(255,255,255,.6)!important;border-color:rgba(182,162,204,.48)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.fis-floating-body{grid-column:2;grid-row:2;min-width:0;overflow:auto;overscroll-behavior:contain;padding:10px 12px 12px}
+.fis-floating-panel .fis-row{grid-template-columns:50px minmax(0,1fr);gap:6px}.fis-choice-chips{display:flex!important;align-items:center;gap:5px!important;flex-wrap:wrap;padding:4px!important}.fis-choice-chips :is(.fis-input-target,.fis-target-option){position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:0;padding:5px 9px;border:1px solid rgba(182,161,203,.42);border-radius:999px;background:rgba(255,255,255,.56);color:#675977;line-height:1.15;cursor:pointer}.fis-choice-chips :is(.fis-input-target,.fis-target-option):has(input:checked){border-color:#a17fc0;background:#a17fc0;color:#fff;box-shadow:0 3px 9px rgba(112,82,144,.18)}.fis-choice-chips :is(.fis-input-target,.fis-target-option) input{position:absolute;width:1px!important;height:1px!important;margin:0;opacity:0;pointer-events:none}.fis-choice-chips .fis-target-option span{overflow:visible;text-overflow:clip}
 .fis-floating-panel :is(.fis-region,.fis-input-style-card,.fis-color-panel,.fis-theme-card){background:rgba(255,255,255,.5)!important;border-color:rgba(182,161,203,.36)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.6);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
 .fis-floating-panel :is(.fis-input-targets,.fis-select,.fis-number,.fis-color-pair input,.fis-inline-color-editor input){background:rgba(255,255,255,.69)!important;border-color:rgba(184,164,204,.43)!important}
 .fis-floating-panel .fis-subtab-bar{border-bottom-color:rgba(172,149,196,.36)}
 .fis-floating-panel .fis-image-tab.active,.fis-floating-panel .fis-font-tab.active,.fis-floating-panel .fis-color-tab.active{background:rgba(255,255,255,.67)!important;border-color:rgba(178,156,200,.4)!important}
 .fis-floating-panel :is(input[type=checkbox],input[type=radio]){accent-color:#9b78ba}.fis-floating-panel .fis-switch input:checked+.fis-switch-track{background:#a17fc0}.fis-floating-panel .fis-range{accent-color:#9b78ba;background:linear-gradient(to right,#a17fc0 0 var(--fis-range-progress,50%),rgba(211,199,223,.82) var(--fis-range-progress,50%) 100%)!important}.fis-floating-panel .fis-range::-webkit-slider-thumb,.fis-floating-panel .fis-range::-moz-range-thumb{background:#9b78ba}.fis-floating-panel .fis-btn.primary,.fis-floating-panel .fis-icon-btn.primary{background:#9b78ba!important;border-color:#9b78ba!important;color:#fff!important}
 .fis-settings .fis-page-tab.active,.fis-settings .fis-btn.primary,.fis-settings .fis-icon-btn.primary,.fis-floating-panel .fis-btn.primary,.fis-floating-panel .fis-icon-btn.primary{background:#a17fc0!important;border-color:#a17fc0!important;color:#fff!important}.fis-settings .fis-switch input:checked+.fis-switch-track,.fis-settings-toggle-row .fis-switch input:checked+.fis-switch-track,.fis-dialog-actions .fis-btn.primary{background:#a17fc0!important;border-color:#a17fc0!important}
-@media(max-width:560px){.fis-floating-button{right:0!important;width:22px!important;height:58px!important;min-height:58px}.fis-floating-panel{left:auto!important;right:28px!important;bottom:auto;width:calc(100vw - 40px)!important;grid-template-columns:96px minmax(0,1fr);max-height:78vh}.fis-floating-head{padding:9px 7px}.fis-floating-head .fis-page-tab{padding:7px 6px!important;font-size:11px!important}.fis-floating-body{padding:9px}.fis-floating-head-actions .fis-icon-btn,.fis-floating-close{width:34px!important}}
+.fis-settings-toggle-row+.fis-settings:not(.fis-floating-panel){display:none!important}
+.fis-floating-panel.fis-theme-library-mode{width:min(390px,calc(100vw - 44px))!important;height:min(72vh,680px);grid-template-columns:minmax(0,1fr)}.fis-floating-panel.fis-theme-library-mode .fis-floating-body{grid-column:1}.fis-theme-library-body{display:flex;flex-direction:column;min-height:0;overflow:hidden!important}.fis-theme-library-heading{flex:0 0 auto;padding:2px 3px 11px;color:#4d3f5c;font-size:15px;font-weight:700}.fis-theme-library-list{flex:1;min-height:0;overflow-y:auto;padding:1px 2px 10px}.fis-theme-library-tools{display:flex;flex:0 0 auto;align-items:center;justify-content:center;gap:12px;margin-top:auto;padding:8px;border:1px solid rgba(182,161,203,.36);border-radius:12px;background:rgba(255,255,255,.48);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.fis-theme-library-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;margin-bottom:8px;padding:10px;border:1px solid rgba(182,161,203,.36);border-radius:11px;background:rgba(255,255,255,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.62)}.fis-theme-library-card.selecting{grid-template-columns:22px minmax(0,1fr);cursor:pointer}.fis-theme-library-card.selecting.selected{border-color:#a17fc0;background:rgba(161,127,192,.14);box-shadow:0 0 0 1px rgba(161,127,192,.2)}.fis-theme-library-card input{width:18px;height:18px}.fis-theme-library-actions{display:flex;gap:6px}.fis-theme-library-empty{display:grid;place-items:center;min-height:160px;color:#897b96;font-size:12px;text-align:center}@media(max-width:560px){.fis-floating-panel.fis-theme-library-mode{width:calc(100vw - 40px)!important}.fis-theme-library-tools{gap:8px}.fis-theme-library-card{padding:8px}}
+.fis-floating-panel.fis-theme-library-mode{grid-template-rows:minmax(0,1fr)}.fis-floating-panel.fis-theme-library-mode .fis-floating-body{grid-row:1}
+@media(max-width:560px){.fis-floating-button{right:0!important;width:22px!important;height:58px!important;min-height:58px}.fis-floating-panel{left:auto!important;right:28px!important;bottom:auto;width:calc(100vw - 40px)!important;grid-template-columns:80px minmax(0,1fr);max-height:78vh}.fis-floating-head{padding:9px 6px}.fis-floating-head .fis-page-tab{padding:7px 6px!important;font-size:11px!important}.fis-floating-body{padding:8px 9px 9px}.fis-floating-head-actions{padding:7px 9px 0}.fis-floating-head-actions .fis-icon-btn,.fis-floating-close{width:34px!important}}
 
 .fis-dialog-overlay{position:fixed;inset:0;z-index:2147483005;display:grid;place-items:center;padding:18px;background:rgba(30,41,59,.22);backdrop-filter:blur(3px)}.fis-dialog-card{width:min(360px,calc(100vw - 36px));padding:16px;border:1px solid rgba(108,132,162,.28);border-radius:14px;background:rgba(248,252,255,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:#334155;box-shadow:0 16px 46px rgba(42,57,78,.3)}.fis-dialog-title{font-size:15px;font-weight:700}.fis-dialog-message{margin-top:7px;color:#68788d;font-size:12px;line-height:1.55}.fis-dialog-input{box-sizing:border-box;width:100%;min-height:38px;margin-top:12px;padding:8px 10px;border:1px solid #cbd5e1;border-radius:9px;background:rgba(255,255,255,.72);color:#334155;font-size:13px;outline:none}.fis-dialog-input:focus{border-color:#6f8fb5;box-shadow:0 0 0 3px rgba(111,143,181,.14)}.fis-dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.fis-dialog-actions .fis-btn{display:inline-flex!important;align-items:center;justify-content:center;min-height:34px;padding:7px 13px;border:1px solid #cbd5e1;border-radius:9px;background:rgba(255,255,255,.7);color:#52677f;font-size:12px;cursor:pointer}.fis-dialog-actions .fis-btn.primary{border-color:#6f8fb5;background:#6f8fb5;color:#fff}.fis-dialog-actions .fis-btn.danger{border-color:#d92d20;background:#d92d20;color:#fff}
 
@@ -366,6 +401,8 @@ html[data-fis-view-scope="1"][data-fis-font-button="1"] .chat-app:not([data-room
 html[data-fis-view-scope="1"][data-fis-font-input="1"] .chat-app :is(input,textarea,select):not(.font-mono),
 html[data-fis-view-scope="1"][data-fis-font-input="1"] .chat-app .chat-search-input,
 html[data-fis-view-scope="1"][data-fis-font-input="1"] .chat-app .chat-search-input::placeholder{font-family:var(--fis-font-input),sans-serif!important}
+html[data-fis-view-scope="1"][data-fis-font-nav-text="1"] .chat-app .chat-tab-bar,
+html[data-fis-view-scope="1"][data-fis-font-nav-text="1"] .chat-app .chat-tab-bar *{font-family:var(--fis-font-nav-text),sans-serif!important}
 
 /* 文字不再覆盖 Float 的全局变量：按界面语义精确着色，避免污染弹窗、气泡与富媒体小组件。 */
 html[data-fis-view-scope="1"][data-fis-color-title="1"] .chat-app:not([data-room-active]) .page-title,
@@ -479,6 +516,32 @@ html[data-fis-view-scope="1"][data-fis-input-style-search="1"] .chat-app .chat-s
 html[data-fis-view-scope="1"][data-fis-input-style-form="1"] .chat-app .ui-input:not(.ui-input-inline):not(.font-mono),
 html[data-fis-view-scope="1"][data-fis-input-style-form="1"] .chat-app .ui-textarea:not(.ui-input-inline):not(.font-mono),
 html[data-fis-view-scope="1"][data-fis-input-style-form="1"] .chat-app .ui-select:not(.font-mono){border:var(--fis-input-border-width) solid var(--fis-input-border-color)!important;border-radius:var(--fis-input-radius)!important}
+html[data-fis-view-scope="1"][data-fis-input-style-chat="1"] .chat-app .chat-room-wrapper .chat-input-textarea{width:var(--fis-chat-input-width,100%)!important;max-width:var(--fis-chat-input-width,100%)!important;min-width:0!important;flex:0 1 var(--fis-chat-input-width,100%)!important;margin-inline:auto!important}
+
+/* 基础色先铺在页面根层；图片层启用时仍可在其上正常显示。 */
+html[data-fis-base-color="1"][data-fis-base-target-chat-room="1"] .chat-app .chat-room-wrapper,
+html[data-fis-base-color="1"][data-fis-base-target-messages="1"] .chat-app .page-shell:has(.chat-list-tabs),
+html[data-fis-base-color="1"][data-fis-base-target-contacts="1"] .chat-app .page-shell:has(input[placeholder='Search contacts...'],.contacts-page-root),
+html[data-fis-base-color="1"][data-fis-base-target-feeds="1"] .chat-app .page-shell:has(.feed-cover-shell),
+html[data-fis-base-color="1"][data-fis-base-target-me="1"] .chat-app .user-profile-page-root{--c-page-body-bg:var(--fis-base-color)!important;background-color:var(--fis-base-color)!important}
+html[data-fis-base-color="1"][data-fis-base-target-chat-room="1"] .chat-app .chat-room-wrapper :is(.chat-main-content,.page-body),
+html[data-fis-base-color="1"][data-fis-base-target-messages="1"] .chat-app .page-shell:has(.chat-list-tabs) :is(.chat-main-content,.page-body),
+html[data-fis-base-color="1"][data-fis-base-target-contacts="1"] .chat-app .page-shell:has(input[placeholder='Search contacts...'],.contacts-page-root) :is(.chat-main-content,.page-body),
+html[data-fis-base-color="1"][data-fis-base-target-feeds="1"] .chat-app .page-shell:has(.feed-cover-shell) :is(.chat-main-content,.page-body),
+html[data-fis-base-color="1"][data-fis-base-target-me="1"] .chat-app .user-profile-page-root :is(.chat-main-content,.page-body){--c-page-body-bg:var(--fis-base-color)!important;background-color:transparent!important}
+
+/* 默认栏位共用可调色毛玻璃；对应图片启用时，两者严格互斥。 */
+html[data-fis-base-color="1"][data-fis-base-target-chat-room="1"] .chat-app .chat-room-wrapper>.page-header,
+html[data-fis-base-color="1"][data-fis-base-target-messages="1"] .chat-app .page-shell:has(.chat-list-tabs)>.page-header,
+html[data-fis-base-color="1"][data-fis-base-target-contacts="1"] .chat-app .page-shell:has(input[placeholder='Search contacts...'],.contacts-page-root)>.page-header{--c-header-bg:var(--fis-base-glass)!important;background:var(--fis-base-glass)!important;backdrop-filter:blur(18px) saturate(1.12)!important;-webkit-backdrop-filter:blur(18px) saturate(1.12)!important}
+html[data-fis-base-color="1"][data-fis-base-target-chat-room="1"]:not([data-fis-bottom-image-input="1"]) .chat-app .chat-room-wrapper .chat-input-bar,
+html[data-fis-base-color="1"][data-fis-base-target-chat-room="1"][data-fis-bottom-image-input="1"] .chat-app .chat-room-wrapper .chat-input-bar:has(.chat-plus-menu){background:var(--fis-base-glass)!important;backdrop-filter:blur(18px) saturate(1.12)!important;-webkit-backdrop-filter:blur(18px) saturate(1.12)!important}
+html[data-fis-view-scope="1"][data-fis-active-view="messages"][data-fis-base-target-messages="1"]:not([data-fis-bottom-image-tab="1"]) .chat-app .chat-tab-bar,
+html[data-fis-view-scope="1"][data-fis-active-view="contacts"][data-fis-base-target-contacts="1"]:not([data-fis-bottom-image-tab="1"]) .chat-app .chat-tab-bar,
+html[data-fis-view-scope="1"][data-fis-active-view="feeds"][data-fis-base-target-feeds="1"]:not([data-fis-bottom-image-tab="1"]) .chat-app .chat-tab-bar,
+html[data-fis-view-scope="1"][data-fis-active-view="me"][data-fis-base-target-me="1"]:not([data-fis-bottom-image-tab="1"]) .chat-app .chat-tab-bar{background:var(--fis-base-glass)!important;border-top-color:var(--fis-base-glass)!important;box-shadow:none!important;backdrop-filter:blur(18px) saturate(1.12)!important;-webkit-backdrop-filter:blur(18px) saturate(1.12)!important}
+html[data-fis-base-color="1"][data-fis-base-target-chat-room="1"] .chat-app .chat-room-wrapper .chat-plus-menu{background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html[data-fis-base-color="1"][data-fis-base-target-chat-room="1"] .chat-app .chat-room-wrapper .chat-plus-menu-item .chat-plus-icon-box{background:var(--fis-tool-icon-background)!important}
 
 /* 文字图片、系统指令、红包、转账、位置等富功能弹窗保持 Float 原样。 */
 html[data-fis-view-scope="1"][data-fis-colors="1"] .chat-app .modal-overlay .ui-input:not(.ui-input-inline),
@@ -496,15 +559,16 @@ html[data-fis-view-scope="1"][data-fis-top-target-messages="1"] .chat-app .page-
 html[data-fis-view-scope="1"][data-fis-top-target-contacts="1"] .chat-app .page-shell:has(input[placeholder='Search contacts...'])>.page-header,
 html[data-fis-view-scope="1"][data-fis-top-target-feeds="1"] .chat-app .page-shell:has(.feed-cover-shell)>.page-header,
 html[data-fis-view-scope="1"][data-fis-top-target-me="1"] .chat-app .user-profile-page-root>.page-header,
-html[data-fis-view-scope="1"][data-fis-bottom-image-input="1"] .chat-app .chat-room-wrapper .chat-input-bar,
-html[data-fis-view-scope="1"][data-fis-bottom-image-tab="1"] .chat-app .chat-tab-bar{isolation:isolate;overflow:visible!important;background:transparent!important;box-shadow:none;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-html[data-fis-view-scope="1"][data-fis-bottom-image-input="1"] .chat-app .chat-room-wrapper .chat-input-bar,html[data-fis-view-scope="1"][data-fis-bottom-image-tab="1"] .chat-app .chat-tab-bar{border-top:0!important}
+html[data-fis-view-scope="1"][data-fis-bottom-image-input="1"] .chat-app .chat-room-wrapper .chat-input-bar:not(:has(.chat-plus-menu)),
+html[data-fis-view-scope="1"][data-fis-bottom-image-tab="1"] .chat-app .chat-tab-bar{isolation:isolate;overflow:visible!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html[data-fis-view-scope="1"][data-fis-bottom-image-input="1"] .chat-app .chat-room-wrapper .chat-input-bar:not(:has(.chat-plus-menu)){border-top:0!important;border-top-color:transparent!important}
+html[data-fis-view-scope="1"][data-fis-bottom-image-tab="1"] .chat-app .chat-tab-bar{border-top:0!important;border-top-color:transparent!important}
 html[data-fis-view-scope="1"][data-fis-top-target-chat-room="1"] .chat-app .chat-room-wrapper>.page-header::before,
 html[data-fis-view-scope="1"][data-fis-top-target-messages="1"] .chat-app .page-shell:has(.chat-list-tabs)>.page-header::before,
 html[data-fis-view-scope="1"][data-fis-top-target-contacts="1"] .chat-app .page-shell:has(input[placeholder='Search contacts...'])>.page-header::before,
 html[data-fis-view-scope="1"][data-fis-top-target-feeds="1"] .chat-app .page-shell:has(.feed-cover-shell)>.page-header::before,
 html[data-fis-view-scope="1"][data-fis-top-target-me="1"] .chat-app .user-profile-page-root>.page-header::before{content:"";position:absolute;top:calc(-1px * var(--fis-top-bar-over-top,0));right:0;bottom:calc(-1px * var(--fis-top-bar-over-bottom,0));left:0;z-index:-1;pointer-events:none;background-color:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:var(--fis-top-bar-image)!important;background-size:var(--fis-top-bar-size)!important;background-repeat:var(--fis-top-bar-repeat)!important;background-position:var(--fis-top-bar-position)!important}
-html[data-fis-view-scope="1"][data-fis-bottom-image-input="1"] .chat-app .chat-room-wrapper .chat-input-bar::before{content:"";position:absolute;top:calc(-1px * var(--fis-bottom-bar-input-over-top,0));right:0;bottom:calc(-1px * var(--fis-bottom-bar-input-over-bottom,0));left:0;z-index:-1;pointer-events:none;background-color:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:var(--fis-bottom-bar-input-image)!important;background-size:var(--fis-bottom-bar-input-size)!important;background-repeat:no-repeat!important;background-position:var(--fis-bottom-bar-input-position)!important}
+html[data-fis-view-scope="1"][data-fis-bottom-image-input="1"] .chat-app .chat-room-wrapper .chat-input-bar:not(:has(.chat-plus-menu))::before{content:"";position:absolute;top:calc(-1px * var(--fis-bottom-bar-input-over-top,0));right:0;bottom:calc(-1px * var(--fis-bottom-bar-input-over-bottom,0));left:0;z-index:-1;pointer-events:none;background-color:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:var(--fis-bottom-bar-input-image)!important;background-size:var(--fis-bottom-bar-input-size)!important;background-repeat:no-repeat!important;background-position:var(--fis-bottom-bar-input-position)!important}
 html[data-fis-view-scope="1"][data-fis-bottom-image-tab="1"] .chat-app .chat-tab-bar::before{content:"";position:absolute;top:calc(-1px * var(--fis-bottom-bar-tab-over-top,0));right:0;bottom:calc(-1px * var(--fis-bottom-bar-tab-over-bottom,0));left:0;z-index:-1;pointer-events:none;background-color:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:var(--fis-bottom-bar-tab-image)!important;background-size:var(--fis-bottom-bar-tab-size)!important;background-repeat:no-repeat!important;background-position:var(--fis-bottom-bar-tab-position)!important}
 `;
 
@@ -513,7 +577,7 @@ export default {
     id: PLUGIN_ID,
     name: "自定义聊天主题",
     apiVersion: 1,
-    version: "0.12.23",
+    version: "1.0.1",
     author: "NEEN&GPT",
     description: "用 PNG、主题色、字体、卡片、按钮与输入框设置自定义聊天界面",
   },
@@ -618,6 +682,7 @@ export default {
       if (key === "backgroundOpacity") root.style.setProperty("--fis-input-background-color", colorWithOpacity(inputStyle.backgroundColor, inputStyle.backgroundOpacity));
       if (key === "radius") root.style.setProperty("--fis-input-radius", `${inputStyle.radius}px`);
       if (key === "borderWidth") root.style.setProperty("--fis-input-border-width", inputStyle.borderless ? "0px" : `${inputStyle.borderWidth}px`);
+      if (key === "chatWidth") root.style.setProperty("--fis-chat-input-width", `${inputStyle.chatWidth}%`);
     }
 
     function clearApplied() {
@@ -638,6 +703,8 @@ export default {
       root.removeAttribute("data-fis-input-style-form");
       root.removeAttribute("data-fis-colors");
       root.removeAttribute("data-fis-interface-cards");
+      root.removeAttribute("data-fis-base-color");
+      for (const key of ["messages", "contacts", "feeds", "me", "chat-room"]) root.removeAttribute("data-fis-base-target-" + key);
       for (const target of FONT_TARGETS) root.removeAttribute("data-fis-font-" + target.key.replace(/[A-Z]/g, letter => "-" + letter.toLowerCase()));
       for (const target of COLOR_TARGETS) {
         root.removeAttribute("data-fis-color-" + target.key.replace(/[A-Z]/g, letter => "-" + letter.toLowerCase()));
@@ -653,9 +720,9 @@ export default {
     function syncThemeScope() {
       const chatApp = document.querySelector(".chat-app");
       const modalOpen = !!document.querySelector(".chat-app .modal-overlay, .chat-app [data-ui='modal'], .chat-app .feed-comment-modal-layer");
+      const chatRoom = chatApp && chatApp.querySelector(".chat-room-wrapper");
       let activeView = "";
       if (chatApp && !modalOpen && !chatApp.hasAttribute("data-tabbar-hidden")) {
-        const chatRoom = chatApp.querySelector(".chat-room-wrapper");
         if (chatApp.hasAttribute("data-room-active") && chatRoom) {
           if (!chatRoom.hasAttribute("data-settings-open")) activeView = "chatRoom";
         } else {
@@ -676,6 +743,16 @@ export default {
 
     function apply() {
       clearApplied();
+      if (state.baseStyle.enabled && state.baseStyle.applyTargets.length) {
+        root.setAttribute("data-fis-base-color", "1");
+        root.style.setProperty("--fis-base-color", state.baseStyle.color);
+        root.style.setProperty("--fis-base-glass", colorWithOpacity(state.baseStyle.glassColor, state.baseStyle.glassOpacity));
+        root.style.setProperty("--fis-tool-icon-background", state.baseStyle.toolIconBackground);
+        for (const target of state.baseStyle.applyTargets) {
+          const suffix = target === "chatRoom" ? "chat-room" : target;
+          root.setAttribute("data-fis-base-target-" + suffix, "1");
+        }
+      }
       if (state.colorsEnabled && state.colorRules.some(rule => rule.targets.length)) root.setAttribute("data-fis-colors", "1");
       if (state.colorsEnabled) {
         for (const rule of state.colorRules) {
@@ -717,6 +794,7 @@ export default {
         root.style.setProperty("--fis-input-radius", `${state.inputStyle.radius}px`);
         root.style.setProperty("--fis-input-border-width", state.inputStyle.borderless ? "0px" : `${state.inputStyle.borderWidth}px`);
         root.style.setProperty("--fis-input-border-color", state.inputStyle.borderColor);
+        root.style.setProperty("--fis-chat-input-width", `${state.inputStyle.chatWidth}%`);
       }
       if (state.inputStyle.backgroundMode === "color") {
         if (state.inputStyle.applyTargets.includes("chatInput")) root.setAttribute("data-fis-input-color-chat", "1");
@@ -803,13 +881,18 @@ export default {
     floatingHost.append(floatingButton, floatingPanel);
 
     let floatingOpen = false;
-    let floatingPage = "colors";
-    let floatingInterfacePage = "cards";
+    let floatingPage = "images";
+    let floatingInterfacePage = "inputs";
     let floatingColorRuleId = "";
     let floatingFontRuleId = "";
-    let floatingImageRegionKey = "appBackground";
+    let floatingImageRegionKey = "base";
     let floatingDeleteMode = false;
     const floatingDeleteSelection = new Set();
+    let floatingMode = "library";
+    let editingThemeId = "";
+    let editingThemeName = "";
+    const themeDeleteSelection = new Set();
+    let themeDeleteMode = false;
 
     const clampFloatingTop = value => {
       const height = floatingButton.offsetHeight || (window.innerWidth <= 560 ? 58 : 64);
@@ -838,6 +921,7 @@ export default {
       floatingButton.style.top = `${top}px`;
       if (state.floatingButtonTop != null) state.floatingButtonTop = top;
       positionFloatingPanel();
+      syncThemeScope();
     };
     window.addEventListener("resize", onFloatingResize);
 
@@ -845,6 +929,11 @@ export default {
       themePlus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z"/><path d="M12 7v6M9 10h6"/></svg>',
       plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
       trash: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>',
+      upload: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M8 8l4-4 4 4M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>',
+      download: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12M8 12l4 4 4-4M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>',
+      check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>',
+      pencil: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 4.2-1 10.6-10.6a2 2 0 0 0-2.8-2.8L5.4 16.2zM14.5 7.1l2.8 2.8"/></svg>',
+      settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M14 4v6M4 17h2M10 17h10M6 14v6"/></svg>',
     };
 
     const liveButton = (text, className, onClick) => {
@@ -938,9 +1027,318 @@ export default {
       if (floatingOpen) requestAnimationFrame(positionFloatingPanel);
     }
 
+    function loadThemeIntoEditor(theme) {
+      const savedThemes = state.themes;
+      const floatingButtonEnabled = state.floatingButtonEnabled;
+      const floatingButtonTop = state.floatingButtonTop;
+      const next = theme ? normalizeState(theme.snapshot) : defaultState();
+      next.themes = savedThemes;
+      next.floatingButtonEnabled = floatingButtonEnabled;
+      next.floatingButtonTop = floatingButtonTop;
+      state = next;
+      editingThemeId = theme ? theme.id : themeId();
+      editingThemeName = theme ? theme.name : editingThemeName;
+      floatingMode = "editor";
+      floatingPage = "images";
+      floatingDeleteMode = false;
+      floatingDeleteSelection.clear();
+      persist();
+      apply();
+      renderFloating();
+    }
+
+    const archiveEncoder = new TextEncoder();
+    const archiveDecoder = new TextDecoder();
+    const archiveCrcTable = (() => {
+      const table = new Uint32Array(256);
+      for (let index = 0; index < 256; index++) {
+        let value = index;
+        for (let bit = 0; bit < 8; bit++) value = (value >>> 1) ^ ((value & 1) ? 0xedb88320 : 0);
+        table[index] = value >>> 0;
+      }
+      return table;
+    })();
+
+    const archiveCrc32 = bytes => {
+      let value = 0xffffffff;
+      for (const byte of bytes) value = archiveCrcTable[(value ^ byte) & 0xff] ^ (value >>> 8);
+      return (value ^ 0xffffffff) >>> 0;
+    };
+
+    const dataUrlBytes = value => {
+      const matched = /^data:([^;,]+)?;base64,([\s\S]*)$/i.exec(String(value || ""));
+      if (!matched) throw new Error("资源格式无效");
+      const binary = atob(matched[2]);
+      const bytes = new Uint8Array(binary.length);
+      for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+      return { mime: matched[1] || "application/octet-stream", bytes };
+    };
+
+    const bytesDataUrl = (bytes, mime) => {
+      const chunks = [];
+      for (let index = 0; index < bytes.length; index += 0x8000) chunks.push(String.fromCharCode(...bytes.subarray(index, index + 0x8000)));
+      return `data:${mime || "application/octet-stream"};base64,${btoa(chunks.join(""))}`;
+    };
+
+    const archiveExtension = (mime, originalName = "") => {
+      const byMime = {
+        "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif",
+        "font/ttf": "ttf", "font/otf": "otf", "font/woff": "woff", "font/woff2": "woff2",
+        "application/font-woff": "woff", "application/font-sfnt": "ttf",
+      };
+      if (byMime[mime]) return byMime[mime];
+      const matched = /\.([a-z0-9]{2,5})$/i.exec(String(originalName));
+      return matched ? matched[1].toLowerCase() : "bin";
+    };
+
+    const safeArchiveName = value => String(value || "asset").replace(/[^a-z0-9_-]+/gi, "-").replace(/^-+|-+$/g, "") || "asset";
+
+    const createStoredZip = files => {
+      const localChunks = [];
+      const records = [];
+      let offset = 0;
+      for (const file of files) {
+        const name = archiveEncoder.encode(file.name);
+        const data = file.data instanceof Uint8Array ? file.data : new Uint8Array(file.data);
+        const crc = archiveCrc32(data);
+        const header = new Uint8Array(30 + name.length);
+        const view = new DataView(header.buffer);
+        view.setUint32(0, 0x04034b50, true); view.setUint16(4, 20, true); view.setUint16(6, 0x0800, true);
+        view.setUint16(8, 0, true); view.setUint16(10, 0, true); view.setUint16(12, 33, true);
+        view.setUint32(14, crc, true); view.setUint32(18, data.length, true); view.setUint32(22, data.length, true);
+        view.setUint16(26, name.length, true); view.setUint16(28, 0, true); header.set(name, 30);
+        localChunks.push(header, data); records.push({ name, data, crc, offset }); offset += header.length + data.length;
+      }
+      const centralChunks = [];
+      let centralSize = 0;
+      for (const record of records) {
+        const header = new Uint8Array(46 + record.name.length);
+        const view = new DataView(header.buffer);
+        view.setUint32(0, 0x02014b50, true); view.setUint16(4, 20, true); view.setUint16(6, 20, true);
+        view.setUint16(8, 0x0800, true); view.setUint16(10, 0, true); view.setUint16(12, 0, true); view.setUint16(14, 33, true);
+        view.setUint32(16, record.crc, true); view.setUint32(20, record.data.length, true); view.setUint32(24, record.data.length, true);
+        view.setUint16(28, record.name.length, true); view.setUint16(30, 0, true); view.setUint16(32, 0, true);
+        view.setUint16(34, 0, true); view.setUint16(36, 0, true); view.setUint32(38, 0, true); view.setUint32(42, record.offset, true);
+        header.set(record.name, 46); centralChunks.push(header); centralSize += header.length;
+      }
+      const end = new Uint8Array(22);
+      const endView = new DataView(end.buffer);
+      endView.setUint32(0, 0x06054b50, true); endView.setUint16(4, 0, true); endView.setUint16(6, 0, true);
+      endView.setUint16(8, records.length, true); endView.setUint16(10, records.length, true);
+      endView.setUint32(12, centralSize, true); endView.setUint32(16, offset, true); endView.setUint16(20, 0, true);
+      return new Blob([...localChunks, ...centralChunks, end], { type: "application/zip" });
+    };
+
+    const readStoredZip = async file => {
+      const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer); const view = new DataView(buffer);
+      let endOffset = -1;
+      for (let index = Math.max(0, bytes.length - 65557); index <= bytes.length - 22; index++) {
+        if (view.getUint32(index, true) === 0x06054b50) endOffset = index;
+      }
+      if (endOffset < 0) throw new Error("ZIP 目录无效");
+      const count = view.getUint16(endOffset + 10, true);
+      let cursor = view.getUint32(endOffset + 16, true);
+      const entries = new Map();
+      for (let index = 0; index < count; index++) {
+        if (view.getUint32(cursor, true) !== 0x02014b50) throw new Error("ZIP 文件项无效");
+        const method = view.getUint16(cursor + 10, true);
+        const compressedSize = view.getUint32(cursor + 20, true);
+        const size = view.getUint32(cursor + 24, true);
+        const nameLength = view.getUint16(cursor + 28, true);
+        const extraLength = view.getUint16(cursor + 30, true);
+        const commentLength = view.getUint16(cursor + 32, true);
+        const localOffset = view.getUint32(cursor + 42, true);
+        const name = archiveDecoder.decode(bytes.subarray(cursor + 46, cursor + 46 + nameLength));
+        if (method !== 0 || compressedSize !== size) throw new Error("暂不支持压缩过的资源文件");
+        if (view.getUint32(localOffset, true) !== 0x04034b50) throw new Error("ZIP 本地文件项无效");
+        const localNameLength = view.getUint16(localOffset + 26, true);
+        const localExtraLength = view.getUint16(localOffset + 28, true);
+        const dataOffset = localOffset + 30 + localNameLength + localExtraLength;
+        const data = bytes.slice(dataOffset, dataOffset + size);
+        if (archiveCrc32(data) !== view.getUint32(cursor + 16, true)) throw new Error("ZIP 资源校验失败");
+        entries.set(name, data);
+        cursor += 46 + nameLength + extraLength + commentLength;
+      }
+      return entries;
+    };
+
+    function exportThemeConfig() {
+      const exported = JSON.parse(JSON.stringify(state));
+      const files = [];
+      const reusedAssets = new Map();
+      let assetIndex = 0;
+      const addAsset = (dataUrl, folder, stem, originalName) => {
+        if (reusedAssets.has(dataUrl)) return reusedAssets.get(dataUrl);
+        const decoded = dataUrlBytes(dataUrl);
+        const extension = archiveExtension(decoded.mime, originalName);
+        const path = `${folder}/${safeArchiveName(stem)}-${++assetIndex}.${extension}`;
+        files.push({ name: path, data: decoded.bytes });
+        const reference = { path, mime: decoded.mime };
+        reusedAssets.set(dataUrl, reference); return reference;
+      };
+      const externalizeRegions = (regions, prefix) => {
+        for (const [key, region] of Object.entries(regions || {})) {
+          if (!region || typeof region.image !== "string" || !region.image.startsWith("data:")) continue;
+          const reference = addAsset(region.image, "images", `${prefix}-${key}`, region.fileName);
+          region.image = ""; region.assetPath = reference.path; region.assetMime = reference.mime;
+        }
+      };
+      const externalizeFonts = (rules, prefix) => {
+        for (const rule of rules || []) {
+          if (!rule || typeof rule.data !== "string" || !rule.data.startsWith("data:")) continue;
+          const reference = addAsset(rule.data, "fonts", `${prefix}-${rule.id}`, rule.name);
+          rule.data = ""; rule.assetPath = reference.path; rule.assetMime = reference.mime;
+        }
+      };
+      externalizeRegions(exported.regions, "current"); externalizeFonts(exported.fontRules, "current");
+      for (const theme of Object.values(exported.themes || {})) {
+        if (!theme || !theme.snapshot) continue;
+        const prefix = `theme-${safeArchiveName(theme.id)}`;
+        externalizeRegions(theme.snapshot.regions, prefix); externalizeFonts(theme.snapshot.fontRules, prefix);
+      }
+      const settings = { format: "float-interface-skin-archive", archiveVersion: 1, state: exported };
+      files.unshift({ name: "settings.json", data: archiveEncoder.encode(JSON.stringify(settings, null, 2)) });
+      const blob = createStoredZip(files);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a"); link.href = url; link.download = "float-interface-skin-backup.zip"; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function importThemeConfig(file) {
+      const entries = await readStoredZip(file);
+      const settingsBytes = entries.get("settings.json");
+      if (!settingsBytes) throw new Error("缺少 settings.json");
+      const archive = JSON.parse(archiveDecoder.decode(settingsBytes));
+      if (!archive || archive.format !== "float-interface-skin-archive" || !archive.state) throw new Error("设置文件无效");
+      const imported = archive.state;
+      const restoreRegions = regions => {
+        for (const region of Object.values(regions || {})) {
+          if (!region || !region.assetPath) continue;
+          const bytes = entries.get(region.assetPath); if (!bytes) throw new Error(`缺少资源：${region.assetPath}`);
+          region.image = bytesDataUrl(bytes, region.assetMime); delete region.assetPath; delete region.assetMime;
+        }
+      };
+      const restoreFonts = rules => {
+        for (const rule of rules || []) {
+          if (!rule || !rule.assetPath) continue;
+          const bytes = entries.get(rule.assetPath); if (!bytes) throw new Error(`缺少资源：${rule.assetPath}`);
+          rule.data = bytesDataUrl(bytes, rule.assetMime); delete rule.assetPath; delete rule.assetMime;
+        }
+      };
+      restoreRegions(imported.regions); restoreFonts(imported.fontRules);
+      for (const theme of Object.values(imported.themes || {})) {
+        if (!theme || !theme.snapshot) continue;
+        restoreRegions(theme.snapshot.regions); restoreFonts(theme.snapshot.fontRules);
+      }
+      state = normalizeState(imported); themeDeleteMode = false; themeDeleteSelection.clear();
+      persist(); refreshAll(); ctx.ui.toast("自定义聊天主题已导入");
+    }
+
     function renderFloating() {
       syncFloatingUi();
       floatingPanel.textContent = "";
+      floatingPanel.classList.toggle("fis-theme-library-mode", floatingMode === "library");
+
+      if (floatingMode === "library") {
+        const body = document.createElement("div"); body.className = "fis-floating-body fis-theme-library-body";
+        const heading = document.createElement("div"); heading.className = "fis-theme-library-heading"; heading.textContent = "主题库";
+        const list = document.createElement("div"); list.className = "fis-theme-library-list";
+        const themes = Object.values(state.themes);
+        for (const theme of themes) {
+          const card = document.createElement("section");
+          card.className = "fis-theme-library-card" + (themeDeleteMode ? " selecting" : "") + (themeDeleteSelection.has(theme.id) ? " selected" : "");
+          if (themeDeleteMode) {
+            const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = themeDeleteSelection.has(theme.id);
+            const toggle = () => {
+              if (themeDeleteSelection.has(theme.id)) themeDeleteSelection.delete(theme.id);
+              else themeDeleteSelection.add(theme.id);
+              renderFloating();
+            };
+            checkbox.addEventListener("click", event => { event.stopPropagation(); toggle(); });
+            card.addEventListener("click", toggle);
+            const copy = document.createElement("div");
+            const name = document.createElement("div"); name.className = "fis-theme-name"; name.textContent = theme.name;
+            copy.appendChild(name); card.append(checkbox, copy);
+          } else {
+            const copy = document.createElement("div");
+            const name = document.createElement("div"); name.className = "fis-theme-name"; name.textContent = theme.name;
+            const hint = document.createElement("div"); hint.className = "fis-theme-hint";
+            const imageCount = Object.values(theme.snapshot.regions || {}).filter(region => region && region.image).length;
+            hint.textContent = imageCount ? `包含 ${imageCount} 张图片` : "未包含图片";
+            copy.append(name, hint);
+            const actions = document.createElement("div"); actions.className = "fis-theme-library-actions";
+            actions.append(
+              liveIconButton("check", `应用主题：${theme.name}`, () => {
+                const savedThemes = state.themes;
+                const floatingButtonEnabled = state.floatingButtonEnabled;
+                const floatingButtonTop = state.floatingButtonTop;
+                const next = normalizeState(theme.snapshot);
+                next.themes = savedThemes; next.floatingButtonEnabled = floatingButtonEnabled; next.floatingButtonTop = floatingButtonTop;
+                state = next; persist(); refreshAll(); ctx.ui.toast(`已应用主题：${theme.name}`);
+              }, "primary"),
+              liveIconButton("settings", `编辑主题：${theme.name}`, () => loadThemeIntoEditor(theme)),
+              liveIconButton("pencil", `重命名主题：${theme.name}`, () => {
+                openFloatingDialog({
+                  title: "重命名主题", inputValue: theme.name, inputPlaceholder: "主题名称", confirmLabel: "保存",
+                  onConfirm: value => {
+                    const nextName = String(value || "").trim(); if (!nextName) return false;
+                    theme.name = nextName;
+                    if (editingThemeId === theme.id) editingThemeName = nextName;
+                    persist(); renderFloating(); ctx.ui.toast("主题已改名");
+                  },
+                });
+              })
+            );
+            card.append(copy, actions);
+          }
+          list.appendChild(card);
+        }
+        if (!themes.length) {
+          const empty = document.createElement("div"); empty.className = "fis-theme-library-empty";
+          empty.textContent = "还没有主题，请点击下方＋新建主题"; list.appendChild(empty);
+        }
+
+        const importInput = document.createElement("input"); importInput.type = "file"; importInput.accept = "application/zip,.zip"; importInput.hidden = true;
+        importInput.addEventListener("change", async () => {
+          const file = importInput.files && importInput.files[0]; if (!file) return;
+          try { await importThemeConfig(file); }
+          catch (error) { ctx.ui.toast(`导入失败：${error && error.message ? error.message : "压缩包无效"}`); }
+          importInput.value = "";
+        });
+        const tools = document.createElement("div"); tools.className = "fis-theme-library-tools";
+        tools.append(
+          liveIconButton("upload", "导入主题配置", () => importInput.click()),
+          liveIconButton("download", "导出主题配置", () => {
+            openFloatingDialog({ title: "导出配置", message: "将设置、图片和字体完整保存为 ZIP 压缩包", confirmLabel: "继续导出", onConfirm: exportThemeConfig });
+          }),
+          liveIconButton("plus", "新建主题", () => {
+            openFloatingDialog({
+              title: "新建主题", inputValue: "", inputPlaceholder: "主题名称", confirmLabel: "新建",
+              onConfirm: value => {
+                const name = String(value || "").trim(); if (!name) return false;
+                editingThemeName = name; loadThemeIntoEditor(null);
+              },
+            });
+          }, "primary"),
+          liveIconButton("trash", themeDeleteMode ? "确认删除所选主题" : "选择要删除的主题", () => {
+            if (!themeDeleteMode) { themeDeleteMode = true; themeDeleteSelection.clear(); renderFloating(); return; }
+            if (!themeDeleteSelection.size) { themeDeleteMode = false; renderFloating(); return; }
+            const ids = [...themeDeleteSelection];
+            openFloatingDialog({
+              title: "删除主题", message: `确定删除选中的 ${ids.length} 个主题吗？`, confirmLabel: "删除", danger: true,
+              onConfirm: () => {
+                for (const id of ids) delete state.themes[id];
+                themeDeleteMode = false; themeDeleteSelection.clear(); persist(); renderFloating();
+              },
+            });
+          }, themeDeleteMode ? "primary" : "danger"),
+          importInput
+        );
+        body.append(heading, list, tools); floatingPanel.appendChild(body);
+        return;
+      }
+
       const head = document.createElement("div"); head.className = "fis-floating-head";
       const tabs = document.createElement("div"); tabs.className = "fis-page-tabs";
       const pageTab = (text, page) => {
@@ -949,28 +1347,22 @@ export default {
         tab.addEventListener("click", () => { floatingPage = page; floatingDeleteMode = false; floatingDeleteSelection.clear(); renderFloating(); });
         return tab;
       };
-      tabs.append(pageTab("主题配色", "colors"), pageTab("字体", "fonts"), pageTab("界面设置", "interface"), pageTab("主题设置", "images"));
+      tabs.append(pageTab("主体", "images"), pageTab("组件", "interface"), pageTab("配色", "colors"), pageTab("字体", "fonts"));
       const headActions = document.createElement("div"); headActions.className = "fis-floating-head-actions";
-      const saveTheme = liveIconButton("themePlus", "保存当前设置为主题", () => {
-        openFloatingDialog({
-          title: "保存当前主题",
-          message: "为当前设置填写一个主题名称。",
-          inputValue: "",
-          inputPlaceholder: "主题名称",
-          confirmLabel: "保存",
-          onConfirm: value => {
-            const name = String(value || "").trim();
-            if (!name) return false;
-            const id = themeId();
-            state.themes[id] = { id, name, snapshot: themeSnapshot(state) };
-            persist(); refreshAll(); ctx.ui.toast("主题已保存");
-          },
-        });
+      const saveTheme = liveIconButton("themePlus", "保存主题", () => {
+        if (!editingThemeId || !editingThemeName) return;
+        state.themes[editingThemeId] = { id: editingThemeId, name: editingThemeName, snapshot: themeSnapshot(state) };
+        persist();
+        floatingMode = "library";
+        themeDeleteMode = false;
+        themeDeleteSelection.clear();
+        renderFloating();
+        ctx.ui.toast("主题已保存");
       }, "primary");
       const close = document.createElement("button"); close.type = "button"; close.className = "fis-floating-close"; close.textContent = "×";
-      close.title = "关闭设置"; close.setAttribute("aria-label", "关闭设置");
-      close.addEventListener("click", () => { floatingOpen = false; syncFloatingUi(); });
-      headActions.append(saveTheme, close); head.append(tabs, headActions); floatingPanel.appendChild(head);
+      close.title = "返回主题库"; close.setAttribute("aria-label", "返回主题库");
+      close.addEventListener("click", () => { floatingMode = "library"; renderFloating(); });
+      headActions.append(saveTheme, close); head.appendChild(tabs); floatingPanel.append(head, headActions);
       const body = document.createElement("div"); body.className = "fis-floating-body"; floatingPanel.appendChild(body);
 
       if (floatingPage === "colors") {
@@ -993,7 +1385,7 @@ export default {
           colorTabs.appendChild(tab);
         }
         const switchBox = document.createElement("div"); switchBox.className = "fis-subtab-switch";
-        switchBox.appendChild(liveSwitch(state.colorsEnabled, "启用全部主题配色", checked => {
+        switchBox.appendChild(liveSwitch(state.colorsEnabled, "启用全部配色", checked => {
           state.colorsEnabled = checked; persist(); apply(); renderFloating();
         }));
         bar.append(colorTabs, switchBox); workspace.appendChild(bar);
@@ -1017,7 +1409,7 @@ export default {
           colorText.addEventListener("change", () => updateColor(colorText.value));
           colorText.addEventListener("blur", () => { colorText.value = activeRule.color.toUpperCase(); });
           editor.append(picker, colorText); panel.appendChild(editor);
-          const options = document.createElement("div"); options.className = "fis-target-options";
+          const options = document.createElement("div"); options.className = "fis-target-options fis-choice-chips";
           for (const target of COLOR_TARGETS) {
             const option = document.createElement("label"); option.className = "fis-target-option";
             const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = activeRule.targets.includes(target.key);
@@ -1050,9 +1442,14 @@ export default {
         const remove = liveIconButton("trash", removeLabel, () => {
           if (!floatingDeleteMode) { floatingDeleteMode = true; floatingDeleteSelection.clear(); renderFloating(); return; }
           if (!floatingDeleteSelection.size) { floatingDeleteMode = false; renderFloating(); return; }
-          if (!confirm(`确定删除选中的 ${floatingDeleteSelection.size} 种颜色？`)) return;
-          state.colorRules = state.colorRules.filter(rule => !floatingDeleteSelection.has(rule.id));
-          floatingDeleteSelection.clear(); floatingDeleteMode = false; persist(); apply(); renderFloating();
+          const count = floatingDeleteSelection.size;
+          openFloatingDialog({
+            title: "删除颜色", message: `确定删除选中的 ${count} 种颜色吗？`, confirmLabel: "删除", danger: true,
+            onConfirm: () => {
+              state.colorRules = state.colorRules.filter(rule => !floatingDeleteSelection.has(rule.id));
+              floatingDeleteSelection.clear(); floatingDeleteMode = false; persist(); apply(); renderFloating();
+            },
+          });
         });
         actions.append(add, remove); workspace.appendChild(actions); body.appendChild(workspace);
       }
@@ -1095,7 +1492,7 @@ export default {
           const fileActions = document.createElement("div"); fileActions.className = "fis-region-actions";
           fileActions.append(liveButton("替换", "primary", () => replaceInput.click()), replaceInput); fileRow.append(fileName, fileActions);
           liveRow(panel, "字体文件", fileRow);
-          const options = document.createElement("div"); options.className = "fis-target-options";
+          const options = document.createElement("div"); options.className = "fis-target-options fis-choice-chips";
           for (const target of FONT_TARGETS) {
             const option = document.createElement("label"); option.className = "fis-target-option";
             const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = activeRule.targets.includes(target.key);
@@ -1147,18 +1544,18 @@ export default {
           tab.addEventListener("click", () => { floatingInterfacePage = page; renderFloating(); });
           return tab;
         };
-        strip.append(interfaceTab("卡片", "cards"), interfaceTab("按钮", "buttons"), interfaceTab("输入框", "inputs"));
+        strip.append(interfaceTab("输入框", "inputs"), interfaceTab("按钮", "buttons"), interfaceTab("主页部件", "cards"));
         bar.appendChild(strip); interfaceWorkspace.appendChild(bar); body.appendChild(interfaceWorkspace);
       }
 
       if (floatingPage === "interface" && floatingInterfacePage === "buttons") {
         const buttonStyle = state.buttonStyle;
         const card = document.createElement("section"); card.className = "fis-input-style-card";
-        liveRow(card, "启用设置", liveSwitch(buttonStyle.enabled, "启用按钮设置", checked => {
+        liveRow(card, "开关", liveSwitch(buttonStyle.enabled, "按钮开关", checked => {
           buttonStyle.enabled = checked; persist(); apply(); renderFloating();
         }));
         const panel = document.createElement("div"); panel.className = "fis-input-style-body" + (buttonStyle.enabled ? "" : " disabled");
-        const targets = document.createElement("div"); targets.className = "fis-input-targets";
+        const targets = document.createElement("div"); targets.className = "fis-input-targets fis-choice-chips";
         for (const [key, labelText] of BUTTON_STYLE_TARGETS) {
           const option = document.createElement("label"); option.className = "fis-input-target";
           const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = buttonStyle.applyTargets.includes(key);
@@ -1170,7 +1567,31 @@ export default {
           const label = document.createElement("span"); label.textContent = labelText;
           option.append(checkbox, label); targets.appendChild(option);
         }
-        liveRow(panel, "作用位置", targets);
+        liveRow(panel, "范围", targets);
+
+        const borderOptions = document.createElement("div"); borderOptions.className = "fis-input-targets";
+        const borderlessOption = document.createElement("label"); borderlessOption.className = "fis-input-target";
+        const borderless = document.createElement("input"); borderless.type = "checkbox"; borderless.checked = buttonStyle.borderless;
+        borderless.addEventListener("change", () => { buttonStyle.borderless = borderless.checked; persist(); apply(); renderFloating(); });
+        borderlessOption.append(borderless, document.createTextNode("无边框")); borderOptions.appendChild(borderlessOption);
+        liveRow(panel, "边框", borderOptions);
+        liveRow(panel, "粗细", liveRange(buttonStyle, "borderWidth", 0.5, 6, 0.5, "px", true, () => previewButtonStyle(buttonStyle, "borderWidth")));
+        liveRow(panel, "圆角", liveRange(buttonStyle, "radius", 0, 50, 1, "px", true, () => previewButtonStyle(buttonStyle, "radius")));
+
+        const borderPair = document.createElement("div"); borderPair.className = "fis-color-pair";
+        const borderPicker = document.createElement("input"); borderPicker.type = "color"; borderPicker.value = buttonStyle.borderColor;
+        const borderText = document.createElement("input"); borderText.type = "text"; borderText.className = "fis-number"; borderText.maxLength = 7; borderText.value = buttonStyle.borderColor.toUpperCase();
+        const updateBorder = (color, commit = true) => {
+          if (!/^#[0-9a-f]{6}$/i.test(color)) return;
+          buttonStyle.borderColor = color.toLowerCase(); borderPicker.value = buttonStyle.borderColor; borderText.value = buttonStyle.borderColor.toUpperCase();
+          previewButtonStyle(buttonStyle, "borderColor");
+          if (commit) { persist(); apply(); }
+        };
+        borderPicker.addEventListener("input", () => updateBorder(borderPicker.value, false));
+        borderPicker.addEventListener("change", () => updateBorder(borderPicker.value, true));
+        borderText.addEventListener("change", () => updateBorder(borderText.value));
+        borderText.addEventListener("blur", () => { borderText.value = buttonStyle.borderColor.toUpperCase(); });
+        borderPair.append(borderPicker, borderText); liveRow(panel, "边框", borderPair);
 
         const appendBackgroundControl = (label, colorKey, opacityKey) => {
           const pair = document.createElement("div"); pair.className = "fis-color-pair";
@@ -1186,35 +1607,11 @@ export default {
           picker.addEventListener("change", () => update(picker.value, true));
           textInput.addEventListener("change", () => update(textInput.value));
           textInput.addEventListener("blur", () => { textInput.value = buttonStyle[colorKey].toUpperCase(); });
-          pair.append(picker, textInput); liveRow(panel, `${label}颜色`, pair);
-          liveRow(panel, `${label}透明度`, liveRange(buttonStyle, opacityKey, 0, 100, 1, "%", true, () => previewButtonStyle(buttonStyle, opacityKey)));
+          pair.append(picker, textInput); liveRow(panel, label, pair);
+          liveRow(panel, "透明", liveRange(buttonStyle, opacityKey, 0, 100, 1, "%", true, () => previewButtonStyle(buttonStyle, opacityKey)));
         };
-        appendBackgroundControl("功能按钮", "accentColor", "accentOpacity");
-        appendBackgroundControl("胶囊标签", "capsuleColor", "capsuleOpacity");
-        liveRow(panel, "圆角", liveRange(buttonStyle, "radius", 0, 50, 1, "px", true, () => previewButtonStyle(buttonStyle, "radius")));
-        liveRow(panel, "边框粗细", liveRange(buttonStyle, "borderWidth", 0.5, 6, 0.5, "px", true, () => previewButtonStyle(buttonStyle, "borderWidth")));
-
-        const borderOptions = document.createElement("div"); borderOptions.className = "fis-input-targets";
-        const borderlessOption = document.createElement("label"); borderlessOption.className = "fis-input-target";
-        const borderless = document.createElement("input"); borderless.type = "checkbox"; borderless.checked = buttonStyle.borderless;
-        borderless.addEventListener("change", () => { buttonStyle.borderless = borderless.checked; persist(); apply(); renderFloating(); });
-        borderlessOption.append(borderless, document.createTextNode("无边框")); borderOptions.appendChild(borderlessOption);
-        liveRow(panel, "边框", borderOptions);
-
-        const borderPair = document.createElement("div"); borderPair.className = "fis-color-pair";
-        const borderPicker = document.createElement("input"); borderPicker.type = "color"; borderPicker.value = buttonStyle.borderColor;
-        const borderText = document.createElement("input"); borderText.type = "text"; borderText.className = "fis-number"; borderText.maxLength = 7; borderText.value = buttonStyle.borderColor.toUpperCase();
-        const updateBorder = (color, commit = true) => {
-          if (!/^#[0-9a-f]{6}$/i.test(color)) return;
-          buttonStyle.borderColor = color.toLowerCase(); borderPicker.value = buttonStyle.borderColor; borderText.value = buttonStyle.borderColor.toUpperCase();
-          previewButtonStyle(buttonStyle, "borderColor");
-          if (commit) { persist(); apply(); }
-        };
-        borderPicker.addEventListener("input", () => updateBorder(borderPicker.value, false));
-        borderPicker.addEventListener("change", () => updateBorder(borderPicker.value, true));
-        borderText.addEventListener("change", () => updateBorder(borderText.value));
-        borderText.addEventListener("blur", () => { borderText.value = buttonStyle.borderColor.toUpperCase(); });
-        borderPair.append(borderPicker, borderText); liveRow(panel, "边框颜色", borderPair);
+        appendBackgroundControl("高亮", "accentColor", "accentOpacity");
+        appendBackgroundControl("常态", "capsuleColor", "capsuleOpacity");
         card.appendChild(panel); interfaceWorkspace.appendChild(card);
       }
 
@@ -1224,19 +1621,19 @@ export default {
 
         const cardFeature = document.createElement("section"); cardFeature.className = "fis-input-feature fis-card-feature";
         const cardFeatureHead = document.createElement("div"); cardFeatureHead.className = "fis-input-feature-head";
-        const cardFeatureTitle = document.createElement("div"); cardFeatureTitle.className = "fis-region-name"; cardFeatureTitle.textContent = "卡片样式";
-        cardFeatureHead.append(cardFeatureTitle, liveSwitch(interfaceStyle.cardsEnabled, "启用卡片样式", checked => {
+        const cardFeatureTitle = document.createElement("div"); cardFeatureTitle.className = "fis-region-name"; cardFeatureTitle.textContent = "开关";
+        cardFeatureHead.append(cardFeatureTitle, liveSwitch(interfaceStyle.cardsEnabled, "主页部件开关", checked => {
           interfaceStyle.cardsEnabled = checked; persist(); apply(); renderFloating();
         }));
         const cardFeatureBody = document.createElement("div"); cardFeatureBody.className = "fis-input-feature-body" + (interfaceStyle.cardsEnabled ? "" : " disabled");
-        liveRow(cardFeatureBody, "圆角", liveRange(interfaceStyle, "radius", 0, 50, 1, "px", true, () => previewCardStyle(interfaceStyle, "radius")));
-        liveRow(cardFeatureBody, "边框粗细", liveRange(interfaceStyle, "borderWidth", 0.5, 6, 0.5, "px", true, () => previewCardStyle(interfaceStyle, "borderWidth")));
         const borderOptions = document.createElement("div"); borderOptions.className = "fis-input-targets";
         const borderlessOption = document.createElement("label"); borderlessOption.className = "fis-input-target";
         const borderless = document.createElement("input"); borderless.type = "checkbox"; borderless.checked = interfaceStyle.borderless;
         borderless.addEventListener("change", () => { interfaceStyle.borderless = borderless.checked; persist(); apply(); renderFloating(); });
         borderlessOption.append(borderless, document.createTextNode("无边框")); borderOptions.appendChild(borderlessOption);
         liveRow(cardFeatureBody, "边框", borderOptions);
+        liveRow(cardFeatureBody, "粗细", liveRange(interfaceStyle, "borderWidth", 0.5, 6, 0.5, "px", true, () => previewCardStyle(interfaceStyle, "borderWidth")));
+        liveRow(cardFeatureBody, "圆角", liveRange(interfaceStyle, "radius", 0, 50, 1, "px", true, () => previewCardStyle(interfaceStyle, "radius")));
         const borderPair = document.createElement("div"); borderPair.className = "fis-color-pair";
         const borderPicker = document.createElement("input"); borderPicker.type = "color"; borderPicker.value = interfaceStyle.borderColor;
         const borderText = document.createElement("input"); borderText.type = "text"; borderText.className = "fis-number"; borderText.maxLength = 7; borderText.value = interfaceStyle.borderColor.toUpperCase();
@@ -1250,7 +1647,7 @@ export default {
         borderPicker.addEventListener("change", () => updateBorder(borderPicker.value, true));
         borderText.addEventListener("change", () => updateBorder(borderText.value));
         borderText.addEventListener("blur", () => { borderText.value = interfaceStyle.borderColor.toUpperCase(); });
-        borderPair.append(borderPicker, borderText); liveRow(cardFeatureBody, "边框颜色", borderPair);
+        borderPair.append(borderPicker, borderText); liveRow(cardFeatureBody, "边框", borderPair);
         const backgroundPair = document.createElement("div"); backgroundPair.className = "fis-color-pair";
         const backgroundPicker = document.createElement("input"); backgroundPicker.type = "color"; backgroundPicker.value = interfaceStyle.backgroundColor;
         const backgroundText = document.createElement("input"); backgroundText.type = "text"; backgroundText.className = "fis-number"; backgroundText.maxLength = 7; backgroundText.value = interfaceStyle.backgroundColor.toUpperCase();
@@ -1264,8 +1661,8 @@ export default {
         backgroundPicker.addEventListener("change", () => updateBackground(backgroundPicker.value, true));
         backgroundText.addEventListener("change", () => updateBackground(backgroundText.value));
         backgroundText.addEventListener("blur", () => { backgroundText.value = interfaceStyle.backgroundColor.toUpperCase(); });
-        backgroundPair.append(backgroundPicker, backgroundText); liveRow(cardFeatureBody, "卡片颜色", backgroundPair);
-        liveRow(cardFeatureBody, "透明度", liveRange(interfaceStyle, "backgroundOpacity", 0, 100, 1, "%", true, () => previewCardStyle(interfaceStyle, "backgroundOpacity")));
+        backgroundPair.append(backgroundPicker, backgroundText); liveRow(cardFeatureBody, "背景", backgroundPair);
+        liveRow(cardFeatureBody, "透明", liveRange(interfaceStyle, "backgroundOpacity", 0, 100, 1, "%", true, () => previewCardStyle(interfaceStyle, "backgroundOpacity")));
         cardFeature.append(cardFeatureHead, cardFeatureBody); card.appendChild(cardFeature);
 
         interfaceWorkspace.appendChild(card);
@@ -1276,7 +1673,7 @@ export default {
         const inputRegion = state.regions.inputField;
         const inputDef = REGION_DEFS.find(def => def.key === "inputField");
         const card = document.createElement("section"); card.className = "fis-input-style-card";
-        const targets = document.createElement("div"); targets.className = "fis-input-targets";
+        const targets = document.createElement("div"); targets.className = "fis-input-targets fis-choice-chips";
         for (const [key, labelText] of INPUT_STYLE_TARGETS) {
           const option = document.createElement("label"); option.className = "fis-input-target";
           const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = inputStyle.applyTargets.includes(key);
@@ -1288,12 +1685,12 @@ export default {
           });
           option.append(checkbox, document.createTextNode(labelText)); targets.appendChild(option);
         }
-        liveRow(card, "作用位置", targets);
+        liveRow(card, "范围", targets);
 
         const colorFeature = document.createElement("section"); colorFeature.className = "fis-input-feature";
         const colorFeatureHead = document.createElement("div"); colorFeatureHead.className = "fis-input-feature-head";
-        const colorFeatureTitle = document.createElement("div"); colorFeatureTitle.className = "fis-region-name"; colorFeatureTitle.textContent = "输入框颜色";
-        colorFeatureHead.append(colorFeatureTitle, liveSwitch(inputStyle.backgroundMode === "color", "启用输入框颜色", checked => {
+        const colorFeatureTitle = document.createElement("div"); colorFeatureTitle.className = "fis-region-name"; colorFeatureTitle.textContent = "颜色";
+        colorFeatureHead.append(colorFeatureTitle, liveSwitch(inputStyle.backgroundMode === "color", "启用颜色", checked => {
           inputStyle.backgroundMode = checked ? "color" : (inputStyle.backgroundMode === "color" ? "none" : inputStyle.backgroundMode);
           persist(); apply(); renderFloating();
         }));
@@ -1311,14 +1708,14 @@ export default {
         backgroundColorPicker.addEventListener("change", () => updateBackgroundColor(backgroundColorPicker.value, true));
         backgroundColorText.addEventListener("change", () => updateBackgroundColor(backgroundColorText.value));
         backgroundColorText.addEventListener("blur", () => { backgroundColorText.value = inputStyle.backgroundColor.toUpperCase(); });
-        backgroundColorPair.append(backgroundColorPicker, backgroundColorText); liveRow(colorFeatureBody, "背景颜色", backgroundColorPair);
-        liveRow(colorFeatureBody, "透明度", liveRange(inputStyle, "backgroundOpacity", 0, 100, 1, "%", true, () => previewInputStyle(inputStyle, "backgroundOpacity")));
+        backgroundColorPair.append(backgroundColorPicker, backgroundColorText); liveRow(colorFeatureBody, "背景", backgroundColorPair);
+        liveRow(colorFeatureBody, "透明", liveRange(inputStyle, "backgroundOpacity", 0, 100, 1, "%", true, () => previewInputStyle(inputStyle, "backgroundOpacity")));
         colorFeature.append(colorFeatureHead, colorFeatureBody); card.appendChild(colorFeature);
 
         const imageFeature = document.createElement("section"); imageFeature.className = "fis-input-feature";
         const imageFeatureHead = document.createElement("div"); imageFeatureHead.className = "fis-input-feature-head";
-        const imageFeatureTitle = document.createElement("div"); imageFeatureTitle.className = "fis-region-name"; imageFeatureTitle.textContent = "输入框图片";
-        imageFeatureHead.append(imageFeatureTitle, liveSwitch(inputStyle.backgroundMode === "image", "启用输入框图片", checked => {
+        const imageFeatureTitle = document.createElement("div"); imageFeatureTitle.className = "fis-region-name"; imageFeatureTitle.textContent = "图片";
+        imageFeatureHead.append(imageFeatureTitle, liveSwitch(inputStyle.backgroundMode === "image", "启用图片", checked => {
           inputStyle.backgroundMode = checked ? "image" : (inputStyle.backgroundMode === "image" ? "none" : inputStyle.backgroundMode);
           persist(); apply(); renderFloating();
         }));
@@ -1340,27 +1737,28 @@ export default {
           persist(); apply(); renderFloating();
         }), fileInput);
         imagePick.append(thumb, imageName, imageActions); imageFeatureBody.appendChild(imagePick);
-        liveRow(imageFeatureBody, "图片缩放", liveRange(inputRegion, "scale", 0.1, 3, 0.05, "×", true, () => previewRegionGeometry(inputDef, inputRegion, "scale")));
-        liveRow(imageFeatureBody, "图片模糊", liveRange(inputRegion, "blur", 0, 30, 1, "px", true));
-        liveRow(imageFeatureBody, "水平位置", liveRange(inputRegion, "positionX", 0, 100, 1, "%", true, () => previewRegionGeometry(inputDef, inputRegion, "positionX")));
-        liveRow(imageFeatureBody, "垂直位置", liveRange(inputRegion, "positionY", 0, 100, 1, "%", true, () => previewRegionGeometry(inputDef, inputRegion, "positionY")));
+        liveRow(imageFeatureBody, "缩放", liveRange(inputRegion, "scale", 0.1, 3, 0.05, "×", true, () => previewRegionGeometry(inputDef, inputRegion, "scale")));
+        liveRow(imageFeatureBody, "模糊", liveRange(inputRegion, "blur", 0, 30, 1, "px", true));
+        liveRow(imageFeatureBody, "水平", liveRange(inputRegion, "positionX", 0, 100, 1, "%", true, () => previewRegionGeometry(inputDef, inputRegion, "positionX")));
+        liveRow(imageFeatureBody, "垂直", liveRange(inputRegion, "positionY", 0, 100, 1, "%", true, () => previewRegionGeometry(inputDef, inputRegion, "positionY")));
         imageFeature.append(imageFeatureHead, imageFeatureBody); card.appendChild(imageFeature);
 
         const shapeFeature = document.createElement("section"); shapeFeature.className = "fis-input-feature";
         const shapeFeatureHead = document.createElement("div"); shapeFeatureHead.className = "fis-input-feature-head";
-        const shapeFeatureTitle = document.createElement("div"); shapeFeatureTitle.className = "fis-region-name"; shapeFeatureTitle.textContent = "圆角与边框";
-        shapeFeatureHead.append(shapeFeatureTitle, liveSwitch(inputStyle.enabled, "启用圆角与边框", checked => {
+        const shapeFeatureTitle = document.createElement("div"); shapeFeatureTitle.className = "fis-region-name"; shapeFeatureTitle.textContent = "样式";
+        shapeFeatureHead.append(shapeFeatureTitle, liveSwitch(inputStyle.enabled, "启用样式", checked => {
           inputStyle.enabled = checked; persist(); apply(); renderFloating();
         }));
         const panel = document.createElement("div"); panel.className = "fis-input-feature-body" + (inputStyle.enabled ? "" : " disabled");
-        liveRow(panel, "圆角", liveRange(inputStyle, "radius", 0, 50, 1, "px", true, () => previewInputStyle(inputStyle, "radius")));
-        liveRow(panel, "边框粗细", liveRange(inputStyle, "borderWidth", 0.5, 6, 0.5, "px", true, () => previewInputStyle(inputStyle, "borderWidth")));
         const borderOptions = document.createElement("div"); borderOptions.className = "fis-input-targets";
         const borderlessOption = document.createElement("label"); borderlessOption.className = "fis-input-target";
         const borderless = document.createElement("input"); borderless.type = "checkbox"; borderless.checked = inputStyle.borderless;
         borderless.addEventListener("change", () => { inputStyle.borderless = borderless.checked; persist(); apply(); renderFloating(); });
         borderlessOption.append(borderless, document.createTextNode("无边框")); borderOptions.appendChild(borderlessOption);
         liveRow(panel, "边框", borderOptions);
+        liveRow(panel, "粗细", liveRange(inputStyle, "borderWidth", 0.5, 6, 0.5, "px", true, () => previewInputStyle(inputStyle, "borderWidth")));
+        liveRow(panel, "圆角", liveRange(inputStyle, "radius", 0, 50, 1, "px", true, () => previewInputStyle(inputStyle, "radius")));
+        liveRow(panel, "宽度", liveRange(inputStyle, "chatWidth", 40, 100, 1, "%", true, () => previewInputStyle(inputStyle, "chatWidth")));
         const colorPair = document.createElement("div"); colorPair.className = "fis-color-pair";
         const colorPicker = document.createElement("input"); colorPicker.type = "color"; colorPicker.value = inputStyle.borderColor;
         const colorText = document.createElement("input"); colorText.type = "text"; colorText.className = "fis-number"; colorText.maxLength = 7; colorText.value = inputStyle.borderColor.toUpperCase();
@@ -1374,23 +1772,89 @@ export default {
         colorPicker.addEventListener("change", () => updateBorderColor(colorPicker.value, true));
         colorText.addEventListener("change", () => updateBorderColor(colorText.value));
         colorText.addEventListener("blur", () => { colorText.value = inputStyle.borderColor.toUpperCase(); });
-        colorPair.append(colorPicker, colorText); liveRow(panel, "边框颜色", colorPair);
+        colorPair.append(colorPicker, colorText); liveRow(panel, "边框", colorPair);
         shapeFeature.append(shapeFeatureHead, panel); card.appendChild(shapeFeature); interfaceWorkspace.appendChild(card);
       }
 
       if (floatingPage === "images") {
-        if (!IMAGE_REGION_DEFS.some(def => def.key === floatingImageRegionKey)) floatingImageRegionKey = IMAGE_REGION_DEFS[0].key;
-        const workspace = document.createElement("div"); workspace.className = "fis-image-workspace" + (state.imagesEnabled ? "" : " disabled");
+        const imageSectionKeys = ["base", ...IMAGE_REGION_DEFS.map(def => def.key)];
+        if (!imageSectionKeys.includes(floatingImageRegionKey)) floatingImageRegionKey = "base";
+        const baseSelected = floatingImageRegionKey === "base";
+        const sectionEnabled = baseSelected ? state.baseStyle.enabled : state.imagesEnabled;
+        const workspace = document.createElement("div"); workspace.className = "fis-image-workspace" + (sectionEnabled ? "" : " disabled");
         const bar = document.createElement("div"); bar.className = "fis-subtab-bar";
         const imageTabs = document.createElement("div"); imageTabs.className = "fis-subtab-strip";
-        const labels = { appBackground: "背景", topBar: "顶部栏", bottomBar: "底部栏" };
-        for (const tabDef of IMAGE_REGION_DEFS) {
-          const tab = document.createElement("button"); tab.type = "button"; tab.className = "fis-image-tab" + (tabDef.key === floatingImageRegionKey ? " active" : ""); tab.textContent = labels[tabDef.key];
-          tab.addEventListener("click", () => { floatingImageRegionKey = tabDef.key; renderFloating(); }); imageTabs.appendChild(tab);
+        const labels = { base: "基础", appBackground: "背景", topBar: "顶部栏", bottomBar: "底部栏" };
+        for (const key of imageSectionKeys) {
+          const tab = document.createElement("button"); tab.type = "button"; tab.className = "fis-image-tab" + (key === floatingImageRegionKey ? " active" : ""); tab.textContent = labels[key];
+          tab.addEventListener("click", () => { floatingImageRegionKey = key; renderFloating(); }); imageTabs.appendChild(tab);
         }
         const switchBox = document.createElement("div"); switchBox.className = "fis-subtab-switch";
-        switchBox.appendChild(liveSwitch(state.imagesEnabled, "启用全部图片设置", checked => { state.imagesEnabled = checked; persist(); apply(); renderFloating(); }));
+        switchBox.appendChild(baseSelected
+          ? liveSwitch(state.baseStyle.enabled, "启用基础色", checked => { state.baseStyle.enabled = checked; persist(); apply(); renderFloating(); })
+          : liveSwitch(state.imagesEnabled, "启用全部图片设置", checked => { state.imagesEnabled = checked; persist(); apply(); renderFloating(); }));
         bar.append(imageTabs, switchBox); workspace.appendChild(bar);
+        if (baseSelected) {
+          const card = document.createElement("section"); card.className = "fis-region";
+          const panel = document.createElement("div"); panel.className = "fis-panel";
+          const colorPair = document.createElement("div"); colorPair.className = "fis-color-pair";
+          const colorPicker = document.createElement("input"); colorPicker.type = "color"; colorPicker.value = state.baseStyle.color;
+          const colorText = document.createElement("input"); colorText.type = "text"; colorText.className = "fis-number"; colorText.maxLength = 7; colorText.value = state.baseStyle.color.toUpperCase();
+          const updateBaseColor = (color, commit = true) => {
+            if (!/^#[0-9a-f]{6}$/i.test(color)) return;
+            state.baseStyle.color = color.toLowerCase(); colorPicker.value = state.baseStyle.color; colorText.value = state.baseStyle.color.toUpperCase();
+            root.style.setProperty("--fis-base-color", state.baseStyle.color);
+            if (commit) { persist(); apply(); }
+          };
+          colorPicker.addEventListener("input", () => updateBaseColor(colorPicker.value, false));
+          colorPicker.addEventListener("change", () => updateBaseColor(colorPicker.value, true));
+          colorText.addEventListener("change", () => updateBaseColor(colorText.value));
+          colorText.addEventListener("blur", () => { colorText.value = state.baseStyle.color.toUpperCase(); });
+          colorPair.append(colorPicker, colorText); liveRow(panel, "颜色", colorPair);
+          const glassPair = document.createElement("div"); glassPair.className = "fis-color-pair";
+          const glassPicker = document.createElement("input"); glassPicker.type = "color"; glassPicker.value = state.baseStyle.glassColor;
+          const glassText = document.createElement("input"); glassText.type = "text"; glassText.className = "fis-number"; glassText.maxLength = 7; glassText.value = state.baseStyle.glassColor.toUpperCase();
+          const updateGlassColor = (color, commit = true) => {
+            if (!/^#[0-9a-f]{6}$/i.test(color)) return;
+            state.baseStyle.glassColor = color.toLowerCase(); glassPicker.value = state.baseStyle.glassColor; glassText.value = state.baseStyle.glassColor.toUpperCase();
+            root.style.setProperty("--fis-base-glass", colorWithOpacity(state.baseStyle.glassColor, state.baseStyle.glassOpacity));
+            if (commit) { persist(); apply(); }
+          };
+          glassPicker.addEventListener("input", () => updateGlassColor(glassPicker.value, false));
+          glassPicker.addEventListener("change", () => updateGlassColor(glassPicker.value, true));
+          glassText.addEventListener("change", () => updateGlassColor(glassText.value));
+          glassText.addEventListener("blur", () => { glassText.value = state.baseStyle.glassColor.toUpperCase(); });
+          glassPair.append(glassPicker, glassText); liveRow(panel, "毛玻璃", glassPair);
+          liveRow(panel, "透明", liveRange(state.baseStyle, "glassOpacity", 0, 100, 1, "%", true, () => {
+            root.style.setProperty("--fis-base-glass", colorWithOpacity(state.baseStyle.glassColor, state.baseStyle.glassOpacity));
+          }));
+          const iconBackgroundPair = document.createElement("div"); iconBackgroundPair.className = "fis-color-pair";
+          const iconBackgroundPicker = document.createElement("input"); iconBackgroundPicker.type = "color"; iconBackgroundPicker.value = state.baseStyle.toolIconBackground;
+          const iconBackgroundText = document.createElement("input"); iconBackgroundText.type = "text"; iconBackgroundText.className = "fis-number"; iconBackgroundText.maxLength = 7; iconBackgroundText.value = state.baseStyle.toolIconBackground.toUpperCase();
+          const updateIconBackground = (color, commit = true) => {
+            if (!/^#[0-9a-f]{6}$/i.test(color)) return;
+            state.baseStyle.toolIconBackground = color.toLowerCase(); iconBackgroundPicker.value = state.baseStyle.toolIconBackground; iconBackgroundText.value = state.baseStyle.toolIconBackground.toUpperCase();
+            root.style.setProperty("--fis-tool-icon-background", state.baseStyle.toolIconBackground);
+            if (commit) { persist(); apply(); }
+          };
+          iconBackgroundPicker.addEventListener("input", () => updateIconBackground(iconBackgroundPicker.value, false));
+          iconBackgroundPicker.addEventListener("change", () => updateIconBackground(iconBackgroundPicker.value, true));
+          iconBackgroundText.addEventListener("change", () => updateIconBackground(iconBackgroundText.value));
+          iconBackgroundText.addEventListener("blur", () => { iconBackgroundText.value = state.baseStyle.toolIconBackground.toUpperCase(); });
+          iconBackgroundPair.append(iconBackgroundPicker, iconBackgroundText); liveRow(panel, "图标背景", iconBackgroundPair);
+          const targets = document.createElement("div"); targets.className = "fis-input-targets fis-choice-chips";
+          for (const [key, labelText] of BASE_TARGETS) {
+            const option = document.createElement("label"); option.className = "fis-input-target";
+            const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = state.baseStyle.applyTargets.includes(key);
+            checkbox.addEventListener("change", () => {
+              if (checkbox.checked && !state.baseStyle.applyTargets.includes(key)) state.baseStyle.applyTargets.push(key);
+              if (!checkbox.checked) state.baseStyle.applyTargets = state.baseStyle.applyTargets.filter(item => item !== key);
+              persist(); apply();
+            });
+            option.append(checkbox, document.createTextNode(labelText)); targets.appendChild(option);
+          }
+          liveRow(panel, "范围", targets); card.appendChild(panel); workspace.appendChild(card);
+        }
         const def = IMAGE_REGION_DEFS.find(item => item.key === floatingImageRegionKey);
         if (def) {
           const region = state.regions[def.key];
@@ -1413,7 +1877,7 @@ export default {
           summary.append(enabled, thumb, copy, actions); card.appendChild(summary);
           const panel = document.createElement("div"); panel.className = "fis-panel";
           if (def.targets) {
-            const targets = document.createElement("div"); targets.className = "fis-input-targets";
+            const targets = document.createElement("div"); targets.className = "fis-input-targets fis-choice-chips";
             for (const [key, labelText] of def.targets) {
               const option = document.createElement("label"); option.className = "fis-input-target";
               const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = region.applyTargets.includes(key);
@@ -1425,10 +1889,10 @@ export default {
               });
               option.append(checkbox, document.createTextNode(labelText)); targets.appendChild(option);
             }
-            liveRow(panel, "作用位置", targets);
+            liveRow(panel, "范围", targets);
           }
           if (def.key === "bottomBar") {
-            for (const [targetKey, labelText, suffix] of [["inputBar", "聊天输入区调节", "input"], ["tabBar", "应用底部栏调节", "tab"]]) {
+            for (const [targetKey, labelText, suffix] of [["inputBar", "聊天界面", "input"], ["tabBar", "主界面", "tab"]]) {
               const feature = document.createElement("section"); feature.className = "fis-input-feature";
               const featureHead = document.createElement("div"); featureHead.className = "fis-input-feature-head";
               const featureTitle = document.createElement("div"); featureTitle.className = "fis-region-name"; featureTitle.textContent = labelText;
@@ -1436,19 +1900,19 @@ export default {
               const settings = region.targetSettings[targetKey];
               const featureBody = document.createElement("div"); featureBody.className = "fis-input-feature-body" + (region.applyTargets.includes(targetKey) ? "" : " disabled");
               const prefix = `--fis-bottom-bar-${suffix}`;
-              liveRow(featureBody, "图片缩放", liveRange(settings, "scale", 0.1, 3, 0.05, "×", true, () => previewRegionGeometry(def, settings, "scale", prefix)));
-              liveRow(featureBody, "图片模糊", liveRange(settings, "blur", 0, 30, 1, "px", true));
-              liveRow(featureBody, "水平位置", liveRange(settings, "positionX", 0, 100, 1, "%", true, () => previewRegionGeometry(def, settings, "positionX", prefix)));
-              liveRow(featureBody, "垂直位置", liveRange(settings, "positionY", 0, 100, 1, "%", true, () => previewRegionGeometry(def, settings, "positionY", prefix)));
-              liveRow(featureBody, "上下超界", liveRange(settings, "overflowY", 0, 300, 1, "px", true, () => previewRegionGeometry(def, settings, "overflowY", prefix)));
+              liveRow(featureBody, "缩放", liveRange(settings, "scale", 0.1, 3, 0.05, "×", true, () => previewRegionGeometry(def, settings, "scale", prefix)));
+              liveRow(featureBody, "模糊", liveRange(settings, "blur", 0, 30, 1, "px", true));
+              liveRow(featureBody, "水平", liveRange(settings, "positionX", 0, 100, 1, "%", true, () => previewRegionGeometry(def, settings, "positionX", prefix)));
+              liveRow(featureBody, "垂直", liveRange(settings, "positionY", 0, 100, 1, "%", true, () => previewRegionGeometry(def, settings, "positionY", prefix)));
+              liveRow(featureBody, "超界", liveRange(settings, "overflowY", 0, 300, 1, "px", true, () => previewRegionGeometry(def, settings, "overflowY", prefix)));
               feature.append(featureHead, featureBody); panel.appendChild(feature);
             }
           } else {
-            liveRow(panel, "图片缩放", liveRange(region, "scale", 0.1, 3, 0.05, "×", true, () => previewRegionGeometry(def, region, "scale")));
-            liveRow(panel, "图片模糊", liveRange(region, "blur", 0, 30, 1, "px", true));
-            liveRow(panel, "水平位置", liveRange(region, "positionX", 0, 100, 1, "%", true, () => previewRegionGeometry(def, region, "positionX")));
-            liveRow(panel, "垂直位置", liveRange(region, "positionY", 0, 100, 1, "%", true, () => previewRegionGeometry(def, region, "positionY")));
-            if (def.overflow) liveRow(panel, "上下超界", liveRange(region, "overflowY", 0, 300, 1, "px", true, () => previewRegionGeometry(def, region, "overflowY")));
+            liveRow(panel, "缩放", liveRange(region, "scale", 0.1, 3, 0.05, "×", true, () => previewRegionGeometry(def, region, "scale")));
+            liveRow(panel, "模糊", liveRange(region, "blur", 0, 30, 1, "px", true));
+            liveRow(panel, "水平", liveRange(region, "positionX", 0, 100, 1, "%", true, () => previewRegionGeometry(def, region, "positionX")));
+            liveRow(panel, "垂直", liveRange(region, "positionY", 0, 100, 1, "%", true, () => previewRegionGeometry(def, region, "positionY")));
+            if (def.overflow) liveRow(panel, "超界", liveRange(region, "overflowY", 0, 300, 1, "px", true, () => previewRegionGeometry(def, region, "overflowY")));
           }
           card.appendChild(panel); workspace.appendChild(card);
         }
@@ -1598,15 +2062,12 @@ export default {
         floatingToggleRow.append(floatingLabel, floatingSwitch);
         pageTabs.append(libraryTitle);
 
-        const importInput = document.createElement("input"); importInput.type = "file"; importInput.accept = "application/json,.json"; importInput.hidden = true;
-        importInput.addEventListener("change", () => {
+        const importInput = document.createElement("input"); importInput.type = "file"; importInput.accept = "application/zip,.zip"; importInput.hidden = true;
+        importInput.addEventListener("change", async () => {
           const file = importInput.files && importInput.files[0]; if (!file) return;
-          const reader = new FileReader();
-          reader.onload = () => {
-            try { state = normalizeState(JSON.parse(String(reader.result))); persist(); refreshAll(); ctx.ui.toast("自定义聊天主题已导入"); }
-            catch (_) { ctx.ui.toast("导入失败：配置文件无效"); }
-          };
-          reader.readAsText(file);
+          try { await importThemeConfig(file); }
+          catch (error) { ctx.ui.toast(`导入失败：${error && error.message ? error.message : "压缩包无效"}`); }
+          importInput.value = "";
         });
         const toolbar = document.createElement("div"); toolbar.className = "fis-toolbar";
         toolbar.append(
@@ -1614,23 +2075,9 @@ export default {
           iconButton("download", "导出配置", () => {
             openFloatingDialog({
               title: "导出配置",
-              message: "仅保存配色和样式，不包含图片本身",
+              message: "将设置、图片和字体完整保存为 ZIP 压缩包",
               confirmLabel: "继续导出",
-              onConfirm: () => {
-                const exported = JSON.parse(JSON.stringify(state));
-                const clearImages = regions => {
-                  for (const region of Object.values(regions || {})) {
-                    if (!region || typeof region !== "object") continue;
-                    region.image = ""; region.fileName = "";
-                  }
-                };
-                clearImages(exported.regions);
-                for (const theme of Object.values(exported.themes || {})) clearImages(theme && theme.snapshot && theme.snapshot.regions);
-                const blob = new Blob([JSON.stringify(exported, null, 2)], { type: "application/json" });
-                const url = URL.createObjectURL(blob); const link = document.createElement("a");
-                link.href = url; link.download = "float-interface-skin.json"; link.click();
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
-              },
+              onConfirm: exportThemeConfig,
             });
           }),
           importInput
@@ -1660,7 +2107,7 @@ export default {
           colorTabs.appendChild(tab);
         }
         const switchBox = document.createElement("div"); switchBox.className = "fis-subtab-switch";
-        switchBox.appendChild(switchControl(state.colorsEnabled, "启用全部主题配色", checked => {
+        switchBox.appendChild(switchControl(state.colorsEnabled, "启用全部配色", checked => {
           state.colorsEnabled = checked; persist(); apply(); render();
         }));
         subtabBar.append(colorTabs, switchBox); colorWorkspace.appendChild(subtabBar);
@@ -1687,7 +2134,7 @@ export default {
           colorText.addEventListener("blur", () => { colorText.value = activeRule.color.toUpperCase(); });
           colorEditor.append(picker, colorText); panel.appendChild(colorEditor);
 
-          const options = document.createElement("div"); options.className = "fis-target-options";
+          const options = document.createElement("div"); options.className = "fis-target-options fis-choice-chips";
           for (const target of COLOR_TARGETS) {
             const option = document.createElement("label"); option.className = "fis-target-option";
             const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = activeRule.targets.includes(target.key);
@@ -1722,10 +2169,15 @@ export default {
           if (!colorDeleteSelection.size) {
             colorDeleteMode = false; render(); return;
           }
-          if (!confirm(`确定删除选中的 ${colorDeleteSelection.size} 种颜色？`)) return;
-          state.colorRules = state.colorRules.filter(rule => !colorDeleteSelection.has(rule.id));
-          if (!state.colorRules.some(rule => rule.id === activeColorRuleId)) activeColorRuleId = state.colorRules[0]?.id || "";
-          colorDeleteSelection.clear(); colorDeleteMode = false; persist(); apply(); render();
+          const count = colorDeleteSelection.size;
+          openFloatingDialog({
+            title: "删除颜色", message: `确定删除选中的 ${count} 种颜色吗？`, confirmLabel: "删除", danger: true,
+            onConfirm: () => {
+              state.colorRules = state.colorRules.filter(rule => !colorDeleteSelection.has(rule.id));
+              if (!state.colorRules.some(rule => rule.id === activeColorRuleId)) activeColorRuleId = state.colorRules[0]?.id || "";
+              colorDeleteSelection.clear(); colorDeleteMode = false; persist(); apply(); render();
+            },
+          });
         });
         colorActions.append(addColor, deleteColor); colorWorkspace.appendChild(colorActions);
         box.appendChild(colorWorkspace);
@@ -1741,7 +2193,7 @@ export default {
           inputHead.append(enabled, heading); card.appendChild(inputHead);
 
           const body = document.createElement("div"); body.className = "fis-input-style-body" + (inputStyle.enabled ? "" : " disabled");
-          const targets = document.createElement("div"); targets.className = "fis-input-targets";
+          const targets = document.createElement("div"); targets.className = "fis-input-targets fis-choice-chips";
           for (const [key, labelText] of INPUT_STYLE_TARGETS) {
             const option = document.createElement("label"); option.className = "fis-input-target";
             const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = inputStyle.applyTargets.includes(key);
@@ -1752,8 +2204,7 @@ export default {
             });
             option.append(checkbox, document.createTextNode(labelText)); targets.appendChild(option);
           }
-          addRow(body, "作用位置", targets);
-          addRow(body, "圆角", rangeControl(inputStyle, "radius", 0, 50, 1, "px"));
+          addRow(body, "范围", targets);
 
           const borderOptions = document.createElement("div"); borderOptions.className = "fis-input-targets";
           const borderlessOption = document.createElement("label"); borderlessOption.className = "fis-input-target";
@@ -1761,6 +2212,9 @@ export default {
           borderless.addEventListener("change", () => { inputStyle.borderless = borderless.checked; persist(); apply(); render(); });
           borderlessOption.append(borderless, document.createTextNode("无边框")); borderOptions.appendChild(borderlessOption);
           addRow(body, "边框", borderOptions);
+          addRow(body, "粗细", rangeControl(inputStyle, "borderWidth", 0.5, 6, 0.5, "px"));
+          addRow(body, "圆角", rangeControl(inputStyle, "radius", 0, 50, 1, "px"));
+          addRow(body, "宽度", rangeControl(inputStyle, "chatWidth", 40, 100, 1, "%"));
 
           const colorPair = document.createElement("div"); colorPair.className = "fis-color-pair";
           const colorPicker = document.createElement("input"); colorPicker.type = "color"; colorPicker.value = inputStyle.borderColor;
@@ -1773,7 +2227,7 @@ export default {
           colorPicker.addEventListener("input", () => updateBorderColor(colorPicker.value));
           colorText.addEventListener("change", () => updateBorderColor(colorText.value));
           colorText.addEventListener("blur", () => { colorText.value = inputStyle.borderColor.toUpperCase(); });
-          colorPair.append(colorPicker, colorText); addRow(body, "边框颜色", colorPair);
+          colorPair.append(colorPicker, colorText); addRow(body, "边框", colorPair);
 
           enabled.addEventListener("change", () => { inputStyle.enabled = enabled.checked; persist(); apply(); render(); });
           card.appendChild(body); box.appendChild(card);
@@ -1887,7 +2341,7 @@ export default {
 
           const panel = document.createElement("div"); panel.className = "fis-panel";
           if (def.targets) {
-            const targets = document.createElement("div"); targets.className = "fis-input-targets";
+            const targets = document.createElement("div"); targets.className = "fis-input-targets fis-choice-chips";
             for (const [key, labelText] of def.targets) {
               const option = document.createElement("label"); option.className = "fis-input-target";
               const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = region.applyTargets.includes(key);
@@ -1898,13 +2352,13 @@ export default {
               });
               option.append(checkbox, document.createTextNode(labelText)); targets.appendChild(option);
             }
-            addRow(panel, "作用位置", targets);
+            addRow(panel, "范围", targets);
           }
-          addRow(panel, "图片缩放", rangeControl(region, "scale", 0.1, 3, 0.05, "×"));
-          addRow(panel, "图片模糊", rangeControl(region, "blur", 0, 30, 1, "px", true));
-          addRow(panel, "水平位置", rangeControl(region, "positionX", 0, 100, 1, "%"));
-          addRow(panel, "垂直位置", rangeControl(region, "positionY", 0, 100, 1, "%"));
-          if (def.overflow) addRow(panel, "上下超界", rangeControl(region, "overflowY", 0, 300, 1, "px"));
+          addRow(panel, "缩放", rangeControl(region, "scale", 0.1, 3, 0.05, "×"));
+          addRow(panel, "模糊", rangeControl(region, "blur", 0, 30, 1, "px", true));
+          addRow(panel, "水平", rangeControl(region, "positionX", 0, 100, 1, "%"));
+          addRow(panel, "垂直", rangeControl(region, "positionY", 0, 100, 1, "%"));
+          if (def.overflow) addRow(panel, "超界", rangeControl(region, "overflowY", 0, 300, 1, "px"));
           card.appendChild(panel); imageWorkspace.appendChild(card);
         }
         box.appendChild(imageWorkspace);
