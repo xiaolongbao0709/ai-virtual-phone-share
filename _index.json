@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-12T09:31:34.510Z",
+  "generatedAt": "2026-09-12T11:07:15.271Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -33,7 +33,7 @@
     },
     {
       "name": "应用",
-      "count": 95
+      "count": 96
     },
     {
       "name": "应用bug改善",
@@ -2927,6 +2927,24 @@
       "avatar": "资源/应用/故梦辞[爱心]/.avatar.png",
       "ownerHash": "9840628ff5f4d01a8a3aad435eade27791b624164c9cb2815513a424987ac5f7",
       "updatedAt": "2026-09-12T14:21:18+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "旅行char",
+      "dirName": "旅行char",
+      "type": "dir",
+      "path": "资源/应用/旅行char",
+      "files": [
+        "资源/应用/旅行char/travel.char-1.1.0 (11).zip"
+      ],
+      "images": [
+        "资源/应用/旅行char/1000114412.jpg"
+      ],
+      "description": "灵感来自旅行青蛙，因为国内下架了，所以做了一个。主要功能是让char去旅行，寄明信片，不会主动同步记忆，要手动。",
+      "author": "垃圾创造者",
+      "avatar": "",
+      "ownerHash": "d2ca8f7dfcde423b0c70bbf439302b75e0c7030422d18da3a5c1ba930f9f7e83",
+      "updatedAt": "2026-09-12T19:06:29+08:00"
     },
     {
       "folder": "应用",
