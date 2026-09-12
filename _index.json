@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-12T13:49:07.327Z",
+  "generatedAt": "2026-09-12T13:56:48.455Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3205,7 +3205,7 @@
       "type": "dir",
       "path": "资源/应用/线下速记",
       "files": [
-        "资源/应用/线下速记/offline.chat-1.5.0 (3).zip"
+        "资源/应用/线下速记/多功能线下应用v2.zip"
       ],
       "images": [
         "资源/应用/线下速记/1000190206.jpg",
@@ -3217,7 +3217,7 @@
       "author": "鱼头柿饼",
       "avatar": "",
       "ownerHash": "ccaecc009bf4a4f670f01f93005ebb7e60c8d958fe2449025a41e1609ae3e4cd",
-      "updatedAt": "2026-09-09T14:45:23+08:00"
+      "updatedAt": "2026-09-12T21:56:07+08:00"
     },
     {
       "folder": "应用",
