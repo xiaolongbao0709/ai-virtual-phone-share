@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-12T07:36:31.420Z",
+  "generatedAt": "2026-09-12T08:07:34.561Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -17,7 +17,7 @@
     },
     {
       "name": "全局主题",
-      "count": 6
+      "count": 7
     },
     {
       "name": "剧情预设及正则",
@@ -1440,6 +1440,24 @@
       "avatar": "资源/全局主题/水色/.avatar.png",
       "ownerHash": "039af75efda3b1a0ba536b59c77cc2e2603d5a91c80b5420ec4cdf75305d12d2",
       "updatedAt": "2026-09-04T19:43:58+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "紫色系",
+      "dirName": "紫色系",
+      "type": "dir",
+      "path": "资源/全局主题/紫色系",
+      "files": [
+        "资源/全局主题/紫色系/紫色系.zip"
+      ],
+      "images": [
+        "资源/全局主题/紫色系/IMG_103436.webp"
+      ],
+      "description": "素材源topwidgets",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "43224a5b025a8c0806c7627788ca68c323ea274cf2e5641d5dcc5170d3bf2b43",
+      "updatedAt": "2026-09-12T16:06:49+08:00"
     },
     {
       "folder": "全局主题",
