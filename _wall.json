@@ -1,6 +1,34 @@
 {
-  "updatedAt": "2026-09-11T11:33:05.219Z",
+  "updatedAt": "2026-09-12T10:57:15.404Z",
   "items": [
+    {
+      "number": 181,
+      "title": "feat(xiaohongshu): 支持发帖多图及详情页左右滑动轮播",
+      "contributor": "Narcissuscycle",
+      "mergedAt": "2026-09-12T06:55:56Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/181"
+    },
+    {
+      "number": 182,
+      "title": "生图设置新增 OpenAI API 多套配置预设",
+      "contributor": "jianchu-in",
+      "mergedAt": "2026-09-12T06:37:35Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/182"
+    },
+    {
+      "number": 177,
+      "title": "通话界面新增重回键与缩小悬浮窗功能",
+      "contributor": "chilljean1123-sudo",
+      "mergedAt": "2026-09-12T06:18:12Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/177"
+    },
+    {
+      "number": 178,
+      "title": "新增角色卡在照片墙的自定义取景+修复照片墙编辑后被编辑的卡片无法打开+微调角色卡更换历史版本不再手动点击关闭",
+      "contributor": "什锦杂货铺。",
+      "mergedAt": "2026-09-12T05:52:08Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/178"
+    },
     {
       "number": 188,
       "title": "fix: 优化参考图判定与重试控制，完善生成中断容灾与换图平滑度",
@@ -46,7 +74,7 @@
     {
       "number": 167,
       "title": "Feature/新增工坊附件上传功能+优化编辑消息为修改消息",
-      "contributor": "huaxingdictionar-art",
+      "contributor": "什锦杂货铺",
       "mergedAt": "2026-08-30T16:32:28Z",
       "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/167"
     },
