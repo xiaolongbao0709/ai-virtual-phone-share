@@ -1,6 +1,13 @@
 {
-  "updatedAt": "2026-09-12T10:57:15.404Z",
+  "updatedAt": "2026-09-12T15:38:03.527Z",
   "items": [
+    {
+      "number": 174,
+      "title": "收起键盘自动回复：修复时灵时不灵",
+      "contributor": "但求一睡君莫笑",
+      "mergedAt": "2026-09-12T11:18:28Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/174"
+    },
     {
       "number": 181,
       "title": "feat(xiaohongshu): 支持发帖多图及详情页左右滑动轮播",
