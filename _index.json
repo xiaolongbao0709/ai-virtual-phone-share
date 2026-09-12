@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-12T14:07:53.935Z",
+  "generatedAt": "2026-09-12T16:34:19.307Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 42
+      "count": 43
     },
     {
       "name": "MCP",
@@ -542,6 +542,20 @@
       "avatar": "",
       "ownerHash": "85b94dde3046f0bb789afce70959e309b5e83cbf12c2417685b16c4d9c3387c5",
       "updatedAt": "2026-09-12T14:32:10+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "朋友圈发贴自动锁脸🔒",
+      "dirName": "朋友圈发贴自动锁脸🔒",
+      "type": "dir",
+      "path": "资源/Js插件/朋友圈发贴自动锁脸🔒",
+      "files": [],
+      "images": [],
+      "description": "插件功能：\n 1. 角色发朋友圈时自动勾选「使用参考图」；\n 2. 注入姿势解绑指令，仅锁定面部五官与发型，动作姿势根据文案自由变化，告别千篇一律的固定姿势。（推荐角色参考图使用标准正脸证件照，效果会更好）\n 3. 如果姿势解绑效果一般，可以尝试在提示词中注入以下内容：\n    仅参考面部五官与发型特征，构图、动作、镜头视角根据画面描述自由变化，禁止复制参考图固定姿势。(face and hair reference only, dynamic natural pose based on prompt, do not copy reference pose)",
+      "author": "锦时念",
+      "avatar": "资源/Js插件/朋友圈发贴自动锁脸🔒/.avatar.png",
+      "ownerHash": "8be1404dc48b69dac097ce254c34d80c5a2bc55c62acef7b9d6217419189b554",
+      "updatedAt": "2026-09-13T00:33:35+08:00"
     },
     {
       "folder": "Js插件",
