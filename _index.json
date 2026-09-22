@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-22T15:40:19.745Z",
+  "generatedAt": "2026-09-22T15:44:33.977Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -41,7 +41,7 @@
     },
     {
       "name": "应用反馈（与应用作者沟通渠道）",
-      "count": 5
+      "count": 4
     },
     {
       "name": "快捷指令模版",
@@ -4757,20 +4757,6 @@
       "avatar": "",
       "ownerHash": "c960a6ed0115aebd1a2b0f673d2c73f169cf59f1679b5ee42b2af1c6c7c7d734",
       "updatedAt": "2026-09-14T21:31:31+08:00"
-    },
-    {
-      "folder": "应用反馈（与应用作者沟通渠道）",
-      "name": "[星星]给自制应用的作者们的应用反馈",
-      "dirName": "[星星]给自制应用的作者们的应用反馈",
-      "type": "dir",
-      "path": "资源/应用反馈（与应用作者沟通渠道）/[星星]给自制应用的作者们的应用反馈",
-      "files": [],
-      "images": [],
-      "description": "如果应用有bug的话，只能从作者留下的渠道反馈，但作者并不是都会留下反馈渠道的。建一个新文件夹，给不爱留渠道的作者们一个能看到反馈的地方。比如我，我就不爱留。",
-      "author": "清",
-      "avatar": "",
-      "ownerHash": "c960a6ed0115aebd1a2b0f673d2c73f169cf59f1679b5ee42b2af1c6c7c7d734",
-      "updatedAt": "2026-09-14T21:24:34+08:00"
     },
     {
       "folder": "应用反馈（与应用作者沟通渠道）",
