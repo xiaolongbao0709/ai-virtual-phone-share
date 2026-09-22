@@ -3,18 +3,20 @@ export default {
     id: "nordic-editorial-patrol",
     name: "透镜 · 极简画报查岗与心智审讯终端",
     apiVersion: 1,
-    version: "23.0.0",
+    version: "23.0.2",
     author: "镜观雪",
-    description: "查岗状态聊天室全景感知、最小化悬浮球、自由拖拽、自定义拍照自证。严格BL/攻受门禁。北欧极简风，全链路极细SVG。",
-    permissions: ["chat.read", "chat.write", "ai"],
+    description: "查岗状态聊天室全景感知、最小化悬浮球、自由拖拽、自定义拍照自证。新增世界书增强、巡视与拍照控制开关。",
+    permissions: ["chat.read", "chat.write", "ai", "worldbook"],
     settings: [
-      { key: "enabled", label: "启用巡视系统", type: "boolean", default: true },
-      { key: "triggerKeywords", label: "查岗触发关键词（逗号分隔，命中即触发）", type: "text", default: "查岗,在干嘛,看什么呢,偷偷看谁,抓包" },
-      { key: "customPhotoPrompt", label: "拍照自证自定义要求（角色质问与评判标准）", type: "text", default: "你可以根据角色当前的心情与性格，在质问中自然地要求用户发照片自证（如实时正脸自拍、特定手势验证、当前周围环境照等，要求必须完全符合角色人设语气，不要生硬刻板）。" },
-      { key: "targetCharName", label: "锁定监视角色（留空自动选用当前会话角色）", type: "text", default: "" },
+      { key: "enabled", label: "启用巡视系统（主开关）", type: "boolean", default: true },
+      { key: "autoPatrolEnabled", label: "开启自动随机巡视", type: "boolean", default: true },
+      { key: "enablePhotoRequest", label: "允许角色要求拍照自证", type: "boolean", default: true },
+      { key: "triggerKeywords", label: "查岗触发关键词（逗号分隔）", type: "text", default: "查岗,在干嘛,看什么呢,偷偷看谁,抓包" },
+      { key: "customPhotoPrompt", label: "拍照自证自定义要求", type: "text", default: "你可以根据角色当前的心情与性格，在质问中自然地要求用户发照片自证（如实时正脸自拍、特定手势验证、当前周围环境照等，要求必须完全符合角色人设语气，不要生硬刻板）。" },
+      { key: "targetCharName", label: "锁定监视角色（留空自动）", type: "text", default: "" },
       { key: "intervalMin", label: "基础巡视周期（分钟）", type: "number", default: 12 },
       { key: "randomVariance", label: "随机浮动周期（分钟）", type: "number", default: 4 },
-      { key: "strictness", label: "审讯原谅门槛（1-5，默认3越高越难原谅）", type: "number", default: 3 },
+      { key: "strictness", label: "审讯原谅门槛（1-5）", type: "number", default: 3 },
     ],
   },
 
@@ -43,6 +45,18 @@ export default {
       minimize: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="14" x2="10" y2="14"/><line x1="10" y1="14" x2="10" y2="20"/><line x1="20" y1="10" x2="14" y2="10"/><line x1="14" y1="10" x2="14" y2="4"/></svg>`,
     };
 
+    // 定义证据卡片的消息模板，确保拍照提交的证据以卡片形式显示在聊天记录中
+    ctx.ui.messageKind("patrol_statement", (el, msg) => {
+      const data = msg.mediaData || {};
+      el.innerHTML = `
+        <div style="background:#f9f9f7; border:1px solid #e5e5df; padding:10px; border-radius:2px; margin:4px 0;">
+          <div style="font-size:9px; color:#888; margin-bottom:5px; font-family:sans-serif;">SENT // EVIDENCE</div>
+          ${data.photoUrl ? `<img src="${data.photoUrl}" style="width:100%; height:80px; object-fit:cover; margin-bottom:8px; border:1px solid #ddd;">` : ""}
+          <div style="font-size:12px; color:#333; line-height:1.4; font-family:serif;">“${data.text || ""}”</div>
+        </div>
+      `;
+    });
+    
     // 样式注入：北欧空气感 · 拖拽悬浮球 · 固定悬浮画报视窗
     ctx.ui.injectCSS(`
       @keyframes patrol-breathing-light {
@@ -232,6 +246,19 @@ export default {
       }
     `);
 
+      .editorial-lock-overlay {
+        position: fixed; top:0; left:0; width:100vw; height:100vh;
+        background: rgba(245, 245, 243, 0.95);
+        z-index: 9999999;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        backdrop-filter: blur(5px);
+      }
+      .editorial-lock-input {
+        background: transparent; border: none; border-bottom: 1px solid #1a1a1a;
+        font-size: 18px; padding: 10px; text-align: center; width: 200px;
+        outline: none;
+      }
+      
     // 工业级原生 Pointer Capture 拖拽绑定
     function makeDraggable(handleEl, targetEl, isClickable = false, onClickCallback = null) {
       let isDragging = false;
@@ -423,21 +450,31 @@ export default {
       return payload;
     });
 
-    // 核心认知同步注入：日常对话 + 实时查岗态双向感知
+    // 核心认知同步注入：日常对话 + 实时查岗态双向感知 + 聊天记忆强制校准
     ctx.hooks.transform("prompt.system", (payload) => {
       let hintAdd = "";
 
-      // 1. 如果当前正在查岗中，注入强状态感知
+      // 获取当前聊天室的历史消息，读取最近50条，避免超出 Token 限制导致报错
+      let chatContext = "（无近期对话）";
+      if (lastActiveSessionId) {
+        const msgs = ctx.data.messages.list(lastActiveSessionId) || [];
+        // 这里读取最近50条记录，确保记忆充足，又不会撑爆模型
+        chatContext = msgs.slice(-50).map(m => `${m.role === 'user' ? '用户' : '角色'}: ${m.content}`).join("\n");
+      }
+
+      // 1. 如果当前正在查岗中，注入强状态感知与近期对话记录
       if (isPatrolling) {
         hintAdd += `\n【当前紧急状态 · 查岗审讯进行中】：
-你（${currentPatrolCharName || "角色"}）此刻正在对用户发起突击查岗！你刚刚翻看了用户的手机与屏幕，当前审讯尚未结案（怀疑紧绷度：${currentPatrolTension}%）。
-如果用户在常规聊天室中与你对话，你必须时刻牢记并体现出【正在查岗】的威严/质问/吃醋态度，绝不能像普通日常一样若无其事地聊天！要求用户先在查岗终端中向你解释或老实交代！\n`;
+你（${currentPatrolCharName || "角色"}）此刻正在对用户发起突击查岗！
+【近期聊天室上下文（必须作为你当前判断态度的依据，严禁忘记刚才的对话）：】
+${chatContext}
+你必须时刻牢记并体现出【正在查岗】的威严/质问/吃醋态度，绝不能像普通日常一样若无其事地聊天！要求用户先在查岗终端中向你解释或老实交代！\n`;
       }
 
       // 2. 注入历史长久档案
       let historyStr = ctx.system.storage.get("all_patrol_history") || "";
       if (historyStr.trim()) {
-        hintAdd += `\n【透镜·过往全部屏幕查岗始末与真实审讯档案（创作者：镜观雪）】：\n${historyStr}\n【认知规则】：牢记查岗与翻看手机发现的痕迹。严禁输出任何BL/攻受设定及Emoji。\n`;
+        hintAdd += `\n【透镜·过往全部屏幕查岗始末与真实审讯档案】：\n${historyStr}\n【认知规则】：牢记查岗与翻看手机发现的痕迹。严禁输出任何BL/攻受设定及Emoji。\n`;
       }
 
       payload.hint = (payload.hint || "") + hintAdd;
@@ -491,15 +528,22 @@ export default {
         if (matchedChar.description) profileText += `【人设】: ${matchedChar.description}\n`;
         if (matchedChar.personality) profileText += `【脾气性格与口吻】: ${matchedChar.personality}\n`;
         
+        // 读取角色绑定的世界书内容
         try {
-          const rawWb = matchedChar.worldbook || matchedChar.worldbookId || matchedChar.lore;
-          if (rawWb) {
-            const wbStr = typeof rawWb === "string" ? rawWb : JSON.stringify(rawWb);
-            profileText += `【世界书与专属设定】: ${wbStr.slice(0, 500)}\n`;
-            const matches = wbStr.match(/[\u4e00-\u9fa5]{2,6}/g) || [];
-            worldbookKeywords = matches.slice(0, 10);
+          if (matchedChar.worldbookId && ctx.data.worldbooks) {
+            const wb = ctx.data.worldbooks.get(matchedChar.worldbookId);
+            if (wb && wb.entries) {
+               // 确保即使 entries 格式不同也能安全读取
+               const entries = Array.isArray(wb.entries) ? wb.entries : [wb.entries];
+               const wbContent = entries.map(e => (typeof e === 'string' ? e : e.content || "")).join(" ");
+               profileText += `【世界书深度内容】: ${wbContent.slice(0, 600)}\n`;
+               const matches = wbContent.match(/[\u4e00-\u9fa5]{2,6}/g) || [];
+               worldbookKeywords = matches.slice(0, 10);
+            }
           }
-        } catch (e) {}
+        } catch (e) {
+            ctx.system.log("世界书读取异常: " + e.message);
+        }
       }
 
       assertNoBlViolation(profileText, "角色卡与世界书");
@@ -682,8 +726,10 @@ export default {
 
         currentPatrolTension = 50 + strictness * 8;
 
-        const customPhotoRule = String(ctx.system.settings.get("customPhotoPrompt") || "").trim() ||
-          "你可以根据角色当前的心情与性格，在质问中自然地要求用户发照片自证（如实时正脸自拍、特定手势验证、当前周围环境照等，要求必须完全符合角色人设语气，不要生硬刻板）。";
+        const isPhotoEnabled = ctx.system.settings.get("enablePhotoRequest");
+        const customPhotoRule = isPhotoEnabled 
+          ? (String(ctx.system.settings.get("customPhotoPrompt") || "").trim() || "你可以根据角色当前的心情与性格，在质问中自然地要求用户发照片自证（如实时正脸自拍、特定手势验证、当前周围环境照等，要求必须完全符合角色人设语气，不要生硬刻板）。")
+          : "禁止要求用户发送照片自证。请完全依靠对话与心理博弈来审讯用户，不要让用户进行拍照操作。";
 
         const snoopData = extractPhoneSnoopData();
 
@@ -703,11 +749,13 @@ export default {
 
         let initialInterrogation = "你刚才在屏幕上看什么？不打算跟我交代一下吗？";
         try {
-          const initPrompt = `【扮演角色设定】：\n${target.profile}\n\n【角色与用户的过往聊天】：\n${target.recentMemory}\n\n【透镜·全部过往审讯始末档案】：\n${pastHistory}\n\n【角色翻阅手机发现的数据】：\n- 最近联系人: ${snoopData.contactNames.join(", ") || "无"}\n- 会话列表: ${snoopData.sessionTitles.join(", ") || "无"}\n- 偶遇的聊天切片: ${snoopData.otherMsgSnippet || "无"}\n- 屏幕可见文字: "${screenText}"\n${foci.length ? `【命中的世界书/敏感词】：${foci.join(", ")}\n` : ""}【重要拍照自证与语气规则】：
+          const initPrompt = `【扮演角色设定】：\n${target.profile}\n\n【角色与用户的过往聊天】：\n${target.recentMemory}\n\n【透镜·全部过往审讯始末档案】：\n${pastHistory}\n\n【角色翻阅手机发现的数据】：\n- 最近联系人: ${snoopData.contactNames.join(", ") || "无"}\n- 会话列表: ${snoopData.sessionTitles.join(", ") || "无"}\n- 偶遇的聊天切片: ${snoopData.otherMsgSnippet || "无"}\n- 屏幕可见文字: "${screenText}"\n${foci.length ? `【命中的世界书/敏感词】：${foci.join(", ")}\n` : ""}【重要审讯证据规则】：
 1. 深度沉浸扮演角色！必须严格体现角色人设的语气习惯、口癖与性格（如病娇占有欲、傲娇嘴硬、高冷威严、温柔吃醋等）。
 2. ${customPhotoRule}
-3. 绝对禁止输出任何 BL / 耽美 / 双男恋情 / 攻受设定相关用语或标签，严禁任何Emoji表情。
-【任务】：发起第一句极具针对性、完全贴合人设的开场质问（2句以内）。`;
+3. 严禁任何 BL/攻受设定、Emoji。严禁输出废话，禁止重复刚才说过的台词。
+4. 【强制引用证据】：你必须明确提及刚才抓拍到的屏幕文字内容（如下方所列），以此作为你怀疑的铁证。不要模糊提问，直接点出证据内容。
+   【抓拍证据原文】："${screenText}"
+【任务】：发起第一句极具针对性、完全贴合人设、并引用了上方【抓拍证据原文】的开场质问（2句以内）。`;
 
           const resp = await ctx.ai.chat({
             system: "你是一个真实立体的互动角色，严禁输出任何BL/攻受属性及Emoji表情。",
@@ -922,16 +970,31 @@ export default {
           historyDrawer.classList.toggle("open");
         };
 
-        if (selfieBtn) {
-          selfieBtn.onclick = () => {
-            replyInput.value = "【发送了一张实时自拍照】：这是我刚刚拍的正脸自拍照，你看，我乖乖在屏幕前呢。";
-          };
-        }
+        // 拍照点击逻辑：直接向聊天室发送证据卡片，确保有记录留底
+        const sendEvidence = async (text, isPhoto = false) => {
+            const evidenceData = {
+                text: text,
+                photoUrl: isPhoto ? "data:image/svg+xml;utf8,<svg width='200' height='200' xmlns='http://www.w3.org/2000/svg'><rect width='200' height='200' fill='%23eee'/><text x='50%' y='50%' font-size='12' text-anchor='middle'>LIVE_EVIDENCE</text></svg>" : null
+            };
 
+            if (sessionId) {
+                ctx.data.messages.push({
+                    sessionId: sessionId,
+                    role: "user",
+                    content: `[证据呈递] ${text}`,
+                    mediaType: "plugin:patrol_statement",
+                    mediaData: evidenceData
+                });
+            }
+            // 提交给 AI 进行审讯判断
+            processRound(text);
+        };
+
+        if (selfieBtn) {
+            selfieBtn.onclick = () => sendEvidence("呈递了一张实时正脸自拍，我真的在忙，你看我的表情。", true);
+        }
         if (envBtn) {
-          envBtn.onclick = () => {
-            replyInput.value = "【发送了一张当前桌面环境抓拍】：这是我周围的环境照片，真的在忙正事，绝没有做别的事情。";
-          };
+            envBtn.onclick = () => sendEvidence("呈递了一张当前桌面环境抓拍，真的在处理事务，没有做别的事情。", true);
         }
 
         const scrollDialogToBottom = () => {
@@ -1015,10 +1078,12 @@ export default {
 
           try {
             const judgePrompt = `【扮演角色设定】：\n${target.profile}\n\n【过往聊天记忆】：\n${target.recentMemory}\n\n【过往案卷始末】：\n${pastHistory}\n\n【角色翻阅手机发现的数据】：\n- 联系人: ${snoopData.contactNames.join(", ")}\n- 屏幕可见文字: "${screenText}"\n\n【当前审讯对话历史】：\n${historyPrompt}\n\n【重要评判规则】：
-1. 严格依据角色人设脾气与口吻回应。${customPhotoRule}
-2. 如果用户提供了诚恳解释或配合发送了自拍照/自证照片，结合角色人设判断是否消气。
-3. 若不满意/在狡辩，第一行严格输出 [STATUS:CONTINUE]，第二行输出紧逼追问或进一步要求。
-4. 若态度真诚、说服了你、或成功哄好了你，第一行严格输出 [STATUS:SATISFIED]，第二行输出释怀/原谅的话语。（绝对严禁BL/攻受，严禁Emoji，2句以内）`;
+1. 严格依据角色人设脾气与口吻回应，严禁输出任何重复的台词或无意义的口头禅。
+2. ${customPhotoRule}
+3. 如果用户提供了诚恳解释或配合发送了自拍照/自证照片，结合角色人设判断是否消气。
+4. 若不满意/在狡辩，第一行输出 [STATUS:CONTINUE]，第二行输出紧逼追问（必须针对上一步用户的陈述进行反驳，不要重复之前的质问）。
+5. 若态度真诚、说服了你、或成功哄好了你，第一行输出 [STATUS:SATISFIED]，第二行输出释怀/原谅的话语。
+【严禁规则】：严禁BL/攻受，严禁Emoji，禁止重复陈词滥调。每句回答必须言之有物。`;
 
             const aiEval = await ctx.ai.chat({
               system: "你是一个拥有鲜明性格与完整记忆的审讯角色，首行必须严格输出 [STATUS:CONTINUE] 或 [STATUS:SATISFIED]，严禁BL/攻受及Emoji。",
@@ -1107,12 +1172,15 @@ export default {
       });
     }
 
-    // 调度循环
+    // 调度循环：增加开关判断
     function scheduleLoop() {
       if (nextPatrolTimeoutCleaner) {
         if (typeof nextPatrolTimeoutCleaner === "function") nextPatrolTimeoutCleaner();
         nextPatrolTimeoutCleaner = null;
       }
+
+      // 如果开关关闭则停止循环调度
+      if (ctx.system.settings.get("autoPatrolEnabled") === false) return;
 
       let rawBase = Number(ctx.system.settings.get("intervalMin"));
       let rawVariance = Number(ctx.system.settings.get("randomVariance"));
