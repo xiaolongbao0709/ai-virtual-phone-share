@@ -3,36 +3,189 @@
   "description": "仅剧情场景，仅显示时生效，含全部替换规则",
   "rules": [
     {
-      "id": "regex-rule-1787338869959",
-      "scriptName": "/女帝/g",
-      "findRegex": "/女帝/g",
-      "replaceString": "皇帝",
-      "tags": [
-        "story"
-      ],
+      "id": "regex-rule-1789556770315",
+      "scriptName": "/女强人|女強人/g",
+      "findRegex": "/女强人|女強人/g",
+      "replaceString": "强者",
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1788412854109",
+      "scriptName": "/处女作|處女作/g",
+      "findRegex": "/处女作|處女作/g",
+      "replaceString": "开山作",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1788412768833",
+      "scriptName": "/处女膜|處女膜/g",
+      "findRegex": "/处女膜|處女膜/g",
+      "replaceString": "阴道瓣",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1788229693048",
+      "scriptName": "/大姨妈|大姨媽/g",
+      "findRegex": "/大姨妈|大姨媽/g",
+      "replaceString": "月经",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1788159336724",
+      "scriptName": "/撕逼/g",
+      "findRegex": "/撕逼/g",
+      "replaceString": "撕吊",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1787994933889",
+      "scriptName": "/处女座|處女座/g",
+      "findRegex": "/处女座|處女座/g",
+      "replaceString": "室女座",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1787917303504",
+      "scriptName": "/(真|这|早)他妈/g",
+      "findRegex": "/(真|这|早)他妈/g",
+      "replaceString": "$1他爹",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1787508534414",
+      "scriptName": "/特么/g ",
+      "findRegex": "/特么/g ",
+      "replaceString": "",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1787341718618",
+      "scriptName": "/男女/g",
+      "findRegex": "/男女/g",
+      "replaceString": "女男",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
+      ],
+      "markdownOnly": true
+    },
+    {
+      "id": "regex-rule-1787338869959",
+      "scriptName": "/女帝/g",
+      "findRegex": "/女帝/g",
+      "replaceString": "皇帝",
+      "disabled": false,
+      "placement": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
     {
       "id": "regex-rule-1787338468708",
       "scriptName": "女司机等",
-      "findRegex": "/女(司机|老师|博士|硕士|作家|王|医生|工程师|科学家|教授|法官|律师|干部|企业家|导演|编剧|歌手|演员|老板|总裁)/g",
+      "findRegex": "/女(司机|老师|博士|硕士|作家|王|医生|工程师|科学家|教授|法官|律师|干部|企业家|导演|编剧|歌手|演员|店员|老板|同事|总裁)/g",
       "replaceString": "$1",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
@@ -41,15 +194,15 @@
       "scriptName": "/女警/g",
       "findRegex": "/女警/g",
       "replaceString": "警察",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
@@ -58,15 +211,15 @@
       "scriptName": "/女侠/g",
       "findRegex": "/女侠/g",
       "replaceString": "大侠",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
@@ -75,15 +228,15 @@
       "scriptName": "/圣子/g",
       "findRegex": "/圣子/g",
       "replaceString": "圣男",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
@@ -92,15 +245,15 @@
       "scriptName": "/视奸/g",
       "findRegex": "/视奸/g",
       "replaceString": "视监",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
@@ -109,15 +262,15 @@
       "scriptName": "/少女暴君/g",
       "findRegex": "/少女暴君/g",
       "replaceString": "少年暴君",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
@@ -126,15 +279,15 @@
       "scriptName": "/化妆/g",
       "findRegex": "/化妆/g",
       "replaceString": "化粧",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
@@ -143,15 +296,15 @@
       "scriptName": "/金主爸爸/g",
       "findRegex": "/金主爸爸/g",
       "replaceString": "金主妈妈",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
@@ -160,15 +313,15 @@
       "scriptName": "/观众姥爷|观众老爷/g",
       "findRegex": "/观众姥爷|观众老爷/g",
       "replaceString": "观众姥姥",
-      "tags": [
-        "story"
-      ],
       "disabled": false,
       "placement": [
         1,
         2,
         5,
         6
+      ],
+      "tags": [
+        "story"
       ],
       "markdownOnly": true
     },
