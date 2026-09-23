@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T10:32:15.285Z",
+  "generatedAt": "2026-09-23T10:44:07.192Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 61
+      "count": 62
     },
     {
       "name": "MCP",
@@ -432,6 +432,25 @@
       "avatar": "资源/Js插件/可发多图仿微信/.avatar.png",
       "ownerHash": "38862857e8e107e2eba9d405dc4162385e199a05563417c0022637fd444ac5d1",
       "updatedAt": "2026-09-21T10:48:12+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "后台切换",
+      "dirName": "后台切换",
+      "type": "dir",
+      "path": "资源/Js插件/后台切换",
+      "files": [
+        "资源/Js插件/后台切换/后台快速切换-by fish.zip"
+      ],
+      "images": [
+        "资源/Js插件/后台切换/IMG_2223.png",
+        "资源/Js插件/后台切换/IMG_2224.jpeg"
+      ],
+      "description": "可以随时切换后台，像手机真实的后台\n目前测下来是流畅的非常\n\n有八股请联系🍠：676353646\n🈲二改传，有建议可以找我",
+      "author": "Fish.baby",
+      "avatar": "资源/Js插件/后台切换/.avatar.png",
+      "ownerHash": "fb962c4fceef95a258ac55e1fab9a3cb0bd1440197814a757957ec7d3234aa5e",
+      "updatedAt": "2026-09-23T18:42:59+08:00"
     },
     {
       "folder": "Js插件",
