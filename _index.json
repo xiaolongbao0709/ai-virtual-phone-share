@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T13:33:30.497Z",
+  "generatedAt": "2026-09-23T15:10:29.716Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3039,7 +3039,7 @@
       "type": "dir",
       "path": "资源/应用/[蝴蝶结]来玩阿瓦隆！",
       "files": [
-        "资源/应用/[蝴蝶结]来玩阿瓦隆！/avalon.board-game-3.0.19.zip"
+        "资源/应用/[蝴蝶结]来玩阿瓦隆！/avalon.board-game-3.0.20.zip"
       ],
       "images": [
         "资源/应用/[蝴蝶结]来玩阿瓦隆！/IMG_2423.png",
@@ -3051,7 +3051,7 @@
       "author": "rhdbh",
       "avatar": "",
       "ownerHash": "4540a02f6a504b49a3c9c81da7cbed5ae22d8f83688534316c4d30121f2238d9",
-      "updatedAt": "2026-09-23T21:32:26+08:00"
+      "updatedAt": "2026-09-23T23:09:30+08:00"
     },
     {
       "folder": "应用",
