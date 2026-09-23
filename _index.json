@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T11:06:02.557Z",
+  "generatedAt": "2026-09-23T11:07:22.374Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3654,7 +3654,7 @@
       "type": "dir",
       "path": "资源/应用/天气☁️",
       "files": [
-        "资源/应用/天气☁️/天气☁️-by fish.js",
+        "资源/应用/天气☁️/天气-by fish.zip",
         "资源/应用/天气☁️/天气配套插件-by fish.js"
       ],
       "images": [
@@ -3669,7 +3669,7 @@
       "author": "Fish.baby",
       "avatar": "资源/应用/天气☁️/.avatar.png",
       "ownerHash": "fb962c4fceef95a258ac55e1fab9a3cb0bd1440197814a757957ec7d3234aa5e",
-      "updatedAt": "2026-09-23T18:44:39+08:00"
+      "updatedAt": "2026-09-23T19:05:33+08:00"
     },
     {
       "folder": "应用",
