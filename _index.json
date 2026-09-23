@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T10:44:07.192Z",
+  "generatedAt": "2026-09-23T10:45:46.548Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -33,7 +33,7 @@
     },
     {
       "name": "应用",
-      "count": 121
+      "count": 122
     },
     {
       "name": "应用bug改善",
@@ -3646,6 +3646,30 @@
       "avatar": "",
       "ownerHash": "f0b52b508e38c8c8b3baed8318d0b6bdad0debd25d8ed3bde63cdc5f44a368b9",
       "updatedAt": "2026-09-01T00:45:08+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "天气☁️",
+      "dirName": "天气☁️",
+      "type": "dir",
+      "path": "资源/应用/天气☁️",
+      "files": [
+        "资源/应用/天气☁️/天气☁️-by fish.js",
+        "资源/应用/天气☁️/天气配套插件-by fish.js"
+      ],
+      "images": [
+        "资源/应用/天气☁️/IMG_2228.jpeg",
+        "资源/应用/天气☁️/IMG_2229.jpeg",
+        "资源/应用/天气☁️/IMG_2230.jpeg",
+        "资源/应用/天气☁️/IMG_2231.jpeg",
+        "资源/应用/天气☁️/IMG_2232.jpeg",
+        "资源/应用/天气☁️/IMG_2233.jpeg"
+      ],
+      "description": "🐟\n天气app\n可以真实定位你的地址，可以修改虚拟地址，但是char感知的是你的真实地址， char有记忆，会在一些天气提醒你干什么，不同天气有不同的页面。\n请搭配配套插件使用\n🈲二改传\n有八股私信我🍠：676353646",
+      "author": "Fish.baby",
+      "avatar": "资源/应用/天气☁️/.avatar.png",
+      "ownerHash": "fb962c4fceef95a258ac55e1fab9a3cb0bd1440197814a757957ec7d3234aa5e",
+      "updatedAt": "2026-09-23T18:44:39+08:00"
     },
     {
       "folder": "应用",
