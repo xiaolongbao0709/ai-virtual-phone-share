@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T13:29:28.946Z",
+  "generatedAt": "2026-09-23T13:30:41.611Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3289,16 +3289,16 @@
       "type": "dir",
       "path": "资源/应用/一键生成你的char",
       "files": [
-        "资源/应用/一键生成你的char/persona.forge-3.0.0.zip"
+        "资源/应用/一键生成你的char/persona.forge-9.0.0.zip"
       ],
       "images": [
         "资源/应用/一键生成你的char/1000086402.jpg"
       ],
-      "description": "懒人专属，一键生成你的专属char，嗯对，可能就是懒得自己写的产物，可以随便玩玩\n包含人设/NPC/世界观/文风生成，皆可联想生成\n生成内容可保存至档案馆，一键复制使用\n就这样吧…阿巴",
+      "description": "新增生成世界书\n\n懒人专属，一键生成你的专属char，嗯对，可能就是懒得自己写的产物，可以随便玩玩\n包含人设/NPC/世界观/文风生成，皆可联想生成\n生成内容可保存至档案馆，一键复制使用\n就这样吧…阿巴",
       "author": "倚枫歌",
       "avatar": "",
       "ownerHash": "0ffce5bd289863ee9a5da25317d422cc3b3ebe42a4b3a0fa8e44b0b9443fc92b",
-      "updatedAt": "2026-09-22T22:50:12+08:00"
+      "updatedAt": "2026-09-23T21:29:39+08:00"
     },
     {
       "folder": "应用",
