@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T07:36:13.060Z",
+  "generatedAt": "2026-09-23T09:59:41.118Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -33,7 +33,7 @@
     },
     {
       "name": "应用",
-      "count": 122
+      "count": 121
     },
     {
       "name": "应用bug改善",
@@ -2837,24 +2837,6 @@
       "avatar": "",
       "ownerHash": "c960a6ed0115aebd1a2b0f673d2c73f169cf59f1679b5ee42b2af1c6c7c7d734",
       "updatedAt": "2026-09-09T22:38:15+08:00"
-    },
-    {
-      "folder": "应用",
-      "name": "[星星]共享笔记",
-      "dirName": "[星星]共享笔记",
-      "type": "dir",
-      "path": "资源/应用/[星星]共享笔记",
-      "files": [
-        "资源/应用/[星星]共享笔记/shared.notes-1.6.3.zip"
-      ],
-      "images": [
-        "资源/应用/[星星]共享笔记/1000046806.jpg"
-      ],
-      "description": "9.19更新（1.6.3）\n完善了笔记导出功能，增加角色主动性。\n——\n欢迎使用共享笔记，你可以和 AI 角色共同记录与整理内容，随时在聊天中快捷查看，并支持自定义主题与历史版本回滚。",
-      "author": "清",
-      "avatar": "",
-      "ownerHash": "c960a6ed0115aebd1a2b0f673d2c73f169cf59f1679b5ee42b2af1c6c7c7d734",
-      "updatedAt": "2026-09-19T14:38:47+08:00"
     },
     {
       "folder": "应用",
