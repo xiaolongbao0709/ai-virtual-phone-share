@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T10:45:46.548Z",
+  "generatedAt": "2026-09-23T10:49:44.878Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -443,14 +443,15 @@
         "资源/Js插件/后台切换/后台快速切换-by fish.zip"
       ],
       "images": [
+        "资源/Js插件/后台切换/309F2A27E2589ECF48C9D67E240FFA16.png",
         "资源/Js插件/后台切换/IMG_2223.png",
         "资源/Js插件/后台切换/IMG_2224.jpeg"
       ],
-      "description": "可以随时切换后台，像手机真实的后台\n目前测下来是流畅的非常\n\n有八股请联系🍠：676353646\n🈲二改传，有建议可以找我",
+      "description": "可以随时切换后台，像手机真实的后台\n目前测下来是流畅的非常\n插件位置在屏幕右边，不用的时候会缩起来不用担心误触\n有八股请联系🍠：676353646\n🈲二改传，有建议可以找我",
       "author": "Fish.baby",
       "avatar": "资源/Js插件/后台切换/.avatar.png",
       "ownerHash": "fb962c4fceef95a258ac55e1fab9a3cb0bd1440197814a757957ec7d3234aa5e",
-      "updatedAt": "2026-09-23T18:42:59+08:00"
+      "updatedAt": "2026-09-23T18:48:48+08:00"
     },
     {
       "folder": "Js插件",
