@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T10:49:44.878Z",
+  "generatedAt": "2026-09-23T11:06:02.557Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -440,10 +440,9 @@
       "type": "dir",
       "path": "资源/Js插件/后台切换",
       "files": [
-        "资源/Js插件/后台切换/后台快速切换-by fish.zip"
+        "资源/Js插件/后台切换/后台快速切换-by fish.js"
       ],
       "images": [
-        "资源/Js插件/后台切换/309F2A27E2589ECF48C9D67E240FFA16.png",
         "资源/Js插件/后台切换/IMG_2223.png",
         "资源/Js插件/后台切换/IMG_2224.jpeg"
       ],
@@ -451,7 +450,7 @@
       "author": "Fish.baby",
       "avatar": "资源/Js插件/后台切换/.avatar.png",
       "ownerHash": "fb962c4fceef95a258ac55e1fab9a3cb0bd1440197814a757957ec7d3234aa5e",
-      "updatedAt": "2026-09-23T18:48:48+08:00"
+      "updatedAt": "2026-09-23T19:04:52+08:00"
     },
     {
       "folder": "Js插件",
