@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T15:42:19.670Z",
+  "generatedAt": "2026-09-23T16:12:01.680Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 62
+      "count": 63
     },
     {
       "name": "MCP",
@@ -1037,6 +1037,24 @@
       "avatar": "资源/Js插件/翻译悬浮球/.avatar.png",
       "ownerHash": "ede8199ada8254a22c3c124c5e367a30a98e15e62456b916541c8f03bc4af34b",
       "updatedAt": "2026-09-15T13:11:51+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "聊天头像切换插件",
+      "dirName": "聊天头像切换插件",
+      "type": "dir",
+      "path": "资源/Js插件/聊天头像切换插件",
+      "files": [
+        "资源/Js插件/聊天头像切换插件/聊天头像切换-v1.1.11.js"
+      ],
+      "images": [
+        "资源/Js插件/聊天头像切换插件/IMG_0946.jpeg"
+      ],
+      "description": "[粗]插件介绍：[/粗]\n1.支持自行上传头像或通过外链导入改变默认角色和用户头像。\n2.自定义切换用户头像是否向角色注入提示词，角色会讨论用户新换的头像。\n3.可让角色自行切换头像，并为用户在发送的图片选择头像，返回注入插件头像列表。\n4.注入提示词都在界面实际暴露，可自行修改。\n\n\n[粗]温馨提示：[/粗]\n由于本人使用的test分支，所以不能保证main分支能百分百适配。\n界面更改依赖于float当前实际dom，所以插件可能会因为float更新而失效。\n插件注入依赖于识图，请使用带有视觉的模型。\n插件概率会跟自定义css打架。",
+      "author": "neen",
+      "avatar": "资源/Js插件/聊天头像切换插件/.avatar.png",
+      "ownerHash": "c2cb363b5cf48540a0cce6011e7c92874b79c871f9a59acc2c876fade97fb44c",
+      "updatedAt": "2026-09-24T00:11:11+08:00"
     },
     {
       "folder": "Js插件",
