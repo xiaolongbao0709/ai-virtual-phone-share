@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T09:59:41.118Z",
+  "generatedAt": "2026-09-23T10:32:15.285Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 60
+      "count": 61
     },
     {
       "name": "MCP",
@@ -839,6 +839,24 @@
       "avatar": "",
       "ownerHash": "ae6a9f76a3bd53095a0492578266a36fa1bd28ecfaee0c7c7098bcba3babe02d",
       "updatedAt": "2026-08-20T19:28:22+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "消息条目统计器",
+      "dirName": "消息条目统计器",
+      "type": "dir",
+      "path": "资源/Js插件/消息条目统计器",
+      "files": [
+        "资源/Js插件/消息条目统计器/消息条数统计.js"
+      ],
+      "images": [
+        "资源/Js插件/消息条目统计器/1000134267.jpg"
+      ],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "3967d5a76a764e87279d7c473db3bfd56975b7c9e64323f3cdfa9de1f773ddad",
+      "updatedAt": "2026-09-23T18:31:00+08:00"
     },
     {
       "folder": "Js插件",
