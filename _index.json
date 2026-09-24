@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T05:20:16.667Z",
+  "generatedAt": "2026-09-24T05:29:58.719Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -25,7 +25,7 @@
     },
     {
       "name": "全局主题",
-      "count": 16
+      "count": 17
     },
     {
       "name": "剧情预设及正则",
@@ -2034,6 +2034,24 @@
       "avatar": "资源/全局主题/水色/.avatar.png",
       "ownerHash": "039af75efda3b1a0ba536b59c77cc2e2603d5a91c80b5420ec4cdf75305d12d2",
       "updatedAt": "2026-09-04T19:43:58+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "灰度浪漫",
+      "dirName": "灰度浪漫",
+      "type": "dir",
+      "path": "资源/全局主题/灰度浪漫",
+      "files": [
+        "资源/全局主题/灰度浪漫/默认主题-2026-09-24-05-27-09.zip"
+      ],
+      "images": [
+        "资源/全局主题/灰度浪漫/1000102960.jpg"
+      ],
+      "description": "图片源于网络\n自用二改随意\n\n使用方法：导入-主题包",
+      "author": "云舟",
+      "avatar": "",
+      "ownerHash": "1ba8f8542cb8e3ab03005499a878ad0bdedd59adbf6614cf53a590d37e1711d7",
+      "updatedAt": "2026-09-24T13:29:06+08:00"
     },
     {
       "folder": "全局主题",
