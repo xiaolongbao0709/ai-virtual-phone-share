@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T05:12:56.102Z",
+  "generatedAt": "2026-09-24T05:14:30.576Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -25,7 +25,7 @@
     },
     {
       "name": "全局主题",
-      "count": 15
+      "count": 16
     },
     {
       "name": "剧情预设及正则",
@@ -2141,6 +2141,22 @@
       "avatar": "资源/全局主题/雾面灰/.avatar.png",
       "ownerHash": "b4f8122c2c864ab59b9b44d3ac94bc675d36ed06adce337dbbaa28b94d488a99",
       "updatedAt": "2026-09-24T13:11:50+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "雾面灰配套字体",
+      "dirName": "雾面灰配套字体",
+      "type": "dir",
+      "path": "资源/全局主题/雾面灰配套字体",
+      "files": [
+        "资源/全局主题/雾面灰配套字体/钱数不玩.ttf"
+      ],
+      "images": [],
+      "description": "雾面灰配套字体\n（带字体版主题传不上来）\n使用方法：下载-外观-文字-上传字体",
+      "author": "云遇",
+      "avatar": "资源/全局主题/雾面灰配套字体/.avatar.png",
+      "ownerHash": "b4f8122c2c864ab59b9b44d3ac94bc675d36ed06adce337dbbaa28b94d488a99",
+      "updatedAt": "2026-09-24T13:13:17+08:00"
     },
     {
       "folder": "全局主题",
