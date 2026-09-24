@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T05:17:38.247Z",
+  "generatedAt": "2026-09-24T05:18:44.513Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -2136,11 +2136,11 @@
       "images": [
         "资源/全局主题/雾面灰/1000075137.png"
       ],
-      "description": "1.0是无字体版\n与小红书上图片相比图标压缩了一些画质（不然传不上来[倒地]）\n使用方法：导入-主题包",
+      "description": "1.0是无字体版，字体单独传在了全局主题中，可配套食用\n与小红书上图片相比图标压缩了一些画质（不然传不上来[倒地]）\n使用方法：导入-主题包",
       "author": "云遇",
       "avatar": "资源/全局主题/雾面灰/.avatar.png",
       "ownerHash": "b4f8122c2c864ab59b9b44d3ac94bc675d36ed06adce337dbbaa28b94d488a99",
-      "updatedAt": "2026-09-24T13:14:54+08:00"
+      "updatedAt": "2026-09-24T13:17:07+08:00"
     },
     {
       "folder": "全局主题",
