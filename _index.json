@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T13:35:35.951Z",
+  "generatedAt": "2026-09-24T13:36:29.634Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3126,7 +3126,7 @@
     },
     {
       "folder": "应用",
-      "name": "[蝴蝶结]来玩阿瓦隆！",
+      "name": "[蝴蝶结]来玩阿瓦隆！（9.24更新了细节）",
       "dirName": "[蝴蝶结]来玩阿瓦隆！",
       "type": "dir",
       "path": "资源/应用/[蝴蝶结]来玩阿瓦隆！",
@@ -3143,7 +3143,7 @@
       "author": "rhdbh",
       "avatar": "",
       "ownerHash": "4540a02f6a504b49a3c9c81da7cbed5ae22d8f83688534316c4d30121f2238d9",
-      "updatedAt": "2026-09-24T21:34:24+08:00"
+      "updatedAt": "2026-09-24T21:35:27+08:00"
     },
     {
       "folder": "应用",
