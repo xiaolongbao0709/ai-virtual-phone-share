@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T04:36:04.346Z",
+  "generatedAt": "2026-09-24T05:10:47.540Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -25,7 +25,7 @@
     },
     {
       "name": "全局主题",
-      "count": 14
+      "count": 15
     },
     {
       "name": "剧情预设及正则",
@@ -2123,6 +2123,22 @@
       "avatar": "",
       "ownerHash": "b4f8122c2c864ab59b9b44d3ac94bc675d36ed06adce337dbbaa28b94d488a99",
       "updatedAt": "2026-09-19T01:12:00+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "雾面灰",
+      "dirName": "雾面灰",
+      "type": "dir",
+      "path": "资源/全局主题/雾面灰",
+      "files": [
+        "资源/全局主题/雾面灰/1.0雾面灰by云遇.zip"
+      ],
+      "images": [],
+      "description": "",
+      "author": "云遇",
+      "avatar": "资源/全局主题/雾面灰/.avatar.png",
+      "ownerHash": "b4f8122c2c864ab59b9b44d3ac94bc675d36ed06adce337dbbaa28b94d488a99",
+      "updatedAt": "2026-09-24T13:09:35+08:00"
     },
     {
       "folder": "全局主题",
