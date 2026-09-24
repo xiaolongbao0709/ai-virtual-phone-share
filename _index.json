@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T22:58:58.902Z",
+  "generatedAt": "2026-09-24T23:01:45.452Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3601,7 +3601,7 @@
     },
     {
       "folder": "应用",
-      "name": "全员匿名版小公司",
+      "name": "全员匿名版小红书",
       "dirName": "全员匿名版小公司",
       "type": "dir",
       "path": "资源/应用/全员匿名版小公司",
@@ -3613,7 +3613,7 @@
       "author": "",
       "avatar": "",
       "ownerHash": "c9ade4e6ced1ed366176dbec99dc7ed8f71da5f1f4f2a6a552cf248b097b5b1b",
-      "updatedAt": "2026-09-25T06:57:47+08:00"
+      "updatedAt": "2026-09-25T07:00:36+08:00"
     },
     {
       "folder": "应用",
