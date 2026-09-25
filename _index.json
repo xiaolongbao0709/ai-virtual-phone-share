@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T16:41:54.403Z",
+  "generatedAt": "2026-09-25T22:34:36.365Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 126
+      "count": 125
     },
     {
       "name": "应用bug改善",
@@ -3637,20 +3637,6 @@
       "avatar": "资源/应用/你画我猜/.avatar.png",
       "ownerHash": "3fa5d4b8a645483b397341996fd8240c49b89d41e275e38cf975dc0418149767",
       "updatedAt": "2026-08-30T22:19:42+08:00"
-    },
-    {
-      "folder": "应用",
-      "name": "全员匿名版小红书",
-      "dirName": "全员匿名版小公司",
-      "type": "dir",
-      "path": "资源/应用/全员匿名版小公司",
-      "files": [],
-      "images": [],
-      "description": "在原版小红书上添加了身份隔离，现在角色们将使用网名上网，并不再默认知道其他人的真实身份。\n是一个独立的应用，不会覆盖原版小红书。\n会自动同步记忆。",
-      "author": "",
-      "avatar": "",
-      "ownerHash": "c9ade4e6ced1ed366176dbec99dc7ed8f71da5f1f4f2a6a552cf248b097b5b1b",
-      "updatedAt": "2026-09-25T07:18:02+08:00"
     },
     {
       "folder": "应用",
