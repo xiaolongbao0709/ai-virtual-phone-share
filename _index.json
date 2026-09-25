@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T23:19:10.174Z",
+  "generatedAt": "2026-09-25T01:32:53.638Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -81,7 +81,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 16
+      "count": 17
     },
     {
       "name": "线下正则",
@@ -6864,6 +6864,26 @@
       "avatar": "",
       "ownerHash": "2df22f4332d991025ff8bdc44bfd1e60b11f54cdf952e93af836e1418b0ad7a1",
       "updatedAt": "2026-09-02T15:54:25+08:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "实时查手机 状态栏by谁是凌玲",
+      "dirName": "实时查手机 状态栏by谁是凌玲",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/实时查手机 状态栏by谁是凌玲",
+      "files": [
+        "资源/线上聊天状态栏/实时查手机 状态栏by谁是凌玲/实时查手机 状态栏.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/实时查手机 状态栏by谁是凌玲/IMG_7601.jpeg",
+        "资源/线上聊天状态栏/实时查手机 状态栏by谁是凌玲/IMG_7602.jpeg",
+        "资源/线上聊天状态栏/实时查手机 状态栏by谁是凌玲/IMG_7603.jpeg"
+      ],
+      "description": "和d老师搓了一个简单的“小手机”，有11个app，内容比较丰富，不太会做UI，可以二改自用，🈲二传",
+      "author": "谁是凌玲",
+      "avatar": "",
+      "ownerHash": "9513e264a6366c34aac41042a44b4bf38aed76d4e7d2d64e098b3531e29e03c9",
+      "updatedAt": "2026-09-25T09:31:46+08:00"
     },
     {
       "folder": "线上聊天状态栏",
