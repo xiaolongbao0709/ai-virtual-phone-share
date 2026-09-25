@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T09:51:00.132Z",
+  "generatedAt": "2026-09-25T11:24:40.247Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6160,20 +6160,20 @@
     },
     {
       "folder": "线上美化",
-      "name": "你ins我不",
+      "name": "你ins我不-v2更新",
       "dirName": "你ins我不",
       "type": "dir",
       "path": "资源/线上美化/你ins我不",
       "files": [
-        "资源/线上美化/你ins我不/你ins我不-css.css",
-        "资源/线上美化/你ins我不/你ins我不.js"
+        "资源/线上美化/你ins我不/你ins我不v2.css",
+        "资源/线上美化/你ins我不/你ins我不v2.js"
       ],
       "images": [],
       "description": "ins-线上美化\n任何bug/自用二改请随意调整\n请勿二传（包括使用我的部分代码后二传）\n\n使用必看：\ncss+js必须都导入\n做了一插件防撞功能，插件仅生效在导入css的聊天窗，理论不影响其他聊天窗口\n\n插件负责的部分（方便排查可能的相撞bug）\n1. 页面布局—含底栏重塑部分\n2. 气泡滚动变色\n3. css样式保护（识别使用ins-css的聊天室）",
       "author": "Yyk",
       "avatar": "",
       "ownerHash": "6421a1c782ea8ac2c630a5c2333444dde10cf3b346c811e07f133389b31f6777",
-      "updatedAt": "2026-09-25T17:20:46+08:00"
+      "updatedAt": "2026-09-25T19:23:31+08:00"
     },
     {
       "folder": "线上美化",
