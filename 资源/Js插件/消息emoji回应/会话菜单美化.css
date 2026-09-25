@@ -1,0 +1,225 @@
+﻿/* 菜单容器 */
+.ctx-menu.chat-floating-ctx-menu {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(16px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+  border: 1px solid rgba(209, 213, 219, 0.75) !important;
+  border-radius: 13px !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08) !important;
+  padding: 5px !important;
+  min-width: 148px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  z-index: 999 !important;
+}
+
+/* 菜单内部结构 */
+.ctx-menu.chat-floating-ctx-menu .flex {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  gap: 1px !important;
+}
+
+/* 菜单分组分割线 */
+.ctx-menu.chat-floating-ctx-menu .flex:not(:last-of-type) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  padding-bottom: 3px !important;
+  margin-bottom: 3px !important;
+}
+
+/* 菜单按钮基础样式（文字左、图标右） */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 7px !important;
+  color: #374151 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.3px;
+  padding: 7px 10px !important;
+  line-height: 1.2 !important;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 菜单按钮图标（移到右侧） */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  order: 2;
+  margin-left: 9px;
+  margin-right: 0;
+  flex-shrink: 0;
+  background-color: transparent;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.75;
+}
+
+/* 菜单按钮按压 */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn:active {
+  background: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 危险按钮样式 */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn.ctx-menu-btn-danger {
+  color: #9E5A5A !important;
+}
+
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-btn.ctx-menu-btn-danger:active {
+  background: rgba(158, 90, 90, 0.1) !important;
+}
+
+/* 菜单定位三角 */
+.ctx-menu.chat-floating-ctx-menu .ctx-menu-triangle {
+  border-top-color: rgba(255, 255, 255, 0.88) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.88) !important;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.04));
+}
+
+/* 复制 */
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(1)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>');
+}
+
+/* 编辑回复 */
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(2)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>');
+}
+
+/* 重试以下 */
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(3)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+}
+
+/* 引用 */
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(1)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>');
+}
+
+/* 多选 */
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(2)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>');
+}
+
+/* 删除 */
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(3)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
+}
+
+/* 删除以下 */
+.ctx-menu.chat-floating-ctx-menu:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(4)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>');
+}
+
+/* 复制 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(1)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>');
+}
+
+/* 编辑 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(2)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>');
+}
+
+/* 重试以下 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(1) .ctx-menu-btn:nth-child(3)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>');
+}
+
+/* 删除 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(1)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>');
+}
+
+/* 删除以下 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex:nth-of-type(2) .ctx-menu-btn:nth-child(4))) .flex:nth-of-type(2) .ctx-menu-btn:nth-child(2)::before {
+  background-color: currentColor;
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>');
+}
+
+/* 特殊菜单容器 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex)) {
+  flex-direction: row !important;
+  width: auto !important;
+  min-width: auto !important;
+  padding: 5px 8px !important;
+  align-items: stretch;
+  gap: 0 !important;
+  overflow: hidden;
+}
+
+/* 特殊菜单按钮 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex)) .ctx-menu-btn {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  padding: 6px 12px !important;
+  justify-content: center !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+}
+
+/* 特殊菜单第一个按钮去分割线 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex)) .ctx-menu-btn:first-child {
+  border-left: none !important;
+}
+
+/* 隐藏特殊菜单图标占位 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex)) .ctx-menu-btn::before {
+  display: none !important;
+}
+
+/* 特殊菜单右侧装饰按钮 */
+.ctx-menu.chat-floating-ctx-menu:not(:has(.flex))::after {
+  content: "";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 36px;
+  border-left: 1px solid rgba(0, 0, 0, 0.12) !important;
+  cursor: default;
+  background-color: #9CA3AF;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>') center / 16px 16px no-repeat;
+  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>') center / 16px 16px no-repeat;
+}
