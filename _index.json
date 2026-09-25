@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T08:29:02.093Z",
+  "generatedAt": "2026-09-25T08:43:12.141Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -45,7 +45,7 @@
     },
     {
       "name": "应用反馈（与应用作者沟通渠道）",
-      "count": 4
+      "count": 5
     },
     {
       "name": "快捷指令模版",
@@ -5003,6 +5003,20 @@
       "avatar": "",
       "ownerHash": "b32246b26f03c91edd579c26cfef21927824a0cfbc453ec3277e4ced15645125",
       "updatedAt": "2026-09-21T18:38:08+08:00"
+    },
+    {
+      "folder": "应用反馈（与应用作者沟通渠道）",
+      "name": "💖许愿char可开小号的功能",
+      "dirName": "💖许愿char可开小号的功能",
+      "type": "dir",
+      "path": "资源/应用反馈（与应用作者沟通渠道）/💖许愿char可开小号的功能",
+      "files": [],
+      "images": [],
+      "description": "或者是记忆共享这样🫶",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "2f234820bdaacd9addff5e9489e134e054bd9afc0e59b224fa94071a905deeb2",
+      "updatedAt": "2026-09-25T16:42:16+08:00"
     },
     {
       "folder": "快捷指令模版",
