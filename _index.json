@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T13:07:20.608Z",
+  "generatedAt": "2026-09-25T13:22:05.269Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 124
+      "count": 125
     },
     {
       "name": "应用bug改善",
@@ -4024,6 +4024,34 @@
       "avatar": "资源/应用/扭蛋机[小猫]/.avatar.png",
       "ownerHash": "fea7123ab26d67be6637cde15c3bc3b5ef94a1144703c93f0af7e1e81e9c77a2",
       "updatedAt": "2026-09-06T03:16:46+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "抖音",
+      "dirName": "抖音",
+      "type": "dir",
+      "path": "资源/应用/抖音",
+      "files": [
+        "资源/应用/抖音/抖音-受保护-v1_1_3.zip"
+      ],
+      "images": [
+        "资源/应用/抖音/IMG_2369.jpeg",
+        "资源/应用/抖音/IMG_2370.jpeg",
+        "资源/应用/抖音/IMG_2371.jpeg",
+        "资源/应用/抖音/IMG_2373.jpeg",
+        "资源/应用/抖音/IMG_2375.jpeg",
+        "资源/应用/抖音/IMG_2376.jpeg",
+        "资源/应用/抖音/IMG_2379.jpeg",
+        "资源/应用/抖音/IMG_2381.jpeg",
+        "资源/应用/抖音/IMG_2382.jpeg",
+        "资源/应用/抖音/IMG_2383.jpeg",
+        "资源/应用/抖音/IMG_2385.png"
+      ],
+      "description": "📱 抖音（虚拟）· 高度还原版\n\n\n在 Float 里拥有一个属于你和角色的抖音小世界。\n\n\n✦ 竖屏刷视频，双击点赞、评论楼中楼、收藏分享，手感还原真抖音\n✦ 实时热榜 + GPS 同城，内容跟着真实热点走\n✦ 角色会主动点赞、评论、@你、私信、分享作品，像真的在用抖音\n✦ 火花与可养成小火人、抖音商城与团购、钱包订单到货提醒\n✦ 深浅色跟随系统自动切换\n\n\n⚠️ 本作品受保护机制约束，严禁二改、二传。此为我与 Claude、Codex 耗费大量精力和额度的出品，请尊重原创。",
+      "author": "Fish.baby",
+      "avatar": "资源/应用/抖音/.avatar.png",
+      "ownerHash": "fb962c4fceef95a258ac55e1fab9a3cb0bd1440197814a757957ec7d3234aa5e",
+      "updatedAt": "2026-09-25T21:20:52+08:00"
     },
     {
       "folder": "应用",
