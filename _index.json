@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T11:24:40.247Z",
+  "generatedAt": "2026-09-25T11:25:54.848Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6160,7 +6160,7 @@
     },
     {
       "folder": "线上美化",
-      "name": "你ins我不-v2更新",
+      "name": "你ins我不",
       "dirName": "你ins我不",
       "type": "dir",
       "path": "资源/线上美化/你ins我不",
@@ -6173,7 +6173,7 @@
       "author": "Yyk",
       "avatar": "",
       "ownerHash": "6421a1c782ea8ac2c630a5c2333444dde10cf3b346c811e07f133389b31f6777",
-      "updatedAt": "2026-09-25T19:23:31+08:00"
+      "updatedAt": "2026-09-25T19:24:38+08:00"
     },
     {
       "folder": "线上美化",
