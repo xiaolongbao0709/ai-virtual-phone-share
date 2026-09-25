@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T13:23:43.853Z",
+  "generatedAt": "2026-09-25T14:09:50.676Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -813,17 +813,18 @@
       "type": "dir",
       "path": "资源/Js插件/消息emoji回应",
       "files": [
+        "资源/Js插件/消息emoji回应/会话菜单美化.css",
         "资源/Js插件/消息emoji回应/（9.10更新）消息表情回应.js"
       ],
       "images": [
         "资源/Js插件/消息emoji回应/IMG_20260910_134223.jpg",
         "资源/Js插件/消息emoji回应/IMG_20260910_204748.jpg"
       ],
-      "description": "✅二改\n🚫二传二卖\n选择 导入-插件 即可使用\n如有bug请反馈 📕@木叶淀粉酶\n\n9.10更新：把原本固定在气泡左上角的按钮改成长按消息后和消息菜单一同显示（如图）\n点击emoji快速选择栏左侧按钮可修改预设emoji和自定义美化，可保存多个美化方案、导入导出美化代码文件\n\n\n仿iMessage的Reaction功能，点击角色气泡右上角的按钮可回应该条消息\n功能及使用效果如图所示。",
+      "description": "✅二改\n🚫二传二卖\n选择 导入-插件 即可使用\n如有bug请反馈 📕@木叶淀粉酶\n\n9.12无更新：单独提取了「薄雾」的会话菜单美化css，请选择 导入-聊天室css 使用，效果如图所示\n9.10更新：把原本固定在气泡左上角的按钮改成长按消息后和消息菜单一同显示（如图）\n点击emoji快速选择栏左侧按钮可修改预设emoji和自定义美化，可保存多个美化方案、导入导出美化代码文件\n\n仿iMessage的Reaction功能，点击角色气泡右上角的按钮可回应该条消息\n功能及使用效果如图所示。",
       "author": "木叶淀粉酶",
       "avatar": "资源/Js插件/消息emoji回应/.avatar.png",
       "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
-      "updatedAt": "2026-09-12T16:15:04+08:00"
+      "updatedAt": "2026-09-25T22:09:02+08:00"
     },
     {
       "folder": "Js插件",
