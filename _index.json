@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T01:32:53.638Z",
+  "generatedAt": "2026-09-25T04:51:39.281Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "线上美化",
-      "count": 46
+      "count": 47
     },
     {
       "name": "线上聊天状态栏",
@@ -6041,6 +6041,24 @@
       "avatar": "资源/线上美化/【聊天室】青苹果2.0/.avatar.png",
       "ownerHash": "d23c4a5877ea9d4ad2c2109fd88c648da108f59ebf8d61b80ea0c3aa25fd4ce9",
       "updatedAt": "2026-08-17T14:13:37+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "仿bubble聊天室美化",
+      "dirName": "仿bubble聊天室美化",
+      "type": "dir",
+      "path": "资源/线上美化/仿bubble聊天室美化",
+      "files": [
+        "资源/线上美化/仿bubble聊天室美化/仿bubble聊天室美化 by可丽饼.docx"
+      ],
+      "images": [
+        "资源/线上美化/仿bubble聊天室美化/IMG_7606.png"
+      ],
+      "description": "做的比较粗糙，尽量还原bubble界面，有问题可以让小卷改",
+      "author": "谁是凌玲",
+      "avatar": "资源/线上美化/仿bubble聊天室美化/.avatar.png",
+      "ownerHash": "9513e264a6366c34aac41042a44b4bf38aed76d4e7d2d64e098b3531e29e03c9",
+      "updatedAt": "2026-09-25T12:49:50+08:00"
     },
     {
       "folder": "线上美化",
