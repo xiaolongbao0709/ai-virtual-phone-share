@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-26T14:09:52.912Z",
+  "generatedAt": "2026-09-26T14:14:41.266Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6791,8 +6791,8 @@
       "description": "线上美化\n\n图源:xhs梨漫枝，小烁星",
       "author": "淅沥沥",
       "avatar": "资源/线上美化/韩系兔丸/.avatar.png",
-      "ownerHash": "bf65bc1c732341505dc056c65d6ad17b6862e2c1f0cdf99f70af36a873b438aa",
-      "updatedAt": "2026-08-13T16:01:49+08:00"
+      "ownerHash": "c76d001b2c70156ba8e7cd67192a641e1dc8a44e4c1472151374999d68b5c934",
+      "updatedAt": "2026-09-26T22:13:28+08:00"
     },
     {
       "folder": "线上美化",
@@ -6811,8 +6811,8 @@
       "description": "是线上美化，放到聊天-主页-外观css里\n\n\n气泡有两个版本，文档里已进行标注，自行删除",
       "author": "淅沥沥",
       "avatar": "资源/线上美化/黑白猪/.avatar.png",
-      "ownerHash": "bf65bc1c732341505dc056c65d6ad17b6862e2c1f0cdf99f70af36a873b438aa",
-      "updatedAt": "2026-08-13T15:55:40+08:00"
+      "ownerHash": "c76d001b2c70156ba8e7cd67192a641e1dc8a44e4c1472151374999d68b5c934",
+      "updatedAt": "2026-09-26T22:13:35+08:00"
     },
     {
       "folder": "线上美化",
