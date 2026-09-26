@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-26T13:50:07.316Z",
+  "generatedAt": "2026-09-26T13:51:42.416Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -3541,7 +3541,7 @@
       "files": [
         "资源/应用/临镜/Limen-Rescue-v1.1.23.zip",
         "资源/应用/临镜/Limen-Snowpage-Reader.css",
-        "资源/应用/临镜/Limen-v1.1.35.zip",
+        "资源/应用/临镜/Limen-v1.1.42.zip",
         "资源/应用/临镜/ReaderGlass-v3.css"
       ],
       "images": [
@@ -3552,7 +3552,7 @@
       "author": "yzy",
       "avatar": "资源/应用/临镜/.avatar.png",
       "ownerHash": "c84f1904fa7b68c212c91bc5fda2055472af121e6c8f64740a348e1eb138a112",
-      "updatedAt": "2026-09-20T23:31:00+08:00"
+      "updatedAt": "2026-09-26T21:50:33+08:00"
     },
     {
       "folder": "应用",
