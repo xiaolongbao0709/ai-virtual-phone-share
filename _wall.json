@@ -1,6 +1,13 @@
 {
-  "updatedAt": "2026-09-16T11:49:02.888Z",
+  "updatedAt": "2026-09-26T16:31:31.149Z",
   "items": [
+    {
+      "number": 206,
+      "title": "feat(dwelling): 栖所新增一键探索全部物品与历史记录",
+      "contributor": "温铎",
+      "mergedAt": "2026-09-26T13:44:46Z",
+      "url": "https://github.com/xiaolongbao0709/ai-virtual-phone/pull/206"
+    },
     {
       "number": 174,
       "title": "收起键盘自动回复：修复时灵时不灵",
