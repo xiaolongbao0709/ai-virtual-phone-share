@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-09-26T06:05:49.199Z",
+  "generatedAt": "2026-09-26T07:21:07.076Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 63
+      "count": 64
     },
     {
       "name": "MCP",
@@ -744,6 +744,24 @@
       "avatar": "资源/Js插件/时间流逝啦/.avatar.png",
       "ownerHash": "168992d163bb3fcaf4ae9bdda07ebcba4591c3533f28260f0bf1dba76ae93ccc",
       "updatedAt": "2026-09-19T18:29:07+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "映笺♡让char发个视频给你[爱心]",
+      "dirName": "映笺♡让char发个视频给你[爱心]",
+      "type": "dir",
+      "path": "资源/Js插件/映笺♡让char发个视频给你[爱心]",
+      "files": [
+        "资源/Js插件/映笺♡让char发个视频给你[爱心]/映笺 聊天图生视频1418.js"
+      ],
+      "images": [
+        "资源/Js插件/映笺♡让char发个视频给你[爱心]/IMG_1216大.jpeg"
+      ],
+      "description": "[粉][大]可以让char生成视频了哦，首批测试OK，在插件内导入使用宝宝们[/大][/粉]",
+      "author": "仓鼠",
+      "avatar": "资源/Js插件/映笺♡让char发个视频给你[爱心]/.avatar.png",
+      "ownerHash": "9840628ff5f4d01a8a3aad435eade27791b624164c9cb2815513a424987ac5f7",
+      "updatedAt": "2026-09-26T15:19:55+08:00"
     },
     {
       "folder": "Js插件",
