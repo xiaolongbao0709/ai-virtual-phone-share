@@ -1,5 +1,5 @@
 主要是为了paro和if包的饺子。
-【9.21更新】
+【9.26更新】
 ·新增user本地人设 排序 备份 小改ui
 ·美化忘开救援的更新rescue
 ·美化蓝色snowpage｜白色renderglass
