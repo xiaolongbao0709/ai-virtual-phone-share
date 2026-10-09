@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-09T04:53:03.818Z",
+  "generatedAt": "2026-10-09T05:45:44.456Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -5832,15 +5832,16 @@
       "type": "dir",
       "path": "资源/气泡美化/轻松熊气泡",
       "files": [
-        "资源/气泡美化/轻松熊气泡/IMG_4238.asset.jpeg",
         "资源/气泡美化/轻松熊气泡/轻松熊.css"
       ],
-      "images": [],
+      "images": [
+        "资源/气泡美化/轻松熊气泡/IMG_4238.jpeg"
+      ],
       "description": "🈲二传自用随便二改有bug都可以丢给爱机帮你修",
       "author": "小姜",
-      "avatar": "",
+      "avatar": "资源/气泡美化/轻松熊气泡/.avatar.png",
       "ownerHash": "59487540ec3a874f053164cfffcf8b9db2adabfb2fb2cf12be0fbdce438b0d30",
-      "updatedAt": "2026-10-09T03:08:48+08:00"
+      "updatedAt": "2026-10-09T13:44:43+08:00"
     },
     {
       "folder": "消息列表美化",
