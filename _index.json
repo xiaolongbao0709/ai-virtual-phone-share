@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-09T05:45:44.456Z",
+  "generatedAt": "2026-10-09T09:49:33.938Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 135
+      "count": 136
     },
     {
       "name": "应用bug改善",
@@ -4304,6 +4304,22 @@
       "avatar": "资源/应用/审批购物➕记账app[笑脸]/.avatar.png",
       "ownerHash": "cdec925f9e2d6a79f64c584d0e0286f334fd96c5312717c1b5659b9dc42955d3",
       "updatedAt": "2026-08-30T11:30:43+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "寄云",
+      "dirName": "寄云",
+      "type": "dir",
+      "path": "资源/应用/寄云",
+      "files": [
+        "资源/应用/寄云/jiyun.app-9.9.9.zip"
+      ],
+      "images": [],
+      "description": "修了一些bug",
+      "author": "倚枫歌",
+      "avatar": "",
+      "ownerHash": "0ffce5bd289863ee9a5da25317d422cc3b3ebe42a4b3a0fa8e44b0b9443fc92b",
+      "updatedAt": "2026-10-09T17:47:53+08:00"
     },
     {
       "folder": "应用",
