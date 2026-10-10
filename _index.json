@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-09T11:08:15.535Z",
+  "generatedAt": "2026-10-10T02:32:15.868Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 136
+      "count": 137
     },
     {
       "name": "应用bug改善",
@@ -3816,6 +3816,22 @@
       "avatar": "",
       "ownerHash": "cdec925f9e2d6a79f64c584d0e0286f334fd96c5312717c1b5659b9dc42955d3",
       "updatedAt": "2026-08-20T16:57:12+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "test_myapp_1",
+      "dirName": "test_myapp_1",
+      "type": "dir",
+      "path": "资源/应用/test_myapp_1",
+      "files": [
+        "资源/应用/test_myapp_1/7Ou-pulse.social-1.2.0.zip"
+      ],
+      "images": [],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "c9d09067cef1492997c78482943fefd77a53c2fce353d6e6ec7e2e025f7ff8e7",
+      "updatedAt": "2026-10-10T10:30:25+08:00"
     },
     {
       "folder": "应用",
