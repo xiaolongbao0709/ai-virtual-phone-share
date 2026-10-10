@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-10T04:49:33.252Z",
+  "generatedAt": "2026-10-10T04:53:30.322Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -5518,7 +5518,6 @@
         "资源/应用/🍀匿名论坛—4chan/微信图片_2026-10-10_124258_383.asset.png"
       ],
       "images": [
-        "资源/应用/🍀匿名论坛—4chan/微信图片_2026-10-10_123949_877.png",
         "资源/应用/🍀匿名论坛—4chan/微信图片_2026-10-10_124250_198.png",
         "资源/应用/🍀匿名论坛—4chan/微信图片_2026-10-10_124258_383.png"
       ],
@@ -5526,7 +5525,7 @@
       "author": "Albus",
       "avatar": "资源/应用/🍀匿名论坛—4chan/.avatar.png",
       "ownerHash": "c9d09067cef1492997c78482943fefd77a53c2fce353d6e6ec7e2e025f7ff8e7",
-      "updatedAt": "2026-10-10T12:47:47+08:00"
+      "updatedAt": "2026-10-10T12:52:00+08:00"
     },
     {
       "folder": "应用bug改善",
