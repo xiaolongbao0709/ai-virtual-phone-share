@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-10T11:00:56.339Z",
+  "generatedAt": "2026-10-10T16:52:27.054Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6243,7 +6243,6 @@
       "type": "dir",
       "path": "资源/游戏/谁是卧底",
       "files": [
-        "资源/游戏/谁是卧底/写不下的注意事项.txt",
         "资源/游戏/谁是卧底/游戏：谁是卧底.json",
         "资源/游戏/谁是卧底/谁是卧底.html"
       ],
@@ -6258,7 +6257,7 @@
       "author": "依山澜",
       "avatar": "资源/游戏/谁是卧底/.avatar.png",
       "ownerHash": "2ba73cbc55fe0c4b5b9d8369bae2628c7a3c4a36aaece1f82473a1c8a2650a1a",
-      "updatedAt": "2026-09-04T02:20:53+08:00"
+      "updatedAt": "2026-10-11T00:51:15+08:00"
     },
     {
       "folder": "游戏",
