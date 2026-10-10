@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-10T05:35:14.470Z",
+  "generatedAt": "2026-10-10T05:39:01.573Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 137
+      "count": 136
     },
     {
       "name": "应用bug改善",
@@ -5504,22 +5504,6 @@
       "avatar": "资源/应用/𝓐𝓶𝓸𝓻𝓮/.avatar.png",
       "ownerHash": "bfb3e3d17651836721132248bd5c9b911d883b93bb4269afe371127e1e530ed6",
       "updatedAt": "2026-09-05T16:19:43+08:00"
-    },
-    {
-      "folder": "应用",
-      "name": "🍀4chan",
-      "dirName": "🍀匿名论坛—4chan",
-      "type": "dir",
-      "path": "资源/应用/🍀匿名论坛—4chan",
-      "files": [
-        "资源/应用/🍀匿名论坛—4chan/4chan.zip"
-      ],
-      "images": [],
-      "description": "模仿[粗]4chan[/粗]做的一个匿名论坛\n完全的4chan风格~\n加了上帝视角可以看匿名人的身份",
-      "author": "Albus",
-      "avatar": "资源/应用/🍀匿名论坛—4chan/.avatar.png",
-      "ownerHash": "c9d09067cef1492997c78482943fefd77a53c2fce353d6e6ec7e2e025f7ff8e7",
-      "updatedAt": "2026-10-10T13:34:09+08:00"
     },
     {
       "folder": "应用bug改善",
