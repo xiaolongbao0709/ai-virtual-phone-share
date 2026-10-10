@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-10T07:13:09.512Z",
+  "generatedAt": "2026-10-10T11:00:56.339Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -81,7 +81,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 18
+      "count": 19
     },
     {
       "name": "线下正则",
@@ -7468,6 +7468,24 @@
       "avatar": "",
       "ownerHash": "2df22f4332d991025ff8bdc44bfd1e60b11f54cdf952e93af836e1418b0ad7a1",
       "updatedAt": "2026-09-19T13:55:27+08:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "【灰白简约ins风】",
+      "dirName": "【灰白简约ins风】",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/【灰白简约ins风】",
+      "files": [
+        "资源/线上聊天状态栏/【灰白简约ins风】/【灰白简约ins风】状态栏.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/【灰白简约ins风】/IMG_9252.png"
+      ],
+      "description": "星星点点简约可爱风格",
+      "author": "安鸣山",
+      "avatar": "资源/线上聊天状态栏/【灰白简约ins风】/.avatar.png",
+      "ownerHash": "9e75a8c2adaf29657201107124e08feed80108579e1a529dbdde83d67b310acf",
+      "updatedAt": "2026-10-10T18:59:23+08:00"
     },
     {
       "folder": "线上聊天状态栏",
