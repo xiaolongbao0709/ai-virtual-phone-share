@@ -1,0 +1,78 @@
+/* ──. 标题栏（顶部）── */
+
+/* ── 1. 升级版：顶部透明悬浮栏 (参考 液态玻璃) ── */
+.page-header {
+  /* 把原本的黑灰背景改成极度透明的白色，像一层薄薄的水膜 */
+  background: rgba(255, 255, 255, 0.1) !important; 
+  backdrop-filter: blur(15px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(150%) !important;
+  
+  /* 底部的大圆角，让它变椭圆一些 更贴合主题，更像悬浮 */
+  border-radius: 0 0 30px 30px !important; 
+  
+  /* 给底部加一条极细的高光边缘，做出“液态玻璃”的切面感 */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+  
+  /* 让字和图标变成深色，在透明白玻璃上更清晰（因为你的壁纸很亮） */
+  color: #333333 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 顶部返回键和字体的颜色换成高级深灰 */
+.page-title, .page-back-btn {
+  color: #333333 !important; 
+}
+
+:root {
+  /* ★ 修改这里：你自己的气泡改成高级烟灰色半透明 */
+  /* rgba(150, 150, 150, 0.25) 是一种带一点点灰度、很清透的玻璃感 */
+  --c-bubble-self: rgba(150, 150, 150, 0.25); 
+}
+
+/* 核心：修改气泡的圆角和毛玻璃特效 */
+.chat-bubble-role-user,
+.chat-bubble-role-assistant {
+  border-radius: 25px; 
+  
+  /* ★ 毛玻璃三件套 */
+  backdrop-filter: blur(12px) saturate(150%); 
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.6); /* 玻璃边缘反光 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+}
+
+/* ★ 修改这里：对方的气泡改回原本的偏白色毛玻璃 */
+.chat-bubble-role-assistant {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ★ 文字颜色：用稍深的灰色，在白灰背景上都清晰 */
+.chat-bubble-role-user,
+.chat-bubble-role-assistant,
+.chat-bubble-role-user *, 
+.chat-bubble-role-assistant * {
+  color: #4a4a4a !important; 
+}
+
+/* 保持你原本的代码框架结构不变 */
+.chat-html-inline-frame {
+  max-height: min(36vh, 340px);
+}
+ .chat-input-panel {
+  position: relative;
+  background: transparent !important;
+}
+
+.chat-input-bar {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  transform: translateY(10px);
+}
+
+.chat-input-bar.chat-room-main-pane .chat-input-actions {
+  position: relative !important;
+}
