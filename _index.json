@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-26T13:24:32.376Z",
+  "generatedAt": "2026-10-26T14:05:38.513Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -21,7 +21,7 @@
     },
     {
       "name": "世界书",
-      "count": 9
+      "count": 10
     },
     {
       "name": "全局主题",
@@ -2425,6 +2425,24 @@
       "avatar": "",
       "ownerHash": "5b6723efb66d29810579492c01f34e04430874499769479f7ba420625c814912",
       "updatedAt": "2026-10-09T12:08:27+08:00"
+    },
+    {
+      "folder": "世界书",
+      "name": "Playful————Nsfw的Play",
+      "dirName": "Playful————Nsfw的Play",
+      "type": "dir",
+      "path": "资源/世界书/Playful————Nsfw的Play",
+      "files": [
+        "资源/世界书/Playful————Nsfw的Play/Playful————by我是树.docx"
+      ],
+      "images": [
+        "资源/世界书/Playful————Nsfw的Play/4855.png"
+      ],
+      "description": "内容如其名…一些play……..😋使用的时候可以描述清晰一点，内置有点多，也可以写一段指向让自由发挥….\n\t\n可搭配《Eros Unbound·Ⅱ》食用",
+      "author": "我是树",
+      "avatar": "",
+      "ownerHash": "f9eb374b4a27ed2bb764b37367d62e17bfd0ea3b4a6530e6966d58309a830024",
+      "updatedAt": "2026-10-26T23:03:30+09:00"
     },
     {
       "folder": "世界书",
