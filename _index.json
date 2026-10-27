@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-27T13:32:23.487Z",
+  "generatedAt": "2026-10-27T14:10:04.069Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 84
+      "count": 85
     },
     {
       "name": "MCP",
@@ -721,6 +721,24 @@
       "avatar": "",
       "ownerHash": "ccaecc009bf4a4f670f01f93005ebb7e60c8d958fe2449025a41e1609ae3e4cd",
       "updatedAt": "2026-09-03T11:46:34+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "小桌宠",
+      "dirName": "小桌宠",
+      "type": "dir",
+      "path": "资源/Js插件/小桌宠",
+      "files": [
+        "资源/Js插件/小桌宠/123.js"
+      ],
+      "images": [
+        "资源/Js插件/小桌宠/1000062039.jpg"
+      ],
+      "description": "一个桌宠 可以自己上传透明底\n可以拖拽改变位置\n两种形态，一弹一弹和静止不动，可以点它，也会一弹一弹",
+      "author": "翼",
+      "avatar": "资源/Js插件/小桌宠/.avatar.png",
+      "ownerHash": "e8fde73ef1fa88d1a7cc055220d4d0f31295655832f1b769e7e444e9095ab6da",
+      "updatedAt": "2026-10-27T23:08:15+09:00"
     },
     {
       "folder": "Js插件",
