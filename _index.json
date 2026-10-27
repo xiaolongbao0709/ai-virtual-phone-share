@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-27T13:01:48.207Z",
+  "generatedAt": "2026-10-27T13:10:57.310Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6076,7 +6076,8 @@
       "type": "dir",
       "path": "资源/应用/记忆面包坊",
       "files": [
-        "资源/应用/记忆面包坊/bakery.memory-1.5.0 (9)(1).zip"
+        "资源/应用/记忆面包坊/bakery.memory-1.5.0 (1)(1).zip",
+        "资源/应用/记忆面包坊/bakery.memory-1.5.1.zip"
       ],
       "images": [
         "资源/应用/记忆面包坊/1000090932.jpg"
@@ -6085,7 +6086,7 @@
       "author": "秋秋秋",
       "avatar": "",
       "ownerHash": "2760fe2001296e6591af85492bdb2725c7a7770227ca38ceb9900888917580da",
-      "updatedAt": "2026-10-27T21:59:32+09:00"
+      "updatedAt": "2026-10-27T22:09:07+09:00"
     },
     {
       "folder": "应用",
