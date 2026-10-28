@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T06:33:45.057Z",
+  "generatedAt": "2026-10-28T06:36:22.305Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -5796,13 +5796,14 @@
         "资源/应用/番外/app.fanwai.story-1.0.1 (11).zip"
       ],
       "images": [
-        "资源/应用/番外/1000090579.jpg"
+        "资源/应用/番外/1000091244.jpg",
+        "资源/应用/番外/1000091245.jpg"
       ],
       "description": "非常简单的一个支持html渲染的番外app\n可以一键同步给char\n\n增加了放置文风提示词的位置",
       "author": "秋秋秋",
       "avatar": "",
       "ownerHash": "2760fe2001296e6591af85492bdb2725c7a7770227ca38ceb9900888917580da",
-      "updatedAt": "2026-10-28T15:31:49+09:00"
+      "updatedAt": "2026-10-28T15:34:32+09:00"
     },
     {
       "folder": "应用",
