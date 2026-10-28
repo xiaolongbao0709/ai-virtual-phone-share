@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T10:29:19.804Z",
+  "generatedAt": "2026-10-28T11:23:40.038Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -5792,16 +5792,18 @@
       "dirName": "番外",
       "type": "dir",
       "path": "资源/应用/番外",
-      "files": [],
+      "files": [
+        "资源/应用/番外/app.fanwai.story-1.0.1 (2).zip"
+      ],
       "images": [
         "资源/应用/番外/1000091244.jpg",
-        "资源/应用/番外/1000091245.jpg"
+        "资源/应用/番外/1000091280.jpg"
       ],
       "description": "非常简单的一个支持html渲染的番外app\n可以一键同步给char\n增加了放置文风提示词的位置\n[橙]增加了模拟线上聊天模式[/橙]",
       "author": "秋秋秋",
       "avatar": "",
       "ownerHash": "2760fe2001296e6591af85492bdb2725c7a7770227ca38ceb9900888917580da",
-      "updatedAt": "2026-10-28T19:27:13+09:00"
+      "updatedAt": "2026-10-28T20:20:38+09:00"
     },
     {
       "folder": "应用",
