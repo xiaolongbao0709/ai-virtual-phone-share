@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T17:38:27.837Z",
+  "generatedAt": "2026-10-28T19:34:07.325Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 86
+      "count": 87
     },
     {
       "name": "MCP",
@@ -506,6 +506,24 @@
       "avatar": "",
       "ownerHash": "a3e8f7a81a5fac289e40f96621b11901cd1b62d50ef20b209b428c924341ca8a",
       "updatedAt": "2026-09-17T12:05:33+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "发文件➕网页抓取",
+      "dirName": "发文件➕网页抓取",
+      "type": "dir",
+      "path": "资源/Js插件/发文件➕网页抓取",
+      "files": [
+        "资源/Js插件/发文件➕网页抓取/SECURITY.md",
+        "资源/Js插件/发文件➕网页抓取/chat-file-sender.plugin (4).js",
+        "资源/Js插件/发文件➕网页抓取/chat-webpage-reader.plugin.js"
+      ],
+      "images": [],
+      "description": "[闪光]可以在聊天室发文件，PDF扫描件不加OCR扫不出来，加了也不一定能扫出来，其他格式加不加都可以\n支持PDF、DOCX、PPTX、XLSX、TXT/MD/CSV/JSON/HTML\n\n[闪光]网页抓取是把网页的文字提取出来给机看",
+      "author": "七个七七",
+      "avatar": "",
+      "ownerHash": "c27ed9c81cc575e5d865b1a4dc6e2f9cd9d27a3f2f775141d179f923a58bc770",
+      "updatedAt": "2026-10-29T04:32:34+09:00"
     },
     {
       "folder": "Js插件",
