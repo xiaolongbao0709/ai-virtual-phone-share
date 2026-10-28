@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T15:42:22.522Z",
+  "generatedAt": "2026-10-28T17:38:27.837Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 156
+      "count": 157
     },
     {
       "name": "应用bug改善",
@@ -4865,6 +4865,24 @@
       "avatar": "",
       "ownerHash": "c03468531fd6615b3bc9dde0e42c77bf4ff654590ed8ac5e955e1905b58bc44c",
       "updatedAt": "2026-09-16T13:23:14+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "场外",
+      "dirName": "场外",
+      "type": "dir",
+      "path": "资源/应用/场外",
+      "files": [
+        "资源/应用/场外/3_场外-小手机APP.zip"
+      ],
+      "images": [
+        "资源/应用/场外/1000107904.png"
+      ],
+      "description": "想跟扮演角色的 AI 聊天，聊它是怎么扮演的怎么理解这个角色的，聊对话这两个人是什么样的状态性格体现，聊这张卡应该怎么优化……于是就有了这个应用\n可以发送人设卡、聊天记录、记忆给 AI，让它跟你聊",
+      "author": "阿巴阿巴",
+      "avatar": "资源/应用/场外/.avatar.png",
+      "ownerHash": "669c2f4579605edead26c25df83e951ce159584320de5f4d54d4ef156aa46539",
+      "updatedAt": "2026-10-29T02:22:32+09:00"
     },
     {
       "folder": "应用",
