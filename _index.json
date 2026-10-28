@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T04:53:56.143Z",
+  "generatedAt": "2026-10-28T04:56:42.518Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 86
+      "count": 87
     },
     {
       "name": "MCP",
@@ -292,6 +292,22 @@
       "avatar": "资源/Js插件/[雪花]便捷语音输入/.avatar.png",
       "ownerHash": "2233a90444598bea29bf22080ecbb781b6ee3b9a382b190a4154d678f27c2b2a",
       "updatedAt": "2026-09-20T14:34:30+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "[音符]",
+      "dirName": "[音符]",
+      "type": "dir",
+      "path": "资源/Js插件/[音符]",
+      "files": [
+        "资源/Js插件/[音符]/慕池野.json"
+      ],
+      "images": [],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "76d11e4d02f13578838287040d32a9a5a26807389f650d528d151d5b45db1a90",
+      "updatedAt": "2026-10-28T13:54:41+09:00"
     },
     {
       "folder": "Js插件",
