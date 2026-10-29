@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T05:38:11.946Z",
+  "generatedAt": "2026-10-29T13:00:13.894Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -21,7 +21,7 @@
     },
     {
       "name": "世界书",
-      "count": 10
+      "count": 11
     },
     {
       "name": "全局主题",
@@ -2507,6 +2507,25 @@
       "avatar": "资源/世界书/ii/.avatar.png",
       "ownerHash": "e3cf116efccbf07e397c93e0aebb253534124b7dcd5a4be0043fb5a88c64f116",
       "updatedAt": "2026-10-13T17:30:12+08:00"
+    },
+    {
+      "folder": "世界书",
+      "name": "minimax活人感语音世界书[樱桃]",
+      "dirName": "minimax活人感语音世界书[樱桃]",
+      "type": "dir",
+      "path": "资源/世界书/minimax活人感语音世界书[樱桃]",
+      "files": [
+        "资源/世界书/minimax活人感语音世界书[樱桃]/minimax活人感语音世界书.json"
+      ],
+      "images": [
+        "资源/世界书/minimax活人感语音世界书[樱桃]/IMG_2340.png",
+        "资源/世界书/minimax活人感语音世界书[樱桃]/已粘贴 2026-10-29 下午5.52.35.png"
+      ],
+      "description": "[粗][粉]查阅官方文档，minimax较比2.6版本新增了19个情绪标签，包括但不限于喷嚏，打嗝，呻吟，咂嘴等等，这波一气全补上了。[/粉][/粗]\n\n\n只能用2.8HD，不要挂2.8turbo\n⚠️只适用2.8HD",
+      "author": "仓鼠",
+      "avatar": "资源/世界书/minimax活人感语音世界书[樱桃]/.avatar.png",
+      "ownerHash": "9840628ff5f4d01a8a3aad435eade27791b624164c9cb2815513a424987ac5f7",
+      "updatedAt": "2026-10-29T21:57:48+09:00"
     },
     {
       "folder": "世界书",
