@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T19:27:49.892Z",
+  "generatedAt": "2026-10-29T19:39:37.553Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -711,11 +711,11 @@
         "资源/Js插件/导入cai聊天记录/识别TXT版本.js"
       ],
       "images": [],
-      "description": "该插件更支持导入TXT版本的聊天记录，HTML/JSON格式未测试",
+      "description": "该插件更支持导入TXT版本的聊天记录，有老师反馈JSON格式也可以，HTML格式未测试\n目前没试过传入多个角色聊天记录，如果传的多导致角色混乱可自行修改，允许二改",
       "author": "kit宝",
-      "avatar": "",
+      "avatar": "资源/Js插件/导入cai聊天记录/.avatar.png",
       "ownerHash": "51f3d36b8170e02b0c1715d8e1642c17b6cf43a8dd50915b49d44bcb019842b2",
-      "updatedAt": "2026-10-26T00:07:21+09:00"
+      "updatedAt": "2026-10-30T04:37:50+09:00"
     },
     {
       "folder": "Js插件",
