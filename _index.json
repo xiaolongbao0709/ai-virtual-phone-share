@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T03:28:35.049Z",
+  "generatedAt": "2026-10-31T10:04:57.550Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -25,7 +25,7 @@
     },
     {
       "name": "全局主题",
-      "count": 23
+      "count": 24
     },
     {
       "name": "剧情预设及正则",
@@ -2929,6 +2929,22 @@
       "avatar": "资源/全局主题/水色/.avatar.png",
       "ownerHash": "039af75efda3b1a0ba536b59c77cc2e2603d5a91c80b5420ec4cdf75305d12d2",
       "updatedAt": "2026-09-04T19:43:58+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "淡淡的萌萌的",
+      "dirName": "淡淡的萌萌的",
+      "type": "dir",
+      "path": "资源/全局主题/淡淡的萌萌的",
+      "files": [
+        "资源/全局主题/淡淡的萌萌的/默认主题-2026-10-31-10-00-59.zip"
+      ],
+      "images": [],
+      "description": "",
+      "author": "每天都想萌萌的",
+      "avatar": "资源/全局主题/淡淡的萌萌的/.avatar.png",
+      "ownerHash": "98b60f915a0a26374ae241df07c0c48c32cd71e568240fc68dc88e457c510422",
+      "updatedAt": "2026-10-31T19:03:05+09:00"
     },
     {
       "folder": "全局主题",
