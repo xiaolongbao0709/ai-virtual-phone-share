@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T10:49:53.387Z",
+  "generatedAt": "2026-10-31T10:53:36.269Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -7940,7 +7940,7 @@
     },
     {
       "folder": "线上美化",
-      "name": "仿微信主题by竹叶草[笑脸]",
+      "name": "仿微信主题by竹叶草",
       "dirName": "仿微信主题by竹叶草[笑脸]",
       "type": "dir",
       "path": "资源/线上美化/仿微信主题by竹叶草[笑脸]",
@@ -7954,7 +7954,7 @@
       "author": "竹叶草（重生版）",
       "avatar": "资源/线上美化/仿微信主题by竹叶草[笑脸]/.avatar.png",
       "ownerHash": "32009c05fc4c078f5c307c68c7b87e5feac26704ef82493fe7262a0965e41eec",
-      "updatedAt": "2026-10-31T19:47:40+09:00"
+      "updatedAt": "2026-10-31T19:51:31+09:00"
     },
     {
       "folder": "线上美化",
