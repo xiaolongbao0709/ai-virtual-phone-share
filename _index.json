@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T19:29:00.312Z",
+  "generatedAt": "2026-10-31T19:34:23.427Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1346,7 +1346,7 @@
       "author": "G",
       "avatar": "",
       "ownerHash": "85b94dde3046f0bb789afce70959e309b5e83cbf12c2417685b16c4d9c3387c5",
-      "updatedAt": "2026-11-01T04:25:26+09:00"
+      "updatedAt": "2026-11-01T04:31:47+09:00"
     },
     {
       "folder": "Js插件",
