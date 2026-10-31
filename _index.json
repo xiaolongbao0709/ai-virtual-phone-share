@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T10:04:57.550Z",
+  "generatedAt": "2026-10-31T10:49:53.387Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "线上美化",
-      "count": 56
+      "count": 57
     },
     {
       "name": "线上聊天状态栏",
@@ -7937,6 +7937,24 @@
       "avatar": "",
       "ownerHash": "9f37e23318f452c263fceb61aacf58008faf41fb28eb4c51f812856d23237529",
       "updatedAt": "2026-08-19T01:22:51+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "仿微信主题by竹叶草[笑脸]",
+      "dirName": "仿微信主题by竹叶草[笑脸]",
+      "type": "dir",
+      "path": "资源/线上美化/仿微信主题by竹叶草[笑脸]",
+      "files": [
+        "资源/线上美化/仿微信主题by竹叶草[笑脸]/仿微信主题by竹叶草.txt"
+      ],
+      "images": [
+        "资源/线上美化/仿微信主题by竹叶草[笑脸]/1000025032.jpg"
+      ],
+      "description": "不要二传 \n比较简陋\n有bug的话丢给小卷改改吧",
+      "author": "竹叶草（重生版）",
+      "avatar": "资源/线上美化/仿微信主题by竹叶草[笑脸]/.avatar.png",
+      "ownerHash": "32009c05fc4c078f5c307c68c7b87e5feac26704ef82493fe7262a0965e41eec",
+      "updatedAt": "2026-10-31T19:47:40+09:00"
     },
     {
       "folder": "线上美化",
