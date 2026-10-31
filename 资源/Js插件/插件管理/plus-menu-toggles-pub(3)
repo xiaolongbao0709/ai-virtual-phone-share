@@ -1,0 +1,3802 @@
+/*
+ * plus-menu-toggles.plugin.js
+ * 插件管理（小手机聊天插件）
+ * Copyright (c) 2026 七个七七
+ * SPDX-License-Identifier: MIT
+ *
+ * 本文件以 MIT 许可证开源，详见同目录 LICENSE。
+ */
+// ─────────────────────────────────────────────────────────────
+// 插件管理 · 小手机聊天插件（apiVersion 1）
+//
+// 在聊天「+」面板的插件按钮区加一个「管理」入口：
+//   · 普通调整：已安装插件一览，一键启用 / 停用（改的就是宿主插件管理页的开关）
+//   · 详细调整：点进某个插件，改它 manifest.settings 里的每一项
+//     （开关 / 下拉 / 数字 / 文本），改完立即保存并触发插件自己的 onChange
+//   · 导入插件：选 .js 文件或粘贴代码，调宿主的安装函数，同 id 覆盖升级
+//
+// 实现说明（重要）：
+// 宿主的公开插件 API 只给插件读写「自己」的设置，没有跨插件启停/改设置的接口。
+// 但宿主是 Next.js/webpack 打包，插件与宿主同环境执行，所以这里通过
+// self.webpackChunk_N_E 拿到 webpack 的模块表，按源码特征认出宿主的
+// chat-plugin-storage 模块（生产包导出名会被混淆，不能按名字找），再调用它
+// 自己的 loadChatPlugins / setChatPluginEnabled / updateChatPluginSettings——
+// 也就是插件管理页用的同一套函数，写入后会发 chat-plugins-changed，
+// 运行时立即启停插件、调用各插件的 settings.onChange。
+//
+// 导入插件则调用宿主 chat-plugin-loader 的 installChatPluginFromCode：
+// 它负责执行校验、同 id 覆盖升级、写入安装表，和「设置 → 扩展插件」的安装
+// 走完全相同的流程，导入后运行时自动加载。
+//
+// 如果某个 App 版本换了打包方式（比如 Turbopack）找不到模块，界面会明确提示
+// 并给出「设置 → 扩展插件」的退路，不会去猜、更不会直接写坏存储。
+// ─────────────────────────────────────────────────────────────
+
+const ENTRY_LABEL = "插件管理";
+
+const SLIDERS_SVG =
+  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  'stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/>' +
+  '<circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></svg>';
+
+const EXPORT_SVG =
+  '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>';
+
+const HAMBURGER_SVG =
+  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  'stroke-width="1.8" stroke-linecap="round" aria-hidden="true">' +
+  '<path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+
+const REFRESH_SVG =
+  '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg>';
+
+const HOST_EXPORT_CLASS = "pmt-host-export";
+
+const CSS = `
+.pmt-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 4px 16px 12px;
+}
+.pmt-entry {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+.pmt-entry:active .chat-plus-icon-box { transform: scale(.94); }
+
+.pmt-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  min-height: 320px;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font-size: 15px;
+  color: var(--c-text, #222);
+  text-align: left;
+}
+.pmt-head { display: flex; align-items: center; gap: 8px; }
+.pmt-title { flex: 1 1 auto; font-size: 17px; font-weight: 600; }
+.pmt-done {
+  font: inherit;
+  font-size: 14px;
+  padding: 7px 16px;
+  border-radius: 9px;
+  border: 1px solid rgba(120, 120, 120, .35);
+  background: rgba(120, 120, 120, .1);
+  color: inherit;
+  cursor: pointer;
+}
+.pmt-export {
+  flex: 0 0 auto;
+  align-self: center;
+  font: inherit;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(120, 120, 120, .35);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.pmt-export:active { background: rgba(120, 120, 120, .12); }
+.pmt-export-all { align-self: flex-start; }
+.pmt-export-code {
+  min-height: 220px;
+  max-height: 46vh;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre;
+  resize: vertical;
+}
+.pmt-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pmt-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font: inherit;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 120, 120, .32);
+  background: rgba(120, 120, 120, .07);
+  color: inherit;
+  outline: none;
+}
+.pmt-search-input:focus { border-color: rgba(74, 124, 89, .55); }
+.pmt-search-btn {
+  flex: 0 0 auto;
+  font: inherit;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 120, 120, .35);
+  background: rgba(120, 120, 120, .1);
+  color: inherit;
+  cursor: pointer;
+}
+.pmt-search-clear {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(120, 120, 120, .14);
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.pmt-search-tip { margin: 0; font-size: 12px; opacity: .65; }
+.pmt-export-choice-head { display: flex; align-items: center; gap: 8px; }
+.pmt-export-choice-title { font-size: 15px; font-weight: 600; }
+.pmt-export-help-btn {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  border: 0;
+  background: #8a8a8a;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+.pmt-export-help {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(120, 120, 120, .08);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.pmt-export-help-row { display: flex; gap: 4px; }
+.pmt-export-help-row strong { flex: 0 0 auto; }
+.pmt-export-choice-list { display: flex; flex-direction: column; gap: 8px; }
+.pmt-export-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(120, 120, 120, .24);
+  border-radius: 12px;
+  background: rgba(120, 120, 120, .05);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.pmt-export-option strong { font-size: 14px; }
+.pmt-export-option-desc { font-size: 12px; opacity: .7; }
+.pmt-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(120, 120, 120, .12);
+}
+.pmt-tab {
+  flex: 1 1 0;
+  padding: 8px 6px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.pmt-tab[data-active="1"] {
+  background: var(--c-card-bg, #fff);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+}
+.pmt-body { display: flex; flex-direction: column; gap: 10px; min-height: 180px; }
+
+.pmt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 52vh;
+  overflow: auto;
+  padding: 2px;
+}
+.pmt-plugin {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(120, 120, 120, .07);
+  box-sizing: border-box;
+}
+.pmt-plugin[data-off="1"] { opacity: .68; }
+.pmt-clickable { cursor: pointer; }
+.pmt-plugin-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.pmt-plugin-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px; }
+.pmt-name { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pmt-ver { font-size: 12px; opacity: .7; }
+.pmt-tag { font-size: 11px; padding: 1px 6px; border-radius: 6px; background: rgba(120, 120, 120, .16); opacity: .9; }
+.pmt-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  opacity: .82; color: var(--c-text, #333);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.pmt-chevron { align-self: center; font-size: 20px; line-height: 1; opacity: .35; }
+.pmt-count { margin: 0; font-size: 13px; color: var(--c-text, #333); opacity: .82; }
+.pmt-tip { margin: 0; font-size: 13px; line-height: 1.6; color: var(--c-text, #333); opacity: .82; }
+.pmt-empty { padding: 26px 8px; text-align: center; font-size: 14px; opacity: .75; }
+
+.pmt-switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 24px;
+  margin-top: 2px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(120, 120, 120, .3);
+  cursor: pointer;
+  transition: background .15s;
+}
+.pmt-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  transition: transform .15s;
+}
+.pmt-switch[aria-checked="true"] { background: #4a7c59; }
+.pmt-switch[aria-checked="true"]::after { transform: translateX(18px); }
+.pmt-switch:disabled { opacity: .45; cursor: default; }
+
+.pmt-back {
+  align-self: flex-start;
+  font: inherit;
+  font-size: 14px;
+  padding: 4px 2px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  opacity: .85;
+  cursor: pointer;
+}
+.pmt-fields { display: flex; flex-direction: column; gap: 12px; max-height: 46vh; overflow: auto; padding: 2px; }
+.pmt-field { display: flex; flex-direction: column; gap: 5px; }
+.pmt-field-head { display: flex; align-items: center; gap: 10px; }
+.pmt-field-label { flex: 1 1 auto; font-size: 14px; line-height: 1.4; }
+.pmt-field-hint { margin: 0; font-size: 12px; line-height: 1.55; color: var(--c-text, #333); opacity: .8; }
+.pmt-input {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 15px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 120, 120, .35);
+  background: rgba(120, 120, 120, .06);
+  color: inherit;
+}
+.pmt-input:focus { outline: 2px solid rgba(74, 124, 89, .45); outline-offset: 1px; }
+.pmt-saved { font-size: 12px; color: #4a7c59; opacity: 0; transition: opacity .2s; }
+.pmt-saved[data-on="1"] { opacity: 1; }
+
+.pmt-import-title { font-size: 16px; font-weight: 600; }
+.pmt-code {
+  min-height: 132px;
+  resize: vertical;
+  font-family: ui-monospace, Menlo, Consolas, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.pmt-status { font-size: 13px; line-height: 1.6; color: var(--c-text, #333); opacity: .85; }
+.pmt-status[data-error="1"] { color: #c0392b; }
+.pmt-status[data-ok="1"] { color: #3f6b4d; }
+
+.pmt-error {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(214, 72, 72, .08);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.pmt-error p { margin: 0; }
+.pmt-retry {
+  align-self: flex-start;
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  border: 1px solid rgba(120, 120, 120, .35);
+  background: rgba(120, 120, 120, .1);
+  color: inherit;
+  cursor: pointer;
+}
+
+/* 导入按钮：选文件靠左绿色，导入靠右下，选中内容后变深蓝 */
+.pmt-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
+.pmt-upgrade-preview {
+  margin-right: auto;
+  align-self: center;
+  max-width: 62%;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #4a7c59;
+  opacity: .9;
+}
+.pmt-action {
+  font: inherit;
+  font-size: 13.5px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 120, 120, .35);
+  background: rgba(120, 120, 120, .08);
+  color: inherit;
+  cursor: pointer;
+}
+.pmt-action:disabled { opacity: .5; cursor: default; }
+.pmt-pick {
+  align-self: flex-start;
+  background: #4a7c59;
+  border-color: #4a7c59;
+  color: #fff;
+  font-weight: 600;
+}
+.pmt-pick:active { background: #3f6b4d; }
+.pmt-do-import[data-ready="0"] {
+  background: transparent;
+  border-color: rgba(143, 163, 184, .45);
+  color: #8fa3b8;
+}
+.pmt-do-import[data-ready="1"] {
+  background: #1e3a8a;
+  border-color: #1e3a8a;
+  color: #fff;
+}
+
+/* 自绘提示：成功白底绿字，失败深灰底白字 */
+.pmt-toast-wrap {
+  position: fixed;
+  left: 50%;
+  top: 11%;
+  transform: translateX(-50%);
+  z-index: 2147483002;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.pmt-toast {
+  max-width: min(82vw, 440px);
+  padding: 10px 16px;
+  border-radius: 11px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+}
+.pmt-toast[data-kind="success"] {
+  background: #fff;
+  color: #2e7d32;
+  border: 1px solid rgba(46, 125, 50, .28);
+}
+.pmt-toast[data-kind="error"] {
+  background: #3a3a3a;
+  color: #fff;
+}
+
+/* 导出勾选面板 */
+.pmt-picker-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pmt-picker-list { display: flex; flex-direction: column; gap: 8px; max-height: 46vh; overflow: auto; padding: 2px; }
+.pmt-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: rgba(120, 120, 120, .08);
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+.pmt-picker-row[aria-checked="true"] { border-color: rgba(74, 124, 89, .45); background: rgba(74, 124, 89, .1); }
+.pmt-picker-box {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid rgba(120, 120, 120, .55);
+  box-sizing: border-box;
+  position: relative;
+}
+.pmt-picker-row[aria-checked="true"] .pmt-picker-box { background: #4a7c59; border-color: #4a7c59; }
+.pmt-picker-row[aria-checked="true"] .pmt-picker-box::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1.5px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.pmt-picker-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pmt-picker-export { background: #4a7c59; border-color: #4a7c59; color: #fff; }
+/* 原生「扩展插件」页：顶部搜索 + 右上角栏目折叠导航 */
+.pmt-native-tools {
+  position: fixed;
+  z-index: 130;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 14px;
+  background: var(--c-card, #fff);
+  border: 1px solid var(--c-card-border, rgba(120, 120, 120, .18));
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .10);
+}
+.pmt-native-row { display: flex; align-items: center; gap: 8px; }
+.pmt-native-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  font: inherit;
+  font-size: 13px;
+  padding: 8px 11px;
+  border-radius: 10px;
+  border: 1px solid var(--c-input-border, rgba(120, 120, 120, .3));
+  background: var(--c-input, rgba(120, 120, 120, .06));
+  color: inherit;
+  outline: none;
+}
+.pmt-native-search:focus { border-color: rgba(74, 124, 89, .55); }
+.pmt-native-search-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+.pmt-native-search-wrap .pmt-native-search {
+  width: 100%;
+  padding-right: 32px;
+}
+.pmt-native-search::-webkit-search-cancel-button,
+.pmt-native-search::-webkit-search-decoration {
+  -webkit-appearance: none;
+  display: none;
+}
+.pmt-native-refreshbtn.is-spinning svg {
+  animation: pmt-native-spin .7s linear infinite;
+}
+@keyframes pmt-native-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.pmt-native-clear {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(120, 120, 120, .18);
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.pmt-native-navbtn {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--c-input-border, rgba(120, 120, 120, .3));
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.pmt-native-navbtn svg { width: 20px; height: 20px; }
+.pmt-native-status { font-size: 12px; opacity: .65; padding: 0 2px; }
+.pmt-native-status:empty { display: none; }
+.pmt-native-navmenu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 156px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--c-card, #fff);
+  border: 1px solid var(--c-card-border, rgba(120, 120, 120, .18));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .16);
+  z-index: 131;
+}
+.pmt-native-navmenu[data-open="1"] { display: flex; flex-direction: column; gap: 2px; }
+.pmt-native-navitem {
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.pmt-native-navitem:active { background: rgba(120, 120, 120, .12); }`;
+
+export default {
+  manifest: {
+    id: "plus-menu-toggles",
+    name: "插件管理",
+    apiVersion: 1,
+    version: "2.5.22",
+    author: "七个七七",
+    description:
+      "在聊天「+」面板加一个「管理」入口：普通模式一键启停已安装插件，详细模式进去调整每个插件自己的设置项，也可以直接导入 .js 插件或 .json 备份、把已安装插件导出成 .js 或勾选导出成 .json。",
+    permissions: ["ui", "storage"],
+  },
+
+  setup(ctx) {
+    const doc = document;
+    const win = typeof window !== "undefined" ? window : globalThis;
+    const selfId = ctx.meta && ctx.meta.id ? ctx.meta.id : "plus-menu-toggles";
+
+    try {
+      ctx.ui.injectCSS(CSS);
+    } catch (err) { /* 样式注入失败不影响功能 */ }
+
+    const later = (fn, ms) => win.setTimeout(fn, Math.max(0, Number(ms) || 0));
+
+    // ── 宿主插件存储：webpack 模块表定位 ──────────────────
+    let bridge = null;
+    let bridgeTried = false;
+    let bridgeError = "";
+
+    function getWebpackRequire() {
+      const chunk = win.webpackChunk_N_E;
+      if (!Array.isArray(chunk)) return null;
+      let req = null;
+      try {
+        chunk.push([[Symbol("pmt-bridge")], {}, (r) => { req = r; }]);
+      } catch (err) {
+        return null;
+      }
+      return typeof req === "function" && req.m ? req : null;
+    }
+
+    // 生产包导出名会被混淆（如 {AA:()=>v,...}），按源码特征认三个函数
+    function parseStorageModule(source) {
+      const mapMatch = source.match(/\.d\(\s*[A-Za-z0-9_$]+\s*,\s*\{([^}]*)\}/);
+      if (!mapMatch) return null;
+
+      const keyByLocal = {};
+      const mapRe = /([A-Za-z0-9_$]+)\s*:\s*\(\)\s*=>\s*([A-Za-z0-9_$]+)/g;
+      let match;
+      while ((match = mapRe.exec(mapMatch[1]))) keyByLocal[match[2]] = match[1];
+
+      const declRe = /function\s+([A-Za-z0-9_$]+)\s*\(([^)]*)\)\s*\{/g;
+      let loadName = null;
+      let setEnabledName = null;
+      let updateName = null;
+
+      while ((match = declRe.exec(source))) {
+        const name = match[1];
+        const params = match[2].trim();
+        const windowText = source.slice(match.index, match.index + 480);
+        const argc = params ? params.split(",").length : 0;
+
+        if (argc === 0
+          && windowText.indexOf("Array.isArray") >= 0
+          && windowText.indexOf(".manifest") >= 0
+          && windowText.indexOf(".code") >= 0) {
+          loadName = name;
+        }
+        if (argc === 2
+          && windowText.indexOf(".enabled") >= 0
+          && windowText.indexOf(".manifest.id") >= 0
+          && windowText.indexOf("enabled=") >= 0) {
+          setEnabledName = name;
+        }
+        if (argc === 2
+          && windowText.indexOf(".settings") >= 0
+          && (windowText.indexOf(".settings={...") >= 0
+            || windowText.indexOf("...r.settings") >= 0
+            || windowText.indexOf(".settings=Object.assign") >= 0)) {
+          updateName = name;
+        }
+      }
+
+      if (!loadName || !setEnabledName || !updateName) return null;
+      if (loadName === setEnabledName || loadName === updateName || setEnabledName === updateName) return null;
+
+      const loadKey = keyByLocal[loadName];
+      const setKey = keyByLocal[setEnabledName];
+      const updateKey = keyByLocal[updateName];
+      if (!loadKey || !setKey || !updateKey) return null;
+      return { loadKey, setKey, updateKey };
+    }
+
+    // 安装模块：源码里有「插件源码为空」「expectedId」「upgraded」的那个双参函数
+    function parseLoaderModule(source) {
+      const mapMatch = source.match(/\.d\(\s*[A-Za-z0-9_$]+\s*,\s*\{([^}]*)\}/);
+      if (!mapMatch) return null;
+
+      const keyByLocal = {};
+      const mapRe = /([A-Za-z0-9_$]+)\s*:\s*\(\)\s*=>\s*([A-Za-z0-9_$]+)/g;
+      let match;
+      while ((match = mapRe.exec(mapMatch[1]))) keyByLocal[match[2]] = match[1];
+
+      const declRe = /function\s+([A-Za-z0-9_$]+)\s*\(([^)]*)\)\s*\{/g;
+      let installName = null;
+      while ((match = declRe.exec(source))) {
+        const params = match[2].trim();
+        if (!params || params.split(",").length !== 2) continue;
+        const windowText = source.slice(match.index, match.index + 620);
+        if (windowText.indexOf("插件源码为空") >= 0
+          && windowText.indexOf("expectedId") >= 0
+          && windowText.indexOf("upgraded") >= 0) {
+          installName = match[1];
+        }
+      }
+
+      if (!installName) return null;
+      const installKey = keyByLocal[installName];
+      if (!installKey) return null;
+      return { installKey };
+    }
+
+    function ensureBridge() {
+      if (bridgeTried) return bridge;
+      bridgeTried = true;
+      bridgeError = "";
+      bridge = null;
+
+      const req = getWebpackRequire();
+      if (!req) {
+        bridgeError = "当前 App 的打包方式拿不到插件管理接口（可能不是 webpack 构建）。";
+        return null;
+      }
+
+      let storage = null;
+      let install = null;
+      const ids = Object.keys(req.m);
+
+      for (let i = 0; i < ids.length; i += 1) {
+        if (storage && install) break;
+        const id = ids[i];
+        let source;
+        try {
+          source = String(req.m[id]);
+        } catch (err) {
+          continue;
+        }
+
+        if (!storage
+          && source.indexOf("chat_plugins_v3") >= 0
+          && source.indexOf("chat-plugins-changed") >= 0) {
+          const parsed = parseStorageModule(source);
+          if (parsed) {
+            let exports = null;
+            try { exports = req(id); } catch (err) { exports = null; }
+            if (exports) {
+              const load = exports[parsed.loadKey];
+              const setEnabled = exports[parsed.setKey];
+              const updateSettings = exports[parsed.updateKey];
+              if (typeof load === "function" && typeof setEnabled === "function" && typeof updateSettings === "function") {
+                try {
+                  const list = load();
+                  if (Array.isArray(list)) {
+                    const eventMatch = source.match(/["']([^"']*plugins-changed[^"']*)["']/);
+                    storage = { load, setEnabled, updateSettings, eventName: eventMatch ? eventMatch[1] : "chat-plugins-changed" };
+                  }
+                } catch (err) { /* ignore */ }
+              }
+            }
+          }
+        }
+
+        if (!install
+          && source.indexOf("插件源码为空") >= 0
+          && source.indexOf("expectedId") >= 0) {
+          const parsed = parseLoaderModule(source);
+          if (parsed) {
+            let exports = null;
+            try { exports = req(id); } catch (err) { exports = null; }
+            const fn = exports ? exports[parsed.installKey] : null;
+            if (typeof fn === "function") install = fn;
+          }
+        }
+      }
+
+      if (!storage) {
+        bridgeError = "找到了宿主代码，但没能读出插件列表。";
+        return null;
+      }
+
+      bridge = { load: storage.load, setEnabled: storage.setEnabled, updateSettings: storage.updateSettings, install, eventName: storage.eventName || "chat-plugins-changed" };
+      return bridge;
+    }
+
+    function resetBridge() {
+      bridgeTried = false;
+      bridge = null;
+      bridgeError = "";
+    }
+
+    function loadPlugins() {
+      if (!bridge) return [];
+      try {
+        const list = bridge.load();
+        if (!Array.isArray(list)) return [];
+        return list.filter((item) => item && item.manifest && typeof item.manifest.id === "string");
+      } catch (err) {
+        bridgeError = "读取插件列表失败。";
+        return [];
+      }
+    }
+
+    // ── 状态 ──────────────────────────────────────────────
+    let modalHandle = null;
+    let modalGen = 0;
+    let activeTab = "normal";
+    let detailId = null;
+    let loading = false;
+    let plugins = [];
+    let savedTimers = [];
+    let importView = false;
+    let exportAllView = false;
+    let exportAllHelp = false;
+    let exportInfoOpen = false;
+    let importCode = "";
+    let importBusy = false;
+    let importResult = null;
+    let exportId = null;
+    let searchQuery = "";
+    let searchDraft = "";
+    let detailScroll = 0;
+    let detailScrollEl = null;
+    let restoreDetailScroll = false;
+    let listScrollChain = null;
+    let restoreNormalScroll = false;
+    let pickerHandle = null;
+    let toastWrap = null;
+    const toastTimers = new Set();
+
+    function toast(text) {
+      try {
+        if (ctx.ui && typeof ctx.ui.toast === "function") ctx.ui.toast(text);
+      } catch (err) { /* ignore */ }
+    }
+
+    // 自绘提示：成功白底绿字、失败深灰底白字（宿主 toast 改不了样式）
+    function notify(kind, text) {
+      try {
+        if (!text) return;
+        if (!toastWrap || !toastWrap.parentNode) {
+          toastWrap = doc.createElement("div");
+          toastWrap.className = "pmt-toast-wrap";
+          (doc.body || doc.documentElement).appendChild(toastWrap);
+        }
+        const item = doc.createElement("div");
+        item.className = "pmt-toast";
+        item.setAttribute("data-kind", kind === "success" ? "success" : "error");
+        item.textContent = String(text);
+        toastWrap.appendChild(item);
+
+        const timer = later(() => {
+          toastTimers.delete(timer);
+          if (item.parentNode) item.parentNode.removeChild(item);
+          if (toastWrap && toastWrap.children.length === 0 && toastWrap.parentNode) {
+            toastWrap.parentNode.removeChild(toastWrap);
+            toastWrap = null;
+          }
+        }, kind === "success" ? 2600 : 3400);
+        toastTimers.add(timer);
+      } catch (err) { /* 提示失败不能影响主流程 */ }
+    }
+
+    function markSaved(span) {
+      if (!span) return;
+      span.setAttribute("data-on", "1");
+      const timer = later(() => {
+        span.removeAttribute("data-on");
+        savedTimers = savedTimers.filter((item) => item !== timer);
+      }, 1200);
+      savedTimers.push(timer);
+    }
+
+    // ── 入口按钮 ──────────────────────────────────────────
+    let offSlot = () => {};
+    try {
+      const dispose = ctx.ui.slot("chat.inputToolbar", (el) => {
+        try {
+          const row = doc.createElement("div");
+          row.className = "pmt-row";
+
+          const item = doc.createElement("div");
+          item.className = "chat-plus-menu-item pmt-entry";
+          item.setAttribute("role", "button");
+          item.setAttribute("tabindex", "0");
+          item.setAttribute("title", "管理扩展插件");
+          item.setAttribute("data-panel-manager", "1");
+          const box = doc.createElement("div");
+          box.className = "chat-plus-icon-box";
+          box.innerHTML = SLIDERS_SVG;
+
+          const label = doc.createElement("span");
+          label.className = "ts-11";
+          label.textContent = ENTRY_LABEL;
+
+          item.appendChild(box);
+          item.appendChild(label);
+
+          const activate = () => openManager();
+          item.addEventListener("click", activate);
+          item.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              activate();
+            }
+          });
+
+          row.appendChild(item);
+          el.insertBefore(row, el.firstChild || null);
+
+          return () => {
+            try {
+              if (row.parentNode) row.parentNode.removeChild(row);
+            } catch (err) { /* ignore */ }
+          };
+        } catch (err) {
+          return () => {};
+        }
+      });
+      if (typeof dispose === "function") offSlot = dispose;
+      else if (dispose && typeof dispose.dispose === "function") offSlot = () => dispose.dispose();
+    } catch (err) { /* 槽位注册失败也不把宿主带崩 */ }
+
+    // ── 浮层 ──────────────────────────────────────────────
+    function openManager() {
+      if (modalHandle) return;
+      activeTab = "normal";
+      detailId = null;
+      detailScroll = 0;
+      detailScrollEl = null;
+      restoreDetailScroll = false;
+      listScrollChain = null;
+      restoreNormalScroll = false;
+      loading = true;
+      plugins = [];
+      importView = false;
+      exportAllView = false;
+      exportAllHelp = false;
+      exportInfoOpen = false;
+      importCode = "";
+      importBusy = false;
+      importResult = null;
+      exportId = null;
+      searchQuery = "";
+      searchDraft = "";
+
+      const handle = ctx.ui.openModal((root, api) => {
+        let closed = false;
+        const gen = ++modalGen;
+        root.classList.add("pmt-modal");
+        root.textContent = "";
+
+        const rerender = () => {
+          if (closed) return;
+          const oldBody = root.querySelector(".pmt-body");
+          const oldKind = bodyViewKind(oldBody);
+          const oldChain = oldBody ? captureListScroll(oldBody) : null;
+          renderModal(root, api, rerender);
+          const newBody = root.querySelector(".pmt-body");
+          if (oldKind && oldChain && newBody && bodyViewKind(newBody) === oldKind) {
+            // 开关、设置值等“同类视图”刷新时保持当前位置；跳转由各返回路径单独处理
+            listScrollChain = oldChain;
+            restoreListScrollState(newBody);
+          }
+        };
+        renderModal(root, api, rerender);
+
+        // 模块表扫描可能要几十到几百毫秒，先让界面画出来再扫
+        later(() => {
+          if (closed || gen !== modalGen) return;
+          ensureBridge();
+          plugins = loadPlugins();
+          loading = false;
+          rerender();
+        }, 30);
+
+        return () => {
+          closed = true;
+          modalHandle = null;
+          savedTimers.forEach((timer) => { try { win.clearTimeout(timer); } catch (err) { /* ignore */ } });
+          savedTimers = [];
+        };
+      });
+      modalHandle = handle || null;
+    }
+
+    function element(tag, className, text) {
+      const el = doc.createElement(tag);
+      if (className) el.className = className;
+      if (text != null) el.textContent = text;
+      return el;
+    }
+
+    function makeSwitch(checked, onChange, disabled) {
+      const button = element("button", "pmt-switch");
+      button.type = "button";
+      button.setAttribute("role", "switch");
+      button.setAttribute("aria-checked", checked ? "true" : "false");
+      if (disabled) button.disabled = true;
+      button.addEventListener("click", (event) => {
+        if (event && event.stopPropagation) event.stopPropagation();
+        onChange();
+      });
+      return button;
+    }
+
+    function renderModal(root, api, rerender) {
+      while (root.firstChild) root.removeChild(root.firstChild);
+
+      const head = element("div", "pmt-head");
+      head.appendChild(element("div", "pmt-title", "插件管理"));
+
+      const importBtn = element("button", "pmt-done pmt-import-open", "导入");
+      importBtn.type = "button";
+      importBtn.addEventListener("click", () => {
+        activeTab = "normal";
+        detailId = null;
+        exportAllView = false;
+        exportAllHelp = false;
+        const listForImport = root.querySelector(".pmt-list");
+        if (listForImport) listScrollChain = captureListScroll(listForImport);
+        importView = true;
+        importResult = null;
+        exportId = null;
+        rerender();
+      });
+      head.appendChild(importBtn);
+
+      const done = element("button", "pmt-done", "完成");
+      done.type = "button";
+      done.addEventListener("click", () => {
+        // 在某个插件的详细设置页里，完成 = 回到详细列表（恢复原滚动位置），不退出管理
+        if (detailId) {
+          detailId = null;
+          restoreDetailScroll = true;
+          rerender();
+          return;
+        }
+        if (api && typeof api.close === "function") api.close();
+        else if (modalHandle && typeof modalHandle.close === "function") modalHandle.close();
+        modalHandle = null;
+      });
+      head.appendChild(done);
+
+      const tabs = element("div", "pmt-tabs");
+      const tabDefs = [["normal", "普通调整"], ["detail", "详细调整"]];
+      for (let i = 0; i < tabDefs.length; i += 1) {
+        const key = tabDefs[i][0];
+        const tab = element("button", "pmt-tab", tabDefs[i][1]);
+        tab.type = "button";
+        tab.setAttribute("data-tab", key);
+        tab.setAttribute("data-active", key === activeTab && !importView ? "1" : "0");
+        tab.addEventListener("click", () => {
+          activeTab = key;
+          detailId = null;
+          importView = false;
+          exportAllView = false;
+          exportAllHelp = false;
+          restoreNormalScroll = false;
+          restoreDetailScroll = false;
+          listScrollChain = null;
+          exportId = null;
+          rerender();
+        });
+        tabs.appendChild(tab);
+      }
+
+      const body = element("div", "pmt-body");
+      if (loading) {
+        body.appendChild(element("div", "pmt-empty", "正在读取插件列表…"));
+      } else if (!bridge) {
+        renderBridgeError(body, rerender);
+      } else if (exportAllView) {
+        renderExportAllChoice(body, rerender);
+      } else if (importView) {
+        renderImport(body, rerender);
+      } else if (exportId) {
+        const plugin = plugins.find((item) => item.manifest.id === exportId);
+        if (plugin) renderExport(body, plugin, rerender);
+        else { exportId = null; renderNormal(body, rerender); }
+      } else if (activeTab === "detail" && detailId) {
+        const plugin = plugins.find((item) => item.manifest.id === detailId);
+        if (plugin) renderSettings(body, plugin, rerender);
+        else { detailId = null; renderDetailList(body, rerender); }
+      } else if (activeTab === "detail") {
+        renderDetailList(body, rerender);
+      } else {
+        renderNormal(body, rerender);
+      }
+
+      root.appendChild(head);
+
+      if (!importView && !exportId) {
+        const search = element("div", "pmt-search");
+        const input = doc.createElement("input");
+        input.type = "search";
+        input.className = "pmt-search-input";
+        input.setAttribute("placeholder", "搜索插件：名称 / id / 作者 / 描述");
+        input.value = searchDraft;
+        input.addEventListener("input", () => { searchDraft = input.value; });
+        const runSearch = () => {
+          searchQuery = String(input.value || "").trim();
+          searchDraft = searchQuery;
+          detailId = null;
+          restoreDetailScroll = false;
+          rerender();
+        };
+        input.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            runSearch();
+          }
+        });
+        const searchBtn = element("button", "pmt-search-btn", "搜索");
+        searchBtn.type = "button";
+        searchBtn.addEventListener("click", runSearch);
+        search.appendChild(input);
+        search.appendChild(searchBtn);
+        if (searchQuery) {
+          const clear = element("button", "pmt-search-clear", "×");
+          clear.type = "button";
+          clear.setAttribute("aria-label", "清除搜索");
+          clear.addEventListener("click", () => {
+            searchQuery = "";
+            searchDraft = "";
+            detailId = null;
+            rerender();
+          });
+          search.appendChild(clear);
+        }
+        root.appendChild(search);
+        if (searchQuery) {
+          root.appendChild(element("p", "pmt-search-tip", `筛选「${searchQuery}」`));
+        }
+      }
+
+      root.appendChild(tabs);
+      root.appendChild(body);
+    }
+
+    function renderBridgeError(body, rerender) {
+      const box = element("div", "pmt-error");
+      box.appendChild(element("p", null, bridgeError || "读不到插件管理接口。"));
+      box.appendChild(element(
+        "p",
+        null,
+        "这个 App 版本的打包方式可能变了。你仍然可以在「设置 → 扩展插件」里启停插件、改各项设置。",
+      ));
+      const retry = element("button", "pmt-retry", "重试");
+      retry.type = "button";
+      retry.addEventListener("click", () => {
+        resetBridge();
+        loading = true;
+        rerender();
+        later(() => {
+          ensureBridge();
+          plugins = loadPlugins();
+          loading = false;
+          rerender();
+        }, 30);
+      });
+      box.appendChild(retry);
+      body.appendChild(box);
+    }
+
+    function readFileText(file) {
+      if (file && typeof file.text === "function") return file.text();
+      return new Promise((resolve, reject) => {
+        try {
+          if (typeof FileReader === "undefined") {
+            reject(new Error("no FileReader"));
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ""));
+          reader.onerror = () => reject(reader.error || new Error("read failed"));
+          reader.readAsText(file);
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
+
+    // ── 导出插件 ──────────────────────────────────────────
+    function pluginSourceOf(plugin) {
+      return plugin && typeof plugin.code === "string" ? plugin.code : "";
+    }
+
+    function safeFileName(name) {
+      const cleaned = String(name || "")
+        .replace(/[\\/:*?"<>|\s]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      return cleaned || "plugin";
+    }
+
+    // 壳的保存桥只能写 Download 根目录，文件名统一加前缀，至少能聚在一起找
+    const EXPORT_PREFIX = "导出插件-";
+    function exportFileName(base) {
+      return `${EXPORT_PREFIX}${safeFileName(base)}`;
+    }
+
+    function dateStamp() {
+      const d = new Date();
+      const two = (value) => String(value).padStart(2, "0");
+      return `${d.getFullYear()}${two(d.getMonth() + 1)}${two(d.getDate())}-${two(d.getHours())}${two(d.getMinutes())}`;
+    }
+
+    function shellSaver() {
+      try {
+        const shell = (typeof window !== "undefined" ? window : win).AndroidShell;
+        if (shell && typeof shell.saveBase64File === "function") return shell;
+      } catch (err) { /* ignore */ }
+      return null;
+    }
+
+    function base64FromText(text) {
+      try {
+        if (typeof TextEncoder !== "undefined" && typeof btoa === "function") {
+          const bytes = new TextEncoder().encode(String(text));
+          let binary = "";
+          const step = 0x8000;
+          for (let i = 0; i < bytes.length; i += step) {
+            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + step));
+          }
+          return btoa(binary);
+        }
+      } catch (err) { /* ignore */ }
+      return "";
+    }
+
+    // 宿主壳里 blob + a[download] 不会落盘（DownloadManager 取不到内存地址），
+    // 必须把 base64 交给 AndroidShell，从 MediaStore 写进公共「下载」目录。
+    const saveCallbacks = {};
+    function ensureSaveCallbackBridge() {
+      try {
+        if (typeof win.__pmtOnSaveFile === "function") return;
+        win.__pmtOnSaveFile = (id, ok) => {
+          const key = String(id || "");
+          const callback = saveCallbacks[key];
+          if (!callback) return;
+          delete saveCallbacks[key];
+          try { callback(Boolean(ok)); } catch (err) { /* ignore */ }
+        };
+      } catch (err) { /* ignore */ }
+    }
+
+    function launchSavePicker(shell, filename, base64, mime) {
+      try {
+        ensureSaveCallbackBridge();
+        const id = `pmt_save_${Date.now()}_${Math.floor(Math.random() * 1000000)}`;
+        saveCallbacks[id] = (ok) => {
+          notify(ok ? "success" : "error", ok ? "已保存到所选位置" : "已取消保存");
+        };
+        let launched;
+        try {
+          launched = shell.saveFileWithPicker(filename, base64, id, mime || "application/octet-stream");
+        } catch (err) {
+          delete saveCallbacks[id];
+          return false;
+        }
+        if (launched !== false) {
+          later(() => { delete saveCallbacks[id]; }, 10 * 60 * 1000);
+          return true;
+        }
+        delete saveCallbacks[id];
+      } catch (err) { /* ignore */ }
+      return false;
+    }
+
+    function downloadText(filename, text, mime, options) {
+      const allowPicker = !options || options.picker !== false;
+      const shell = shellSaver();
+      if (shell) {
+        const base64 = base64FromText(text);
+        if (base64) {
+          if (allowPicker && typeof shell.saveFileWithPicker === "function") {
+            if (launchSavePicker(shell, filename, base64, mime)) return "picker";
+          }
+          try {
+            if (shell.saveBase64File(filename, base64) === true) return "download";
+          } catch (err) { /* 落盘失败，退回浏览器路径 */ }
+        }
+      }
+
+      try {
+        const BlobCtor = typeof Blob !== "undefined" ? Blob : (win.Blob || null);
+        const URLObj = typeof URL !== "undefined" ? URL : (win.URL || null);
+        if (!BlobCtor || !URLObj || typeof URLObj.createObjectURL !== "function") return false;
+        const blob = new BlobCtor([text], { type: `${mime};charset=utf-8` });
+        const url = URLObj.createObjectURL(blob);
+        const a = doc.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.rel = "noopener";
+        a.style.display = "none";
+        doc.body.appendChild(a);
+        a.click();
+        later(() => {
+          try {
+            if (a.parentNode) a.parentNode.removeChild(a);
+          } catch (err) { /* ignore */ }
+          try { URLObj.revokeObjectURL(url); } catch (err) { /* ignore */ }
+        }, 1500);
+        return "browser";
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function downloadSavedText(fileName) {
+      return shellSaver() ? `已保存到「下载」：${fileName}` : `已开始下载 ${fileName}`;
+    }
+
+    function copyText(text) {
+      const nav = typeof navigator !== "undefined" ? navigator : (win.navigator || null);
+      if (nav && nav.clipboard && typeof nav.clipboard.writeText === "function") {
+        return nav.clipboard.writeText(text);
+      }
+      return new Promise((resolve, reject) => {
+        try {
+          const area = doc.createElement("textarea");
+          area.value = text;
+          area.style.position = "fixed";
+          area.style.left = "-9999px";
+          area.style.top = "0";
+          doc.body.appendChild(area);
+          area.focus();
+          area.select();
+          const ok = doc.execCommand ? doc.execCommand("copy") : false;
+          if (area.parentNode) area.parentNode.removeChild(area);
+          if (ok) resolve(); else reject(new Error("copy failed"));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
+
+    function openExport(plugin, rerender) {
+      activeTab = "normal";
+      detailId = null;
+      importView = false;
+      exportId = plugin.manifest.id;
+      exportInfoOpen = false;
+      rerender();
+    }
+
+    function renderExport(body, plugin, rerender) {
+      const back = element("button", "pmt-back", "‹ 插件列表");
+      back.type = "button";
+      back.addEventListener("click", () => {
+        exportId = null;
+        restoreNormalScroll = activeTab === "normal";
+        rerender();
+      });
+      body.appendChild(back);
+
+      const exportHead = element("div", "pmt-export-choice-head");
+      exportHead.appendChild(element("div", "pmt-import-title", "导出插件"));
+      const infoBtn = element("button", "pmt-export-help-btn", "?");
+      infoBtn.type = "button";
+      infoBtn.setAttribute("aria-label", "导出位置和文件大小");
+      infoBtn.setAttribute("aria-expanded", exportInfoOpen ? "true" : "false");
+      infoBtn.addEventListener("click", () => {
+        exportInfoOpen = !exportInfoOpen;
+        rerender();
+      });
+      exportHead.appendChild(infoBtn);
+      body.appendChild(exportHead);
+      body.appendChild(pluginTitle(plugin));
+
+      const code = pluginSourceOf(plugin);
+      if (!code.trim()) {
+        const warn = element("div", "pmt-error");
+        warn.appendChild(element("p", null, "这个插件没有保存源码，无法导出。"));
+        body.appendChild(warn);
+        return;
+      }
+
+      const fileName = `${exportFileName(`${plugin.manifest.id}-${plugin.manifest.version || "plugin"}`)}.js`;
+      const sizeKb = Math.max(1, Math.round(code.length / 1024));
+      body.appendChild(element(
+        "p",
+        "pmt-tip",
+        `文件名：${fileName}（${sizeKb}KB）。优先下载；如果没反应，就用「复制源码」自己保存。`,
+      ));
+      if (exportInfoOpen) {
+        const shell = shellSaver();
+        const canPick = Boolean(shell && typeof shell.saveFileWithPicker === "function");
+        const locationText = canPick
+          ? "点「下载 .js」后会先弹出系统保存位置，选好后保存到那里。"
+          : (shell ? "点「下载 .js」后保存到系统「下载」目录（/sdcard/Download）。" : "浏览器下载目录。");
+        const info = element("div", "pmt-export-help");
+        const rows = [
+          ["导出位置", locationText],
+          ["文件大小", `约 ${sizeKb} KB（单插件 .js 源码）。`],
+          ["包含内容", "只包含插件源码；不包含设置和启用状态。同 id 导入覆盖升级会保留手机上原有设置。"],
+          ["备用方式", "下载没反应时，用「复制源码」保存到文本文件。"],
+        ];
+        for (let i = 0; i < rows.length; i += 1) {
+          const row = element("div", "pmt-export-help-row");
+          row.appendChild(element("strong", null, `${rows[i][0]}：`));
+          row.appendChild(element("span", null, rows[i][1]));
+          info.appendChild(row);
+        }
+        body.appendChild(info);
+      }
+
+      const actions = element("div", "pmt-actions");
+      const downloadBtn = element("button", "pmt-action pmt-do-export", "下载 .js");
+      downloadBtn.type = "button";
+      downloadBtn.addEventListener("click", () => {
+        const result = downloadText(fileName, code, "text/javascript");
+        if (result === "picker") {
+          notify("success", "已打开保存位置，选好后即可保存");
+          return;
+        }
+        notify(result ? "success" : "error", result ? downloadSavedText(fileName) : "下载失败，请用「复制源码」");
+      });
+      const copyBtn = element("button", "pmt-action pmt-copy-export", "复制源码");
+      copyBtn.type = "button";
+      copyBtn.addEventListener("click", () => {
+        copyText(code)
+          .then(() => notify("success", "已复制插件源码"))
+          .catch(() => notify("error", "复制失败，请长按文本框全选复制"));
+      });
+      actions.appendChild(downloadBtn);
+      actions.appendChild(copyBtn);
+      body.appendChild(actions);
+
+      const area = doc.createElement("textarea");
+      area.className = "pmt-input pmt-code pmt-export-code";
+      area.value = code;
+      area.readOnly = true;
+      area.setAttribute("aria-label", "插件源码");
+      area.addEventListener("focus", () => {
+        try { area.select(); } catch (err) { /* ignore */ }
+      });
+      body.appendChild(area);
+
+      body.appendChild(element("p", "pmt-tip", "同 id 的插件可以用「导入」覆盖升级，原有设置会保留。"));
+    }
+
+    function buildExportBundle(list) {
+      const source = Array.isArray(list) ? list : plugins;
+      const payload = {
+        format: "doremy-chat-plugins",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        plugins: source.map((plugin) => ({
+          manifest: plugin.manifest,
+          enabled: plugin.enabled !== false,
+          settings: plugin.settings && typeof plugin.settings === "object" ? plugin.settings : {},
+          code: pluginSourceOf(plugin),
+        })),
+      };
+      return {
+        fileName: `${EXPORT_PREFIX}plugins-${dateStamp()}.json`,
+        text: JSON.stringify(payload, null, 2),
+      };
+    }
+
+    function textBytes(text) {
+      try {
+        if (typeof TextEncoder !== "undefined") return new TextEncoder().encode(String(text));
+      } catch (err) { /* ignore */ }
+      const encoded = unescape(encodeURIComponent(String(text)));
+      const out = new Uint8Array(encoded.length);
+      for (let i = 0; i < encoded.length; i += 1) out[i] = encoded.charCodeAt(i);
+      return out;
+    }
+
+    function base64FromBytes(bytes) {
+      let binary = "";
+      const step = 0x8000;
+      for (let i = 0; i < bytes.length; i += step) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + step));
+      }
+      return btoa(binary);
+    }
+
+    function crc32(bytes) {
+      let table = crc32.table;
+      if (!table) {
+        table = [];
+        for (let n = 0; n < 256; n += 1) {
+          let c = n;
+          for (let k = 0; k < 8; k += 1) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+          table[n] = c >>> 0;
+        }
+        crc32.table = table;
+      }
+      let crc = 0xffffffff;
+      for (let i = 0; i < bytes.length; i += 1) crc = table[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+      return (crc ^ 0xffffffff) >>> 0;
+    }
+
+    function createZip(files) {
+      const chunks = [];
+      const entries = [];
+      let offset = 0;
+      const push = (bytes) => { chunks.push(bytes); offset += bytes.length; };
+      const u16 = (value) => {
+        const b = new Uint8Array(2);
+        b[0] = value & 0xff;
+        b[1] = (value >>> 8) & 0xff;
+        return b;
+      };
+      const u32 = (value) => {
+        const b = new Uint8Array(4);
+        b[0] = value & 0xff;
+        b[1] = (value >>> 8) & 0xff;
+        b[2] = (value >>> 16) & 0xff;
+        b[3] = (value >>> 24) & 0xff;
+        return b;
+      };
+      const now = new Date();
+      const dosTime = ((now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1)) & 0xffff;
+      const dosDate = (((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate()) & 0xffff;
+
+      for (let i = 0; i < files.length; i += 1) {
+        const file = files[i];
+        const name = textBytes(file.name);
+        const data = file.bytes instanceof Uint8Array ? file.bytes : textBytes(file.text || "");
+        const crc = crc32(data);
+        const localOffset = offset;
+        push(u32(0x04034b50));
+        push(u16(20));
+        push(u16(0x0800));
+        push(u16(0));
+        push(u16(dosTime));
+        push(u16(dosDate));
+        push(u32(crc));
+        push(u32(data.length));
+        push(u32(data.length));
+        push(u16(name.length));
+        push(u16(0));
+        push(name);
+        push(data);
+        entries.push({ name, crc, size: data.length, offset: localOffset, time: dosTime, date: dosDate });
+      }
+
+      const centralStart = offset;
+      for (let i = 0; i < entries.length; i += 1) {
+        const entry = entries[i];
+        push(u32(0x02014b50));
+        push(u16(20));
+        push(u16(20));
+        push(u16(0x0800));
+        push(u16(0));
+        push(u16(entry.time));
+        push(u16(entry.date));
+        push(u32(entry.crc));
+        push(u32(entry.size));
+        push(u32(entry.size));
+        push(u16(entry.name.length));
+        push(u16(0));
+        push(u16(0));
+        push(u16(0));
+        push(u16(0));
+        push(u32(0));
+        push(u32(entry.offset));
+        push(entry.name);
+      }
+      const centralSize = offset - centralStart;
+
+      push(u32(0x06054b50));
+      push(u16(0));
+      push(u16(0));
+      push(u16(entries.length));
+      push(u16(entries.length));
+      push(u32(centralSize));
+      push(u32(centralStart));
+      push(u16(0));
+
+      const total = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+      const out = new Uint8Array(total);
+      let at = 0;
+      for (let i = 0; i < chunks.length; i += 1) {
+        out.set(chunks[i], at);
+        at += chunks[i].length;
+      }
+      return out;
+    }
+
+    function downloadBytes(filename, bytes, mime) {
+      const shell = shellSaver();
+      if (shell) {
+        const base64 = base64FromBytes(bytes);
+        if (typeof shell.saveFileWithPicker === "function") {
+          if (launchSavePicker(shell, filename, base64, mime)) return "picker";
+        }
+        try {
+          if (shell.saveBase64File(filename, base64) === true) return "download";
+        } catch (err) { /* ignore */ }
+      }
+
+      try {
+        const BlobCtor = typeof Blob !== "undefined" ? Blob : (win.Blob || null);
+        const URLObj = typeof URL !== "undefined" ? URL : (win.URL || null);
+        if (!BlobCtor || !URLObj || typeof URLObj.createObjectURL !== "function") return false;
+        const blob = new BlobCtor([bytes], { type: mime });
+        const url = URLObj.createObjectURL(blob);
+        const a = doc.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.rel = "noopener";
+        a.style.display = "none";
+        doc.body.appendChild(a);
+        a.click();
+        later(() => {
+          try {
+            if (a.parentNode) a.parentNode.removeChild(a);
+          } catch (err) { /* ignore */ }
+          try { URLObj.revokeObjectURL(url); } catch (err) { /* ignore */ }
+        }, 1500);
+        return "browser";
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function exportAllPlugins() {
+      const { fileName, text } = buildExportBundle(plugins);
+      const result = downloadText(fileName, text, "application/json");
+      const picker = result === "picker";
+      const ok = Boolean(result);
+      copyText(text)
+        .then(() => notify(ok ? "success" : "error", ok
+          ? (picker
+            ? "已打开保存位置，选好后即可保存（已复制全部插件）"
+            : (shellSaver() ? "已保存到「下载」并复制全部插件" : "已开始下载并复制全部插件"))
+          : "无法下载，已复制全部插件 JSON"))
+        .catch(() => notify(ok ? "success" : "error", ok
+          ? (picker ? "已打开保存位置，选好后即可保存" : downloadSavedText(fileName))
+          : "导出失败，请逐个插件复制源码"));
+    }
+
+    function exportAllAsJsFiles() {
+      const files = [];
+      for (let i = 0; i < plugins.length; i += 1) {
+        const plugin = plugins[i];
+        const code = pluginSourceOf(plugin);
+        if (!code.trim()) continue;
+        const base = `${plugin.manifest.id}-${plugin.manifest.version || "plugin"}`;
+        files.push({ fileName: `${exportFileName(base)}.js`, code });
+      }
+      if (!files.length) {
+        notify("error", "没有可导出的插件源码");
+        return;
+      }
+      for (let i = 0; i < files.length; i += 1) {
+        const file = files[i];
+        const start = () => {
+          try { downloadText(file.fileName, file.code, "text/javascript", { picker: false }); } catch (err) { /* ignore */ }
+        };
+        if (i === 0) start();
+        else later(start, i * 260);
+      }
+      notify("success", `已开始导出 ${files.length} 个 .js 文件`);
+    }
+
+    function exportAllAsZip() {
+      const files = [];
+      for (let i = 0; i < plugins.length; i += 1) {
+        const plugin = plugins[i];
+        const code = pluginSourceOf(plugin);
+        if (!code.trim()) continue;
+        const base = `${plugin.manifest.id}-${plugin.manifest.version || "plugin"}`;
+        files.push({ name: `${exportFileName(base)}.js`, text: code });
+      }
+      if (!files.length) {
+        notify("error", "没有可导出的插件源码");
+        return;
+      }
+      const readme = [
+        "doremy chat plugins backup",
+        `导出时间：${new Date().toISOString()}`,
+        "",
+        "包含插件：",
+        ...files.map((file) => `- ${file.name}`),
+        "",
+        "安装：设置 → 扩展插件 → 安装插件，选择对应 .js；或 插件管理 → 导入。",
+      ].join("\n");
+      const zipFiles = [{ name: "README.txt", text: readme }].concat(files);
+      const bytes = createZip(zipFiles);
+      const fileName = `${EXPORT_PREFIX}plugins-${dateStamp()}.zip`;
+      const result = downloadBytes(fileName, bytes, "application/zip");
+      if (result === "picker") notify("success", "已打开保存位置，选好后即可保存");
+      else if (result === "download") notify("success", `已保存到「下载」：${fileName}`);
+      else if (result === "browser") notify("success", `已开始下载 ${fileName}`);
+      else notify("error", "打包失败，请重试");
+    }
+
+    function openExportPicker() {
+      if (pickerHandle) return;
+      ensureBridge();
+      if (!bridge) {
+        notify("error", "当前版本取不到插件接口，请用「管理」里的导出");
+        return;
+      }
+      plugins = loadPlugins();
+      if (!plugins.length) {
+        notify("error", "还没有安装插件");
+        return;
+      }
+
+      const selected = new Set(plugins.map((item) => item.manifest.id));
+      const handle = ctx.ui.openModal((root, api) => {
+        let closed = false;
+        const rerender = () => {
+          if (closed) return;
+          renderPicker(root, api, rerender, selected);
+        };
+        root.classList.add("pmt-modal", "pmt-picker");
+        root.textContent = "";
+        renderPicker(root, api, rerender, selected);
+        return () => {
+          closed = true;
+          pickerHandle = null;
+        };
+      });
+      pickerHandle = handle || null;
+    }
+
+    function renderPicker(root, api, rerender, selected) {
+      while (root.firstChild) root.removeChild(root.firstChild);
+
+      const head = element("div", "pmt-head");
+      head.appendChild(element("div", "pmt-title", "导出插件"));
+      const cancel = element("button", "pmt-done", "取消");
+      cancel.type = "button";
+      cancel.addEventListener("click", () => {
+        if (api && typeof api.close === "function") api.close();
+        else if (pickerHandle && typeof pickerHandle.close === "function") pickerHandle.close();
+      });
+      head.appendChild(cancel);
+      root.appendChild(head);
+
+      root.appendChild(element("p", "pmt-tip", "勾选要导出的插件（可单选、多选或全选），每个插件导出为 .js 文件。"));
+
+      const allSelected = plugins.every((item) => selected.has(item.manifest.id));
+      const tools = element("div", "pmt-picker-tools");
+      const selectAll = element("button", "pmt-action pmt-picker-all", allSelected ? "取消全选" : "全选");
+      selectAll.type = "button";
+      selectAll.addEventListener("click", () => {
+        if (plugins.every((item) => selected.has(item.manifest.id))) selected.clear();
+        else plugins.forEach((item) => selected.add(item.manifest.id));
+        rerender();
+      });
+      tools.appendChild(selectAll);
+      tools.appendChild(element("span", "pmt-count", `已选 ${selected.size} / ${plugins.length}`));
+      root.appendChild(tools);
+
+      const list = element("div", "pmt-picker-list");
+      for (let i = 0; i < plugins.length; i += 1) {
+        const plugin = plugins[i];
+        const on = selected.has(plugin.manifest.id);
+        const row = element("button", "pmt-picker-row");
+        row.type = "button";
+        row.setAttribute("role", "checkbox");
+        row.setAttribute("aria-checked", on ? "true" : "false");
+        row.appendChild(element("span", "pmt-picker-box"));
+        const name = `${plugin.manifest.name || plugin.manifest.id}${plugin.manifest.version ? ` v${plugin.manifest.version}` : ""}`;
+        row.appendChild(element("span", "pmt-picker-name", name));
+        row.addEventListener("click", () => {
+          if (selected.has(plugin.manifest.id)) selected.delete(plugin.manifest.id);
+          else selected.add(plugin.manifest.id);
+          rerender();
+        });
+        list.appendChild(row);
+      }
+      root.appendChild(list);
+
+      const foot = element("div", "pmt-actions");
+      const exportBtn = element("button", "pmt-action pmt-picker-export", "导出所选（.js）");
+      exportBtn.type = "button";
+      exportBtn.disabled = selected.size === 0;
+      exportBtn.addEventListener("click", () => {
+        const chosen = plugins.filter((item) => selected.has(item.manifest.id));
+        if (!chosen.length) {
+          notify("error", "先勾选至少一个插件");
+          return;
+        }
+
+        const files = [];
+        for (let i = 0; i < chosen.length; i += 1) {
+          const plugin = chosen[i];
+          const code = pluginSourceOf(plugin);
+          if (!String(code || "").trim()) continue;
+          const base = `${plugin.manifest.id}-${plugin.manifest.version || "plugin"}`;
+          files.push({ fileName: `${exportFileName(base)}.js`, code });
+        }
+        if (!files.length) {
+          notify("error", "选中的插件没有保存源码，无法导出");
+          return;
+        }
+
+        // 单个直接下载；多个按 260ms 错开，降低 Android WebView 连续下载被拦的概率
+        const single = files.length === 1;
+        const firstResult = downloadText(files[0].fileName, files[0].code, "text/javascript", { picker: single });
+        if (single) {
+          if (firstResult === "picker") {
+            notify("success", "已打开保存位置，选好后即可保存");
+            if (api && typeof api.close === "function") api.close();
+          } else if (firstResult) {
+            notify("success", downloadSavedText(files[0].fileName));
+            if (api && typeof api.close === "function") api.close();
+          } else {
+            notify("error", "导出失败，请重试或到「管理」里逐个复制源码");
+          }
+          return;
+        }
+
+        for (let i = 1; i < files.length; i += 1) {
+          const file = files[i];
+          later(() => {
+            try { downloadText(file.fileName, file.code, "text/javascript", { picker: false }); } catch (err) { /* ignore */ }
+          }, i * 260);
+        }
+        const skipped = chosen.length - files.length;
+        notify("success", `${shellSaver() ? "已保存到「下载」" : "已开始导出"} ${files.length} 个 .js 文件${skipped ? `（${skipped} 个无源码已跳过）` : ""}`);
+        if (api && typeof api.close === "function") api.close();
+      });
+      foot.appendChild(exportBtn);
+      root.appendChild(foot);
+    }
+
+    // ── 宿主「扩展插件」页：在「导入插件」下面补一个「导出插件」──────
+    // 注意：这个按钮挂在 document.body 上，用 fixed 定位贴在导入按钮下方。
+    // 不能插进宿主页面的 React 节点里——插件列表一变化，React 重排子节点会整页崩。
+    let hostExportEl = null;
+    let hostPaddedSection = null;
+    let hostOriginalPadding = "";
+    let hostGroupEl = null;
+    let hostGroupObserver = null;
+    let hostInstallInput = null;
+    let hostInstallInputHandler = null;
+    let hostHintGroup = null;
+    let hostHintText = "";
+
+    const normalizeText = (value) => String(value == null ? "" : value).replace(/\s+/g, " ").trim();
+
+    function buildHostExportButton() {
+      const btn = doc.createElement("button");
+      btn.type = "button";
+      btn.className = `menu-item ${HOST_EXPORT_CLASS}`;
+      btn.style.position = "fixed";
+      btn.style.zIndex = "60";
+      btn.style.display = "none";
+      btn.style.boxSizing = "border-box";
+      btn.style.alignItems = "center";
+      btn.style.gap = "10px";
+      btn.style.padding = "10px 12px";
+      btn.style.textAlign = "left";
+      btn.style.font = "inherit";
+      btn.style.cursor = "pointer";
+      // 透明底：不再像一张浮在页面上的白卡
+      btn.style.background = "transparent";
+      btn.style.border = "0";
+      btn.style.borderRadius = "12px";
+      btn.style.boxShadow = "none";
+
+      const icon = doc.createElement("div");
+      icon.className = "menu-icon";
+      icon.style.flex = "0 0 auto";
+      icon.style.width = "30px";
+      icon.style.height = "30px";
+      icon.style.display = "flex";
+      icon.style.alignItems = "center";
+      icon.style.justifyContent = "center";
+      icon.style.borderRadius = "9px";
+      icon.style.background = "rgba(74, 124, 89, .14)";
+      icon.style.color = "#4a7c59";
+      icon.innerHTML = EXPORT_SVG;
+
+      const group = doc.createElement("div");
+      group.className = "menu-label-group";
+      group.style.display = "flex";
+      group.style.flexDirection = "column";
+      group.style.gap = "1px";
+      group.style.minWidth = "0";
+      const label = doc.createElement("span");
+      label.className = "menu-label";
+      label.style.fontSize = "14px";
+      label.style.fontWeight = "600";
+      label.textContent = "导出插件";
+      const desc = doc.createElement("span");
+      desc.className = "menu-desc";
+      desc.style.fontSize = "11.5px";
+      desc.style.opacity = ".7";
+      desc.textContent = "选择插件导出为.js插件文件";
+      group.appendChild(label);
+      group.appendChild(desc);
+
+      btn.appendChild(icon);
+      btn.appendChild(group);
+      btn.addEventListener("click", (event) => {
+        if (event && event.preventDefault) event.preventDefault();
+        openExportPicker();
+      });
+      return btn;
+    }
+
+    function findInstallParts() {
+      const titles = doc.querySelectorAll(".settings-menu-section-title");
+      for (let i = 0; i < titles.length; i += 1) {
+        if (normalizeText(titles[i].textContent) !== "安装插件") continue;
+        const section = titles[i].parentNode;
+        if (!section) continue;
+        const kids = Array.from(section.children || []);
+        const start = kids.indexOf(titles[i]);
+        for (let j = start + 1; j < kids.length; j += 1) {
+          const group = kids[j];
+          if (!group.classList || !group.classList.contains("menu-group")) continue;
+          const items = Array.from(group.querySelectorAll(".menu-item") || []);
+          let importBtn = null;
+          for (let k = 0; k < items.length; k += 1) {
+            if (items[k].classList.contains(HOST_EXPORT_CLASS)) continue;
+            if (normalizeText(items[k].textContent).indexOf("导入插件") >= 0) {
+              importBtn = items[k];
+              break;
+            }
+          }
+          if (!importBtn && items.length) importBtn = items[0];
+          if (!importBtn) return null;
+          return { button: importBtn, group, section };
+        }
+      }
+      return null;
+    }
+
+    function restoreHostPadding() {
+      if (hostPaddedSection) {
+        try { hostPaddedSection.style.paddingBottom = hostOriginalPadding; } catch (err) { /* ignore */ }
+      }
+      hostPaddedSection = null;
+      hostOriginalPadding = "";
+    }
+
+    function watchHostGroup(group) {
+      if (hostGroupEl === group && hostGroupObserver) return;
+      if (hostGroupObserver) {
+        try { hostGroupObserver.disconnect(); } catch (err) { /* ignore */ }
+      }
+      hostGroupEl = group;
+      hostGroupObserver = null;
+      if (typeof MutationObserver === "undefined") return;
+      try {
+        hostGroupObserver = new MutationObserver(() => {
+          // 导入结果提示会插进这个 group，立刻重排，别让导出入口盖住它
+          try { ensureHostExportItem(); } catch (err) { /* ignore */ }
+        });
+        hostGroupObserver.observe(group, { childList: true, subtree: true, characterData: true });
+      } catch (err) {
+        hostGroupObserver = null;
+      }
+    }
+
+    function watchHostInstallInput(group) {
+      const input = group && typeof group.querySelector === "function"
+        ? group.querySelector('input[type="file"]')
+        : null;
+      if (!input || hostInstallInput === input) return;
+      if (hostInstallInput && hostInstallInputHandler) {
+        try { hostInstallInput.removeEventListener("change", hostInstallInputHandler, true); } catch (err) { /* ignore */ }
+      }
+      hostInstallInput = input;
+      hostInstallInputHandler = () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        const fail = (error) => {
+          notify("error", `读取文件失败：${(error && error.message) || error || "无法读取所选文件"}`);
+        };
+        try {
+          if (typeof file.text === "function") {
+            file.text().then(() => {}, fail);
+          } else if (typeof FileReader !== "undefined") {
+            const reader = new FileReader();
+            reader.onload = () => {};
+            reader.onerror = () => fail(reader.error);
+            reader.readAsText(file);
+          }
+        } catch (error) {
+          fail(error);
+        }
+      };
+      try { input.addEventListener("change", hostInstallInputHandler, true); } catch (err) { /* ignore */ }
+    }
+
+    function watchHostInstallHint(group) {
+      if (!group) return;
+      const text = String(group.textContent || "");
+      if (hostHintGroup !== group) {
+        hostHintGroup = group;
+        hostHintText = text;
+        return;
+      }
+      if (text === hostHintText) return;
+      hostHintText = text;
+      if (!/失败|错误|无法|Invalid|SyntaxError|Unexpected/i.test(text)) return;
+      notify("error", text.slice(-160));
+    }
+
+    function ensureHostExportItem() {
+      const parts = findInstallParts();
+      if (!parts || !parts.button || typeof parts.button.getBoundingClientRect !== "function") {
+        if (hostExportEl) hostExportEl.style.display = "none";
+        if (hostGroupObserver) {
+          try { hostGroupObserver.disconnect(); } catch (err) { /* ignore */ }
+        }
+        hostGroupObserver = null;
+        hostGroupEl = null;
+        restoreHostPadding();
+        return;
+      }
+
+      const importBtn = parts.button;
+      const group = parts.group;
+      const section = parts.section;
+      watchHostGroup(group);
+      watchHostInstallInput(group);
+      watchHostInstallHint(group);
+
+      let el = hostExportEl;
+      if (!el || !el.parentNode) {
+        el = buildHostExportButton();
+        (doc.body || doc.documentElement).appendChild(el);
+        hostExportEl = el;
+      }
+
+      const rect = importBtn.getBoundingClientRect();
+      const groupRect = typeof group.getBoundingClientRect === "function" ? group.getBoundingClientRect() : rect;
+      const viewportHeight = Number(win.innerHeight) || 800;
+      if (!rect || rect.width < 40 || rect.bottom < 0 || rect.top > viewportHeight) {
+        el.style.display = "none";
+        return;
+      }
+
+      if (hostPaddedSection !== section) {
+        restoreHostPadding();
+        hostPaddedSection = section;
+        hostOriginalPadding = section.style.paddingBottom || "";
+      }
+
+      // 给安装区补出与这一行等高的底部留白，让浮层看起来是列表里的一行，而不是盖在内容上
+      const rowHeight = Number(el.offsetHeight) || 50;
+      try { section.style.paddingBottom = `${rowHeight + 20}px`; } catch (err) { /* ignore */ }
+
+      const bottom = Math.max(Number(rect.bottom) || 0, Number(groupRect.bottom) || 0);
+      el.style.display = "flex";
+      el.style.left = `${Math.round(rect.left)}px`;
+      el.style.top = `${Math.round(bottom + 8)}px`;
+      el.style.width = `${Math.round(rect.width)}px`;
+    }
+
+    // ── 宿主「扩展插件」页：顶部搜索 + 右上角栏目折叠导航 ──────
+    let nativeToolsEl = null;
+    let nativeSearchEl = null;
+    let nativeClearEl = null;
+    let nativeStatusEl = null;
+    let nativeNavMenuEl = null;
+    let nativePageMenu = null;
+    let nativePageTitles = [];
+    let nativePageInstalled = null;
+    let nativeQuery = "";
+    let nativePaddedMenu = null;
+    let nativeOriginalPaddingTop = "";
+    let nativeBasePaddingTop = "";
+    let nativeAnchor = null;
+    let nativeOutsideBound = false;
+    let nativeObserver = null;
+    let nativeObserverScheduled = false;
+    let nativeSuppressUntil = 0;
+    let nativeBackBtn = null;
+    let nativeBackHandler = null;
+    let nativeDocClickBound = false;
+    let nativePopBound = false;
+
+    function isNodeInside(parent, node) {
+      let current = node;
+      let guard = 0;
+      while (current && guard < 80) {
+        if (current === parent) return true;
+        current = current.parentNode;
+        guard += 1;
+      }
+      return false;
+    }
+
+    function findNativePage() {
+      const all = doc.querySelectorAll(".settings-menu-section-title");
+      if (!all.length) return null;
+      const wanted = ["已安装插件", "安装插件", "运行日志", "制作说明"];
+      const titles = [];
+      for (let i = 0; i < wanted.length; i += 1) {
+        let match = null;
+        for (let j = 0; j < all.length; j += 1) {
+          if (normalizeText(all[j].textContent) === wanted[i]) { match = all[j]; break; }
+        }
+        if (!match) return null;
+        titles.push(match);
+      }
+      const installed = titles[0];
+      let menu = installed.parentNode;
+      let guard = 0;
+      while (menu && guard < 30) {
+        if (menu.classList && menu.classList.contains("page-menu")) break;
+        menu = menu.parentNode;
+        guard += 1;
+      }
+      if (!menu || !menu.classList || !menu.classList.contains("page-menu")) return null;
+      if (typeof menu.getClientRects === "function" && menu.getClientRects().length === 0) return null;
+      return { menu, titles, installed };
+    }
+
+    function nativeInstalledCards(page) {
+      const section = page && page.installed ? page.installed.parentNode : null;
+      if (!section) return [];
+      return Array.from(section.querySelectorAll(".menu-group"));
+    }
+
+    function nativeCardText(card) {
+      const label = card.querySelector(".menu-label");
+      const desc = card.querySelector(".menu-desc");
+      const text = `${label ? label.textContent : ""} ${desc ? desc.textContent : ""}`.trim();
+      return String(text || card.textContent || "").toLowerCase();
+    }
+
+    function applyNativeFilter() {
+      const page = findNativePage();
+      if (!page) return;
+      const cards = nativeInstalledCards(page);
+      const query = nativeQuery.trim().toLowerCase();
+      let visible = 0;
+      for (let i = 0; i < cards.length; i += 1) {
+        const card = cards[i];
+        const match = !query || nativeCardText(card).indexOf(query) >= 0;
+        card.style.display = match ? "" : "none";
+        if (match) visible += 1;
+      }
+      if (!nativeStatusEl) return;
+      if (!query) {
+        if (nativeStatusEl.textContent !== "") nativeStatusEl.textContent = "";
+        nativeStatusEl.style.display = "none";
+        return;
+      }
+      nativeStatusEl.style.display = "";
+      const statusText = visible ? `找到 ${visible} 个已安装插件` : "没有匹配的插件";
+      if (nativeStatusEl.textContent !== statusText) nativeStatusEl.textContent = statusText;
+    }
+
+    function restoreNativePadding() {
+      if (nativePaddedMenu) {
+        try { nativePaddedMenu.style.paddingTop = nativeOriginalPaddingTop; } catch (err) { /* ignore */ }
+      }
+      nativePaddedMenu = null;
+      nativeOriginalPaddingTop = "";
+    }
+
+    function closeNativeNav() {
+      if (nativeNavMenuEl) nativeNavMenuEl.setAttribute("data-open", "0");
+    }
+
+    function nativeScrollContainer(el) {
+      let node = el && el.parentNode;
+      let guard = 0;
+      while (node && node !== doc.body && guard < 30) {
+        const scrollHeight = Number(node.scrollHeight) || 0;
+        const clientHeight = Number(node.clientHeight) || 0;
+        if (scrollHeight > clientHeight + 4) {
+          let overflow = "";
+          try {
+            const style = win.getComputedStyle ? win.getComputedStyle(node) : null;
+            overflow = style ? style.overflowY : "";
+          } catch (err) { overflow = ""; }
+          if (!overflow || /(auto|scroll|overlay)/.test(overflow)) return node;
+        }
+        node = node.parentNode;
+        guard += 1;
+      }
+      const body = doc.scrollingElement || doc.documentElement || doc.body;
+      if (body && Number(body.scrollHeight) > Number(body.clientHeight) + 4) return body;
+      return null;
+    }
+
+    function jumpNativeSection(label) {
+      const page = findNativePage();
+      if (!page) return;
+      const title = page.titles.find((el) => normalizeText(el.textContent) === label);
+      if (!title) return;
+      closeNativeNav();
+      const toolsHeight = Number(nativeToolsEl && nativeToolsEl.offsetHeight) || 52;
+      const barTop = nativeAnchor ? nativeAnchor.top : (nativeToolsEl ? (Number(nativeToolsEl.getBoundingClientRect().top) || 0) : 0);
+      // 让分区标题停在固定栏下方，而不是被固定栏压住
+      const desiredTop = barTop + toolsHeight + 16;
+      try { title.style.scrollMarginTop = `${Math.round(desiredTop)}px`; } catch (err) { /* ignore */ }
+
+      const container = nativeScrollContainer(title);
+      if (container && typeof title.getBoundingClientRect === "function" && typeof container.getBoundingClientRect === "function") {
+        const containerRect = container.getBoundingClientRect();
+        const titleRect = title.getBoundingClientRect();
+        const target = Math.max(0, Math.round(
+          (Number(container.scrollTop) || 0) + (titleRect.top - containerRect.top) - desiredTop,
+        ));
+        try {
+          if (typeof container.scrollTo === "function") {
+            container.scrollTo({ top: target, behavior: "smooth" });
+            return;
+          }
+          container.scrollTop = target;
+          return;
+        } catch (err) { /* fall through */ }
+      }
+
+      if (typeof title.scrollIntoView === "function") {
+        try {
+          title.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        } catch (err) { /* fall through */ }
+      }
+
+      const menu = page.menu;
+      if (typeof menu.getBoundingClientRect === "function" && typeof title.getBoundingClientRect === "function") {
+        const menuRect = menu.getBoundingClientRect();
+        const titleRect = title.getBoundingClientRect();
+        const target = Math.max(0, Math.round(
+          (Number(menu.scrollTop) || 0) + (titleRect.top - menuRect.top) - desiredTop,
+        ));
+        menu.scrollTop = target;
+      }
+    }
+    function onNativeOutside(event) {
+      if (!nativeToolsEl) return;
+      if (isNodeInside(nativeToolsEl, event.target)) return;
+      closeNativeNav();
+    }
+
+    function nativeOpaqueBackground(page) {
+      try {
+        const styles = win.getComputedStyle;
+        if (!styles) return "";
+        let node = page && page.menu ? page.menu : doc.body;
+        let guard = 0;
+        while (node && guard < 40) {
+          const bg = styles(node).backgroundColor;
+          if (bg && bg !== "transparent" && bg !== "rgba(0, 0, 0, 0)") {
+            const match = /^rgba?\(([^)]+)\)$/i.exec(bg);
+            if (!match) return bg;
+            const parts = match[1].split(",").map((value) => parseFloat(value));
+            const alpha = parts.length > 3 ? parts[3] : 1;
+            if (alpha >= 1) return bg;
+          }
+          node = node.parentNode;
+          guard += 1;
+        }
+      } catch (err) { /* ignore */ }
+      return "";
+    }
+
+    function syncNativeClear() {
+      if (!nativeClearEl) return;
+      nativeClearEl.style.display = nativeQuery && nativeQuery.length ? "flex" : "none";
+    }
+
+    function resetNativeSearch() {
+      nativeQuery = "";
+      if (nativeSearchEl) nativeSearchEl.value = "";
+      if (nativeClearEl) nativeClearEl.style.display = "none";
+      if (nativeStatusEl) {
+        nativeStatusEl.textContent = "";
+        nativeStatusEl.style.display = "none";
+      }
+    }
+
+    function refreshNativePage(button) {
+      if (button) {
+        button.classList.add("is-spinning");
+        button.disabled = true;
+      }
+      const page = findNativePage();
+      resetNativeSearch();
+      nativeAnchor = null;
+      applyNativeFilter();
+      if (page) {
+        try { page.menu.scrollTop = 0; } catch (err) { /* ignore */ }
+      }
+      const names = new Set([
+        "chat-plugins-changed",
+        "ai-phone-chat-plugins-changed",
+        "ai-phone:chat-plugins-changed",
+      ]);
+      try {
+        const store = ensureBridge();
+        if (store && store.eventName) names.add(store.eventName);
+      } catch (err) { /* ignore */ }
+      for (const name of names) {
+        try { win.dispatchEvent(new win.Event(name)); } catch (err) { /* ignore */ }
+      }
+      // 列表重渲染后重新量一次：搜索框按新的插件卡片重新对齐左/宽，并重新过滤
+      const relayout = () => {
+        try {
+          nativeAnchor = null;
+          positionNativeTools();
+          applyNativeFilter();
+        } catch (err) { /* ignore */ }
+      };
+      later(relayout, 80);
+      later(relayout, 250);
+      later(() => {
+        relayout();
+        if (button) {
+          button.classList.remove("is-spinning");
+          button.disabled = false;
+        }
+        notify("success", "已刷新");
+      }, 650);
+    }
+
+    function buildNativeTools() {
+      const tools = doc.createElement("div");
+      tools.className = "pmt-native-tools";
+      tools.style.visibility = "hidden";
+
+      const row = doc.createElement("div");
+      row.className = "pmt-native-row";
+
+      const input = doc.createElement("input");
+      input.type = "search";
+      input.className = "pmt-native-search";
+      input.setAttribute("placeholder", "搜索已安装插件");
+      input.setAttribute("aria-label", "搜索已安装插件");
+      input.value = nativeQuery;
+      input.addEventListener("input", () => {
+        nativeQuery = input.value;
+        syncNativeClear();
+        applyNativeFilter();
+        positionNativeTools();
+      });
+      const searchWrap = doc.createElement("div");
+      searchWrap.className = "pmt-native-search-wrap";
+      const clear = doc.createElement("button");
+      clear.type = "button";
+      clear.className = "pmt-native-clear";
+      clear.setAttribute("aria-label", "清除搜索");
+      clear.textContent = "×";
+      clear.addEventListener("click", (event) => {
+        if (event && event.stopPropagation) event.stopPropagation();
+        nativeQuery = "";
+        input.value = "";
+        syncNativeClear();
+        applyNativeFilter();
+        positionNativeTools();
+      });
+      searchWrap.appendChild(input);
+      searchWrap.appendChild(clear);
+
+      const navBtn = doc.createElement("button");
+      navBtn.type = "button";
+      navBtn.className = "pmt-native-navbtn";
+      navBtn.setAttribute("aria-label", "栏目跳转");
+      navBtn.setAttribute("title", "栏目跳转");
+      navBtn.innerHTML = HAMBURGER_SVG;
+      navBtn.addEventListener("click", (event) => {
+        if (event && event.stopPropagation) event.stopPropagation();
+        const menu = nativeNavMenuEl;
+        if (!menu) return;
+        menu.setAttribute("data-open", menu.getAttribute("data-open") === "1" ? "0" : "1");
+      });
+
+      const navMenu = doc.createElement("div");
+      navMenu.className = "pmt-native-navmenu";
+      navMenu.setAttribute("data-open", "0");
+      const labels = ["已安装插件", "安装插件", "运行日志", "制作说明"];
+      for (let i = 0; i < labels.length; i += 1) {
+        const item = doc.createElement("button");
+        item.type = "button";
+        item.className = "pmt-native-navitem";
+        item.textContent = labels[i];
+        item.addEventListener("click", () => jumpNativeSection(labels[i]));
+        navMenu.appendChild(item);
+      }
+
+      const status = doc.createElement("div");
+      status.className = "pmt-native-status";
+      status.style.display = "none";
+
+      row.appendChild(searchWrap);
+      row.appendChild(navBtn);
+
+      const refreshBtn = doc.createElement("button");
+      refreshBtn.type = "button";
+      refreshBtn.className = "pmt-native-navbtn pmt-native-refreshbtn";
+      refreshBtn.setAttribute("aria-label", "刷新页面");
+      refreshBtn.setAttribute("title", "刷新页面");
+      refreshBtn.innerHTML = REFRESH_SVG;
+      refreshBtn.addEventListener("click", (event) => {
+        if (event && event.stopPropagation) event.stopPropagation();
+        refreshNativePage(refreshBtn);
+      });
+      row.appendChild(refreshBtn);
+      tools.appendChild(row);
+      tools.appendChild(status);
+      tools.appendChild(navMenu);
+      (doc.body || doc.documentElement).appendChild(tools);
+
+      const solid = nativeOpaqueBackground(findNativePage());
+      if (solid) {
+        tools.style.background = solid;
+        navMenu.style.background = solid;
+      } else {
+        let dark = false;
+        try { dark = Boolean(win.matchMedia && win.matchMedia("(prefers-color-scheme: dark)").matches); } catch (err) { dark = false; }
+        const fallback = dark ? "#1e1f24" : "#ffffff";
+        tools.style.background = fallback;
+        navMenu.style.background = fallback;
+      }
+
+      nativeToolsEl = tools;
+      nativeSearchEl = input;
+      nativeClearEl = clear;
+      nativeStatusEl = status;
+      nativeNavMenuEl = navMenu;
+      syncNativeClear();
+      if (!nativeOutsideBound) {
+        nativeOutsideBound = true;
+        try { doc.addEventListener("pointerdown", onNativeOutside, true); } catch (err) { /* ignore */ }
+      }
+    }
+
+    function nativeHeaderBottom(page, sectionTop) {
+      try {
+        const scopes = [];
+        if (page && page.menu && page.menu.parentNode) scopes.push(page.menu.parentNode);
+        scopes.push(doc.body || doc.documentElement);
+        for (let s = 0; s < scopes.length; s += 1) {
+          const scope = scopes[s];
+          if (!scope || typeof scope.querySelectorAll !== "function") continue;
+          const nodes = scope.querySelectorAll("*");
+          for (let i = 0; i < nodes.length; i += 1) {
+            const node = nodes[i];
+            if (normalizeText(node.textContent) !== "扩展插件") continue;
+            const ownRect = typeof node.getBoundingClientRect === "function" ? node.getBoundingClientRect() : null;
+            if (!ownRect || ownRect.width === 0 || ownRect.height === 0) continue;
+            let current = node;
+            let best = 0;
+            let bestHeight = 0;
+            let guard = 0;
+            while (current && guard < 4) {
+              const rect = typeof current.getBoundingClientRect === "function" ? current.getBoundingClientRect() : null;
+              if (rect && rect.width > 0 && rect.height > 0) {
+                if (sectionTop > 0 && rect.bottom > sectionTop - 8) break;
+                if (rect.height > 260) break;
+                if (rect.bottom > best) {
+                  best = rect.bottom;
+                  bestHeight = rect.height;
+                }
+              }
+              current = current.parentNode;
+              guard += 1;
+            }
+            if (best > 0 && bestHeight > ownRect.height + 6) return best;
+          }
+        }
+      } catch (err) { /* ignore */ }
+      return 0;
+    }
+
+    function hideNativeToolsNow(suppressMs) {
+      nativeSuppressUntil = Date.now() + (typeof suppressMs === "number" ? suppressMs : 1400);
+      if (nativeToolsEl) {
+        nativeToolsEl.style.display = "none";
+        nativeToolsEl.style.visibility = "hidden";
+      }
+      nativeAnchor = null;
+      closeNativeNav();
+      restoreNativePadding();
+    }
+
+    function findNativeBackButton(page, headerBottom) {
+      try {
+        const shell = page && page.menu ? page.menu.parentNode : null;
+        if (!shell || typeof shell.querySelectorAll !== "function") return null;
+        const buttons = shell.querySelectorAll("button, [role=button]");
+        let fallback = null;
+        for (let i = 0; i < buttons.length; i += 1) {
+          const btn = buttons[i];
+          const label = `${btn.getAttribute("aria-label") || ""} ${btn.getAttribute("title") || ""}`;
+          if (/返回|back/i.test(label)) return btn;
+          const rect = typeof btn.getBoundingClientRect === "function" ? btn.getBoundingClientRect() : null;
+          if (!rect || rect.width === 0 || rect.height === 0) continue;
+          if (headerBottom > 0 && rect.top < headerBottom + 10 && rect.bottom > 0
+            && rect.left < 90 && rect.width < 90 && rect.height < 90) {
+            fallback = btn;
+          }
+        }
+        return fallback;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function bindNativeBack(page, headerBottom) {
+      const back = findNativeBackButton(page, headerBottom);
+      if (nativeBackBtn && nativeBackHandler) {
+        try { nativeBackBtn.removeEventListener("click", nativeBackHandler, true); } catch (err) { /* ignore */ }
+      }
+      nativeBackBtn = back;
+      nativeBackHandler = null;
+      if (back) {
+        nativeBackHandler = () => hideNativeToolsNow(1400);
+        try { back.addEventListener("click", nativeBackHandler, true); } catch (err) { /* ignore */ }
+      }
+    }
+
+    function nativeScrollSignature(page) {
+      let container = null;
+      try { container = nativeScrollContainer(page && page.installed); } catch (err) { container = null; }
+      const inner = container ? (Number(container.scrollTop) || 0) : 0;
+      const outer = Number(win.scrollY) || 0;
+      return `${inner}|${outer}`;
+    }
+
+    function scheduleNativeSettle(anchorRef, menuRef) {
+      anchorRef.allowReady = false;
+      later(() => {
+        if (nativeAnchor === anchorRef) anchorRef.allowReady = true;
+      }, 500);
+      const attempt = () => {
+        if (nativeAnchor !== anchorRef || nativeAnchor.menu !== menuRef) return;
+        const page = findNativePage();
+        if (!page || page.menu !== menuRef) return;
+        const sectionRect = page.installed && typeof page.installed.getBoundingClientRect === "function"
+          ? page.installed.getBoundingClientRect()
+          : null;
+        const sectionTop = sectionRect ? sectionRect.top : 0;
+        const headerBottom = nativeHeaderBottom(page, sectionTop);
+        // 让隐藏中的锚点也持续刷新，避免它一直停在入场动画中间量到的位置
+        try { ensureNativeTools(); } catch (err) { /* ignore */ }
+        if (headerBottom > 0 && sectionTop > 0) {
+          const prevHeader = anchorRef.lastHeader || 0;
+          const prevSection = anchorRef.lastSection || 0;
+          anchorRef.lastHeader = headerBottom;
+          anchorRef.lastSection = sectionTop;
+          if (prevHeader > 0 && Math.abs(headerBottom - prevHeader) <= 2
+            && prevSection > 0 && Math.abs(sectionTop - prevSection) <= 2
+            && anchorRef.allowReady) {
+            anchorRef.forceLayout = true;
+            anchorRef.ready = true;
+            try { ensureNativeTools(); } catch (err) { /* ignore */ }
+            return;
+          }
+        }
+        const now = Date.now();
+        if (now < (anchorRef.deadline || 0)) {
+          later(attempt, 120);
+        } else {
+          anchorRef.forceLayout = true;
+          anchorRef.ready = true;
+          try { ensureNativeTools(); } catch (err) { /* ignore */ }
+        }
+      };
+      later(attempt, 120);
+    }
+    function positionNativeTools() {
+      const now = Date.now();
+      if (nativeSuppressUntil && now < nativeSuppressUntil) {
+        if (nativeToolsEl) {
+          nativeToolsEl.style.display = "none";
+          nativeToolsEl.style.visibility = "hidden";
+        }
+        return;
+      }
+      nativeSuppressUntil = 0;
+
+      const page = findNativePage();
+      if (!page) {
+        if (nativeToolsEl) {
+          nativeToolsEl.style.display = "none";
+          nativeToolsEl.style.visibility = "hidden";
+        }
+        nativeAnchor = null;
+        resetNativeSearch();
+        restoreNativePadding();
+        closeNativeNav();
+        return;
+      }
+      if (nativePageMenu && nativePageMenu !== page.menu) {
+        // 新一次进入扩展插件页（页面容器已换）时从空搜索开始
+        resetNativeSearch();
+      }
+      if (!nativeToolsEl) buildNativeTools();
+
+      const rect = page.menu.getBoundingClientRect();
+      if (!rect || rect.width < 40) {
+        nativeToolsEl.style.display = "none";
+        nativeToolsEl.style.visibility = "hidden";
+        restoreNativePadding();
+        return;
+      }
+
+      let padLeft = 0;
+      let padRight = 0;
+      try {
+        const style = win.getComputedStyle ? win.getComputedStyle(page.menu) : null;
+        if (style) {
+          padLeft = parseFloat(style.paddingLeft) || 0;
+          padRight = parseFloat(style.paddingRight) || 0;
+        }
+      } catch (err) { /* ignore */ }
+
+      const viewportWidth = Number(win.innerWidth) || 0;
+      const viewportHeight = Number(win.innerHeight) || 0;
+      const sectionRect = page.installed && typeof page.installed.getBoundingClientRect === "function"
+        ? page.installed.getBoundingClientRect()
+        : null;
+      const sectionTop = sectionRect ? sectionRect.top : 0;
+      const headerBottom = nativeHeaderBottom(page, sectionTop);
+
+      if (headerBottom <= 0 && sectionTop <= 0) {
+        // 页面刚挂载、标题还没布局好时先不显示，避免先出现在顶部再跳
+        nativeToolsEl.style.display = "none";
+        nativeToolsEl.style.visibility = "hidden";
+        return;
+      }
+
+      bindNativeBack(page, headerBottom);
+
+      let layoutRect = rect;
+      try {
+        const sectionEl = page.installed && page.installed.parentNode ? page.installed.parentNode : null;
+        const cardEl = sectionEl && typeof sectionEl.querySelector === "function"
+          ? sectionEl.querySelector(".menu-group")
+          : null;
+        const cardRect = cardEl && typeof cardEl.getBoundingClientRect === "function"
+          ? cardEl.getBoundingClientRect()
+          : null;
+        if (cardRect && cardRect.width > 40) {
+          layoutRect = cardRect;
+        } else if (sectionEl && typeof sectionEl.getBoundingClientRect === "function") {
+          const sectionRect = sectionEl.getBoundingClientRect();
+          if (sectionRect && sectionRect.width > 40) layoutRect = sectionRect;
+        }
+      } catch (err) { layoutRect = rect; }
+      const useSection = layoutRect !== rect;
+      const left = Math.round(layoutRect.left + (useSection ? 0 : padLeft));
+      const width = Math.max(200, Math.round(layoutRect.width - (useSection ? 0 : padLeft + padRight)));
+
+      // 先以隐藏但参与布局的状态量真实高度，padding 才不会按 52px 估算
+      nativeToolsEl.style.display = "flex";
+      nativeToolsEl.style.visibility = "hidden";
+      nativeToolsEl.style.left = `${left}px`;
+      nativeToolsEl.style.width = `${width}px`;
+      const toolsHeight = Number(nativeToolsEl.offsetHeight) || 52;
+
+      let candidateTop = Math.max(0, Math.round(rect.top + 6));
+      if (headerBottom > 0) {
+        const belowHeader = Math.round(headerBottom + 8);
+        if (!sectionTop || belowHeader + toolsHeight + 12 <= sectionTop) {
+          candidateTop = belowHeader;
+        } else if (sectionTop > 0) {
+          candidateTop = Math.max(0, Math.round(sectionTop - toolsHeight - 24));
+        }
+      } else if (sectionTop > 0) {
+        candidateTop = Math.max(0, Math.round(sectionTop - toolsHeight - 24));
+      }
+
+      const scrollSignature = nativeScrollSignature(page);
+      const isNewPage = !nativeAnchor || nativeAnchor.menu !== page.menu;
+      const viewportChanged = Boolean(nativeAnchor
+        && (nativeAnchor.viewportWidth !== viewportWidth || nativeAnchor.viewportHeight !== viewportHeight));
+      const scrolled = Boolean(nativeAnchor && nativeAnchor.scrollSignature !== scrollSignature);
+      const headerChanged = Boolean(nativeAnchor
+        && headerBottom > 0 && Math.abs(headerBottom - (nativeAnchor.headerBottom || 0)) > 2);
+      const sectionChanged = Boolean(nativeAnchor
+        && sectionTop > 0 && Math.abs(sectionTop - (nativeAnchor.sectionTop || 0)) > 2);
+      if (isNewPage || viewportChanged) {
+        nativeAnchor = {
+          menu: page.menu,
+          top: candidateTop,
+          left,
+          width,
+          viewportWidth,
+          viewportHeight,
+          ready: !isNewPage,
+          forceLayout: false,
+          createdAt: now,
+          deadline: now + 1500,
+          lastHeader: 0,
+          lastSection: 0,
+          headerBottom,
+          sectionTop,
+          scrollSignature,
+        };
+        if (isNewPage) scheduleNativeSettle(nativeAnchor, page.menu);
+      } else if (!nativeAnchor.ready) {
+        nativeAnchor.top = candidateTop;
+        nativeAnchor.left = left;
+        nativeAnchor.width = width;
+        nativeAnchor.headerBottom = headerBottom;
+        nativeAnchor.sectionTop = sectionTop;
+        nativeAnchor.scrollSignature = scrollSignature;
+      } else if (!scrolled && (headerChanged || sectionChanged || nativeAnchor.forceLayout)) {
+        // 入场结束后仍在微调布局时校正；用户一旦滚动就不再跟随
+        nativeAnchor.top = candidateTop;
+        nativeAnchor.left = left;
+        nativeAnchor.width = width;
+        nativeAnchor.headerBottom = headerBottom;
+        nativeAnchor.sectionTop = sectionTop;
+        nativeAnchor.scrollSignature = scrollSignature;
+        nativeAnchor.forceLayout = false;
+      }
+
+      nativeToolsEl.style.left = `${nativeAnchor.left}px`;
+      nativeToolsEl.style.top = `${nativeAnchor.top}px`;
+      nativeToolsEl.style.width = `${nativeAnchor.width}px`;
+
+      if (nativePaddedMenu !== page.menu) {
+        restoreNativePadding();
+        nativePaddedMenu = page.menu;
+        nativeOriginalPaddingTop = page.menu.style.paddingTop || "";
+        nativeBasePaddingTop = nativeOriginalPaddingTop;
+        if (!nativeBasePaddingTop) {
+          try {
+            const style = win.getComputedStyle ? win.getComputedStyle(page.menu) : null;
+            nativeBasePaddingTop = style ? style.paddingTop : "";
+          } catch (err) { nativeBasePaddingTop = ""; }
+        }
+      }
+      try { page.menu.style.paddingTop = `calc(${nativeBasePaddingTop || "0px"} + ${toolsHeight + 10}px)`; } catch (err) { /* ignore */ }
+
+      nativePageMenu = page.menu;
+      nativePageTitles = page.titles;
+      nativePageInstalled = page.installed;
+      applyNativeFilter();
+
+      if (!nativeAnchor.ready) {
+        // 页面入场动画期间保持隐藏，等落位后再显示，避免看到错误位置再跳回去
+        nativeToolsEl.style.display = "none";
+        nativeToolsEl.style.visibility = "hidden";
+        return;
+      }
+      nativeToolsEl.style.display = "flex";
+      nativeToolsEl.style.visibility = "";
+    }
+
+    function ensureNativeTools() {
+      const now = Date.now();
+      if (nativeSuppressUntil && now < nativeSuppressUntil) {
+        if (nativeToolsEl) {
+          nativeToolsEl.style.display = "none";
+          nativeToolsEl.style.visibility = "hidden";
+        }
+        return;
+      }
+      const page = findNativePage();
+      if (!page) {
+        nativeSuppressUntil = 0;
+        if (nativeToolsEl) {
+          nativeToolsEl.style.display = "none";
+          nativeToolsEl.style.visibility = "hidden";
+        }
+        nativeAnchor = null;
+        resetNativeSearch();
+        restoreNativePadding();
+        closeNativeNav();
+        return;
+      }
+      nativeSuppressUntil = 0;
+      if (!nativeToolsEl) buildNativeTools();
+      positionNativeTools();
+    }
+
+    function onNativePopState() {
+      if (nativeToolsEl) hideNativeToolsNow(1400);
+    }
+
+    function onNativeDocumentClick(event) {
+      if (!nativeToolsEl || nativeToolsEl.style.display === "none") return;
+      // 点搜索框/☰ 自己不能当成“点返回”
+      if (isNodeInside(nativeToolsEl, event.target)) return;
+      // 点页头左侧的返回箭头时立即收起，不等轮询；避免返回动画期间还浮着一个框
+      try {
+        const page = findNativePage();
+        if (page) {
+          const sectionRect = page.installed && typeof page.installed.getBoundingClientRect === "function"
+            ? page.installed.getBoundingClientRect()
+            : null;
+          const sectionTop = sectionRect ? sectionRect.top : 0;
+          const headerBottom = nativeHeaderBottom(page, sectionTop);
+          const targetRect = event.target && typeof event.target.getBoundingClientRect === "function"
+            ? event.target.getBoundingClientRect()
+            : null;
+          if (headerBottom > 0 && targetRect && targetRect.width > 0
+            && targetRect.left < 90 && targetRect.top < headerBottom + 20 && targetRect.bottom > 0) {
+            hideNativeToolsNow(1400);
+            return;
+          }
+        }
+      } catch (err) { /* ignore */ }
+      let node = event.target;
+      let guard = 0;
+      while (node && node !== doc.body && guard < 10) {
+        const tag = node.tagName;
+        const role = node.getAttribute ? node.getAttribute("role") : "";
+        if (tag === "BUTTON" || role === "button") {
+          const label = `${node.getAttribute("aria-label") || ""} ${node.getAttribute("title") || ""}`;
+          if (/返回|back/i.test(label)) {
+            hideNativeToolsNow(1400);
+            return;
+          }
+        }
+        node = node.parentNode;
+        guard += 1;
+      }
+    }
+
+    function bindNativeGlobalEvents() {
+      if (!nativeDocClickBound) {
+        nativeDocClickBound = true;
+        try { doc.addEventListener("click", onNativeDocumentClick, true); } catch (err) { /* ignore */ }
+      }
+      if (!nativePopBound) {
+        nativePopBound = true;
+        try { win.addEventListener("popstate", onNativePopState); } catch (err) { /* ignore */ }
+      }
+    }
+
+    function scheduleNativeEnsure() {
+      if (nativeObserverScheduled) return;
+      nativeObserverScheduled = true;
+      later(() => {
+        nativeObserverScheduled = false;
+        try { ensureNativeTools(); } catch (err) { /* ignore */ }
+      }, 30);
+    }
+
+    function startNativeObserver() {
+      if (nativeObserver || typeof MutationObserver === "undefined" || !doc.body) return;
+      try {
+        nativeObserver = new MutationObserver((mutations) => {
+          for (let i = 0; i < mutations.length; i += 1) {
+            const mutation = mutations[i];
+            if (nativeToolsEl && isNodeInside(nativeToolsEl, mutation.target)) continue;
+            let own = false;
+            const added = mutation.addedNodes || [];
+            for (let j = 0; j < added.length; j += 1) {
+              if (nativeToolsEl && (added[j] === nativeToolsEl || isNodeInside(nativeToolsEl, added[j]))) {
+                own = true;
+                break;
+              }
+            }
+            if (own) continue;
+            scheduleNativeEnsure();
+            return;
+          }
+        });
+        nativeObserver.observe(doc.body, { childList: true, subtree: true });
+      } catch (err) { /* ignore */ }
+    }
+    function disposeNativeTools() {
+      if (nativeObserver) {
+        try { nativeObserver.disconnect(); } catch (err) { /* ignore */ }
+      }
+      nativeObserver = null;
+      nativeObserverScheduled = false;
+      nativeSuppressUntil = 0;
+      if (nativeBackBtn && nativeBackHandler) {
+        try { nativeBackBtn.removeEventListener("click", nativeBackHandler, true); } catch (err) { /* ignore */ }
+      }
+      nativeBackBtn = null;
+      nativeBackHandler = null;
+      if (nativeDocClickBound) {
+        nativeDocClickBound = false;
+        try { doc.removeEventListener("click", onNativeDocumentClick, true); } catch (err) { /* ignore */ }
+      }
+      if (nativePopBound) {
+        nativePopBound = false;
+        try { win.removeEventListener("popstate", onNativePopState); } catch (err) { /* ignore */ }
+      }
+      restoreNativePadding();
+      closeNativeNav();
+      if (nativeToolsEl && nativeToolsEl.parentNode) {
+        try { nativeToolsEl.parentNode.removeChild(nativeToolsEl); } catch (err) { /* ignore */ }
+      }
+      nativeToolsEl = null;
+      nativeSearchEl = null;
+      nativeClearEl = null;
+      nativeStatusEl = null;
+      nativeNavMenuEl = null;
+      nativePageMenu = null;
+      nativePageTitles = [];
+      nativePageInstalled = null;
+      if (nativeOutsideBound) {
+        nativeOutsideBound = false;
+        try { doc.removeEventListener("pointerdown", onNativeOutside, true); } catch (err) { /* ignore */ }
+      }
+    }
+    // 宿主页面是 React 渲染的，按钮可能被重渲染冲掉；轻量轮询比全局 MutationObserver 省
+    let hostPollTimer = null;
+    const safeEnsureHostExport = () => {
+      try { ensureHostExportItem(); } catch (err) { /* 宿主页面结构变化不影响聊天 */ }
+      try { ensureNativeTools(); } catch (err) { /* 原生页增强失败不影响聊天 */ }
+    };
+    try {
+      if (ctx.system.timers && typeof ctx.system.timers.setInterval === "function") {
+        hostPollTimer = ctx.system.timers.setInterval(safeEnsureHostExport, 500);
+      } else if (typeof win.setInterval === "function") {
+        hostPollTimer = win.setInterval(safeEnsureHostExport, 500);
+      }
+      safeEnsureHostExport();
+    } catch (err) { /* 宿主不支持轮询就跳过导出入口 */ }
+
+    const onHostScroll = () => safeEnsureHostExport();
+    try {
+      if (typeof win.addEventListener === "function") {
+        win.addEventListener("scroll", onHostScroll, true);
+        win.addEventListener("resize", onHostScroll);
+      }
+    } catch (err) { /* ignore */ }
+
+    startNativeObserver();
+    bindNativeGlobalEvents();
+
+    function pickPluginFile(rerender) {
+      const input = doc.createElement("input");
+      input.type = "file";
+      input.accept = "*/*"; // 安卓 WebView 对 .js 的 MIME 过滤会把文件全变灰，和宿主安装页一致放行
+      input.style.display = "none";
+      doc.body.appendChild(input);
+
+      let cleaned = false;
+      const cleanup = () => {
+        if (cleaned) return;
+        cleaned = true;
+        try { input.remove(); } catch (err) { /* ignore */ }
+      };
+
+      input.addEventListener("change", () => {
+        const file = input.files && input.files[0];
+        if (!file) { cleanup(); return; }
+        readFileText(file).then((text) => {
+          cleanup();
+          importCode = String(text || "");
+          importResult = null;
+          rerender();
+        }).catch(() => {
+          cleanup();
+          importResult = { ok: false, error: "读取文件失败，换一个文件或直接粘贴代码。" };
+          notify("error", importResult.error);
+          rerender();
+        });
+      });
+
+      later(cleanup, 120000);
+      input.click();
+    }
+
+    function importSummary(result) {
+      if (result.bundle) {
+        return { toast: `已导入 ${result.count} 个插件`, text: `导入成功：${result.count} 个插件` };
+      }
+      const name = result.name || "插件";
+      if (result.upgraded) {
+        const from = result.fromVersion ? `v${result.fromVersion}` : "旧版本";
+        const to = result.toVersion ? `v${result.toVersion}` : "新版本";
+        return { toast: `${from} 已升级为 ${to}`, text: `「${name}」${from} 已升级为 ${to}` };
+      }
+      const text = result.toVersion
+        ? `导入成功：「${name}」v${result.toVersion}`
+        : `导入成功：「${name}」`;
+      return { toast: "导入成功", text };
+    }
+
+    // 导出的 .json 备份可以直接拖回来导入
+    function parsePluginBundle(text) {
+      const raw = String(text || "").trim();
+      if (!raw || raw.charAt(0) !== "{") return null;
+      try {
+        const data = JSON.parse(raw);
+        if (data && data.format === "doremy-chat-plugins" && Array.isArray(data.plugins)) return data;
+      } catch (err) { /* 不是 JSON，按源码处理 */ }
+      return null;
+    }
+
+    // 从源码里粗略读 manifest.id / version，用来在导入前显示“从 x 升级为 y”
+    function manifestFromCode(code) {
+      const text = String(code || "");
+      const at = text.indexOf("manifest");
+      if (at < 0) return null;
+      const block = text.slice(at, at + 900);
+      const id = block.match(/\bid\s*:\s*["']([^"']+)["']/);
+      if (!id) return null;
+      const version = block.match(/\bversion\s*:\s*["']([^"']*)["']/);
+      return { id: id[1], version: version ? version[1] : "" };
+    }
+
+    function describeImportTarget(code, bundle) {
+      const text = String(code || "").trim();
+      if (!text) return "";
+      if (bundle) return `备份：${bundle.plugins.length} 个插件`;
+      const manifest = manifestFromCode(text);
+      if (!manifest) return "";
+      const installed = plugins.find((item) => item.manifest.id === manifest.id);
+      if (installed) {
+        const from = installed.manifest.version ? `v${installed.manifest.version}` : "未知版本";
+        const to = manifest.version ? `v${manifest.version}` : "未知版本";
+        return `从 ${from} 升级为 ${to}`;
+      }
+      return manifest.version ? `新插件 v${manifest.version}` : "新插件";
+    }
+
+    async function doImportBundle(bundle, rerender) {
+      const gen = modalGen;
+      const items = bundle.plugins.filter((item) => item
+        && typeof item.code === "string"
+        && item.code.trim()
+        && !(item.manifest && item.manifest.id === selfId));
+      if (!items.length) {
+        importResult = { ok: false, error: "备份里没有可导入的插件源码（只有本插件自己时，请到扩展插件页升级）。" };
+        notify("error", importResult.error);
+        rerender();
+        return;
+      }
+
+      importBusy = true;
+      importResult = null;
+      rerender();
+
+      let okCount = 0;
+      const failures = [];
+      for (let i = 0; i < items.length; i += 1) {
+        const item = items[i];
+        const name = (item.manifest && (item.manifest.name || item.manifest.id)) || "插件";
+        try {
+          const result = await bridge.install(item.code);
+          if (result && result.ok) okCount += 1;
+          else failures.push(`${name}：${(result && result.error) || "导入失败"}`);
+        } catch (err) {
+          failures.push(`${name}：${err && err.message ? err.message : String(err)}`);
+        }
+      }
+      if (gen !== modalGen) return;
+
+      importBusy = false;
+      plugins = loadPlugins();
+      if (failures.length) {
+        importResult = { ok: false, bundle: true, count: okCount, failed: failures.length, error: failures[0] };
+        notify(okCount ? "success" : "error", okCount
+          ? `已导入 ${okCount} 个插件，${failures.length} 个失败`
+          : `导入失败：${failures[0]}`);
+      } else {
+        importResult = { ok: true, bundle: true, count: okCount };
+        notify("success", `已导入 ${okCount} 个插件`);
+      }
+      rerender();
+    }
+
+    async function doImport(code, rerender) {
+      const source = String(code || "").replace(/^\uFEFF/, "").trim();
+      const bundle = parsePluginBundle(source);
+      if (bundle) {
+        await doImportBundle(bundle, rerender);
+        return;
+      }
+
+      const gen = modalGen;
+      importBusy = true;
+      importResult = null;
+      rerender();
+
+      let result;
+      try {
+        result = await bridge.install(source);
+      } catch (err) {
+        result = { ok: false, error: err && err.message ? err.message : String(err) };
+      }
+
+      if (gen !== modalGen) return;
+      importBusy = false;
+      importResult = result && typeof result === "object"
+        ? result
+        : { ok: false, error: "导入失败" };
+
+      if (importResult.ok) {
+        plugins = loadPlugins();
+        notify("success", importSummary(importResult).text);
+      } else {
+        notify("error", importResult.error || "导入失败");
+      }
+      rerender();
+    }
+
+    // 升级本插件：先关掉管理浮层，再让宿主停/启；结果用宿主 toast 提示，避免拆浮层时整页崩
+    function startSelfUpgrade(code, manifest) {
+      const installed = plugins.find((item) => item.manifest.id === selfId);
+      const from = installed && installed.manifest.version ? `v${installed.manifest.version}` : "旧版本";
+      const to = manifest && manifest.version ? `v${manifest.version}` : "新版本";
+
+      try {
+        if (modalHandle && typeof modalHandle.close === "function") modalHandle.close();
+      } catch (err) { /* ignore */ }
+      modalHandle = null;
+
+      try {
+        if (ctx.ui && typeof ctx.ui.toast === "function") ctx.ui.toast("正在升级本插件…");
+      } catch (err) { /* ignore */ }
+
+      later(() => {
+        ensureBridge();
+        if (!bridge || typeof bridge.install !== "function") {
+          try { if (ctx.ui && typeof ctx.ui.toast === "function") ctx.ui.toast("当前版本取不到导入接口"); } catch (err) { /* ignore */ }
+          return;
+        }
+        bridge.install(code).then((result) => {
+          try {
+            if (result && result.ok) {
+              const name = result.name || "插件管理";
+              const a = result.fromVersion ? `v${result.fromVersion}` : from;
+              const b = result.toVersion ? `v${result.toVersion}` : to;
+              if (ctx.ui && typeof ctx.ui.toast === "function") ctx.ui.toast(`「${name}」${a} 已升级为 ${b}`);
+            } else {
+              if (ctx.ui && typeof ctx.ui.toast === "function") ctx.ui.toast(`导入失败：${(result && result.error) || "未知错误"}`);
+            }
+          } catch (err) { /* ignore */ }
+        }).catch((err) => {
+          try {
+            if (ctx.ui && typeof ctx.ui.toast === "function") ctx.ui.toast(`导入失败：${err && err.message ? err.message : String(err)}`);
+          } catch (e) { /* ignore */ }
+        });
+      }, 120);
+    }
+
+    function renderImport(body, rerender) {
+      const back = element("button", "pmt-back", "‹ 插件列表");
+      back.type = "button";
+      back.addEventListener("click", () => {
+        importView = false;
+        restoreNormalScroll = activeTab === "normal";
+        rerender();
+      });
+      body.appendChild(back);
+
+      body.appendChild(element("div", "pmt-import-title", "导入插件"));
+      body.appendChild(element(
+        "p",
+        "pmt-tip",
+        "插件代码会和 App 同权限运行，只导入你信任的来源。同 id 会覆盖升级，原有设置保留；导入后立即启用。",
+      ));
+
+      if (!bridge || typeof bridge.install !== "function") {
+        const warn = element("div", "pmt-error");
+        warn.appendChild(element("p", null, "当前 App 版本取不到导入接口，请到「设置 → 扩展插件」里安装。"));
+        body.appendChild(warn);
+        return;
+      }
+
+      const fileBtn = element("button", "pmt-action pmt-pick", "选择 .js / .json 文件");
+      fileBtn.type = "button";
+      fileBtn.addEventListener("click", () => pickPluginFile(rerender));
+      body.appendChild(fileBtn);
+
+      body.appendChild(element("p", "pmt-tip", "或把插件代码 / 导出的 .json 备份粘贴到下面："));
+
+      const area = doc.createElement("textarea");
+      area.className = "pmt-input pmt-code";
+      area.value = importCode || "";
+      area.setAttribute("placeholder", "export default { manifest: { ... }, setup(ctx) { ... } }");
+      body.appendChild(area);
+
+      const actions = element("div", "pmt-actions");
+      const previewEl = element("span", "pmt-upgrade-preview");
+      const syncPreview = () => {
+        const text = describeImportTarget(importCode, parsePluginBundle(importCode));
+        previewEl.textContent = text;
+        previewEl.style.display = text ? "" : "none";
+      };
+
+      const doBtn = element("button", "pmt-action pmt-do-import", importBusy ? "正在导入…" : "导入");
+      doBtn.type = "button";
+      doBtn.disabled = importBusy;
+
+      const syncReady = () => {
+        doBtn.setAttribute("data-ready", String(area.value || "").trim() ? "1" : "0");
+      };
+      area.addEventListener("input", () => {
+        importCode = area.value;
+        syncReady();
+        syncPreview();
+      });
+      syncReady();
+      syncPreview();
+
+      doBtn.addEventListener("click", () => {
+        if (importBusy) return;
+        importCode = String(area.value || "");
+        const code = importCode.trim();
+        if (!code) {
+          importResult = { ok: false, error: "先选择文件，或粘贴插件代码。" };
+          notify("error", importResult.error);
+          rerender();
+          return;
+        }
+        const bundle = parsePluginBundle(code);
+        const manifest = manifestFromCode(code);
+        // 在自己的浮层里升级自己：先关浮层再装，避免宿主停旧实例时拆浮层导致整页崩
+        if (!bundle && ((manifest && manifest.id === selfId) || code.indexOf(selfId) >= 0)) {
+          startSelfUpgrade(code, manifest);
+          return;
+        }
+        // 不在按钮点击的同一轮里直接装：宿主会同步停/启插件并更新 React 状态，
+        // 推迟到下一个任务再装，避免和宿主的渲染/提交阶段撞车。
+        later(() => { void doImport(code, rerender); }, 0);
+      });
+      actions.appendChild(previewEl);
+      actions.appendChild(doBtn);
+
+      if (importResult && importResult.ok) {
+        const listBtn = element("button", "pmt-action", "回到插件列表");
+        listBtn.type = "button";
+        listBtn.addEventListener("click", () => {
+          importView = false;
+          rerender();
+        });
+        actions.appendChild(listBtn);
+      }
+      body.appendChild(actions);
+
+      if (importBusy) {
+        body.appendChild(element("div", "pmt-status", "正在导入…"));
+      } else if (importResult) {
+        const status = element("div", "pmt-status");
+        if (importResult.ok) {
+          status.setAttribute("data-ok", "1");
+          status.textContent = importSummary(importResult).text;
+        } else if (importResult.bundle && importResult.count > 0) {
+          status.setAttribute("data-error", "1");
+          status.textContent = `已导入 ${importResult.count} 个，${importResult.failed} 个失败：${importResult.error}`;
+        } else {
+          status.setAttribute("data-error", "1");
+          status.textContent = importResult.error || "导入失败";
+        }
+        body.appendChild(status);
+      }
+    }
+
+    function pluginTitle(plugin) {
+      const title = element("div", "pmt-plugin-title");
+      title.appendChild(element("span", "pmt-name", plugin.manifest.name || plugin.manifest.id));
+      if (plugin.manifest.version) title.appendChild(element("span", "pmt-ver", `v${plugin.manifest.version}`));
+      if (plugin.manifest.id === selfId) title.appendChild(element("span", "pmt-tag", "当前插件"));
+      if (plugin.enabled === false) title.appendChild(element("span", "pmt-tag", "已停用"));
+      return title;
+    }
+
+    function filteredPlugins() {
+      const query = searchQuery.trim().toLowerCase();
+      if (!query) return plugins;
+      return plugins.filter((plugin) => {
+        const manifest = plugin && plugin.manifest ? plugin.manifest : {};
+        const text = [manifest.name, manifest.id, manifest.author, manifest.description, manifest.version]
+          .filter((value) => typeof value === "string" && value)
+          .join(" ")
+          .toLowerCase();
+        return text.indexOf(query) >= 0;
+      });
+    }
+
+    function renderExportAllChoice(body, rerender) {
+      const back = element("button", "pmt-back", "‹ 插件列表");
+      back.type = "button";
+      back.addEventListener("click", () => {
+        exportAllView = false;
+        exportAllHelp = false;
+        restoreNormalScroll = true;
+        rerender();
+      });
+      body.appendChild(back);
+
+      const head = element("div", "pmt-export-choice-head");
+      head.appendChild(element("div", "pmt-export-choice-title", "导出全部插件"));
+      const helpBtn = element("button", "pmt-export-help-btn", "?");
+      helpBtn.type = "button";
+      helpBtn.setAttribute("aria-label", "三种格式的区别");
+      helpBtn.setAttribute("aria-expanded", exportAllHelp ? "true" : "false");
+      helpBtn.addEventListener("click", () => {
+        exportAllHelp = !exportAllHelp;
+        rerender();
+      });
+      head.appendChild(helpBtn);
+      body.appendChild(head);
+
+      if (exportAllHelp) {
+        const help = element("div", "pmt-export-help");
+        const rows = [
+          ["JSON", "一个文件，包含所有插件的源码、设置和启用状态；适合整机备份。不能直接装，要从「插件管理 → 导入」。注意：当前导入只重装源码，设置需要重新配。"],
+          [".js", "每个插件一个独立文件；可以直接在「安装插件」里装；适合分享/发布单个插件；不包含设置和启用状态。"],
+          ["ZIP", "一个压缩包，内含每个 .js 和一份说明；适合一次下载/备份；解压后逐个安装。"],
+        ];
+        const shell = shellSaver();
+        const canPick = Boolean(shell && typeof shell.saveFileWithPicker === "function");
+        const jsonKb = Math.max(1, Math.round(buildExportBundle(plugins).text.length / 1024));
+        const jsKb = Math.max(1, Math.round(plugins.reduce(
+          (total, plugin) => total + pluginSourceOf(plugin).length,
+          0,
+        ) / 1024));
+        rows.push(["导出位置", canPick
+          ? "点导出后会先弹出系统保存位置，选好后保存到那里。"
+          : (shell ? "保存到系统「下载」目录（/sdcard/Download）。" : "浏览器下载目录。")]);
+        rows.push(["文件大小", `JSON 约 ${jsonKb} KB；多个 .js 合计约 ${jsKb} KB；ZIP 与 .js 合计接近（不压缩）。`]);
+        for (let i = 0; i < rows.length; i += 1) {
+          const row = element("div", "pmt-export-help-row");
+          row.appendChild(element("strong", null, `${rows[i][0]}：`));
+          row.appendChild(element("span", null, rows[i][1]));
+          help.appendChild(row);
+        }
+        body.appendChild(help);
+      }
+
+      const list = element("div", "pmt-export-choice-list");
+      const options = [
+        { key: "json", title: "JSON 备份", desc: "一个文件 · 含设置和启用状态 · 适合整机备份" },
+        { key: "js", title: "多个 .js", desc: "每个插件一个文件 · 可直接安装 · 适合分享" },
+        { key: "zip", title: "ZIP 压缩包", desc: "一个压缩包 · 内含全部 .js · 适合一次下载" },
+      ];
+      for (let i = 0; i < options.length; i += 1) {
+        const option = options[i];
+        const btn = element("button", "pmt-export-option");
+        btn.type = "button";
+        btn.setAttribute("data-format", option.key);
+        btn.appendChild(element("strong", null, option.title));
+        btn.appendChild(element("span", "pmt-export-option-desc", option.desc));
+        btn.addEventListener("click", () => {
+          exportAllView = false;
+          exportAllHelp = false;
+          restoreNormalScroll = true;
+          if (option.key === "json") exportAllPlugins();
+          else if (option.key === "js") exportAllAsJsFiles();
+          else exportAllAsZip();
+          rerender();
+        });
+        list.appendChild(btn);
+      }
+      body.appendChild(list);
+      body.appendChild(element("p", "pmt-tip", "点标题旁的 ? 看三种格式的区别。"));
+    }
+
+    function bodyViewKind(body) {
+      if (!body) return "";
+      if (body.querySelector(".pmt-export-option")) return "choice";
+      if (body.querySelector(".pmt-export-code")) return "export";
+      if (body.querySelector(".pmt-field")) return "settings";
+      if (body.querySelector(".pmt-list")) return "list";
+      if (body.querySelector(".pmt-code")) return "import";
+      if (body.querySelector(".pmt-back")) return "settings";
+      return "other";
+    }
+
+    function renderNormal(body, rerender) {
+      const shown = filteredPlugins();
+      const enabledCount = shown.filter((item) => item.enabled !== false).length;
+      if (searchQuery) {
+        body.appendChild(element(
+          "p",
+          "pmt-count",
+          `筛选出 ${shown.length} 个 · 共 ${plugins.length} 个（启用 ${enabledCount} 个）`,
+        ));
+      } else {
+        body.appendChild(element("p", "pmt-count", `已启用 ${enabledCount} 个 · 共 ${plugins.length} 个`));
+      }
+
+      if (!shown.length) {
+        body.appendChild(element(
+          "div",
+          "pmt-empty",
+          searchQuery ? `没有匹配「${searchQuery}」的插件。` : "还没有安装扩展插件。",
+        ));
+        return;
+      }
+
+      const refreshNormalCount = () => {
+        const enabledCount = shown.filter((item) => item.enabled !== false).length;
+        const countEl = body.querySelector(".pmt-count");
+        if (!countEl) return;
+        countEl.textContent = searchQuery
+          ? `筛选出 ${shown.length} 个 · 共 ${plugins.length} 个（启用 ${enabledCount} 个）`
+          : `已启用 ${enabledCount} 个 · 共 ${plugins.length} 个`;
+      };
+
+      const list = element("div", "pmt-list");
+      for (let i = 0; i < shown.length; i += 1) {
+        const plugin = shown[i];
+        const row = element("div", "pmt-plugin");
+        row.setAttribute("data-off", plugin.enabled === false ? "1" : "0");
+
+        const main = element("div", "pmt-plugin-main");
+        main.appendChild(pluginTitle(plugin));
+        if (plugin.manifest.description) main.appendChild(element("div", "pmt-desc", plugin.manifest.description));
+
+        const isSelf = plugin.manifest.id === selfId;
+        const toggle = makeSwitch(plugin.enabled !== false, () => {
+          if (isSelf) {
+            toast("当前插件请在「设置 → 扩展插件」里停用");
+            return;
+          }
+          const next = plugin.enabled === false;
+          try {
+            bridge.setEnabled(plugin.manifest.id, next);
+            plugin.enabled = next;
+            toggle.setAttribute("aria-checked", next ? "true" : "false");
+            row.setAttribute("data-off", next ? "0" : "1");
+            refreshNormalCount();
+          } catch (err) {
+            toast("操作失败，请重试");
+            resetBridge();
+          }
+        }, isSelf);
+
+        row.appendChild(main);
+        const exportBtn = element("button", "pmt-export", "导出");
+        exportBtn.type = "button";
+        exportBtn.addEventListener("click", (event) => {
+          if (event && event.stopPropagation) event.stopPropagation();
+          listScrollChain = captureListScroll(list);
+          openExport(plugin, rerender);
+        });
+        row.appendChild(exportBtn);
+        row.appendChild(toggle);
+        list.appendChild(row);
+      }
+      body.appendChild(list);
+      const exportAll = element("button", "pmt-action pmt-export-all", "导出全部插件…");
+      exportAll.type = "button";
+      exportAll.addEventListener("click", () => {
+        activeTab = "normal";
+        detailId = null;
+        importView = false;
+        exportId = null;
+        exportAllView = true;
+        exportAllHelp = false;
+        listScrollChain = captureListScroll(list);
+        rerender();
+      });
+      body.appendChild(exportAll);
+      body.appendChild(element(
+        "p",
+        "pmt-tip",
+        "「导出」保存单个插件源码；「导出全部」可选 JSON 备份、多个 .js 或 ZIP。",
+      ));
+      if (restoreNormalScroll) {
+        restoreNormalScroll = false;
+        restoreListScrollState(list);
+      }
+    }
+
+    function managerScroller(el) {
+      let node = el;
+      let guard = 0;
+      while (node && guard < 20) {
+        if (node.classList && node.classList.contains("pmt-modal")) return node;
+        const scrollHeight = Number(node.scrollHeight) || 0;
+        const clientHeight = Number(node.clientHeight) || 0;
+        if (scrollHeight > clientHeight + 4) {
+          let overflow = "";
+          try {
+            const style = win.getComputedStyle ? win.getComputedStyle(node) : null;
+            overflow = style ? style.overflowY : "";
+          } catch (err) { overflow = ""; }
+          if (!overflow || /(auto|scroll|overlay)/.test(overflow)) return node;
+        }
+        node = node.parentNode;
+        guard += 1;
+      }
+      return null;
+    }
+
+    function captureListScroll(list) {
+      if (!list) return null;
+      const chain = [];
+      let node = list;
+      let guard = 0;
+      while (node && guard < 30) {
+        chain.push(Number(node.scrollTop) || 0);
+        node = node.parentNode;
+        guard += 1;
+      }
+      return { chain, winY: Number(win.scrollY) || 0 };
+    }
+
+    function restoreListScrollState(list) {
+      const state = listScrollChain;
+      listScrollChain = null;
+      if (!state || !list) return;
+      const apply = () => {
+        let node = list;
+        let index = 0;
+        while (node && index < state.chain.length) {
+          const top = state.chain[index] || 0;
+          if (top > 0) {
+            try { node.scrollTop = top; } catch (err) { /* ignore */ }
+          }
+          node = node.parentNode;
+          index += 1;
+        }
+        if (state.winY > 0) {
+          try { win.scrollTo(0, state.winY); } catch (err) { /* ignore */ }
+        }
+      };
+      apply();
+      later(apply, 0);
+      later(apply, 80);
+      later(apply, 200);
+    }
+
+    function renderDetailList(body, rerender) {
+      const shown = filteredPlugins();
+      if (!shown.length) {
+        body.appendChild(element(
+          "div",
+          "pmt-empty",
+          searchQuery ? `没有匹配「${searchQuery}」的插件。` : "还没有安装扩展插件。",
+        ));
+        return;
+      }
+      body.appendChild(element("p", "pmt-tip", "点一个插件，进去改它的各项设置。"));
+
+      const list = element("div", "pmt-list");
+      for (let i = 0; i < shown.length; i += 1) {
+        const plugin = shown[i];
+        const fields = Array.isArray(plugin.manifest.settings) ? plugin.manifest.settings.length : 0;
+        const row = element("div", "pmt-plugin pmt-clickable");
+        row.setAttribute("role", "button");
+        row.setAttribute("tabindex", "0");
+        row.setAttribute("data-off", plugin.enabled === false ? "1" : "0");
+
+        const main = element("div", "pmt-plugin-main");
+        main.appendChild(pluginTitle(plugin));
+        const sub = [];
+        sub.push(fields ? `${fields} 项设置` : "没有可配置项");
+        if (plugin.manifest.author) sub.push(plugin.manifest.author);
+        main.appendChild(element("div", "pmt-desc", sub.join(" · ")));
+
+        row.appendChild(main);
+        row.appendChild(element("span", "pmt-chevron", "›"));
+
+        const open = () => {
+          listScrollChain = captureListScroll(list);
+          restoreDetailScroll = true;
+          detailId = plugin.manifest.id;
+          rerender();
+        };
+        row.addEventListener("click", open);
+        row.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            open();
+          }
+        });
+        list.appendChild(row);
+      }
+      body.appendChild(list);
+      if (restoreDetailScroll) {
+        restoreDetailScroll = false;
+        restoreListScrollState(list);
+      }
+    }
+
+    function renderSettings(body, plugin, rerender) {
+      const back = element("button", "pmt-back", "‹ 插件列表");
+      back.type = "button";
+      back.addEventListener("click", () => {
+        detailId = null;
+        restoreDetailScroll = true;
+        rerender();
+      });
+      body.appendChild(back);
+
+      const isSelf = plugin.manifest.id === selfId;
+      const headRow = element("div", "pmt-plugin");
+      const main = element("div", "pmt-plugin-main");
+      main.appendChild(pluginTitle(plugin));
+      if (plugin.manifest.description) main.appendChild(element("div", "pmt-desc", plugin.manifest.description));
+      headRow.appendChild(main);
+      const exportBtn = element("button", "pmt-export", "导出");
+      exportBtn.type = "button";
+      exportBtn.addEventListener("click", () => openExport(plugin, rerender));
+      headRow.appendChild(exportBtn);
+      const enableSwitch = makeSwitch(plugin.enabled !== false, () => {
+        if (isSelf) {
+          toast("当前插件请在「设置 → 扩展插件」里停用");
+          return;
+        }
+        const next = plugin.enabled === false;
+        try {
+          bridge.setEnabled(plugin.manifest.id, next);
+          plugin.enabled = next;
+          enableSwitch.setAttribute("aria-checked", next ? "true" : "false");
+          headRow.setAttribute("data-off", next ? "0" : "1");
+        } catch (err) {
+          toast("操作失败，请重试");
+          resetBridge();
+        }
+      }, isSelf);
+      headRow.appendChild(enableSwitch);
+      body.appendChild(headRow);
+
+      const fields = Array.isArray(plugin.manifest.settings) ? plugin.manifest.settings : [];
+      if (!fields.length) {
+        body.appendChild(element("div", "pmt-empty", "这个插件没有声明可配置项。"));
+        return;
+      }
+
+      const list = element("div", "pmt-fields");
+      for (let i = 0; i < fields.length; i += 1) {
+        list.appendChild(renderField(plugin, fields[i]));
+      }
+      body.appendChild(list);
+      body.appendChild(element("p", "pmt-tip", "改动即时保存，不需要额外确认。"));
+
+      const resetBtn = element("button", "pmt-action pmt-reset-settings", "恢复默认");
+      resetBtn.type = "button";
+      resetBtn.addEventListener("click", () => {
+        const defaults = {};
+        for (const field of fields) {
+          if (field && field.key) defaults[field.key] = field.default;
+        }
+        try {
+          bridge.updateSettings(plugin.manifest.id, defaults);
+          plugin.settings = { ...(plugin.settings || {}), ...defaults };
+          toast("已恢复默认设置");
+          rerender();
+        } catch (err) {
+          toast("恢复失败，请重试");
+          resetBridge();
+        }
+      });
+      body.appendChild(resetBtn);
+    }
+
+    function currentValue(plugin, field) {
+      const key = field.key;
+      const bag = plugin.settings && typeof plugin.settings === "object" ? plugin.settings : {};
+      if (bag[key] !== undefined && bag[key] !== null) return bag[key];
+      return field.default;
+    }
+
+    function saveField(plugin, field, value, statusEl) {
+      try {
+        bridge.updateSettings(plugin.manifest.id, { [field.key]: value });
+        plugin.settings = { ...(plugin.settings || {}), [field.key]: value };
+        markSaved(statusEl);
+      } catch (err) {
+        toast("保存失败，请重试");
+        resetBridge();
+      }
+    }
+
+    function fieldShell(field) {
+      const box = element("div", "pmt-field");
+      const head = element("div", "pmt-field-head");
+      const label = element("span", "pmt-field-label", field.label || field.key);
+      const status = element("span", "pmt-saved", "已保存");
+      head.appendChild(label);
+      head.appendChild(status);
+      box.appendChild(head);
+      return { box, head, status };
+    }
+
+    function renderField(plugin, field) {
+      const value = currentValue(plugin, field);
+
+      if (field.type === "boolean") {
+        const shell = fieldShell(field);
+        const toggle = makeSwitch(value === true, () => {
+          const next = !(value === true);
+          saveField(plugin, field, next, shell.status);
+          toggle.setAttribute("aria-checked", next ? "true" : "false");
+        }, false);
+        shell.head.appendChild(toggle);
+        if (field.description) shell.box.appendChild(element("p", "pmt-field-hint", field.description));
+        return shell.box;
+      }
+
+      if (field.type === "select") {
+        const shell = fieldShell(field);
+        const select = element("select", "pmt-input pmt-select");
+        const options = Array.isArray(field.options) ? field.options : [];
+        for (let i = 0; i < options.length; i += 1) {
+          const option = doc.createElement("option");
+          option.value = String(options[i].value);
+          option.textContent = options[i].label != null ? String(options[i].label) : String(options[i].value);
+          select.appendChild(option);
+        }
+        select.value = value == null ? "" : String(value);
+        select.addEventListener("change", () => {
+          saveField(plugin, field, select.value, shell.status);
+        });
+        shell.box.appendChild(select);
+        if (field.description) shell.box.appendChild(element("p", "pmt-field-hint", field.description));
+        return shell.box;
+      }
+
+      if (field.type === "number") {
+        const shell = fieldShell(field);
+        const input = element("input", "pmt-input");
+        input.type = "number";
+        input.inputMode = "decimal";
+        input.value = value == null ? "" : String(value);
+        input.addEventListener("change", () => {
+          const raw = String(input.value).trim();
+          if (!raw) {
+            input.value = value == null ? "" : String(value);
+            return;
+          }
+          const num = Number(raw);
+          if (!Number.isFinite(num)) {
+            input.value = value == null ? "" : String(value);
+            return;
+          }
+          saveField(plugin, field, num, shell.status);
+        });
+        shell.box.appendChild(input);
+        if (field.description) shell.box.appendChild(element("p", "pmt-field-hint", field.description));
+        return shell.box;
+      }
+
+      const shell = fieldShell(field);
+      const input = element("input", "pmt-input");
+      input.type = "text";
+      input.value = value == null ? "" : String(value);
+      input.addEventListener("change", () => {
+        saveField(plugin, field, String(input.value), shell.status);
+      });
+      shell.box.appendChild(input);
+      if (field.description) shell.box.appendChild(element("p", "pmt-field-hint", field.description));
+      return shell.box;
+    }
+
+    // ── 清理 ──────────────────────────────────────────────
+    return () => {
+      try { if (typeof offSlot === "function") offSlot(); } catch (err) { /* ignore */ }
+      if (typeof hostPollTimer === "function") {
+        try { hostPollTimer(); } catch (err) { /* ignore */ }
+      } else if (hostPollTimer != null && typeof win.clearInterval === "function") {
+        try { win.clearInterval(hostPollTimer); } catch (err) { /* ignore */ }
+      }
+      hostPollTimer = null;
+      if (hostGroupObserver) {
+        try { hostGroupObserver.disconnect(); } catch (err) { /* ignore */ }
+      }
+      hostGroupObserver = null;
+      hostGroupEl = null;
+      if (hostInstallInput && hostInstallInputHandler) {
+        try { hostInstallInput.removeEventListener("change", hostInstallInputHandler, true); } catch (err) { /* ignore */ }
+      }
+      hostInstallInput = null;
+      hostInstallInputHandler = null;
+      hostHintGroup = null;
+      hostHintText = "";
+      restoreHostPadding();
+      disposeNativeTools();
+      if (hostExportEl && hostExportEl.parentNode) {
+        try { hostExportEl.parentNode.removeChild(hostExportEl); } catch (err) { /* ignore */ }
+      }
+      hostExportEl = null;
+      try {
+        if (typeof win.removeEventListener === "function") {
+          win.removeEventListener("scroll", onHostScroll, true);
+          win.removeEventListener("resize", onHostScroll);
+        }
+      } catch (err) { /* ignore */ }
+
+      // 宿主停插件时可能正处在 React 渲染/提交阶段，直接关浮层会触发
+      // “Cannot update a component while rendering” 之类的整页异常，延迟到下一轮再关。
+      const picker = pickerHandle;
+      pickerHandle = null;
+      if (picker && typeof picker.close === "function") {
+        later(() => { try { picker.close(); } catch (err) { /* ignore */ } }, 0);
+      }
+
+      toastTimers.forEach((timer) => { try { win.clearTimeout(timer); } catch (err) { /* ignore */ } });
+      toastTimers.clear();
+      if (toastWrap && toastWrap.parentNode) {
+        try { toastWrap.parentNode.removeChild(toastWrap); } catch (err) { /* ignore */ }
+      }
+      toastWrap = null;
+
+      const modal = modalHandle;
+      modalHandle = null;
+      modalGen += 1;
+      if (modal && typeof modal.close === "function") {
+        later(() => { try { modal.close(); } catch (err) { /* ignore */ } }, 0);
+      }
+
+      savedTimers.forEach((timer) => { try { win.clearTimeout(timer); } catch (err) { /* ignore */ } });
+      savedTimers = [];
+    };
+  },
+};
