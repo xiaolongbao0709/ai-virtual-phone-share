@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T03:25:39.051Z",
+  "generatedAt": "2026-10-31T03:28:35.049Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 88
+      "count": 89
     },
     {
       "name": "MCP",
@@ -1565,6 +1565,24 @@
       "avatar": "",
       "ownerHash": "4540a02f6a504b49a3c9c81da7cbed5ae22d8f83688534316c4d30121f2238d9",
       "updatedAt": "2026-08-25T00:31:47+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "转发应用",
+      "dirName": "转发应用",
+      "type": "dir",
+      "path": "资源/Js插件/转发应用",
+      "files": [
+        "资源/Js插件/转发应用/README (4).md",
+        "资源/Js插件/转发应用/_storage_emulated_0_Download_WeiXin_LICENSE (4)",
+        "资源/Js插件/转发应用/chat-app-sender.plugin (10).js"
+      ],
+      "images": [],
+      "description": "可以把应用发给聊天室，好像没什么用？）",
+      "author": "七个七七",
+      "avatar": "",
+      "ownerHash": "c27ed9c81cc575e5d865b1a4dc6e2f9cd9d27a3f2f775141d179f923a58bc770",
+      "updatedAt": "2026-10-31T12:25:42+09:00"
     },
     {
       "folder": "Js插件",
@@ -5878,11 +5896,11 @@
         "资源/应用/番外/1000091244.jpg",
         "资源/应用/番外/1000091280.jpg"
       ],
-      "description": "一个支持html渲染的番外app\n可以一键同步给char\n增加了放置文风提示词的位置\n[橙]线上聊天格式的番外可以在正文上方转成仿微信气泡[/橙]",
+      "description": "一个支持html渲染的番外app\n线上聊天格式的番外可以在正文上方转成仿微信气泡\n可以一键同步给ch[橙]ar[/橙]\n[橙]增加了放置文风提示词的位置[/橙]\n[橙]修复了线上格式会在聊天app中发出来的bug[/橙]",
       "author": "秋秋秋",
       "avatar": "",
       "ownerHash": "2760fe2001296e6591af85492bdb2725c7a7770227ca38ceb9900888917580da",
-      "updatedAt": "2026-10-31T12:23:36+09:00"
+      "updatedAt": "2026-10-31T12:26:06+09:00"
     },
     {
       "folder": "应用",
