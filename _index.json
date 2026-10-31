@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T15:58:42.050Z",
+  "generatedAt": "2026-10-31T16:39:44.271Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -897,11 +897,11 @@
         "资源/Js插件/插件管理/plus-menu-toggles-pub(3)"
       ],
       "images": [],
-      "description": "开源版「插件管理」简介\n\n\n给小手机（doremy.float.phone）用的插件管理扩展，MIT 许可，单文件、无依赖、不联网。\n\n\n\n\n\n\n\n\n\n\n功能：\n「+」面板入口，普通/详细两种模式；\n一键启用 / 停用已装插件；\n改各插件的设置项，支持和详细页滚动位置保持，底部可 恢复默认；\n按名称 / id / 作者 / 描述搜索；\n导入 .js 代码或文件、.json 备份，同 id 覆盖升级保留设置；\n导出单个 .js，或全部导出 JSON 备份 / 多个 .js / ZIP；\n增强 App 原生「扩展插件」页：顶部搜索、刷新、栏目跳转、导出按钮、安装提示。",
+      "description": "给小手机（doremy.float.phone）用的插件管理扩展，MIT 许可，单文件、无依赖、不联网。\n功能：\n「+」面板入口，普通/详细两种模式；\n一键启用 / 停用已装插件；\n改各插件的设置项，支持和详细页滚动位置保持，底部可 恢复默认；\n按名称 / id / 作者 / 描述搜索；\n导入 .js 代码或文件、.json 备份，同 id 覆盖升级保留设置；\n导出单个 .js，或全部导出 JSON 备份 / 多个 .js / ZIP；\n增强 App 原生「扩展插件」页：顶部搜索、刷新、栏目跳转、导出按钮、安装提示。",
       "author": "七个七七",
       "avatar": "",
       "ownerHash": "c27ed9c81cc575e5d865b1a4dc6e2f9cd9d27a3f2f775141d179f923a58bc770",
-      "updatedAt": "2026-10-31T12:15:03+09:00"
+      "updatedAt": "2026-11-01T01:37:39+09:00"
     },
     {
       "folder": "Js插件",
