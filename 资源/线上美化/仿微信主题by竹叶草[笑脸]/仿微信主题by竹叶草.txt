@@ -1,0 +1,639 @@
+/* ═══ 仿微信主题 by竹叶草 禁止二传═══ */
+.chat-app {
+  --c-header-bg: #EDEDED;
+  --c-page-body-bg: #EDEDED;
+  --c-bubble-self: #95EC69;
+  --c-bubble-other: #FFFFFF;
+  --c-card: #FFFFFF;
+  --c-card-border: #E0E0E0;
+  --c-input: #FFFFFF;
+  --c-input-border: #DADBDF;
+  --c-text-title: #191919;
+  --c-text: #888888;
+  --c-icon: #888888;
+  --c-icon-active: #07C160;
+}
+
+.page-header {
+  background: var(--c-header-bg);
+  backdrop-filter: none;
+  border-bottom: 0.5px solid #D6D6D6;
+}
+
+.page-title,
+.page-back-btn {
+  color: var(--c-text-title);
+}
+
+.page-body {
+  background: transparent;
+}
+
+.chat-room-wrapper {
+  background: transparent;
+}
+
+.chat-room-wrapper .page-body {
+  background: transparent !important;
+}
+
+.chat-app > .page-body,
+.chat-list-page .page-body,
+.contacts-page .page-body {
+  background: var(--c-page-body-bg);
+}
+
+.chat-search-bar {
+  background: #FFFFFF;
+  border: 1px solid var(--c-input-border);
+  border-radius: 8px;
+}
+
+.chat-search-input {
+  color: var(--c-text-title);
+}
+
+.chat-list-tab {
+  color: var(--c-text);
+}
+
+.chat-list-tab.active {
+  color: var(--c-text-title);
+  font-weight: 600;
+}
+
+.contact-item {
+  border-bottom: 0.5px solid var(--c-card-border);
+}
+
+.chat-contact-name,
+.contact-name {
+  color: var(--c-text-title);
+}
+
+.contact-letter-header {
+  color: var(--c-text);
+}
+
+.chat-tab-bar {
+  background: #F7F7F7;
+  backdrop-filter: none;
+  border-top: 0.5px solid #D6D6D6;
+}
+
+.chat-tab {
+  color: var(--c-icon);
+}
+
+.chat-tab-active {
+  color: var(--c-icon-active);
+}
+
+.chat-tab svg {
+  stroke-width: 1.7;
+}
+
+.chat-tab-active svg {
+  stroke-width: 1.8;
+}
+
+.chat-bubble-role-user {
+  background: var(--c-bubble-self);
+  color: #191919;
+  border-radius: 4px !important;
+  padding: 6px 10px !important;
+  font-size: calc(15px * var(--app-text-scale, 1)) !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+}
+
+.chat-bubble-role-assistant {
+  background: var(--c-bubble-other);
+  color: #191919;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px !important;
+  padding: 6px 10px !important;
+  font-size: calc(15px * var(--app-text-scale, 1)) !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+}
+
+.chat-bubble-media {
+  overflow: visible;
+}
+
+.chat-system-instruction-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-card-border);
+  border-radius: 6px;
+  box-shadow: var(--chat-bubble-shadow);
+}
+
+.chat-system-instruction-title {
+  color: var(--c-text-title);
+  font-weight: 600;
+}
+
+.chat-system-instruction-body {
+  color: var(--c-text);
+  text-indent: 2em;
+}
+
+.chat-input-bar {
+  background: #F7F7F7;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-top: 0.5px solid #D6D6D6;
+}
+
+.chat-offline-toggle.chat-offline-active {
+  color: var(--c-text-title);
+}
+
+.chat-offline-body {
+  padding: 16px 8px 24px;
+  gap: 12px;
+}
+
+.chat-offline-turn {
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c-card) 56%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-card-border) 30%, transparent);
+}
+
+.chat-offline-time,
+.chat-offline-empty,
+.chat-offline-summary-content,
+.chat-offline-generating {
+  color: var(--c-icon);
+}
+
+.chat-offline-label {
+  border-radius: 4px;
+  font-size: calc(11px*var(--app-text-scale,1));
+}
+
+.chat-offline-text {
+  color: var(--c-text);
+  font-size: calc(14.5px*var(--app-text-scale,1));
+  line-height: 1.85;
+}
+
+.chat-offline-entry[data-role="assistant"] .chat-offline-text {
+  color: var(--c-text-title);
+}
+
+.chat-offline-summary-fold {
+  background: color-mix(in srgb, var(--c-page-body-bg) 50%, transparent);
+  border-radius: 6px;
+}
+
+.chat-html-inline,
+.chat-music-share-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-card-border);
+  border-radius: 8px;
+}
+
+.chat-html-inline-frame {
+  max-height: min(36vh, 340px);
+}
+
+.chat-thought-card .chat-html-inline-frame,
+.chat-status-bare .chat-html-inline-frame {
+  max-height: min(52vh, 420px);
+}
+
+.chat-gift-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.025);
+  margin: 2px 0 4px;
+}
+
+.chat-gift-card-body {
+  background: #ffffff;
+  overflow: visible;
+}
+
+.chat-gift-card-status {
+  background: rgba(0,0,0,0.055);
+  color: var(--c-text-title);
+}
+
+.chat-gift-card-title {
+  color: var(--c-text-title);
+  font-size: calc(24px*var(--app-text-scale,1));
+}
+
+.chat-gift-card-divider {
+  background: rgba(0,0,0,0.12);
+}
+
+.chat-gift-card-footer {
+  border-top: 1px solid rgba(0,0,0,0.12);
+}
+
+.chat-gift-card-cell-label,
+.chat-gift-card-kicker,
+.chat-gift-card-label,
+.chat-gift-card-brand {
+  color: var(--c-icon);
+}
+
+.chat-gift-card-cell-value,
+.chat-gift-card-source {
+  color: var(--c-text);
+}
+
+.chat-photo-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.025);
+  margin: 2px 0 4px;
+}
+
+.chat-photo-card-placeholder {
+  background: #ffffff;
+}
+
+.chat-photo-card-text {
+  color: var(--c-text-title);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: calc(13px*var(--app-text-scale,1));
+  font-style: italic;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.chat-photo-card-image {
+  background: #ffffff;
+}
+
+.chat-photo-card--image {
+  background: transparent;
+  box-shadow: none;
+}
+
+.chat-photo-card--image .chat-photo-card-image {
+  object-fit: contain;
+}
+
+.chat-xhs-share-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+
+.chat-xhs-share-title {
+  color: var(--c-text-title);
+}
+
+.chat-xhs-share-head,
+.chat-xhs-share-author,
+.chat-xhs-share-desc {
+  color: var(--c-text);
+}
+
+.chat-xhs-share-mark {
+  background: #ff2442;
+  color: #ffffff;
+}
+
+.chat-xhs-share-cover {
+  border-radius: 6px;
+}
+
+.chat-xhs-share-tags span {
+  color: #ff2442;
+  background: #fff0f3;
+}
+
+.scan-pay-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-card-border);
+  border-radius: 8px;
+}
+.scan-pay-title {
+  color: var(--c-text-title);
+}
+.scan-pay-qr {
+  border-radius: 8px;
+}
+.scan-pay-hint {
+  color: var(--c-text);
+}
+.scan-pay-btn {
+  border-radius: 6px;
+}
+.scan-pay-btn-primary {
+  background: #07c160;
+  color: #ffffff;
+}
+
+.chat-app-card {
+  --cac-ink: #141414;
+  --cac-ink-soft: #3b3b3b;
+  --cac-ink-mute: #8c8c8c;
+  --cac-line: rgba(0,0,0,0.12);
+  --cac-dash: rgba(0,0,0,0.30);
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.06);
+}
+.chat-app-card-section-title {
+  background: var(--cac-ink);
+  color: #ffffff;
+}
+.chat-app-card-actions button:last-child:not([data-style="danger"]) {
+  background: var(--cac-ink);
+  color: #ffffff;
+}
+
+.chat-app .moments-feed-page > .page-body {
+  background: var(--c-page-body-bg);
+}
+
+.moments-feed-page:not(.is-scrolled) .page-header {
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
+.feed-cover-shell {
+  margin-bottom: 16px;
+}
+
+.feed-cover-bg {
+  background: var(--c-input);
+}
+
+.feed-cover-image {
+  object-fit: cover;
+}
+
+.feed-profile-avatar {
+  border-color: var(--c-page-body-bg);
+  background: var(--c-input);
+}
+
+.feed-profile-name {
+  color: var(--c-text-title);
+}
+
+.feed-profile-stats,
+.feed-profile-signature-text {
+  color: var(--c-text);
+}
+
+.feed-profile-stat-value {
+  color: var(--c-text-title);
+}
+
+.feed-notif-banner {
+  background: color-mix(in srgb, var(--c-icon-active) 12%, var(--c-card));
+  color: var(--c-icon-active);
+}
+
+.feed-post {
+  background: transparent;
+  border-color: var(--c-card-border);
+}
+
+.feed-post-author-name,
+.feed-post-content {
+  color: var(--c-text-title);
+}
+
+.feed-post-location {
+  color: var(--c-icon);
+}
+
+.feed-post-like-btn,
+.feed-post-comment-btn,
+.feed-post-delete-btn {
+  color: var(--c-icon-active);
+}
+
+.feed-like-summary {
+  color: var(--c-text-title);
+}
+
+.feed-like-summary-icon {
+  color: var(--c-icon);
+}
+
+.feed-comments {
+  gap: 4px;
+}
+
+.feed-comment-author,
+.feed-comment-reply-target {
+  color: var(--c-text);
+  opacity: 0.7;
+}
+
+.feed-comment-body,
+.feed-comment-reply-prefix,
+.feed-comment-reply-button {
+  color: var(--c-text-title);
+}
+
+.feed-comment-time {
+  color: var(--c-icon);
+}
+
+.feed-comment-replies {
+  padding-left: 40px;
+}
+
+.feed-comment-input {
+  background: var(--c-input);
+}
+
+.feed-comment-input-field {
+  color: var(--c-text);
+}
+
+.feed-comment-input-send {
+  color: var(--c-icon-active);
+}
+
+.feed-inline-translation-toggle {
+  color: var(--c-icon-active);
+}
+
+.feed-inline-translation {
+  color: var(--c-text-title);
+}
+
+/* ───── 头像统一正方形 ───── */
+.minimal-avatar-wrapper,
+.chat-msg-avatar,
+.feed-profile-avatar,
+.feed-comment-avatar-root,
+.feed-comment-avatar-child {
+  border-radius: 4px !important;
+  overflow: hidden !important;
+}
+
+.chat-msg-wrapper [class*="avatar"],
+.chat-msg-wrapper [class*="avatar"] > *,
+.minimal-avatar-wrapper,
+.feed-profile-avatar,
+.feed-comment-avatar-root,
+.feed-comment-avatar-child {
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
+.minimal-avatar-wrapper img,
+.chat-msg-avatar img,
+.feed-profile-avatar img,
+.feed-comment-avatar-root img,
+.feed-comment-avatar-child img,
+.chat-msg-wrapper [class*="avatar"] img {
+  border-radius: 4px !important;
+  object-fit: cover !important;
+}
+
+.chat-msg-wrapper [class*="avatar"] img,
+.minimal-avatar-wrapper img,
+.feed-profile-avatar img,
+.feed-comment-avatar-root img,
+.feed-comment-avatar-child img {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 4px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+[class*="bubble-role"] {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.chat-msg-wrapper [class*="left"] [class*="avatar"] {
+  border-radius: 4px !important;
+}
+
+/* ══════════════════════════
+   修复其他卡片遮挡头像的问题
+   ══════════════════════════ */
+/* 强制所有消息气泡容器（包括普通卡片）不越出屏幕，且不挤占头像空间 */
+.chat-msg-wrapper [class*="left"] > div:not([class*="avatar"]),
+.chat-msg-wrapper [class*="right"] > div:not([class*="avatar"]) {
+  max-width: calc(100% - 48px) !important; /* 留出头像的宽度 */
+  box-sizing: border-box !important;
+}
+
+/* 确保各类卡片内容不会溢出 */
+.chat-msg-wrapper [class*="card"],
+.chat-msg-wrapper [class*="bubble"] {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  word-break: break-word !important;
+}
+
+/* 强行将偏移的卡片拉回原位，或者增加左侧间距防止被头像盖住 */
+.chat-msg-wrapper [class*="left"] {
+  padding-left: 4px !important;
+}
+
+/* ══════════════════════════
+   仿微信红包/转账卡片还原 (扁长浅橙)
+   ══════════════════════════ */
+
+/* 1. 限制宽度，保证形状不变 */
+.chat-msg-wrapper [class*="red-packet"],
+.chat-msg-wrapper [class*="transfer"],
+.chat-msg-wrapper [class*="pay-card"] {
+  max-width: min(75%, 280px) !important;
+  min-width: 220px !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+  border: none !important;
+}
+
+/* 2. 上半部分彩色背景区（浅橙色） */
+.chat-msg-wrapper [class*="red-packet"] > div:nth-child(1),
+.chat-msg-wrapper [class*="transfer"] > div:nth-child(1),
+.chat-msg-wrapper [class*="pay-card"] > div:nth-child(1) {
+  background-color: #FFB86B !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+}
+
+/* 3. 上半部分内部白块背景透明 */
+.chat-msg-wrapper [class*="red-packet"] > div:nth-child(1) > div,
+.chat-msg-wrapper [class*="transfer"] > div:nth-child(1) > div {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 3b. 只让上半部分文字变白 */
+.chat-msg-wrapper [class*="red-packet"] > div:nth-child(1) :is(h1,h2,h3,h4,h5,h6,p,span,strong,b,em,div:not(:has(*))),
+.chat-msg-wrapper [class*="transfer"] > div:nth-child(1) :is(h1,h2,h3,h4,h5,h6,p,span,strong,b,em,div:not(:has(*))) {
+  color: #FFFFFF !important;
+}
+
+/* 4. 底部文字栏 */
+.chat-msg-wrapper [class*="red-packet"] > div:last-child,
+.chat-msg-wrapper [class*="transfer"] > div:last-child,
+.chat-msg-wrapper [class*="pay-card"] > div:last-child {
+  background-color: #FAF7ED !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+  border-top: 0.5px solid rgba(0,0,0,0.05) !important;
+}
+
+/* 5. 底部文字颜色变灰 */
+.chat-msg-wrapper [class*="red-packet"] > div:last-child *,
+.chat-msg-wrapper [class*="transfer"] > div:last-child *,
+.chat-msg-wrapper [class*="pay-card"] > div:last-child * {
+  color: #999999 !important;
+}
+
+/* 6. 左侧气泡小尖角 */
+.chat-msg-wrapper [class*="left"] [class*="red-packet"],
+.chat-msg-wrapper [class*="left"] [class*="transfer"],
+.chat-msg-wrapper [class*="left"] [class*="pay-card"] {
+  border-top-left-radius: 4px !important;
+  position: relative;
+}
+.chat-msg-wrapper [class*="left"] [class*="red-packet"]::before,
+.chat-msg-wrapper [class*="left"] [class*="transfer"]::before,
+.chat-msg-wrapper [class*="left"] [class*="pay-card"]::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 14px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 6px solid #FFB86B;
+}
+
+/* 7. 右侧气泡小尖角 */
+.chat-msg-wrapper [class*="right"] [class*="red-packet"],
+.chat-msg-wrapper [class*="right"] [class*="transfer"],
+.chat-msg-wrapper [class*="right"] [class*="pay-card"] {
+  border-top-right-radius: 4px !important;
+  position: relative;
+}
+.chat-msg-wrapper [class*="right"] [class*="red-packet"]::before,
+.chat-msg-wrapper [class*="right"] [class*="transfer"]::before,
+.chat-msg-wrapper [class*="right"] [class*="pay-card"]::before {
+  content: "";
+  position: absolute;
+  right: -6px;
+  top: 14px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 6px solid #FFB86B;
+}
