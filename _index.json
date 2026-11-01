@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T17:21:20.311Z",
+  "generatedAt": "2026-11-01T17:23:47.001Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -81,7 +81,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 24
+      "count": 25
     },
     {
       "name": "线下正则",
@@ -8867,6 +8867,27 @@
       "avatar": "资源/线上聊天状态栏/【状态栏-Canteen🍜by雪】/.avatar.png",
       "ownerHash": "b0ac5619f082c348e0d7e7a1f2d855e5ed77e7a34000610f96aa935e10e6499e",
       "updatedAt": "2026-11-02T02:14:08+09:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "【状态栏-Frost社交❄️by雪】",
+      "dirName": "【状态栏-Frost社交❄️by雪】",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/【状态栏-Frost社交❄️by雪】",
+      "files": [
+        "资源/线上聊天状态栏/【状态栏-Frost社交❄️by雪】/【状态栏-Frost社交by雪】.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/【状态栏-Frost社交❄️by雪】/IMG_8398.jpeg",
+        "资源/线上聊天状态栏/【状态栏-Frost社交❄️by雪】/IMG_8399.jpeg",
+        "资源/线上聊天状态栏/【状态栏-Frost社交❄️by雪】/IMG_8401.jpeg",
+        "资源/线上聊天状态栏/【状态栏-Frost社交❄️by雪】/IMG_8402.jpeg"
+      ],
+      "description": "[粗]一个会下雪的的社交平台❄️[/粗]\n[粗]• 日夜跟随系统，自带绝美夜间下雪特效感叹号\n[/粗]\n• 分为Frost（最新）、Trending（热榜）、Nearby（附近）、Me（个人）四个版块\n• 评论区极度真实，除了路人吃瓜，还会有帖主亲自下场回复带专属标签❗️\n• 个人主页支持查看所有历史动态，点击追更日常\n[粗]二改✅商用❌[/粗]",
+      "author": "Snowi",
+      "avatar": "资源/线上聊天状态栏/【状态栏-Frost社交❄️by雪】/.avatar.png",
+      "ownerHash": "b0ac5619f082c348e0d7e7a1f2d855e5ed77e7a34000610f96aa935e10e6499e",
+      "updatedAt": "2026-11-02T02:21:34+09:00"
     },
     {
       "folder": "线上聊天状态栏",
