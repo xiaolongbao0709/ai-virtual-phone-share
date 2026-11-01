@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T12:10:12.811Z",
+  "generatedAt": "2026-11-01T12:58:52.352Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -81,7 +81,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 19
+      "count": 20
     },
     {
       "name": "线下正则",
@@ -8831,6 +8831,25 @@
       "avatar": "资源/线上聊天状态栏/【灰白简约ins风】/.avatar.png",
       "ownerHash": "9e75a8c2adaf29657201107124e08feed80108579e1a529dbdde83d67b310acf",
       "updatedAt": "2026-10-10T18:59:23+08:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "【状态栏-试香纸by雪】",
+      "dirName": "【状态栏-试香纸by雪】",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/【状态栏-试香纸by雪】",
+      "files": [
+        "资源/线上聊天状态栏/【状态栏-试香纸by雪】/【试香纸-状态栏by雪】.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/【状态栏-试香纸by雪】/IMG_8332.jpeg",
+        "资源/线上聊天状态栏/【状态栏-试香纸by雪】/IMG_8333.jpeg"
+      ],
+      "description": "[粗]一个试香纸状态栏[/粗]\n-可以导入聊天室自定义状态栏使用\n-是三张能翻面的纸，点一下看香调笔记，纸面会飘一层香雾。有粒子漂浮特效\n[粗]二改✅商用❌[/粗]",
+      "author": "Snowi",
+      "avatar": "",
+      "ownerHash": "b0ac5619f082c348e0d7e7a1f2d855e5ed77e7a34000610f96aa935e10e6499e",
+      "updatedAt": "2026-11-01T21:56:33+09:00"
     },
     {
       "folder": "线上聊天状态栏",
