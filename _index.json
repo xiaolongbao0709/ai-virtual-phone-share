@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T12:58:52.352Z",
+  "generatedAt": "2026-11-01T13:11:51.568Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -81,7 +81,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 20
+      "count": 21
     },
     {
       "name": "线下正则",
@@ -8850,6 +8850,25 @@
       "avatar": "",
       "ownerHash": "b0ac5619f082c348e0d7e7a1f2d855e5ed77e7a34000610f96aa935e10e6499e",
       "updatedAt": "2026-11-01T21:56:33+09:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "【状态栏-黑白拍立得by雪】",
+      "dirName": "【状态栏-黑白拍立得by雪】",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/【状态栏-黑白拍立得by雪】",
+      "files": [
+        "资源/线上聊天状态栏/【状态栏-黑白拍立得by雪】/【状态栏-拍立得by雪】.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/【状态栏-黑白拍立得by雪】/IMG_8336.jpeg",
+        "资源/线上聊天状态栏/【状态栏-黑白拍立得by雪】/IMG_8340.jpeg"
+      ],
+      "description": "[粗]三张可翻页的拍立得[/粗]\n-三张图片可自行替换url\n[粗]二改✅商用❌[/粗]",
+      "author": "Snowi",
+      "avatar": "资源/线上聊天状态栏/【状态栏-黑白拍立得by雪】/.avatar.png",
+      "ownerHash": "b0ac5619f082c348e0d7e7a1f2d855e5ed77e7a34000610f96aa935e10e6499e",
+      "updatedAt": "2026-11-01T22:10:13+09:00"
     },
     {
       "folder": "线上聊天状态栏",
