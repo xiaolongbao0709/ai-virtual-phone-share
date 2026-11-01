@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T15:12:33.865Z",
+  "generatedAt": "2026-11-01T17:10:08.465Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -81,7 +81,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 22
+      "count": 23
     },
     {
       "name": "线下正则",
@@ -8847,6 +8847,26 @@
       "avatar": "资源/线上聊天状态栏/【灰白简约ins风】/.avatar.png",
       "ownerHash": "9e75a8c2adaf29657201107124e08feed80108579e1a529dbdde83d67b310acf",
       "updatedAt": "2026-10-10T18:59:23+08:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "【状态栏-记忆当铺🧾by雪】",
+      "dirName": "【状态栏-记忆当铺🧾by雪】",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/【状态栏-记忆当铺🧾by雪】",
+      "files": [
+        "资源/线上聊天状态栏/【状态栏-记忆当铺🧾by雪】/【状态栏-记忆当铺🧾by雪】.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/【状态栏-记忆当铺🧾by雪】/IMG_8392.jpeg",
+        "资源/线上聊天状态栏/【状态栏-记忆当铺🧾by雪】/IMG_8393.jpeg",
+        "资源/线上聊天状态栏/【状态栏-记忆当铺🧾by雪】/IMG_8394.jpeg"
+      ],
+      "description": "[粗]四个可切换的绝密当铺档案页[/粗]\n• 分为当票、寻物、封存、销毁四大版块\n• 销毁页有眼泪晕开纸张水痕特效\n[粗]二改✅商用❌[/粗]",
+      "author": "Snowi",
+      "avatar": "资源/线上聊天状态栏/【状态栏-记忆当铺🧾by雪】/.avatar.png",
+      "ownerHash": "b0ac5619f082c348e0d7e7a1f2d855e5ed77e7a34000610f96aa935e10e6499e",
+      "updatedAt": "2026-11-02T02:08:07+09:00"
     },
     {
       "folder": "线上聊天状态栏",
