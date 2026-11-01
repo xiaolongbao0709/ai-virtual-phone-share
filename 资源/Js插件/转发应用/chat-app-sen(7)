@@ -4,6 +4,8 @@
 // 把手机上的应用转发给聊天对象：
 //   · 「+」面板 →「应用」：选一个应用 → 选转发对象（可多选）
 //   · 桌面整理态：每个应用图标右上角出现「转发」角标，点它选对象
+//   · 文件夹：角标或轻点文件夹本体 → 弹出可转发的应用列表（不退出整理态），
+//     列表底部还有「移动 / 整理」一键进宿主原生面板
 // 对象支持：AI 助手小卷、一个/多个 AI 角色、一个/多个群聊。
 //
 // 应用来源：宿主桌面布局（分页/程序坞/文件夹）+ 已安装的自定义应用 +
@@ -223,6 +225,23 @@ const CSS = `
 }
 .cas-fwd-badge:active { transform: scale(.9); }
 
+/* 文件夹列表底部的「去系统面板整理」 */
+.cas-wide {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 13px;
+  padding: 10px 12px;
+  margin-top: 2px;
+  border-radius: 11px;
+  border: 1px dashed rgba(120, 120, 120, .45);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: center;
+}
+.cas-wide:active { background: rgba(120, 120, 120, .12); }
+
 /* 转发对象选择 */
 .cas-rcp-app {
   display: flex;
@@ -302,10 +321,10 @@ export default {
     id: "chat-app-sender",
     name: "转发应用",
     apiVersion: 1,
-    version: "1.2.2",
+    version: "1.2.5",
     author: "",
     description:
-      "把手机桌面上的应用转发给别人：整理桌面时点图标右上角的转发角标（文件夹会列出里面的应用），或在「+」→「应用」里选；可多选小卷、多个 AI 角色和群聊。",
+      "把手机桌面上的应用转发给别人：整理桌面时点图标右上角的转发角标，或点文件夹选里面的应用（不退出整理态，列表底部可进系统面板移动）；也能在「+」→「应用」里选。可多选小卷、多个 AI 角色和群聊。",
     permissions: ["chat.read", "chat.write", "ui"],
     settings: [
       {
@@ -1104,7 +1123,7 @@ export default {
         root.textContent = "";
 
         const head = element("div", "cas-head");
-        head.appendChild(element("div", "cas-title", `文件夹「${data.folder.name}」`));
+        head.appendChild(element("div", "cas-title", `转发文件夹「${data.folder.name}」`));
         const done = element("button", "cas-done", "完成");
         done.type = "button";
         done.addEventListener("click", () => {
@@ -1114,7 +1133,7 @@ export default {
         head.appendChild(done);
         root.appendChild(head);
 
-        root.appendChild(element("p", "cas-tip", "选一个应用转发给别人："));
+        root.appendChild(element("p", "cas-tip", "点一个应用就直接选转发对象："));
         const list = element("div", "cas-list");
         for (let i = 0; i < data.apps.length; i += 1) {
           const app = data.apps[i];
@@ -1125,6 +1144,16 @@ export default {
           }));
         }
         root.appendChild(list);
+
+        // 原生文件夹面板只管移动，插件塞不进按钮；要移动就走这里
+        const organize = element("button", "cas-wide", "移动 / 整理里面的应用（打开系统文件夹）");
+        organize.type = "button";
+        organize.addEventListener("click", () => {
+          api.close();
+          folderHandle = null;
+          openNativeFolder(folderId);
+        });
+        root.appendChild(organize);
 
         return () => { folderHandle = null; };
       });
@@ -1328,10 +1357,11 @@ export default {
       if (badge) openBadge(badge, event);
     }
 
-    function addBadge(icon, iconId) {
+    function addBadge(icon, iconId, forcedLabel) {
       icon.classList.add("cas-fwd-anchor");
       const labelEl = icon.querySelector(".icon-label");
-      const label = labelEl && labelEl.textContent ? String(labelEl.textContent).trim() : "";
+      const label = forcedLabel
+        || (labelEl && labelEl.textContent ? String(labelEl.textContent).trim() : "");
       const isFolder = iconId.indexOf("folder:") === 0;
 
       // 图标本身是 <button>，角标用 span 避免 button 嵌套
@@ -1388,7 +1418,8 @@ export default {
       try { syncEditBadges(); } catch (err) { /* ignore */ }
     }, 600);
 
-    // 整理态里宿主的文件夹点击被禁用了；自己识别一次轻点，打开文件夹里的应用
+    // 整理态里宿主的文件夹点击被禁用了；轻点文件夹时先退出整理态，
+    // 再走宿主自己的文件夹打开逻辑（原生面板里可以拖动/移出应用）。
     let folderPress = null;
 
     function folderIconFrom(target) {
@@ -1403,9 +1434,24 @@ export default {
       return null;
     }
 
+    // ── 整理态轻点文件夹 ──────────────────────────────────
+    // 宿主的原生文件夹面板只负责移动，插件没有接口往里塞按钮，所以轻点
+    // 文件夹先弹自己的列表（就地转发），要移动再从列表底部一键进系统面板。
+    function openNativeFolder(folderId) {
+      const done = doc.querySelector(".edit-mode-done");
+      if (done && typeof done.click === "function") done.click();
+      later(() => {
+        try {
+          const safe = String(folderId).replace(/"/g, '\\"');
+          const icon = doc.querySelector(`[data-flip-id="icon:${safe}"]`);
+          if (icon && typeof icon.click === "function") icon.click();
+        } catch (err) { /* ignore */ }
+      }, 160);
+    }
+
     function onFolderPointerDown(event) {
-      if (!doc.querySelector(".edit-mode-done")) return;
       if (badgeFromTarget(event.target)) return;
+      if (!doc.querySelector(".edit-mode-done")) return;
       const folder = folderIconFrom(event.target);
       if (!folder) return;
       folderPress = {
