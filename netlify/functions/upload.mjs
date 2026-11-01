@@ -8,6 +8,7 @@
 //   SHARE_REPO       可选，默认 "xiaolongbao0709/ai-virtual-phone-share"
 
 import { createHash } from "node:crypto";
+import { isBlockedRequestSource } from "../lib/request-source-policy.mjs";
 
 const REPO = process.env.SHARE_REPO || "xiaolongbao0709/ai-virtual-phone-share";
 const API = "https://api.github.com";
@@ -685,6 +686,17 @@ async function handleClaim(token, payload) {
 }
 
 export default async function handler(req, context) {
+    // Reject every action (including preflight) before parsing input or doing work.
+    if (isBlockedRequestSource(req.headers)) {
+        return new Response(JSON.stringify({ ok: false, error: "此来源不可使用本服务。" }), {
+            status: 403,
+            headers: {
+                "Content-Type": "application/json",
+                "Cache-Control": "no-store",
+                "Vary": "Origin, Referer",
+            },
+        });
+    }
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
     if (req.method !== "POST") return json(405, { ok: false, error: "只接受 POST" });
 
@@ -730,3 +742,4 @@ export default async function handler(req, context) {
         return json(502, { ok: false, error: `操作失败：${err instanceof Error ? err.message : String(err)}` });
     }
 }
+
