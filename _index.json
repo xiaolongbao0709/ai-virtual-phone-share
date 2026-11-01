@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T17:10:08.465Z",
+  "generatedAt": "2026-11-01T17:16:02.967Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -81,7 +81,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 23
+      "count": 24
     },
     {
       "name": "线下正则",
@@ -8847,6 +8847,26 @@
       "avatar": "资源/线上聊天状态栏/【灰白简约ins风】/.avatar.png",
       "ownerHash": "9e75a8c2adaf29657201107124e08feed80108579e1a529dbdde83d67b310acf",
       "updatedAt": "2026-10-10T18:59:23+08:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "【状态栏-Canteen🍜by雪】",
+      "dirName": "【状态栏-Canteen🍜by雪】",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/【状态栏-Canteen🍜by雪】",
+      "files": [
+        "资源/线上聊天状态栏/【状态栏-Canteen🍜by雪】/【状态栏-Canteen🍜by雪】.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/【状态栏-Canteen🍜by雪】/IMG_8395.jpeg",
+        "资源/线上聊天状态栏/【状态栏-Canteen🍜by雪】/IMG_8396.jpeg",
+        "资源/线上聊天状态栏/【状态栏-Canteen🍜by雪】/IMG_8397.jpeg"
+      ],
+      "description": "[粗]一个可以随时发帖吐槽的食堂/美食点评墙[/粗]\n• 分为今日、热榜、附近、我的四大版块 评论有可能会产生互怼事件❗️\n• 我的板块分为我的点评，收藏，美食地图，还有看看好友都点评了什么❓\n• 包含专属“美食地图”和“好友动态”\n[粗]二改✅商用❌[/粗]",
+      "author": "Snowi",
+      "avatar": "资源/线上聊天状态栏/【状态栏-Canteen🍜by雪】/.avatar.png",
+      "ownerHash": "b0ac5619f082c348e0d7e7a1f2d855e5ed77e7a34000610f96aa935e10e6499e",
+      "updatedAt": "2026-11-02T02:14:08+09:00"
     },
     {
       "folder": "线上聊天状态栏",
