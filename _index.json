@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T19:34:23.427Z",
+  "generatedAt": "2026-11-01T03:02:55.339Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -1575,14 +1575,14 @@
       "files": [
         "资源/Js插件/转发应用/README (4).md",
         "资源/Js插件/转发应用/_storage_emulated_0_Download_WeiXin_LICENSE (4)",
-        "资源/Js插件/转发应用/chat-app-sender.plugin (10).js"
+        "资源/Js插件/转发应用/chat-app-sen(7)"
       ],
       "images": [],
       "description": "可以把应用发给聊天室，好像没什么用？）",
       "author": "七个七七",
       "avatar": "",
       "ownerHash": "c27ed9c81cc575e5d865b1a4dc6e2f9cd9d27a3f2f775141d179f923a58bc770",
-      "updatedAt": "2026-10-31T12:25:42+09:00"
+      "updatedAt": "2026-11-01T12:00:20+09:00"
     },
     {
       "folder": "Js插件",
