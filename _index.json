@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-01T14:27:26.091Z",
+  "generatedAt": "2026-11-01T14:32:06.249Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -41,7 +41,7 @@
     },
     {
       "name": "应用bug改善",
-      "count": 3
+      "count": 4
     },
     {
       "name": "应用反馈（与应用作者沟通渠道）",
@@ -6587,6 +6587,22 @@
       "avatar": "资源/应用/𝓐𝓶𝓸𝓻𝓮/.avatar.png",
       "ownerHash": "bfb3e3d17651836721132248bd5c9b911d883b93bb4269afe371127e1e530ed6",
       "updatedAt": "2026-09-05T16:19:43+08:00"
+    },
+    {
+      "folder": "应用bug改善",
+      "name": "Ios闪退修复",
+      "dirName": "Ios闪退修复",
+      "type": "dir",
+      "path": "资源/应用bug改善/Ios闪退修复",
+      "files": [
+        "资源/应用bug改善/Ios闪退修复/通过网盘分享的文件：float修复.pdf"
+      ],
+      "images": [],
+      "description": "！！请先备份！！！\n请在百度网盘内打开，内含文件和使用教程\n\n因为是ios且出现了char发几条消息后闪退，然后重新回去闪退了生成的消息只剩一半，所以寻求了d老师和gpt帮助，目前不再有丢失消息的问题但是偶尔还会闪退，怀疑是浏览器问题。而且本人的netlify一直出问题，换了vetcel后买了新的域名，所以不确定是否有参考性，不会的可以把教程给d老师让他教，白屏修复自己还没测试过，因为白屏是小概率问题我就忽略了，最好把它当没有的东西",
+      "author": "祁岚",
+      "avatar": "",
+      "ownerHash": "c36ba74c3ec240c06f2561ce242842dd2518e3ad42cf80af06d730d46f8a31ba",
+      "updatedAt": "2026-11-01T23:30:27+09:00"
     },
     {
       "folder": "应用bug改善",
