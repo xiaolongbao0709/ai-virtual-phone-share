@@ -321,7 +321,7 @@ export default {
     id: "chat-app-sender",
     name: "转发应用",
     apiVersion: 1,
-    version: "1.2.5",
+    version: "1.2.6",
     author: "",
     description:
       "把手机桌面上的应用转发给别人：整理桌面时点图标右上角的转发角标，或点文件夹选里面的应用（不退出整理态，列表底部可进系统面板移动）；也能在「+」→「应用」里选。可多选小卷、多个 AI 角色和群聊。",
@@ -1107,7 +1107,11 @@ export default {
     }
 
     function openFolderApps(folderId) {
-      if (folderHandle) return;
+      // 上一份列表可能被宿主直接关掉、没走清理回调；先收掉，否则这次会被挡掉
+      if (folderHandle) {
+        try { folderHandle.close(); } catch (err) { /* ignore */ }
+        folderHandle = null;
+      }
       const data = appsInFolder(folderId);
       if (!data) {
         toast("读不到这个文件夹");
@@ -1469,13 +1473,26 @@ export default {
       if (Math.abs(dx) > 10 || Math.abs(dy) > 10) folderPress = null;
     }
 
+    function openFolderSheet(folderId) {
+      if (typeof console !== "undefined") console.error("[dbg] openFolderSheet", folderId, Boolean(folderHandle));
+      const data = appsInFolder(folderId);
+      if (!data || !data.apps.length) {
+        // 读不到就退回宿主面板，至少别让这一下白点
+        openNativeFolder(folderId);
+        return;
+      }
+      openFolderApps(folderId);
+    }
+
     function onFolderPointerUp() {
       if (!folderPress) return;
       const press = folderPress;
       folderPress = null;
       if (Date.now() - press.time > 900) return;
       if (!doc.querySelector(".edit-mode-done")) return;
-      openFolderApps(press.id);
+      // 晚一拍再开：pointerup 之后紧跟的 click 会落到刚弹出的遮罩上，
+      // 把列表瞬间点没，看起来就是「点不开」
+      later(() => { openFolderSheet(press.id); }, 90);
     }
 
     function onFolderPointerCancel() { folderPress = null; }
