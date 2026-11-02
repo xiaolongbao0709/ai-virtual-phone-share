@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T08:28:22.960Z",
+  "generatedAt": "2026-11-02T13:27:17.775Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 89
+      "count": 90
     },
     {
       "name": "MCP",
@@ -1493,6 +1493,22 @@
       "avatar": "资源/Js插件/自动总结插件/.avatar.png",
       "ownerHash": "502eea5fd500c34516131c8089734f4ac5b5deae42d6fe8bf6af15018a4daeee",
       "updatedAt": "2026-09-09T13:22:02+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "自动推进剧情（类cai",
+      "dirName": "自动推进剧情（类cai",
+      "type": "dir",
+      "path": "资源/Js插件/自动推进剧情（类cai",
+      "files": [
+        "资源/Js插件/自动推进剧情（类cai/自动推进剧情.js"
+      ],
+      "images": [],
+      "description": "「个人用线下比较多，所以不保证线上质量」\n用户不在场时，角色的故事也有完整的行动、人物和事件。\n独立剧情不是孤立的番外，而是会改变角色的状态，并影响之后与用户的互动。",
+      "author": "kit宝",
+      "avatar": "资源/Js插件/自动推进剧情（类cai/.avatar.png",
+      "ownerHash": "51f3d36b8170e02b0c1715d8e1642c17b6cf43a8dd50915b49d44bcb019842b2",
+      "updatedAt": "2026-11-02T22:25:01+09:00"
     },
     {
       "folder": "Js插件",
