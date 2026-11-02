@@ -8,6 +8,14 @@
 // v1.2.0 起还会把文档正文解析出来交给模型（见文件下部「文档正文提取」），
 // 所以发 PDF 给角色，它是真的能读到内容，而不是回一句「我接收不了 PDF」。
 //
+// v1.4.1 起补了无扩展名文件的识别：手机文件管理器常把说明/配置存成没后缀的名字，
+// 这时扩展名和 MIME 都是空的。插件改为读一次字节按内容判断（%PDF / ZIP 里的
+// word|ppt|xl / 合法 UTF-8 文本），判不出来就安静跳过，不再静默当成普通附件。
+//
+// v1.5.0 起管住"副本"：同一个文件重复发送只存一份（设置 dedupe，默认开），
+// 另外可以设副本保留天数（keepDays，默认 0 = 永久保留），到期自动清理本插件
+// 写进媒体库的记录，只删 id 形如 mc_<时间戳>_<随机> 的条目，不碰宿主自己的媒体。
+//
 // 实现要点：
 // 1) 字节优先写进宿主自己的媒体库（AiPhoneMediaCacheDB / media-store:// 引用），
 //    消息里只留引用，聊天存储不会被 base64 撑爆；写不进去时按体积兜底成 data: URL。
@@ -62,8 +70,10 @@ const DOC_TYPES = [
   },
 ];
 
+const extensionOf = (name) => (String(name || "").toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || "";
+
 const docKindOf = (name, mime) => {
-  const ext = (String(name || "").toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || "";
+  const ext = extensionOf(name);
   const type = String(mime || "").toLowerCase();
   if (LEGACY_DOC_EXT.includes(ext)) return "legacy";
   for (const entry of DOC_TYPES) {
@@ -95,6 +105,136 @@ const decodeUtf8 = (bytes) => {
     return latin1FromBytes(bytes);
   }
 };
+
+// ── 副本指纹：用于"同一文件不重复存"─────────────────────────
+const bytesToHex = (bytes) => {
+  let out = "";
+  for (const byte of bytes) out += byte.toString(16).padStart(2, "0");
+  return out;
+};
+
+/**
+ * 小于 32 MB 走 SHA-256；大文件退回"名字+大小+改动时间"，
+ * 避免为了去重把上百 MB 的文件整块读进内存。
+ * crypto.subtle 只在安全上下文可用，拿不到就降级。
+ */
+const fingerprintOf = async (file) => {
+  const meta = `meta:${(file && file.name) || ""}|${(file && file.size) || 0}|${(file && file.lastModified) || 0}`;
+  if (!file || !file.size || file.size > 32 * 1024 * 1024) return meta;
+  try {
+    if (!globalThis.crypto || !crypto.subtle) return meta;
+    const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
+    return `sha256:${bytesToHex(new Uint8Array(digest))}`;
+  } catch {
+    return meta;
+  }
+};
+
+// ── 无扩展名文件的类型嗅探 ────────────────────────────────────
+// 手机文件管理器经常把导出的说明/配置存成没有后缀的名字（例如「APP制作说明」），
+// 这时扩展名和 MIME 都是空的，docKindOf 只能返回 ""，文件会被当成普通附件静默放过。
+// 下面按内容再判一次；判不出来就安静跳过——既不写"解析失败"记录，也不往模型上下文塞东西。
+
+const TEXT_SNIFF_BYTES = 8192;
+
+const hasPrefix = (bytes, prefix, at = 0) => {
+  if (!bytes || bytes.length < at + prefix.length) return false;
+  for (let i = 0; i < prefix.length; i += 1) if (bytes[at + i] !== prefix[i]) return false;
+  return true;
+};
+
+const MAGIC_ZIP = [0x50, 0x4b, 0x03, 0x04];                            // PK\x03\x04
+const MAGIC_OLE = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1];    // 老式 doc/xls/ppt
+
+/** 明显不是文档的二进制：认出来就直接放过，省得把字节当文本喂给模型 */
+const BINARY_MAGIC = [
+  [0x89, 0x50, 0x4e, 0x47],   // PNG
+  [0xff, 0xd8, 0xff],         // JPEG
+  [0x47, 0x49, 0x46, 0x38],   // GIF
+  [0x42, 0x4d],               // BMP
+  [0x52, 0x49, 0x46, 0x46],   // RIFF（WebP / WAV / AVI）
+  [0x4f, 0x67, 0x67, 0x53],   // OGG
+  [0x66, 0x4c, 0x61, 0x43],   // FLAC
+  [0x49, 0x44, 0x33],         // MP3
+  [0x1f, 0x8b],               // gzip
+  [0x52, 0x61, 0x72, 0x21],   // RAR
+  [0x37, 0x7a, 0xbc, 0xaf],   // 7z
+  [0x7f, 0x45, 0x4c, 0x46],   // ELF
+  [0x4d, 0x5a],               // Windows PE
+  [0x00, 0x61, 0x73, 0x6d],   // WASM
+];
+
+/** 只读中央目录里的名字，不解压（嗅探 zip 里装的是 docx 还是普通压缩包） */
+const zipEntryNames = (bytes) => {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let eocd = -1;
+  const floor = Math.max(0, bytes.length - 66000);
+  for (let i = bytes.length - 22; i >= floor; i -= 1) {
+    if (view.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) return [];
+  const count = view.getUint16(eocd + 10, true);
+  let offset = view.getUint32(eocd + 16, true);
+  const names = [];
+  for (let index = 0; index < count; index += 1) {
+    if (offset + 46 > bytes.length || view.getUint32(offset, true) !== 0x02014b50) break;
+    const nameLen = view.getUint16(offset + 28, true);
+    const extraLen = view.getUint16(offset + 30, true);
+    const commentLen = view.getUint16(offset + 32, true);
+    names.push(decodeUtf8(bytes.subarray(offset + 46, offset + 46 + nameLen)));
+    offset += 46 + nameLen + extraLen + commentLen;
+  }
+  return names;
+};
+
+const looksLikePlainText = (bytes) => {
+  const sample = bytes.subarray(0, Math.min(bytes.length, TEXT_SNIFF_BYTES));
+  if (sample.length === 0) return false;
+  let controls = 0;
+  for (const byte of sample) {
+    if (byte === 0) return false;
+    if (byte < 0x09 || (byte > 0x0d && byte < 0x20) || byte === 0x7f) controls += 1;
+  }
+  if (controls / sample.length > 0.02) return false;
+  try {
+    // stream:true：样本可能正好切在多字节字符中间，不该因此判成二进制
+    new TextDecoder("utf-8", { fatal: true }).decode(sample, { stream: true });
+    return true;
+  } catch {
+    return false;   // 不是合法 UTF-8（可能是 GBK 老文本，但无扩展名时不敢猜）
+  }
+};
+
+const sniffDocKind = (bytes) => {
+  if (!bytes || bytes.length === 0) return "";
+  const head = latin1FromBytes(bytes.subarray(0, Math.min(bytes.length, 64)));
+  if (head.includes("%PDF-")) return "pdf";
+  if (hasPrefix(bytes, MAGIC_OLE)) return "legacy";
+  if (hasPrefix(bytes, MAGIC_ZIP)) {
+    const names = zipEntryNames(bytes);
+    if (names.includes("word/document.xml")) return "docx";
+    if (names.some((name) => name === "[Content_Types].xml")) {
+      if (names.some((name) => name.startsWith("word/"))) return "docx";
+      if (names.some((name) => name.startsWith("ppt/"))) return "pptx";
+      if (names.some((name) => name.startsWith("xl/"))) return "xlsx";
+    }
+    return "";   // 普通压缩包，不解析
+  }
+  if (BINARY_MAGIC.some((prefix) => hasPrefix(bytes, prefix))) return "";
+  if (hasPrefix(bytes, [0x66, 0x74, 0x79, 0x70], 4)) return "";   // ftyp：mp4/mov/heic
+  return looksLikePlainText(bytes) ? "text" : "";
+};
+
+/** 只有"没扩展名、MIME 也看不出是图片/音视频"的文件，才值得按内容嗅探一次 */
+const isExtensionlessDocument = (name, mime) => {
+  if (extensionOf(name)) return false;
+  const type = String(mime || "").trim().toLowerCase();
+  if (!type || type === "application/octet-stream" || type === "binary/octet-stream") return true;
+  return type.startsWith("text/");
+};
+
+/** 这个文件值不值得尝试解析：声明的类型在白名单里，或可能是无扩展名文档 */
+const canParseFile = (name, mime) => Boolean(docKindOf(name, mime)) || isExtensionlessDocument(name, mime);
 
 const inflateBytes = async (bytes, format) => {
   if (typeof DecompressionStream !== "function") throw new Error("当前环境不支持解压（缺少 DecompressionStream）");
@@ -782,8 +922,8 @@ const extractTextFile = (bytes) => {
   return { text: tidy, kind: "text" };
 };
 
-const extractDocument = async (bytes, name, mime) => {
-  const kind = docKindOf(name, mime);
+const extractDocument = async (bytes, name, mime, knownKind) => {
+  const kind = knownKind || docKindOf(name, mime) || sniffDocKind(bytes);
   if (!kind) throw new Error("这种文件类型暂不支持提取文字");
   if (kind === "legacy") throw new Error("老式 .doc/.ppt/.xls 解析不了，请另存为 docx 或 pdf 再发");
   if (kind === "pdf") return extractPdfText(bytes);
@@ -796,6 +936,13 @@ const extractDocument = async (bytes, name, mime) => {
 /** 测试用出口（宿主只读 default，额外导出不影响插件加载） */
 export const _internals = {
   docKindOf,
+  extensionOf,
+  fingerprintOf,
+  sniffDocKind,
+  isExtensionlessDocument,
+  canParseFile,
+  zipEntryNames,
+  looksLikePlainText,
   extractDocument,
   extractPdfText,
   extractDocxText,
@@ -814,9 +961,9 @@ export default {
     id: "chat-file-sender",
     name: "发文件",
     apiVersion: 1,
-    version: "1.4.0",
+    version: "1.5.0",
     author: "you",
-    description: "在聊天里发送任意文件，原生文件气泡，一键保存到手机；PDF / DOCX / TXT 等文档自动解析正文，扫描件可选百度 OCR 识别。",
+    description: "在聊天里发送任意文件，原生文件气泡，一键保存到手机；PDF / DOCX / TXT 等文档自动解析正文（没有扩展名的文件按内容识别），扫描件可选百度 OCR 识别；同一文件不重复存副本，可设保留天数。",
     permissions: ["chat.read", "chat.write", "storage", "ui"],
     settings: [
       { key: "autoReply", label: "发完文件后自动让角色回复", type: "boolean", default: true },
@@ -903,6 +1050,20 @@ export default {
         default: 4,
         description: "正常情况下文件会写进 App 自己的媒体库，不占聊天记录。只有在媒体库不可用时才会把文件内联进消息，超过这个体积就拒绝发送。",
       },
+      {
+        key: "dedupe",
+        label: "同一文件重复发送时不重复存副本",
+        type: "boolean",
+        default: true,
+        description: "按内容指纹复用已有副本（32 MB 以内用 SHA-256，更大的按名字+大小）。关掉就每发一次都新存一份。",
+      },
+      {
+        key: "keepDays",
+        label: "副本保留天数（0 = 永久保留）",
+        type: "number",
+        default: 0,
+        description: "超过天数的副本会在下次打开插件/发文件时清掉，用来省空间。注意：删掉的副本对应的旧消息将无法再预览或保存那个文件。只清理本插件存的副本，不动宿主自己的媒体。",
+      },
       { key: "showHelp", label: "在「+」面板里显示使用说明入口", type: "boolean", default: true },
     ],
   },
@@ -979,8 +1140,124 @@ export default {
       }
     };
 
+    // ── 副本索引：去重和过期清理都靠它 ─────────────────────
+    // 只记录本插件写进媒体库的 id；键里带时间戳，清理由 id 反推创建时间，
+    // 这样 1.4.x 时期没有索引的旧副本也能一起清掉。
+    const MEDIA_INDEX_KEY = "media:index";
+    const MEDIA_INDEX_MAX = 300;
+    const OUR_MEDIA_ID = /^mc_(\d+)_[a-z0-9]{6,}$/;
+
+    const readMediaIndex = () => {
+      const value = ctx.system.storage.get(MEDIA_INDEX_KEY);
+      const items = value && Array.isArray(value.items) ? value.items : [];
+      return items.filter((item) => item && typeof item.id === "string");
+    };
+
+    const writeMediaIndex = (items) => {
+      const kept = items
+        .filter((item) => item && typeof item.id === "string")
+        .sort((a, b) => (Number(b.at) || 0) - (Number(a.at) || 0))
+        .slice(0, MEDIA_INDEX_MAX);
+      try { ctx.system.storage.set(MEDIA_INDEX_KEY, { v: 1, items: kept }); } catch { /* ignore */ }
+    };
+
+    const rememberMedia = (id, hash, file) => {
+      const items = readMediaIndex().filter((item) => item.id !== id);
+      items.push({ id, at: Date.now(), size: Number(file && file.size) || 0, mime: (file && file.type) || "", hash: hash || "" });
+      writeMediaIndex(items);
+    };
+
+    const forgetMedia = (id) => writeMediaIndex(readMediaIndex().filter((item) => item.id !== id));
+
+    const hasMediaRecord = async (id) => {
+      if (!id) return false;
+      try {
+        const db = await openIdb(undefined);
+        if (!db.objectStoreNames || !db.objectStoreNames.contains(DB_STORE)) return false;
+        try {
+          return await new Promise((resolve) => {
+            let tx;
+            try { tx = db.transaction(DB_STORE, "readonly"); } catch { resolve(false); return; }
+            const request = tx.objectStore(DB_STORE).get(id);
+            request.onsuccess = () => resolve(Boolean(request.result && request.result.blob));
+            request.onerror = () => resolve(false);
+          });
+        } finally {
+          try { db.close(); } catch { /* ignore */ }
+        }
+      } catch {
+        return false;
+      }
+    };
+
+    /** 按保留天数删除本插件存的副本；days <= 0 时什么都不做 */
+    const cleanupCopies = async () => {
+      const days = Number(setting("keepDays", 0));
+      if (!Number.isFinite(days) || days <= 0) return 0;
+      const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+      const expired = new Set();
+      let db = null;
+      try {
+        db = await openIdb(undefined);
+        if (!db.objectStoreNames || !db.objectStoreNames.contains(DB_STORE)) return 0;
+        const keys = await new Promise((resolve) => {
+          let tx;
+          try { tx = db.transaction(DB_STORE, "readonly"); } catch { resolve([]); return; }
+          const request = tx.objectStore(DB_STORE).getAllKeys();
+          request.onsuccess = () => resolve(Array.isArray(request.result) ? request.result : []);
+          request.onerror = () => resolve([]);
+        });
+        for (const key of keys) {
+          const id = String(key);
+          const match = OUR_MEDIA_ID.exec(id);
+          if (!match) continue;                       // 不是本插件写的，绝不碰
+          const at = Number(match[1]);
+          if (Number.isFinite(at) && at < cutoff) expired.add(id);
+        }
+        // 索引里可能有 id 格式被改过的记录，按记录时间再补一轮
+        for (const item of readMediaIndex()) {
+          if (Number(item.at) < cutoff && OUR_MEDIA_ID.test(item.id)) expired.add(item.id);
+        }
+        if (expired.size === 0) return 0;
+
+        const ids = [...expired];
+        const removed = await new Promise((resolve) => {
+          let tx;
+          try { tx = db.transaction(DB_STORE, "readwrite"); } catch { resolve(0); return; }
+          const store = tx.objectStore(DB_STORE);
+          for (const id of ids) { try { store.delete(id); } catch { /* ignore */ } }
+          tx.oncomplete = () => resolve(ids.length);
+          tx.onerror = () => resolve(0);
+          tx.onabort = () => resolve(0);
+        });
+        if (removed > 0) {
+          writeMediaIndex(readMediaIndex().filter((item) => !expired.has(item.id)));
+          log(`清理旧副本 ${removed} 个（保留 ${days} 天）`);
+        }
+        return removed;
+      } catch (err) {
+        log("清理副本失败", err && err.message ? err.message : err);
+        return 0;
+      } finally {
+        try { if (db) db.close(); } catch { /* ignore */ }
+      }
+    };
+
     const storeInHostMedia = async (file) => {
       if (!(await hostDbExists())) return null;
+
+      // 同一个文件再发一次：复用已有副本，不再多占一份空间
+      const fingerprint = setting("dedupe", true) !== false ? await fingerprintOf(file) : "";
+      if (fingerprint) {
+        const hit = readMediaIndex().find((item) => item.hash === fingerprint);
+        if (hit && await hasMediaRecord(hit.id)) {
+          rememberMedia(hit.id, fingerprint, file);
+          log(`复用已有副本 ${hit.id}`);
+          return REF_PREFIX + hit.id;
+        }
+        if (hit) forgetMedia(hit.id);
+      }
+
       let db = null;
       try {
         db = await openIdb(undefined);
@@ -1016,7 +1293,9 @@ export default {
           tx.onerror = () => resolve(false);
         });
 
-        return verified ? REF_PREFIX + id : null;
+        if (!verified) return null;
+        rememberMedia(id, fingerprint, file);
+        return REF_PREFIX + id;
       } catch (err) {
         log("写入媒体库失败", err && err.message ? err.message : err);
         return null;
@@ -1421,8 +1700,10 @@ export default {
       if (setting("readDocuments", true) === false) return Promise.resolve(null);
       const name = message.mediaData?.fileName || String(message.content || "").replace(/^\[文件\]\s*/, "");
       const mime = message.mediaData?.mimeType || "";
-      const kind = docKindOf(name, mime);
-      if (!kind) return Promise.resolve(null);
+      const declaredKind = docKindOf(name, mime);
+      // 没扩展名、MIME 又是空/octet-stream 的文件，留到读出字节日再按内容判
+      const sniffable = !declaredKind && isExtensionlessDocument(name, mime);
+      if (!declaredKind && !sniffable) return Promise.resolve(null);
       const cached = readDoc(message.id);
       if (cached) return Promise.resolve(cached);
       const running = docInflight.get(message.id);
@@ -1431,18 +1712,33 @@ export default {
       const base = { name, mime, at: Date.now() };
       const task = (async () => {
         let bytes = null;
+        let kind = declaredKind;
         try {
+          // 无扩展名的大文件不值得整块读进来嗅探
+          if (!kind && file && Number(file.size) > MAX_DOC_BYTES) return null;
           if (file) {
             bytes = await bytesOf(file);
           } else {
             const media = await ctx.data.messages.resolveMedia(message);
-            if (!media || !media.blob) throw new Error("取不到文件字节");
+            if (!media || !media.blob) {
+              // 副本已经被「保留天数」清理掉了：安静跳过，别把"解析失败"塞进上下文
+              const ref = String(message.mediaUrl || "");
+              const id = ref.startsWith(REF_PREFIX) ? ref.slice(REF_PREFIX.length) : "";
+              if (id && OUR_MEDIA_ID.test(id) && !(await hasMediaRecord(id))) return null;
+              throw new Error("取不到文件字节");
+            }
             bytes = await bytesOf(media.blob);
           }
           if (bytes.length > MAX_DOC_BYTES) {
             throw new Error(`文件超过 ${Math.round(MAX_DOC_BYTES / 1024 / 1024)} MB，未解析`);
           }
-          const result = await extractDocument(bytes, name, mime);
+          if (!kind) {
+            kind = sniffDocKind(bytes);
+            // 嗅探不出文档类型：这是图片/压缩包/安装包之类，安静放过，
+            // 不写失败记录，也不让模型看到"解析失败"
+            if (!kind) return null;
+          }
+          const result = await extractDocument(bytes, name, mime, kind);
           const record = { ...base, ok: true, text: result.text, chars: result.text.length, kind: result.kind };
           writeDoc(message.id, record);
           if (message.sessionId) {
@@ -1582,6 +1878,7 @@ export default {
       if (sent > 0) {
         refreshChat(sessionId);
         notify(sent > 1 ? `已发送 ${sent} 个文件` : "文件已发送");
+        void cleanupCopies();   // 顺手清掉到期的旧副本，免得越攒越多
         if (setting("autoReply", true) !== false) {
           ctx.system.timers.setTimeout(() => {
             if (!askReply(sessionId)) notify("文件已发送。对方没反应的话，点一下输入栏右侧的生成按钮");
@@ -1644,10 +1941,12 @@ export default {
           for (const line of [
             "图片会一起发给模型看（走宿主的视觉通道）",
             "PDF / DOCX / PPTX / XLSX / 文本会自动解析正文，角色能读到内容",
+            "没有扩展名的文件（如「APP制作说明」）会按内容识别，是 PDF / Office / 纯文本就能读",
             "扫描件没有文字层：配好 OCR 服务并同意上传后才会识别",
             "首次识别前会弹框确认：把哪几页图片、传给谁；拒绝就不上传",
             "配好服务后，长按旧文件消息选「重新解析文件」即可补识别",
             "默认发完自动让角色回复，可在插件设置里关掉",
+            "同一文件重复发只存一份；想省空间可在设置里填「副本保留天数」",
             "一次最多 5 个文件",
           ]) {
             const li = document.createElement("li");
@@ -1668,6 +1967,9 @@ export default {
 
     // ── 注册 ────────────────────────────────────────────────
     ctx.ui.injectCSS(CSS);
+
+    // 启动后顺手清一次过期副本（keepDays <= 0 时是空操作）
+    ctx.system.timers.setTimeout(() => { void cleanupCopies(); }, 8000);
 
     // 借 chat.header 坑位拿 sessionId（inputToolbar 的 props 不含 sessionId）。
     // 这个容器本身渲染为空，不占位。
@@ -1745,7 +2047,7 @@ export default {
       filter: (msg) => Boolean(msg)
         && msg.role === "user"
         && msg.mediaType === "media_file"
-        && Boolean(docKindOf(msg.mediaData?.fileName || "", msg.mediaData?.mimeType || "")),
+        && canParseFile(msg.mediaData?.fileName || "", msg.mediaData?.mimeType || ""),
       onSelect: async (msg, helpers) => {
         try {
           ctx.system.storage.remove(docKey(msg.id));
@@ -1753,7 +2055,7 @@ export default {
         const record = await prepareDocument(msg, null, { interactive: true });
         helpers.toast(record && record.ok
           ? `已解析 ${record.chars} 字${record.ocr ? "（OCR）" : ""}`
-          : ((record && record.error) || "解析失败"));
+          : ((record && record.error) || "这个文件里没有可读的文字（可能是图片、压缩包或安装包）"));
       },
     });
 
@@ -1779,7 +2081,7 @@ export default {
       for (const item of recent) {
         if (!item || item.role !== "user" || item.mediaType !== "media_file") continue;
         const name = item.mediaData?.fileName || "文件";
-        if (!docKindOf(name, item.mediaData?.mimeType || "")) continue;
+        if (!canParseFile(name, item.mediaData?.mimeType || "")) continue;
 
         let record = readDoc(item.id);
         if (!record) {
