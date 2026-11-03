@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T18:10:03.110Z",
+  "generatedAt": "2026-11-03T19:19:05.111Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6433,7 +6433,7 @@
     },
     {
       "folder": "应用",
-      "name": "资源档案",
+      "name": "聊天档案",
       "dirName": "资源档案",
       "type": "dir",
       "path": "资源/应用/资源档案",
@@ -6445,7 +6445,7 @@
       "author": "七个七七",
       "avatar": "",
       "ownerHash": "c27ed9c81cc575e5d865b1a4dc6e2f9cd9d27a3f2f775141d179f923a58bc770",
-      "updatedAt": "2026-11-04T02:47:21+09:00"
+      "updatedAt": "2026-11-04T04:12:14+09:00"
     },
     {
       "folder": "应用",
