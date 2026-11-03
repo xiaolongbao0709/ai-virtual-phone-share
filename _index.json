@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T07:45:49.777Z",
+  "generatedAt": "2026-11-03T08:55:16.228Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 159
+      "count": 160
     },
     {
       "name": "应用bug改善",
@@ -4408,6 +4408,26 @@
       "avatar": "",
       "ownerHash": "4540a02f6a504b49a3c9c81da7cbed5ae22d8f83688534316c4d30121f2238d9",
       "updatedAt": "2026-09-24T21:35:27+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "[雪花]",
+      "dirName": "[雪花]",
+      "type": "dir",
+      "path": "资源/应用/[雪花]",
+      "files": [
+        "资源/应用/[雪花]/织梦纪事——.zip"
+      ],
+      "images": [
+        "资源/应用/[雪花]/Screenshot_20261103_163228_com.microsoft.emmx_edit_96815.jpg",
+        "资源/应用/[雪花]/Videoframe_20261103_165033_com.huawei.himovie.local.jpg",
+        "资源/应用/[雪花]/Videoframe_20261103_165040_com.huawei.himovie.local.jpg"
+      ],
+      "description": "一个类似情侣空间的小屋，实在是想要看看一起生活的画面，又想要各自各样人的人生，内置了以前写的小论坛可以捞文章看，以及伙伴串门的小剧场，很多双人情侣相伴时一起能做的事，双人记账，共同目标，外出事件，一日行程，梦境，共同添置家装，手绘板，便签，共感触碰，歌占？八音盒？可以在聊天室和char一起聊聊有什么添置的家具，让char下厨，还可以看char十连抽破防实录，尽量放大了一起生活能经历的事情。",
+      "author": "鸢尾纪事",
+      "avatar": "资源/应用/[雪花]/.avatar.png",
+      "ownerHash": "b32246b26f03c91edd579c26cfef21927824a0cfbc453ec3277e4ced15645125",
+      "updatedAt": "2026-11-03T17:52:39+09:00"
     },
     {
       "folder": "应用",
