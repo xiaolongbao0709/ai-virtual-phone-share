@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T08:55:16.228Z",
+  "generatedAt": "2026-11-03T10:04:35.441Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -4416,7 +4416,7 @@
       "type": "dir",
       "path": "资源/应用/[雪花]",
       "files": [
-        "资源/应用/[雪花]/织梦纪事——.zip"
+        "资源/应用/[雪花]/最新？.zip"
       ],
       "images": [
         "资源/应用/[雪花]/Screenshot_20261103_163228_com.microsoft.emmx_edit_96815.jpg",
@@ -4427,7 +4427,7 @@
       "author": "鸢尾纪事",
       "avatar": "资源/应用/[雪花]/.avatar.png",
       "ownerHash": "b32246b26f03c91edd579c26cfef21927824a0cfbc453ec3277e4ced15645125",
-      "updatedAt": "2026-11-03T17:52:39+09:00"
+      "updatedAt": "2026-11-03T19:03:04+09:00"
     },
     {
       "folder": "应用",
