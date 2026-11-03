@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T11:41:04.452Z",
+  "generatedAt": "2026-11-03T15:06:56.413Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 160
+      "count": 161
     },
     {
       "name": "应用bug改善",
@@ -6495,6 +6495,22 @@
       "avatar": "资源/应用/陪伴睡眠[小猫]/.avatar.png",
       "ownerHash": "fea7123ab26d67be6637cde15c3bc3b5ef94a1144703c93f0af7e1e81e9c77a2",
       "updatedAt": "2026-09-04T18:50:39+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "陪我学",
+      "dirName": "陪我学",
+      "type": "dir",
+      "path": "资源/应用/陪我学",
+      "files": [
+        "资源/应用/陪我学/study.companion-1.0.0.zip"
+      ],
+      "images": [],
+      "description": "一个学习软件，可以语音背诵，思维导图，大纲，表格，专注，每日计划打卡…小坊出品，不知道有没有bug",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "bdec2167b79ad74d54a709ec1bd3d0a0ea8303a56614011c59c940f4e4d8819b",
+      "updatedAt": "2026-11-04T00:04:56+09:00"
     },
     {
       "folder": "应用",
