@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T23:45:14.390Z",
+  "generatedAt": "2026-11-03T02:52:37.381Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -25,7 +25,7 @@
     },
     {
       "name": "全局主题",
-      "count": 25
+      "count": 26
     },
     {
       "name": "剧情预设及正则",
@@ -2798,6 +2798,26 @@
       "avatar": "",
       "ownerHash": "236ecc192be0d623afb290c5cc467a13575a1a2edd0456b3c04869f0825cefab",
       "updatedAt": "2026-08-29T09:19:12+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "【主题-黑白熊🐼by雪】",
+      "dirName": "【主题-黑白熊🐼by雪】",
+      "type": "dir",
+      "path": "资源/全局主题/【主题-黑白熊🐼by雪】",
+      "files": [
+        "资源/全局主题/【主题-黑白熊🐼by雪】/【主题-黑白熊🐼by雪】.zip"
+      ],
+      "images": [
+        "资源/全局主题/【主题-黑白熊🐼by雪】/预览1.png",
+        "资源/全局主题/【主题-黑白熊🐼by雪】/预览2.png",
+        "资源/全局主题/【主题-黑白熊🐼by雪】/预览3.jpeg"
+      ],
+      "description": "图片自行替换\n图标位置可参考图片◝(⑅•ᴗ•⑅)◜..°♡",
+      "author": "Snowi",
+      "avatar": "资源/全局主题/【主题-黑白熊🐼by雪】/.avatar.png",
+      "ownerHash": "b0ac5619f082c348e0d7e7a1f2d855e5ed77e7a34000610f96aa935e10e6499e",
+      "updatedAt": "2026-11-03T11:50:54+09:00"
     },
     {
       "folder": "全局主题",
