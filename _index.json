@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-04T03:24:06.864Z",
+  "generatedAt": "2026-11-04T03:37:06.846Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6445,7 +6445,7 @@
       "author": "七个七七",
       "avatar": "",
       "ownerHash": "c27ed9c81cc575e5d865b1a4dc6e2f9cd9d27a3f2f775141d179f923a58bc770",
-      "updatedAt": "2026-11-04T12:21:50+09:00"
+      "updatedAt": "2026-11-04T12:34:45+09:00"
     },
     {
       "folder": "应用",
