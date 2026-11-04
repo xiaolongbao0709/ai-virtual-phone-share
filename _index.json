@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T19:19:05.111Z",
+  "generatedAt": "2026-11-04T01:26:32.346Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -69,7 +69,7 @@
     },
     {
       "name": "特调材料",
-      "count": 4
+      "count": 5
     },
     {
       "name": "线上正则",
@@ -7641,6 +7641,22 @@
       "avatar": "",
       "ownerHash": "9577e5df4de93884ed882617df4005b5545c3bae0b2da19585abc2241356d7f3",
       "updatedAt": "2026-09-29T15:08:13+08:00"
+    },
+    {
+      "folder": "特调材料",
+      "name": "记忆卷宗-机括",
+      "dirName": "记忆卷宗-机括",
+      "type": "dir",
+      "path": "资源/特调材料/记忆卷宗-机括",
+      "files": [
+        "资源/特调材料/记忆卷宗-机括/记忆卷宗.机括.json"
+      ],
+      "images": [],
+      "description": "总结前轮记忆并注入",
+      "author": "K",
+      "avatar": "",
+      "ownerHash": "eb8629cf871874ba4aaa7dc48bf518ccbf95034b2a3b6bc7e62dc8b8be56a67c",
+      "updatedAt": "2026-11-04T10:24:05+09:00"
     },
     {
       "folder": "特调材料",
