@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-04T19:22:28.234Z",
+  "generatedAt": "2026-11-04T20:29:43.432Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 163
+      "count": 164
     },
     {
       "name": "应用bug改善",
@@ -5893,6 +5893,22 @@
       "avatar": "资源/应用/每日计划/.avatar.png",
       "ownerHash": "120fb2230dafecee5ae5be0a1b49abdc9b4ed42491e25793739f3a496a3773ae",
       "updatedAt": "2026-10-06T09:12:03+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "洲：带不走的都得留下",
+      "dirName": "洲：带不走的都得留下",
+      "type": "dir",
+      "path": "资源/应用/洲：带不走的都得留下",
+      "files": [
+        "资源/应用/洲：带不走的都得留下/delta.holo.raid.app-1.0.0 5.zip"
+      ],
+      "images": [],
+      "description": "按照三角洲搓的模拟小游戏，可以和角色组队记忆可连通聊天室。",
+      "author": "知雀",
+      "avatar": "",
+      "ownerHash": "73ef0d6ea1ea927035a640d2e4d558a7a8b959c8fa793f0d26b237c6f7c6fe48",
+      "updatedAt": "2026-11-05T05:27:22+09:00"
     },
     {
       "folder": "应用",
