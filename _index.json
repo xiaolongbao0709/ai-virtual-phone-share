@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-04T15:41:06.810Z",
+  "generatedAt": "2026-11-04T15:48:27.328Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6559,11 +6559,11 @@
         "资源/应用/陪我学/study.companion-1.0.0.zip"
       ],
       "images": [],
-      "description": "一个学习软件，可以语音背诵，思维导图，大纲，表格，专注，每日计划打卡…小坊出品，不知道有没有bug",
-      "author": "",
+      "description": "一个学习软件，可以语音背诵，思维导图，大纲，表格，专注，每日计划打卡…小坊出品，不知道有没有bug，可以二改来着，然后如果有问题可以去小红书跟我说我让小坊加，我自己还只用过一次来着。",
+      "author": "一去二三里",
       "avatar": "",
       "ownerHash": "bdec2167b79ad74d54a709ec1bd3d0a0ea8303a56614011c59c940f4e4d8819b",
-      "updatedAt": "2026-11-04T00:04:56+09:00"
+      "updatedAt": "2026-11-05T00:46:00+09:00"
     },
     {
       "folder": "应用",
