@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-04T14:03:17.705Z",
+  "generatedAt": "2026-11-04T15:16:30.040Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -53,7 +53,7 @@
     },
     {
       "name": "朋友圈美化",
-      "count": 3
+      "count": 4
     },
     {
       "name": "气泡美化",
@@ -7001,6 +7001,24 @@
       "avatar": "",
       "ownerHash": "72adb7d77211b0354bc8d30ad6f28de6e6ba7e1047ed9ec1c80c1ab683f98f11",
       "updatedAt": "2026-08-27T16:58:10+08:00"
+    },
+    {
+      "folder": "朋友圈美化",
+      "name": "仿QQ空间",
+      "dirName": "仿QQ空间",
+      "type": "dir",
+      "path": "资源/朋友圈美化/仿QQ空间",
+      "files": [
+        "资源/朋友圈美化/仿QQ空间/仿QQ空间动态美化.txt"
+      ],
+      "images": [
+        "资源/朋友圈美化/仿QQ空间/Screenshot_2026_1024_175559.png"
+      ],
+      "description": "简单的仿QQ空间动态\n栏目都是装饰，发动态在右上角\n随意搭配/二改使用",
+      "author": "Mir",
+      "avatar": "",
+      "ownerHash": "7e23f17206cd464fcecdd0e4f95aaf3204080d2f5349ab00b54b3d9afc1df15a",
+      "updatedAt": "2026-11-05T00:13:53+09:00"
     },
     {
       "folder": "朋友圈美化",
