@@ -1,610 +1,597 @@
+// 悬浮球收纳盒 (Floating Ball Dock) · v4.0.0
+// 更新内容：
+// 1. 性能优化：修复 MutationObserver 监听子树导致的严重卡顿，改为节流按需扫描。
+// 2. 还原豁免：支持单独将被收纳的悬浮球还原，被还原的球会被加入豁免名单，直到点击"刷新"才重新收纳。
+
+const DOCK_ID = "__plugin_float_dock_master__";
+const PANEL_ID = "__plugin_float_dock_panel__";
+const ATTR_CAPTURED = "data-dock-captured";
+
+const KNOWN_BALL_NAMES = [
+  { match: (el) => el.classList.contains("asw-ball"), name: "多任务切换" },
+  { match: (el) => el.classList.contains("mmv-tab") || el.closest("#mmv-root"), name: "语音导出缓存" },
+];
+
+const CSS = `
+#${DOCK_ID} {
+  position: fixed;
+  z-index: 2147483646;
+  right: 0;
+  top: 42%;
+  width: var(--dock-w, 10px);
+  height: var(--dock-h, 48px);
+  border-radius: 8px 0 0 8px;
+  background: rgba(30, 32, 38, var(--dock-alpha, 0.42));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-right: none;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition: width 0.2s cubic-bezier(.2,.8,.2,1), background 0.2s, opacity 0.2s, border-radius 0.2s;
+}
+#${DOCK_ID}:hover,
+#${DOCK_ID}.dock-active {
+  width: 16px;
+  background: rgba(30, 32, 38, 0.82);
+}
+#${DOCK_ID}[data-side="left"] {
+  left: 0;
+  right: auto;
+  border-radius: 0 8px 8px 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.28);
+  border-left: none;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.12);
+}
+#${DOCK_ID} .dock-grip {
+  width: 2px;
+  height: 16px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.65);
+  pointer-events: none;
+}
+#${DOCK_ID} .dock-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 4px #38bdf8;
+  pointer-events: none;
+  display: none;
+}
+#${DOCK_ID}.has-items .dock-dot {
+  display: block;
+}
+
+#${PANEL_ID} {
+  position: fixed;
+  z-index: 2147483645;
+  width: 226px;
+  max-height: 340px;
+  overflow-y: auto;
+  border-radius: 16px;
+  background: rgba(26, 28, 34, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
+  padding: 10px;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+}
+#${PANEL_ID}.dock-open {
+  display: flex;
+  animation: dockFadeIn 0.16s ease-out;
+}
+@keyframes dockFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.dock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 6px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+}
+.dock-rescan-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dock-rescan-btn:active {
+  background: rgba(255, 255, 255, 0.22);
+}
+.dock-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.dock-item:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.dock-item:active {
+  transform: scale(0.98);
+}
+.dock-item-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+  overflow: hidden;
+  color: #fff;
+}
+.dock-item-icon svg { width: 16px; height: 16px; }
+.dock-item-title {
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+.dock-item-action {
+  background: rgba(255, 69, 58, 0.15);
+  color: #ff453a;
+  border: none;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.15s;
+}
+.dock-item:hover .dock-item-action {
+  opacity: 1;
+}
+.dock-item-action:active {
+  background: rgba(255, 69, 58, 0.25);
+}
+.dock-empty {
+  padding: 16px 8px;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* 仅隐藏触发按钮本身，不影响插件自己的弹出面板 */
+[${ATTR_CAPTURED}="hidden"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0px !important;
+  min-width: 0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  border-width: 0px !important;
+  overflow: hidden !important;
+}
+`;
+
 export default {
   manifest: {
     id: "floating-ball-dock",
     name: "悬浮球收纳盒",
     apiVersion: 1,
-    version: "2.0.0",
+    version: "4.0.0",
     author: "可丽饼＆Gemini",
-    description: "极细贴边半透明收纳条，自动识别普通悬浮球与零宽高复合挂件（如MiniMax语音条）",
+    description: "将页面上各个扩展插件自带的悬浮球统一收纳。v4优化了性能解决卡顿，并支持悬浮球单独脱离收纳盒还原显示。",
     settings: [
-      {
-        key: "maxBallSize",
-        label: "识别悬浮球的最大尺寸(px)",
-        type: "number",
-        default: 100,
-      },
-      {
-        key: "barWidth",
-        label: "贴边条宽度(px，建议8~16)",
-        type: "number",
-        default: 10,
-      },
-      {
-        key: "barHeight",
-        label: "贴边条高度(px，建议40~64)",
-        type: "number",
-        default: 48,
-      },
-      {
-        key: "barOpacity",
-        label: "平时不透明度(0.15~0.9)",
-        type: "number",
-        default: 0.42,
-      },
+      { key: "maxBallSize", label: "最大识别尺寸 (px)", type: "number", default: 100 },
+      { key: "barWidth", label: "贴边条宽度 (px)", type: "number", default: 10 },
+      { key: "barHeight", label: "贴边条高度 (px)", type: "number", default: 48 },
+      { key: "barOpacity", label: "平时不透明度 (0.1~1)", type: "number", default: 0.42 },
     ],
   },
 
   setup(ctx) {
-    const DOCK_ID = "__plugin_float_dock_master__";
-    const PANEL_ID = "__plugin_float_dock_panel__";
-    const ATTR_CAPTURED = "data-dock-captured";
+    ctx.ui.injectCSS(CSS);
 
-    // Map<HTMLElement(触发按钮本身), { el, rootEl, label, avatarStyle, innerPreview }>
-    const capturedBalls = new Map();
-    let showOriginalBalls = false;
-    let panelOpen = false;
+    const captured = new Map();
+    // 豁免名单：记录用户手动还原（不收纳）的节点
+    const excluded = new Set();
+    
+    let isOpen = false;
+    let side = "right";
+    let topRatio = 0.42;
+    let observer = null;
+    let phoneObserver = null;
 
-    // 注入样式：极细贴边半透明条 + 抽屉面板
-    ctx.ui.injectCSS(`
-      #${DOCK_ID} {
-        position: fixed;
-        right: 0;
-        top: 42vh;
-        width: 10px;
-        height: 48px;
-        border-radius: 8px 0 0 8px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(180, 210, 230, 0.45));
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.38);
-        border-right: none;
-        box-shadow: -1px 2px 8px rgba(0, 0, 0, 0.18);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        z-index: 2147483640;
-        cursor: pointer;
-        user-select: none;
-        touch-action: none;
-        transition: width 0.18s ease, opacity 0.2s ease, background 0.18s ease;
-      }
-      /* 悬停或按住时稍微变亮展开一点点，方便看清 */
-      #${DOCK_ID}:hover, #${DOCK_ID}:active {
-        width: 15px !important;
-        opacity: 0.9 !important;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(160, 205, 235, 0.72));
-      }
-      /* 极细竖线指示器 */
-      #${DOCK_ID} .dock-grip {
-        width: 2.5px;
-        height: 16px;
-        border-radius: 2px;
-        background: rgba(40, 60, 80, 0.55);
-      }
-      /* 迷你内嵌数量点 */
-      #${DOCK_ID} .dock-mini-count {
-        font-size: 8.5px;
-        font-weight: 700;
-        line-height: 1;
-        color: rgba(25, 45, 65, 0.85);
-        transform: scale(0.88);
-      }
+    try {
+      const saved = ctx.system.storage.get("dockPos");
+      const pos = typeof saved === "string" ? JSON.parse(saved) : saved;
+      if (pos && (pos.side === "left" || pos.side === "right")) side = pos.side;
+      if (pos && typeof pos.topRatio === "number") topRatio = pos.topRatio;
+    } catch (_) {}
 
-      /* 只隐藏触发球本体，不影响同容器下的弹出面板 */
-      [${ATTR_CAPTURED}="hidden"] {
-        opacity: 0 !important;
-        pointer-events: none !important;
-        width: 0px !important;
-        min-width: 0px !important;
-        overflow: hidden !important;
-        border: none !important;
-        box-shadow: none !important;
-      }
-
-      #${PANEL_ID} {
-        position: fixed;
-        inset: 0;
-        z-index: 2147483645;
-        background: rgba(0, 0, 0, 0.22);
-        backdrop-filter: blur(3px);
-        -webkit-backdrop-filter: blur(3px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: dockFadeIn 0.15s ease-out;
-      }
-      @keyframes dockFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      #${PANEL_ID} .dock-card {
-        width: min(295px, 84vw);
-        max-height: 70vh;
-        background: rgba(32, 35, 44, 0.86);
-        backdrop-filter: blur(22px) saturate(1.2);
-        -webkit-backdrop-filter: blur(22px) saturate(1.2);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 20px;
-        padding: 14px;
-        color: #fff;
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.42);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      #${PANEL_ID} .dock-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 13px;
-        font-weight: 600;
-        opacity: 0.9;
-        padding: 0 4px;
-      }
-      #${PANEL_ID} .dock-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        overflow-y: auto;
-        padding: 2px;
-      }
-      #${PANEL_ID} .dock-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-        padding: 9px 5px;
-        border-radius: 13px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        cursor: pointer;
-        transition: background 0.15s, transform 0.1s;
-        text-align: center;
-      }
-      #${PANEL_ID} .dock-item:hover, #${PANEL_ID} .dock-item:active {
-        background: rgba(255, 255, 255, 0.18);
-        transform: scale(0.96);
-      }
-      #${PANEL_ID} .dock-item-avatar {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.14);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        overflow: hidden;
-        background-size: cover;
-        background-position: center;
-        color: #fff;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.22);
-      }
-      #${PANEL_ID} .dock-item-avatar img,
-      #${PANEL_ID} .dock-item-avatar svg {
-        max-width: 72%;
-        max-height: 72%;
-        object-fit: contain;
-      }
-      #${PANEL_ID} .dock-item-label {
-        font-size: 10.5px;
-        line-height: 1.2;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        opacity: 0.9;
-      }
-      #${PANEL_ID} .dock-footer {
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        padding-top: 6px;
-        border-top: 1px solid rgba(255,255,255,0.1);
-      }
-      #${PANEL_ID} .dock-btn {
-        flex: 1;
-        padding: 7px 8px;
-        border-radius: 9px;
-        border: none;
-        background: rgba(255, 255, 255, 0.12);
-        color: #fff;
-        font-size: 11.5px;
-        cursor: pointer;
-      }
-      #${PANEL_ID} .dock-btn:active {
-        background: rgba(255, 255, 255, 0.22);
-      }
-    `);
-
-    const masterBar = document.createElement("div");
-    masterBar.id = DOCK_ID;
-
-    // 恢复上次的上下位置及左右贴边方向
-    const savedPos = ctx.system.storage.get("dockPosV2");
-    let dockSide = (savedPos && savedPos.side) || "right";
-
-    const applyBarGeometry = () => {
-      const w = Math.max(6, Math.min(28, Number(ctx.system.settings.get("barWidth")) || 10));
-      const h = Math.max(28, Math.min(120, Number(ctx.system.settings.get("barHeight")) || 48));
-      const op = Math.max(0.12, Math.min(0.95, Number(ctx.system.settings.get("barOpacity")) || 0.42));
-
-      masterBar.style.width = w + "px";
-      masterBar.style.height = h + "px";
-      masterBar.style.opacity = String(op);
-
-      if (dockSide === "left") {
-        masterBar.style.left = "0px";
-        masterBar.style.right = "auto";
-        masterBar.style.borderRadius = "0 8px 8px 0";
-        masterBar.style.borderLeft = "none";
-        masterBar.style.borderRight = "1px solid rgba(255,255,255,0.38)";
-      } else {
-        masterBar.style.right = "0px";
-        masterBar.style.left = "auto";
-        masterBar.style.borderRadius = "8px 0 0 8px";
-        masterBar.style.borderRight = "none";
-        masterBar.style.borderLeft = "1px solid rgba(255,255,255,0.38)";
+    const getSetting = (key, fallback) => {
+      try {
+        const val = ctx.system.settings.get(key);
+        return val === undefined || val === null || val === "" ? fallback : val;
+      } catch (_) {
+        return fallback;
       }
     };
 
-    if (savedPos && typeof savedPos.top === "number") {
-      masterBar.style.top = Math.min(Math.max(12, savedPos.top), window.innerHeight - 60) + "px";
+    const dock = document.createElement("div");
+    dock.id = DOCK_ID;
+    dock.innerHTML = `<div class="dock-dot"></div><div class="dock-grip"></div>`;
+
+    const panel = document.createElement("div");
+    panel.id = PANEL_ID;
+
+    document.body.appendChild(dock);
+    document.body.appendChild(panel);
+
+    function applyAppearance() {
+      const w = Math.max(6, Math.min(32, Number(getSetting("barWidth", 10)) || 10));
+      const h = Math.max(28, Math.min(140, Number(getSetting("barHeight", 48)) || 48));
+      const alpha = Math.max(0.1, Math.min(1, Number(getSetting("barOpacity", 0.42)) || 0.42));
+      dock.style.setProperty("--dock-w", `${w}px`);
+      dock.style.setProperty("--dock-h", `${h}px`);
+      dock.style.setProperty("--dock-alpha", String(alpha));
     }
 
-    const updateMasterUI = () => {
-      for (const [el] of capturedBalls) {
-        if (!document.body.contains(el)) {
-          capturedBalls.delete(el);
-        }
-      }
-      applyBarGeometry();
-      const count = capturedBalls.size;
-      masterBar.innerHTML = `
-        <span class="dock-grip"></span>
-        ${count > 0 ? `<span class="dock-mini-count">${count}</span>` : ""}
-      `;
-    };
+    function placeDock() {
+      const H = window.innerHeight;
+      const barH = dock.offsetHeight || 48;
+      const y = Math.min(H - barH - 24, Math.max(24, topRatio * H));
+      dock.style.top = `${Math.round(y)}px`;
+      dock.setAttribute("data-side", side);
+      if (isOpen) placePanel();
+    }
 
-    // 判断一个元素的尺寸是否像悬浮球/贴边条触发器
-    const isTriggerSize = (rect, maxSize) => {
-      // 允许窄贴边条（如宽度 14~24px、高度 40~80px 的 .mmv-tab）
-      if (rect.width < 10 || rect.height < 14) return false;
-      if (rect.width > maxSize || rect.height > maxSize) return false;
-      return true;
-    };
+    function placePanel() {
+      const rect = dock.getBoundingClientRect();
+      const pW = 226;
+      const pH = panel.offsetHeight || 180;
+      let left = side === "right" ? rect.left - pW - 10 : rect.right + 10;
+      left = Math.max(10, Math.min(window.innerWidth - pW - 10, left));
+      let top = rect.top + rect.height / 2 - pH / 2;
+      top = Math.max(16, Math.min(window.innerHeight - pH - 16, top));
+      panel.style.left = `${Math.round(left)}px`;
+      panel.style.top = `${Math.round(top)}px`;
+    }
 
-    // 寻找页面上的野生悬浮球（含直接 fixed 球 + 0x0 fixed 容器内的触发器）
-    const findTriggerElements = () => {
-      const maxSize = Number(ctx.system.settings.get("maxBallSize")) || 100;
-      const results = [];
-      const topNodes = document.querySelectorAll("body > *");
+    function isExcludedNode(el) {
+      if (!el || el.nodeType !== 1) return true;
+      if (el.id === DOCK_ID || el.id === PANEL_ID) return true;
+      const tag = el.tagName;
+      if (tag === "SCRIPT" || tag === "STYLE" || tag === "LINK" || tag === "META") return true;
+      if (el.getAttribute("data-ui") === "phone-screen") return true;
+      if (el.id === "__next" || el.id === "root") return true;
+      if (el.classList.contains("asw-bar") || el.classList.contains("asw-overlay")) return true;
+      return false;
+    }
 
-      topNodes.forEach((node) => {
-        if (!(node instanceof HTMLElement)) return;
-        if (node.id === DOCK_ID || node.id === PANEL_ID) return;
-        if (node.id === "__next" || node.id === "root" || node.tagName === "SCRIPT" || node.tagName === "STYLE") {
-          return;
-        }
+    function isSizeLikeTrigger(rect, maxSize) {
+      return (rect.width >= 8 && rect.height >= 14 && rect.width <= maxSize && rect.height <= maxSize);
+    }
 
-        const style = window.getComputedStyle(node);
-        if (style.position !== "fixed") return;
-        if (style.display === "none" || style.visibility === "hidden") return;
+    function findTriggerElement(rootEl, allowAbsolute = false) {
+      if (isExcludedNode(rootEl)) return null;
+      if (rootEl.getAttribute(ATTR_CAPTURED) === "hidden") return rootEl;
 
-        // 如果已经被捕获过，直接跳过尺寸检查（因为被隐藏后 width 是 0）
-        if (capturedBalls.has(node)) {
-          results.push(node);
-          return;
-        }
+      const cs = window.getComputedStyle(rootEl);
+      if (cs.display === "none" || cs.visibility === "hidden") return null;
 
-        const rect = node.getBoundingClientRect();
+      const pos = cs.position;
+      const isFixed = pos === "fixed";
+      const isHighZAbsolute = allowAbsolute && pos === "absolute" && (parseInt(cs.zIndex, 10) || 0) >= 100;
 
-        // 情况 A：这个 fixed 元素本身就是一个尺寸合适的悬浮球
-        // 但要先检查它里面是不是含有一个独立面板（例如既有 tab 又有 panel）
-        const childCandidates = Array.from(node.children).filter((c) => c instanceof HTMLElement);
-        const hasLargePanelSibling = childCandidates.some((c) => {
-          const cr = c.getBoundingClientRect();
-          const cs = window.getComputedStyle(c);
-          return cr.width > maxSize || cr.height > maxSize || /panel|modal|drawer|list/i.test(c.className);
-        });
+      if (!isFixed && !isHighZAbsolute) return null;
 
-        if (!hasLargePanelSibling && isTriggerSize(rect, maxSize)) {
-          results.push(node);
-          return;
-        }
+      const maxSize = Number(getSetting("maxBallSize", 100)) || 100;
+      const rect = rootEl.getBoundingClientRect();
 
-        // 情况 B：像 #mmv-root 这种 0x0 的 fixed 外壳，或者内部包含独立 .mmv-tab + .mmv-panel 的复合容器
-        childCandidates.forEach((child) => {
-          if (capturedBalls.has(child)) {
-            results.push(child);
-            return;
-          }
-          const cs = window.getComputedStyle(child);
-          if (cs.display === "none" || cs.visibility === "hidden") return;
-          // 排除弹出面板本身
-          if (/panel|modal|popup|menu|drawer/i.test(child.className)) return;
-
-          const cr = child.getBoundingClientRect();
-          if (isTriggerSize(cr, maxSize)) {
-            results.push(child);
-          }
-        });
-      });
-
-      return results;
-    };
-
-    // 提取原悬浮球的名称与图标外观
-    const extractBallInfo = (el, index) => {
-      const style = window.getComputedStyle(el);
-      const rawTitle =
-        el.getAttribute("title") ||
-        el.getAttribute("aria-label") ||
-        el.getAttribute("data-name") ||
-        (el.parentElement && el.parentElement.getAttribute("title")) ||
-        "";
-
-      // 清洗标题（比如 "语音缓存，点击展开 / 可拖动" 取逗号前）
-      let cleanTitle = rawTitle.split(/[，,\/（(]/)[0].trim();
-      const text = (el.innerText || el.textContent || "").trim().replace(/\s+/g, " ");
-
-      if (!cleanTitle) {
-        if (text && !/^\d+$/.test(text)) {
-          cleanTitle = text;
-        } else if (el.id || (el.parentElement && el.parentElement.id)) {
-          const rawId = el.id || el.parentElement.id;
-          cleanTitle = rawId.replace(/[-_]|root|tab|btn/gi, " ").trim() || `插件 #${index}`;
-        } else {
-          cleanTitle = `插件 #${index}`;
-        }
+      if (isSizeLikeTrigger(rect, maxSize)) {
+        return rootEl;
       }
 
-      let avatarStyle = "";
-      let innerPreview = "";
+      // 处理0x0复合容器
+      if (rect.width <= maxSize && rect.height <= maxSize) {
+        const children = rootEl.querySelectorAll("*");
+        for (const child of children) {
+          if (child.getAttribute(ATTR_CAPTURED) === "hidden") return child;
+          const ccs = window.getComputedStyle(child);
+          if (ccs.display === "none" || ccs.visibility === "hidden") continue;
+          if (ccs.position === "fixed" || ccs.position === "absolute") {
+            const cRect = child.getBoundingClientRect();
+            if (isSizeLikeTrigger(cRect, maxSize)) {
+              return child;
+            }
+          }
+        }
+      }
+      return null;
+    }
 
-      const img = el.querySelector("img");
+    function extractMeta(el, index) {
+      let knownName = "";
+      for (const item of KNOWN_BALL_NAMES) {
+        try { if (item.match(el)) { knownName = item.name; break; } } catch (_) {}
+      }
+
+      const rawText = (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
+      const title = knownName || el.getAttribute("title") || el.getAttribute("aria-label") || el.getAttribute("data-label") || 
+        (rawText.length > 0 && rawText.length <= 12 ? rawText : "") || (el.id ? `插件 (${el.id})` : `悬浮功能 #${index}`);
+
+      let iconHTML = "";
       const svg = el.querySelector("svg");
-      if (img && img.src) {
-        innerPreview = `<img src="${img.src}" alt="" />`;
-      } else if (svg) {
-        innerPreview = svg.outerHTML;
-      } else if (style.backgroundImage && style.backgroundImage !== "none" && !style.backgroundImage.includes("gradient")) {
-        avatarStyle = `background-image: ${style.backgroundImage};`;
-      } else {
-        innerPreview = text && !/^\d+$/.test(text) ? text.slice(0, 2) : "⚡";
-      }
+      const img = el.querySelector("img");
+      if (svg) iconHTML = svg.outerHTML;
+      else if (img && img.src) iconHTML = `<img src="${img.src}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" />`;
+      else if (rawText) iconHTML = rawText.slice(0, 2);
+      else iconHTML = title.slice(0, 1) || "⚡";
 
-      // 保留原悬浮球的背景渐变或底色，方便一眼认出（比如浅水蓝的语音条）
-      if (style.backgroundImage && style.backgroundImage.includes("gradient")) {
-        avatarStyle += `background-image: ${style.backgroundImage};`;
-      } else if (style.backgroundColor && style.backgroundColor !== "rgba(0, 0, 0, 0)") {
-        avatarStyle += `background-color: ${style.backgroundColor};`;
-      }
+      return { label: title, iconHTML };
+    }
 
-      return {
-        el,
-        label: cleanTitle.slice(0, 9),
-        avatarStyle,
-        innerPreview,
-      };
-    };
-
-    // 扫描并收纳
-    const scanFloatingBalls = () => {
-      const triggers = findTriggerElements();
-      let idx = capturedBalls.size + 1;
-
-      triggers.forEach((el) => {
-        if (!capturedBalls.has(el)) {
-          // 必须在加上 hidden 属性之前提取外观与尺寸！
-          const info = extractBallInfo(el, idx++);
-          capturedBalls.set(el, info);
-        }
-        el.setAttribute(ATTR_CAPTURED, showOriginalBalls ? "shown" : "hidden");
-      });
-
-      updateMasterUI();
-    };
-
-    // 模拟真实点击（完美兼容 pointerdown -> pointerup 绑定的插件如 MiniMax 语音条）
-    const triggerOriginalBall = (targetEl) => {
-      if (!targetEl) return;
-
-      // 临时解除隐藏以获取正常坐标并触发事件
-      const prevAttr = targetEl.getAttribute(ATTR_CAPTURED);
+    function triggerPluginAction(targetEl) {
       targetEl.removeAttribute(ATTR_CAPTURED);
+      if (targetEl.classList.contains("asw-tucked")) targetEl.classList.remove("asw-tucked");
 
+      const rect = targetEl.getBoundingClientRect();
+      const cx = rect.left + (rect.width || 20) / 2;
+      const cy = rect.top + (rect.height || 20) / 2;
+
+      const sharedInit = { bubbles: true, cancelable: true, composed: true, view: window, clientX: cx, clientY: cy, button: 0, buttons: 1 };
       try {
-        const rect = targetEl.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
+        if (typeof PointerEvent !== "undefined") {
+          targetEl.dispatchEvent(new PointerEvent("pointerdown", { ...sharedInit, pointerId: 1, pointerType: "touch", isPrimary: true }));
+        }
+        targetEl.dispatchEvent(new MouseEvent("mousedown", sharedInit));
 
-        // 依次派发 pointerdown -> mousedown -> pointerup -> mouseup -> click
-        // 同一坐标（moved = false），即可触发像 .mmv-tab 这种在 pointerup 里判断 !moved 的开关
-        ["pointerdown", "mousedown", "pointerup", "mouseup", "click"].forEach((type) => {
-          const Evt = type.startsWith("pointer") ? PointerEvent : MouseEvent;
-          targetEl.dispatchEvent(
-            new Evt(type, {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-              pointerId: 1,
-              isPrimary: true,
-              clientX: cx,
-              clientY: cy,
-            })
-          );
-        });
-      } finally {
-        if (!showOriginalBalls && prevAttr) {
-          setTimeout(() => {
-            targetEl.setAttribute(ATTR_CAPTURED, "hidden");
-          }, 60);
+        if (typeof PointerEvent !== "undefined") {
+          targetEl.dispatchEvent(new PointerEvent("pointerup", { ...sharedInit, buttons: 0, pointerId: 1, pointerType: "touch", isPrimary: true }));
+        }
+        targetEl.dispatchEvent(new MouseEvent("mouseup", { ...sharedInit, buttons: 0 }));
+        targetEl.click();
+      } catch (_) {
+        try { targetEl.click(); } catch (_e) {}
+      }
+
+      setTimeout(() => {
+        if (captured.has(targetEl) && !excluded.has(targetEl)) {
+          targetEl.setAttribute(ATTR_CAPTURED, "hidden");
+        }
+      }, 80);
+    }
+
+    function scanBalls() {
+      for (const [el] of captured.entries()) {
+        if (!el.isConnected) captured.delete(el);
+      }
+
+      // 扫描 document.body 下直接元素
+      for (const node of Array.from(document.body.children)) {
+        const triggerEl = findTriggerElement(node, false);
+        if (triggerEl && !captured.has(triggerEl) && !excluded.has(triggerEl)) {
+          const meta = extractMeta(triggerEl, captured.size + 1);
+          captured.set(triggerEl, { el: triggerEl, ...meta });
+          triggerEl.setAttribute(ATTR_CAPTURED, "hidden");
         }
       }
+
+      // 扫描 phone-screen 下直接元素
+      const phoneScreen = document.querySelector('[data-ui="phone-screen"]');
+      if (phoneScreen) {
+        // 如果挂载了小手机且未监听它，启动监听（不使用子树以防卡顿）
+        if (!phoneObserver) {
+            phoneObserver = new MutationObserver(debouncedScan);
+            phoneObserver.observe(phoneScreen, { childList: true, subtree: false });
+        }
+        for (const node of Array.from(phoneScreen.children)) {
+          const triggerEl = findTriggerElement(node, true);
+          if (triggerEl && !captured.has(triggerEl) && !excluded.has(triggerEl)) {
+            const meta = extractMeta(triggerEl, captured.size + 1);
+            captured.set(triggerEl, { el: triggerEl, ...meta });
+            triggerEl.setAttribute(ATTR_CAPTURED, "hidden");
+          }
+        }
+      }
+
+      updateBadge();
+      if (isOpen) renderPanel();
+    }
+
+    // 节流处理扫描，避免密集操作导致卡顿
+    let scanTimer = null;
+    const debouncedScan = () => {
+      if (scanTimer) clearTimeout(scanTimer);
+      scanTimer = setTimeout(() => scanBalls(), 300);
     };
 
-    // 打开收纳面板
-    const openDockPanel = () => {
-      if (panelOpen) return;
-      scanFloatingBalls();
-      panelOpen = true;
+    function updateBadge() {
+      dock.classList.toggle("has-items", captured.size > 0);
+    }
 
-      const overlay = document.createElement("div");
-      overlay.id = PANEL_ID;
+    function renderPanel() {
+      panel.innerHTML = "";
 
-      const closePanel = () => {
-        overlay.remove();
-        panelOpen = false;
+      const header = document.createElement("div");
+      header.className = "dock-header";
+      header.innerHTML = `<span>已收纳 (${captured.size})</span>`;
+
+      const rescanBtn = document.createElement("button");
+      rescanBtn.className = "dock-rescan-btn";
+      rescanBtn.textContent = "刷新重置";
+      rescanBtn.title = "清空豁免名单并重新扫描页面";
+      rescanBtn.onclick = (e) => {
+        e.stopPropagation();
+        excluded.clear(); // 清空被还原的球名单
+        scanBalls();
       };
+      header.appendChild(rescanBtn);
+      panel.appendChild(header);
 
-      const renderCard = () => {
-        const items = Array.from(capturedBalls.values());
-        overlay.innerHTML = `
-          <div class="dock-card">
-            <div class="dock-header">
-              <span>插件收纳盒 (${items.length})</span>
-              <span class="dock-close" style="cursor:pointer;padding:2px 6px;opacity:0.7;">✕</span>
-            </div>
-            ${
-              items.length === 0
-                ? `<div style="padding:22px 10px;text-align:center;font-size:12.5px;opacity:0.65;">
-                    暂未检测到悬浮球<br/>可点击下方「重新扫描」
-                   </div>`
-                : `<div class="dock-grid">
-                    ${items
-                      .map(
-                        (item, i) => `
-                      <div class="dock-item" data-idx="${i}">
-                        <div class="dock-item-avatar" style="${item.avatarStyle}">
-                          ${item.innerPreview}
-                        </div>
-                        <div class="dock-item-label">${item.label}</div>
-                      </div>
-                    `
-                      )
-                      .join("")}
-                   </div>`
-            }
-            <div class="dock-footer">
-              <button class="dock-btn" data-action="rescan">🔄 重新扫描</button>
-              <button class="dock-btn" data-action="toggle-raw">
-                ${showOriginalBalls ? "🙈 隐藏原球" : "👁️ 显示原球"}
-              </button>
-            </div>
-          </div>
-        `;
+      if (captured.size === 0) {
+        const empty = document.createElement("div");
+        empty.className = "dock-empty";
+        empty.textContent = "暂未发现其他插件悬浮球";
+        panel.appendChild(empty);
+      } else {
+        for (const [el, item] of captured.entries()) {
+          const row = document.createElement("div");
+          row.className = "dock-item";
 
-        overlay.querySelector(".dock-close").onclick = closePanel;
+          const ico = document.createElement("div");
+          ico.className = "dock-item-icon";
+          ico.innerHTML = item.iconHTML;
 
-        overlay.querySelectorAll(".dock-item").forEach((itemEl) => {
-          itemEl.onclick = () => {
-            const idx = Number(itemEl.getAttribute("data-idx"));
-            const target = items[idx];
-            closePanel();
-            if (target && target.el) {
-              triggerOriginalBall(target.el);
-            }
+          const txt = document.createElement("div");
+          txt.className = "dock-item-title";
+          txt.textContent = item.label;
+          
+          const actionBtn = document.createElement("button");
+          actionBtn.className = "dock-item-action";
+          actionBtn.textContent = "还原";
+          actionBtn.title = "从收纳盒中移出并放回原处";
+          actionBtn.onclick = (e) => {
+              e.stopPropagation();
+              el.removeAttribute(ATTR_CAPTURED);
+              excluded.add(el);
+              captured.delete(el);
+              updateBadge();
+              renderPanel();
           };
-        });
 
-        overlay.querySelector('[data-action="rescan"]').onclick = () => {
-          // 先临时恢复原状以重新采集图标和尺寸
-          for (const [el] of capturedBalls) {
-            el.removeAttribute(ATTR_CAPTURED);
-          }
-          capturedBalls.clear();
-          scanFloatingBalls();
-          renderCard();
-        };
+          row.appendChild(ico);
+          row.appendChild(txt);
+          row.appendChild(actionBtn);
 
-        overlay.querySelector('[data-action="toggle-raw"]').onclick = () => {
-          showOriginalBalls = !showOriginalBalls;
-          for (const [el] of capturedBalls) {
-            el.setAttribute(ATTR_CAPTURED, showOriginalBalls ? "shown" : "hidden");
-          }
-          renderCard();
-        };
-      };
+          row.addEventListener("click", (e) => {
+            if(e.target === actionBtn) return;
+            e.stopPropagation();
+            togglePanel(false);
+            triggerPluginAction(item.el);
+          });
 
-      overlay.onclick = (e) => {
-        if (e.target === overlay) closePanel();
-      };
+          panel.appendChild(row);
+        }
+      }
+      placePanel();
+    }
 
-      renderCard();
-      document.body.appendChild(overlay);
-    };
+    function togglePanel(force) {
+      isOpen = typeof force === "boolean" ? force : !isOpen;
+      dock.classList.toggle("dock-active", isOpen);
+      if (isOpen) {
+        scanBalls();
+        renderPanel();
+        panel.classList.add("dock-open");
+        placePanel();
+      } else {
+        panel.classList.remove("dock-open");
+      }
+    }
 
-    // 贴边条拖拽（支持上下滑动 + 拖到左半屏自动贴左边，右半屏自动贴右边）
-    let isDragging = false;
-    let hasMoved = false;
-    let startX = 0;
-    let startY = 0;
-    let initTop = 0;
+    let pid = null, startX = 0, startY = 0, origTop = 0, moved = false;
 
-    masterBar.addEventListener("pointerdown", (e) => {
-      isDragging = true;
-      hasMoved = false;
+    dock.addEventListener("pointerdown", (e) => {
+      pid = e.pointerId;
       startX = e.clientX;
       startY = e.clientY;
-      initTop = masterBar.getBoundingClientRect().top;
-      try {
-        masterBar.setPointerCapture(e.pointerId);
-      } catch (err) {}
+      origTop = dock.offsetTop;
+      moved = false;
+      try { dock.setPointerCapture(pid); } catch (_) {}
+      e.preventDefault(); e.stopPropagation();
     });
 
-    masterBar.addEventListener("pointermove", (e) => {
-      if (!isDragging) return;
+    dock.addEventListener("pointermove", (e) => {
+      if (e.pointerId !== pid) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-        hasMoved = true;
-      }
-      if (hasMoved) {
-        const newTop = Math.min(Math.max(12, initTop + dy), window.innerHeight - 60);
-        masterBar.style.top = newTop + "px";
-        // 根据手指水平位置自动判断吸附左边缘还是右边缘
-        dockSide = e.clientX < window.innerWidth / 2 ? "left" : "right";
-        applyBarGeometry();
-      }
-    });
-
-    masterBar.addEventListener("pointerup", (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      try {
-        masterBar.releasePointerCapture(e.pointerId);
-      } catch (err) {}
-
-      if (hasMoved) {
-        const rect = masterBar.getBoundingClientRect();
-        ctx.system.storage.set("dockPosV2", { top: rect.top, side: dockSide });
-      } else {
-        openDockPanel();
+      if (!moved && Math.hypot(dx, dy) > 6) { moved = true; if (isOpen) togglePanel(false); }
+      if (moved) {
+        const H = window.innerHeight;
+        const barH = dock.offsetHeight || 48;
+        const nextTop = Math.max(24, Math.min(H - barH - 24, origTop + dy));
+        dock.style.top = `${nextTop}px`;
+        side = e.clientX < window.innerWidth / 2 ? "left" : "right";
+        dock.setAttribute("data-side", side);
       }
     });
 
-    document.body.appendChild(masterBar);
-    updateMasterUI();
+    const onPointerEnd = (e) => {
+      if (e.pointerId !== pid) return;
+      pid = null;
+      if (moved) {
+        topRatio = dock.offsetTop / Math.max(1, window.innerHeight);
+        try { ctx.system.storage.set("dockPos", JSON.stringify({ side, topRatio })); } catch (_) {}
+        placeDock();
+      } else if (e.type === "pointerup") {
+        togglePanel();
+      }
+    };
 
-    // 定时扫描补抓
-    scanFloatingBalls();
-    ctx.system.timers.setInterval(scanFloatingBalls, 1500);
-    ctx.hooks.on("app.ready", scanFloatingBalls);
-    ctx.hooks.on("session.opened", scanFloatingBalls);
-    ctx.hooks.on("plugins.changed", scanFloatingBalls);
-    ctx.system.settings.onChange(updateMasterUI);
+    dock.addEventListener("pointerup", onPointerEnd);
+    dock.addEventListener("pointercancel", onPointerEnd);
+
+    const onDocDown = (e) => {
+      if (isOpen && !panel.contains(e.target) && !dock.contains(e.target)) togglePanel(false);
+    };
+    document.addEventListener("pointerdown", onDocDown, true);
+    const onResize = () => placeDock();
+    window.addEventListener("resize", onResize);
+
+    applyAppearance();
+    placeDock();
+    scanBalls();
+
+    // 仅监听直接子元素的变化，抛弃 subtree: true，大幅提升性能
+    observer = new MutationObserver(debouncedScan);
+    observer.observe(document.body, { childList: true, subtree: false });
+
+    const timer = ctx.system.timers.setInterval(scanBalls, 1800);
+
+    if (ctx.system.settings.onChange) {
+      ctx.system.settings.onChange(() => { applyAppearance(); placeDock(); scanBalls(); });
+    }
 
     return () => {
-      masterBar.remove();
-      const existingPanel = document.getElementById(PANEL_ID);
-      if (existingPanel) existingPanel.remove();
-      for (const [el] of capturedBalls) {
-        el.removeAttribute(ATTR_CAPTURED);
-      }
-      capturedBalls.clear();
+      if (observer) observer.disconnect();
+      if (phoneObserver) phoneObserver.disconnect();
+      if (scanTimer) clearTimeout(scanTimer);
+      clearInterval(timer);
+      document.removeEventListener("pointerdown", onDocDown, true);
+      window.removeEventListener("resize", onResize);
+      for (const [el] of captured.entries()) { el.removeAttribute(ATTR_CAPTURED); }
+      for (const el of excluded) { el.removeAttribute(ATTR_CAPTURED); }
+      captured.clear();
+      excluded.clear();
+      dock.remove();
+      panel.remove();
     };
   },
 };
