@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-05T12:54:48.731Z",
+  "generatedAt": "2026-11-05T13:52:17.245Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 164
+      "count": 165
     },
     {
       "name": "应用bug改善",
@@ -4916,6 +4916,24 @@
       "avatar": "",
       "ownerHash": "122da77ce3e09cb45fb3833d01053fa7d73663b1ed5d35d61b66d65a8b7cf4ea",
       "updatedAt": "2026-10-07T01:29:08+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "你抢谁蓝呢（王者模拟器）",
+      "dirName": "你抢谁蓝呢（王者模拟器）",
+      "type": "dir",
+      "path": "资源/应用/你抢谁蓝呢（王者模拟器）",
+      "files": [
+        "资源/应用/你抢谁蓝呢（王者模拟器）/honor.canyon.companion-2.2.0.zip"
+      ],
+      "images": [
+        "资源/应用/你抢谁蓝呢（王者模拟器）/IMG_7253.jpeg"
+      ],
+      "description": "一个以「绑定小手机角色双排上分」为核心、带完整段位/商场/好友亲密度/抽卡养成、并能与聊天室角色双向开黑邀请的模拟器 APP",
+      "author": "知雀",
+      "avatar": "",
+      "ownerHash": "73ef0d6ea1ea927035a640d2e4d558a7a8b959c8fa793f0d26b237c6f7c6fe48",
+      "updatedAt": "2026-11-05T22:49:40+09:00"
     },
     {
       "folder": "应用",
