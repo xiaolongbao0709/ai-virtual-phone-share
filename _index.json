@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-05T13:52:17.245Z",
+  "generatedAt": "2026-11-05T14:56:16.723Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 90
+      "count": 91
     },
     {
       "name": "MCP",
@@ -884,6 +884,22 @@
       "avatar": "",
       "ownerHash": "a72bf6ad0965ee47b487768076e67415b21fd051bcad92bc200d69f191a33713",
       "updatedAt": "2026-08-23T15:33:42+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "插件悬浮球收纳盒[花]",
+      "dirName": "插件悬浮球收纳盒[花]",
+      "type": "dir",
+      "path": "资源/Js插件/插件悬浮球收纳盒[花]",
+      "files": [
+        "资源/Js插件/插件悬浮球收纳盒[花]/悬浮球收纳盒.js"
+      ],
+      "images": [],
+      "description": "因为安装了太多插件 有好多都是悬浮球设计\n屏幕悬浮球太多太杂乱 因而让家机搓了一个收纳盒\n可以自动抓取 可[大]自定义要抓取的悬浮球大小[/大]\n[蓝]采用极细半透明贴边设计 还原干净屏幕[/蓝]\n[红][大]不保证所有都能抓取 支持二改注明原作者[/大][/红]",
+      "author": "可丽饼",
+      "avatar": "资源/Js插件/插件悬浮球收纳盒[花]/.avatar.png",
+      "ownerHash": "9513e264a6366c34aac41042a44b4bf38aed76d4e7d2d64e098b3531e29e03c9",
+      "updatedAt": "2026-11-05T23:53:53+09:00"
     },
     {
       "folder": "Js插件",
