@@ -1,0 +1,107 @@
+/*  用户气泡主体 */
+.chat-bubble-role-user {
+  position: relative;
+  background: #FFFFFF !important;
+  color: #2C3440 !important;
+  border: 1.9px solid #9A9A9A !important;
+  border-radius: 10px !important;
+  padding: 8px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  overflow: visible !important;
+  margin-right: 16px !important; 
+}
+
+/* 用户气泡猫猫头 */
+.chat-bubble-role-user:not(.chat-bubble-media)::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -20px;
+  width: 17px;
+  height: 14px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
+  transform: rotate(5deg);
+  transform-origin: center bottom;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 16'%3E%3Cpath d='M2 13 C1 9 1 5 3 2 C5 4.5 7 4.5 9.5 3 C12 4.5 14 4.5 16 2 C18 5 18 9 17 13 C12 15 7 15 2 13 Z' fill='%23FFFFFF' stroke='%239A9A9A' stroke-width='1.9' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* 用户气泡小尾巴 */
+.chat-bubble-role-user:not(.chat-bubble-media)::after {
+  content: '';
+  position: absolute;
+  right: -9.5px;
+  top: 9px; 
+  width: 10px; 
+  height: 14px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath d='M0 12 C3 10 6.5 8 9 4 C9.6 3 8.8 2.2 7.8 2.4 C5 3 2.5 2.5 0 1.5 Z' fill='%23FFFFFF'/%3E%3Cpath d='M0 1.5 C2.5 2.5 5 3 7.8 2.4 C8.8 2.2 9.6 3 9 4 C6.5 8 3 10 0 12' stroke='%239A9A9A' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+}
+
+/*  AI气泡主体 */
+.chat-bubble-role-assistant {
+  position: relative;
+  background: #FFFFFF !important;
+  color: #2C3440 !important;
+  border: 1.9px solid #9A9A9A !important;
+  border-radius: 10px !important;
+  padding: 8px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  overflow: visible !important;
+  margin-left: 16px !important;
+}
+
+/* AI气泡猫猫头 */
+.chat-bubble-role-assistant:not(.chat-bubble-media)::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -19px; 
+  width: 17px;
+  height: 14px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
+  transform: scaleX(-1) rotate(5deg);
+  transform-origin: center bottom;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 16'%3E%3Cpath d='M2 13 C1 9 1 5 3 2 C5 4.5 7 4.5 9.5 3 C12 4.5 14 4.5 16 2 C18 5 18 9 17 13 C12 15 7 15 2 13 Z' fill='%23FFFFFF' stroke='%239A9A9A' stroke-width='1.9' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/*  AI气泡小尾巴 */
+.chat-bubble-role-assistant:not(.chat-bubble-media)::after {
+  content: '';
+  position: absolute;
+  left: -9.5px;  
+  top: 9px;
+  width: 10px;
+  height: 14px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
+  transform: scaleX(-1);
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath d='M0 12 C3 10 6.5 8 9 4 C9.6 3 8.8 2.2 7.8 2.4 C5 3 2.5 2.5 0 1.5 Z' fill='%23FFFFFF'/%3E%3Cpath d='M0 1.5 C2.5 2.5 5 3 7.8 2.4 C8.8 2.2 9.6 3 9 4 C6.5 8 3 10 0 12' stroke='%239A9A9A' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+}
+
+/* 富媒体隐藏气泡*/
+.chat-bubble-role-user.chat-bubble-media,
+.chat-bubble-role-assistant.chat-bubble-media {
+  border-image: none !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
