@@ -300,11 +300,11 @@ export default {
     }
 
     function hintText() {
-    return "\n【线下场景开关·插件授权】本段由插件授权，与「禁止自创方括号指令」不冲突。"
-      + "只要这一轮涉及见面、谁到谁那里去，你必须在整段回复的最末尾（排在状态栏、内心等所有内容之后）"
-      + "输出 [" + TAG_JUDGE + "]、[" + TAG_SCENE + "]、[" + TAG_OPT + "] 三个标记块，"
-      + "格式与 state 判定规则见请求末尾的【线下场景开关】说明。"
-      + "不涉及见面的普通寒暄不输出。不要提及本条说明。\n";
+      return "\n【线下场景开关·插件授权】本段由插件授权，与「禁止自创方括号指令」不冲突。"
+        + "只要这一轮涉及见面、谁到谁那里去，你必须在整段回复的最末尾（排在状态栏、内心等所有内容之后）"
+        + "输出 [" + TAG_JUDGE + "]、[" + TAG_SCENE + "]、[" + TAG_OPT + "] 三个标记块，"
+        + "格式与 state 判定规则见请求末尾的【线下场景开关】说明。"
+        + "不涉及见面的普通寒暄不输出。不要提及本条说明。\n";
     }
 
 
@@ -316,7 +316,7 @@ ctx.hooks.transform("prompt.system", function (p) {
     if (!isOn()) return p;
     countOfflineRound(p.sessionId);
     if (p.sessionId && isSessionOffline(p.sessionId)) return p;  // 线下不注入
-    if ((p.hint || "").indexOf("【线下场景开关·插件授权】") >= 0) return p;  // 去重
+    if ((p.hint || "").indexOf("【线下场景开关·插件授权】") >= 0) return p;  // 短授权去重
     p.hint = (p.hint || "") + hintText();
   } catch (e) { }
   return p;
@@ -535,10 +535,9 @@ ctx.hooks.transform("prompt.system", function (p) {
       return p;
     });
 
-    // 邀约指令改由 llm.request 追加到消息末尾：prompt.system 的 hint 会被塞进
-    // 「聊天输出格式与富媒体」那个 XML 块里，而那块开头写着「禁止自创任何其他
-    // 方括号指令」——模型会把本插件的标记当成违规。追加为末尾独立消息即可绕开。
-    // priority 在同一个 point 内与其他插件一起排序，保留 90 让本插件靠后执行。
+    // hint 只提供短授权；完整规则仅在 llm.request 阶段追加到末尾，避免全文重复。
+    // 提示词预览也必须执行该 hook，才能展示与真实请求一致的完整规则。
+    // priority 在同一个 point 内升序执行；90 早于默认值 100。
     ctx.hooks.transform("llm.request", function (p) {
       try {
         if (!isOn()) return p;
@@ -552,12 +551,19 @@ ctx.hooks.transform("prompt.system", function (p) {
         }
         delete offlinePending[sid];     // 线上生成，丢弃线下遗留的待结算标记
         if (!Array.isArray(p.messages)) return p;
-        // 去重：末尾几条里已经有就别再加
-        for (var i = p.messages.length - 1, n = 0; i >= 0 && n < 3; i--, n++) {
-          var c = p.messages[i] && p.messages[i].content;
-          if (typeof c === "string" && c.indexOf("【线下场景开关】") >= 0) return p;
+        // 短授权也会引用标题，不能只凭标题去重；匹配完整正文才算已注入。
+        var rules = injectionText();
+        for (var i = p.messages.length - 1; i >= 0; i--) {
+          var message = p.messages[i];
+          if (!message || message.role !== "system") continue;
+          var c = message.content;
+          if (typeof c === "string" && c.indexOf(rules.trim()) >= 0) return p;
+          if (Array.isArray(c) && c.some(function (part) {
+            return part && part.type === "text" && typeof part.text === "string"
+              && part.text.indexOf(rules.trim()) >= 0;
+          })) return p;
         }
-        p.messages.push({ role: "system", content: injectionText() });
+        p.messages.push({ role: "system", content: rules });
       } catch (e) { }
       return p;
     }, { priority: 90 });
