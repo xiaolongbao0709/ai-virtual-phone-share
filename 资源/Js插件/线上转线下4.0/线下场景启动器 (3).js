@@ -299,14 +299,28 @@ export default {
       ].join("\n");
     }
 
+    function hintText() {
+    return "\n【线下场景开关·插件授权】本段由插件授权，与「禁止自创方括号指令」不冲突。"
+      + "只要这一轮涉及见面、谁到谁那里去，你必须在整段回复的最末尾（排在状态栏、内心等所有内容之后）"
+      + "输出 [" + TAG_JUDGE + "]、[" + TAG_SCENE + "]、[" + TAG_OPT + "] 三个标记块，"
+      + "格式与 state 判定规则见请求末尾的【线下场景开关】说明。"
+      + "不涉及见面的普通寒暄不输出。不要提及本条说明。\n";
+    }
+
+
     // 线下回复不产生 ChatMessage（走 ChatOfflineTurn，存 kv），message.persisted 不触发。
     // 所以挂在 prompt.system：每次线下生成恰好触发一次（摘要补提走 retryMessages，不经此处，不会重复）。
     // 这里只登记，不计数；llm.response 收到成功回复才 +1。
-    ctx.hooks.transform("prompt.system", function (p) {
-      try { if (isOn()) countOfflineRound(p.sessionId); } catch (e) { }
-      return p;
-    });
-
+ctx.hooks.transform("prompt.system", function (p) {
+  try {
+    if (!isOn()) return p;
+    countOfflineRound(p.sessionId);
+    if (p.sessionId && isSessionOffline(p.sessionId)) return p;  // 线下不注入
+    if ((p.hint || "").indexOf("【线下场景开关·插件授权】") >= 0) return p;  // 去重
+    p.hint = (p.hint || "") + hintText();
+  } catch (e) { }
+  return p;
+}, { priority: 90 });
     // ═════════ 解析 ═════════
     // 剥掉首尾的引号 / 括号类装饰符（含【】〔〕［］）。
     // 模型有时会自行把长段落包一层【】，这里统一剥掉；若这是用户设定的包裹符，
