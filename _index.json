@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-06T08:42:27.030Z",
+  "generatedAt": "2026-11-06T12:08:23.148Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -4961,11 +4961,11 @@
       "images": [
         "资源/应用/你抢谁蓝呢（王者模拟器）/IMG_7253.jpeg"
       ],
-      "description": "一个以「绑定小手机角色双排上分」为核心、带完整段位/商场/好友亲密度/抽卡养成、并能与聊天室角色双向开黑邀请的模拟器 APP",
+      "description": "更新了角色触发卡片邀请的规则\n 一个以「绑定小手机角色双排上分」为核心、带完整段位/商场/好友亲密度/抽卡养成、并能与聊天室角色双向开黑邀请的模拟器 APP",
       "author": "知雀",
       "avatar": "",
       "ownerHash": "73ef0d6ea1ea927035a640d2e4d558a7a8b959c8fa793f0d26b237c6f7c6fe48",
-      "updatedAt": "2026-11-05T22:49:40+09:00"
+      "updatedAt": "2026-11-06T21:04:46+09:00"
     },
     {
       "folder": "应用",
