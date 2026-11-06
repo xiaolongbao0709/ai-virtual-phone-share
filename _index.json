@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-06T18:45:20.017Z",
+  "generatedAt": "2026-11-06T18:58:18.461Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -57,7 +57,7 @@
     },
     {
       "name": "气泡美化",
-      "count": 8
+      "count": 9
     },
     {
       "name": "消息列表美化",
@@ -7278,6 +7278,24 @@
       "avatar": "",
       "ownerHash": "9f37e23318f452c263fceb61aacf58008faf41fb28eb4c51f812856d23237529",
       "updatedAt": "2026-08-19T02:10:45+08:00"
+    },
+    {
+      "folder": "气泡美化",
+      "name": "简约猫猫头装饰气泡",
+      "dirName": "简约猫猫头装饰气泡",
+      "type": "dir",
+      "path": "资源/气泡美化/简约猫猫头装饰气泡",
+      "files": [
+        "资源/气泡美化/简约猫猫头装饰气泡/猫头装饰气泡.txt"
+      ],
+      "images": [
+        "资源/气泡美化/简约猫猫头装饰气泡/Screenshot_2026_1107_025024.png"
+      ],
+      "description": "随意用，从QQ装扮找图让哈基米做的\n只有气泡，状态栏没有搭配改\n\n放全局即可，替换气泡相关代码或直接放末尾",
+      "author": "Mir",
+      "avatar": "",
+      "ownerHash": "7e23f17206cd464fcecdd0e4f95aaf3204080d2f5349ab00b54b3d9afc1df15a",
+      "updatedAt": "2026-11-07T03:56:39+09:00"
     },
     {
       "folder": "气泡美化",
