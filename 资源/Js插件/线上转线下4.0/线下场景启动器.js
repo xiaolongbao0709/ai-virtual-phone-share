@@ -1146,9 +1146,12 @@ ctx.hooks.transform("prompt.system", function (p) {
         ".opl-fxb{position:absolute;inset:-160px;animation:oplFxFloat 2.6s ease-out both;}",
         ".opl-fxw-reject .opl-fxb{animation-direction:reverse;}",
         "@media (prefers-reduced-motion:reduce){.opl-fxb,.opl-fxc,.opl-fxg{animation:none;}}",
-        // 粒子定位；线下 mini 模式：只保留一个点，隐藏爱心和文字
+        // 粒子定位；线下 mini 模式：保留一个爱心，从胶囊正中心垂直上飘
         ".opl-foot-heart{position:absolute;pointer-events:none;}",
-        ".opl-foot-wrap.opl-mini .opl-foot-heart-1{display:flex!important;justify-content:center!important;align-items:center!important;left:calc(50% - 2px)!important;top:calc(50% - 2px)!important;width:0!important;height:0!important;margin:0!important;font-size:12px!important;}",
+        "@keyframes oplMiniFloat{0%{opacity:0;transform:translate(-50%,-50%) translateY(0) scale(.5)}22%{opacity:.9}100%{opacity:0;transform:translate(-50%,-50%) translateY(-22px) scale(1.05)}}",
+        ".opl-foot-wrap.opl-mini .opl-foot-heart{display:none!important;}",
+        ".opl-foot-wrap.opl-mini .opl-foot-heart-1{display:flex!important;justify-content:center!important;align-items:center!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;width:12px!important;height:12px!important;margin:0!important;padding:0!important;font-size:12px!important;line-height:1!important;scale:1!important;animation:oplMiniFloat 2.6s ease-out infinite!important;}",
+        "@media (prefers-reduced-motion:reduce){.opl-foot-wrap.opl-mini .opl-foot-heart-1{animation:none!important;opacity:0!important;}}",
         ".opl-foot-wrap.opl-mini::before,.opl-foot-wrap.opl-mini::after{display:none!important;}",
         ".opl-foot-wrap.opl-mini .opl-foot{gap:0;justify-content:center;align-items:center;vertical-align:middle;line-height:0;}",
         ".opl-foot-wrap.opl-mini .opl-foot>span:not(.opl-dot){display:none;}",
