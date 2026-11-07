@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-07T15:38:57.937Z",
+  "generatedAt": "2026-11-07T16:06:59.636Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -25,7 +25,7 @@
     },
     {
       "name": "全局主题",
-      "count": 26
+      "count": 27
     },
     {
       "name": "剧情预设及正则",
@@ -3160,6 +3160,24 @@
       "avatar": "",
       "ownerHash": "8d841e19c41140482ccc32d988879fa99853479b73edd4d85b2f69d784fba791",
       "updatedAt": "2026-09-17T17:25:27+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "粉色韩系",
+      "dirName": "粉色韩系",
+      "type": "dir",
+      "path": "资源/全局主题/粉色韩系",
+      "files": [],
+      "images": [
+        "资源/全局主题/粉色韩系/Screenshot_20261108_000332_com.microsoft.emmx.jpg",
+        "资源/全局主题/粉色韩系/Screenshot_20261108_000339_com.microsoft.emmx.jpg",
+        "资源/全局主题/粉色韩系/Screenshot_20261108_000344_com.microsoft.emmx.jpg"
+      ],
+      "description": "",
+      "author": "uu",
+      "avatar": "",
+      "ownerHash": "5bfb68ebffc3a8aca3cf19d38c5c5aa17880b22f427d0c63903ecba041f9c215",
+      "updatedAt": "2026-11-08T01:04:35+09:00"
     },
     {
       "folder": "全局主题",
