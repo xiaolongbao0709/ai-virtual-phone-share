@@ -1,27 +1,23 @@
 /**
- * 苹果实况动图与短视频 (Live Photo & Video) v2.4.0
+ * 苹果实况动图与短视频 (Live Photo & Video) v2.5.0
+ * 基于 v2.4.0 原版架构修改
  * 规范：apiVersion 1 (ES Module)
- * 更新：
- * 1. 抽帧上限大幅扩展，支持最高 60 帧细致拆解；
- * 2. 角标动态切换：>10帧时仅显示视频暂停键标志，≤10帧保持 LIVE；
- * 3. 修复相册记录过多时卡片被 Flex 弹性挤扁的问题，改为顺畅滚动查看；
- * 4. 聊天卡片在后台删除后自动转换为优雅的提示态，全量文案统一为 Live/Video。
  */
 
 const plugin = {
   manifest: {
     id: "live-photo-sender-v2",
-    name: "Live Photo & Video Sending ",
+    name: "Live Photo & Video Sending",
     apiVersion: 1,
-    version: "2.4.0",
+    version: "2.5.0",
     author: "可丽饼＆Gemini",
-    description: "向角色发送苹果 Live Photo 或视频，支持最高 60 帧动作切片供AI视觉识别；相册历史支持多选批量管理与顺畅滚动查看。",
+    description: "向角色发送苹果 Live Photo 或视频，支持最高 60 帧动作切片供AI视觉识别；悬浮球快捷发送，点击卡片全屏放大，相册支持折叠与滑动多选管理。",
     permissions: ["chat.read", "chat.write", "ai", "storage", "ui"],
     settings: [
       { key: "autoPlay", label: "聊天卡片自动循环播放", type: "boolean", default: true },
       {
         key: "frameCount",
-        label: "默认动作抓取帧数",
+        label: "默认动作抓取帧数（视频将自动按 1秒=1帧 识别）",
         type: "select",
         default: "8",
         options: [
@@ -47,6 +43,28 @@ const plugin = {
   setup: function (ctx) {
     let currentSessionId = null;
     const HISTORY_KEY = "live_photo_history_v1";
+    const POS_KEY = "live_photo_float_pos_v1";
+    const FLOAT_BALL_ID = "lp-floating-ball-v25";
+
+    // 苹果蓝实况同心圆图标 (#007aff)
+    const LIVE_BLUE_SVG = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#007aff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+      <circle cx="12" cy="12" r="3" fill="#007aff" stroke="none"></circle>
+      <circle cx="12" cy="12" r="7" stroke-dasharray="2 3"></circle>
+      <circle cx="12" cy="12" r="10" stroke-width="1.5"></circle>
+    </svg>`;
+
+    // 悬浮球大号苹果蓝实况图标 (#007aff)
+    const FLOAT_BALL_SVG = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3.5" fill="#007aff" stroke="none"></circle>
+      <circle cx="12" cy="12" r="7.5" stroke-dasharray="2.2 3.2"></circle>
+      <circle cx="12" cy="12" r="10.5" stroke-width="1.6"></circle>
+    </svg>`;
+
+    // 苹果蓝暂停图标 (#007aff) - 用于 >10帧
+    const PAUSE_BLUE_SVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="#007aff" style="flex-shrink:0;">
+      <rect x="6" y="4" width="4" height="16" rx="1.2"></rect>
+      <rect x="14" y="4" width="4" height="16" rx="1.2"></rect>
+    </svg>`;
 
     // ── 0. 注入全局样式 ───────────────────────────────────────
     const removeCSS = ctx.ui.injectCSS(`
@@ -56,27 +74,21 @@ const plugin = {
         top: 8px;
         left: 8px;
         z-index: 2;
-        background: rgba(0, 0, 0, 0.65);
+        background: rgba(0, 0, 0, 0.58);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         padding: 3px 8px;
         border-radius: 999px;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
         color: #ffffff;
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        justify-content: center;
+        gap: 4px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         pointer-events: none;
-      }
-      .lp-badge-live-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #38bdf8;
-        box-shadow: 0 0 6px #38bdf8;
       }
       /* 聊天气泡实况卡片点击放大效果 */
       .lp-chat-card-media {
@@ -91,6 +103,9 @@ const plugin = {
       }
       .lp-chat-card-media:hover {
         opacity: 0.95;
+      }
+      .lp-chat-card-media:active {
+        transform: scale(0.98);
       }
       /* 已删除提示气泡容器样式 */
       .lp-chat-deleted-card {
@@ -119,8 +134,8 @@ const plugin = {
         flex-shrink: 0;
       }
       .lp-manage-card.selected {
-        border-color: #38bdf8;
-        box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+        border-color: #007aff;
+        box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.35);
       }
       .lp-manage-card .lp-check-mark {
         position: absolute;
@@ -140,8 +155,8 @@ const plugin = {
         pointer-events: none;
       }
       .lp-manage-card.selected .lp-check-mark {
-        background: #0284c7;
-        border-color: #38bdf8;
+        background: #007aff;
+        border-color: #007aff;
       }
       /* 相册专属平滑滚动条 */
       .lp-scroll-container::-webkit-scrollbar {
@@ -158,12 +173,127 @@ const plugin = {
       .lp-scroll-container::-webkit-scrollbar-thumb:hover {
         background: rgba(255, 255, 255, 0.35);
       }
+
+      /* 可拖拽贴边半隐藏悬浮球 */
+      #${FLOAT_BALL_ID} {
+        position: fixed;
+        z-index: 9990;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(24, 26, 32, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1.5px solid rgba(0, 122, 255, 0.5);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease, left 0.25s ease, right 0.25s ease;
+      }
+      #${FLOAT_BALL_ID}:active {
+        cursor: grabbing;
+        transform: scale(0.94) !important;
+      }
+      #${FLOAT_BALL_ID}.dock-left {
+        transform: translateX(-52%);
+        opacity: 0.68;
+      }
+      #${FLOAT_BALL_ID}.dock-right {
+        transform: translateX(52%);
+        opacity: 0.68;
+      }
+      #${FLOAT_BALL_ID}.dock-left:hover,
+      #${FLOAT_BALL_ID}.dock-right:hover,
+      #${FLOAT_BALL_ID}.dragging {
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+      }
+
+      /* 下移后的通知弹窗（距顶部 140px） */
+      .lp-down-toast {
+        position: fixed;
+        top: 140px !important;
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px);
+        z-index: 20010;
+        background: rgba(24, 26, 32, 0.94);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: #fff;
+        padding: 9px 20px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 500;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .lp-down-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
     `);
+
+    // 自定义下移通知弹窗（距顶部 140px）
+    function showDownToast(text = "已发送", durationMs = 1800) {
+      try {
+        const old = document.querySelector(".lp-down-toast");
+        if (old) old.remove();
+
+        const el = document.createElement("div");
+        el.className = "lp-down-toast";
+        el.innerHTML = `${LIVE_BLUE_SVG}<span>${escapeHtml(text)}</span>`;
+        document.body.appendChild(el);
+
+        requestAnimationFrame(() => el.classList.add("show"));
+        setTimeout(() => {
+          el.classList.remove("show");
+          setTimeout(() => el.remove(), 220);
+        }, durationMs);
+      } catch (e) {
+        ctx.ui.toast(text);
+      }
+    }
 
     // ── 1. 跟踪当前所在会话 ────────────────────────────────────
     const offSessionOpened = ctx.hooks.on("session.opened", ({ sessionId }) => {
-      currentSessionId = sessionId;
+      if (sessionId) currentSessionId = sessionId;
     });
+
+    // 辅助通过 chat.header 槽位实时同步当前 sessionId
+    const offHeaderSlot = ctx.ui.slot("chat.header", (el, props) => {
+      if (props && props.sessionId) {
+        currentSessionId = props.sessionId;
+      }
+      el.style.display = "none";
+    });
+
+    async function getActiveSessionId() {
+      if (currentSessionId) return currentSessionId;
+      const match = window.location.hash.match(/session[=/]([a-zA-Z0-9_-]+)/);
+      if (match) {
+        currentSessionId = match[1];
+        return currentSessionId;
+      }
+      try {
+        const list = await ctx.data.sessions.list();
+        if (Array.isArray(list) && list.length > 0) {
+          currentSessionId = list[0].id;
+          return currentSessionId;
+        }
+      } catch (e) {}
+      return null;
+    }
 
     // 辅助生成「已删除」状态的 HTML 结构
     function renderDeletedHTML() {
@@ -178,22 +308,19 @@ const plugin = {
       `;
     }
 
-    // 动态生成角标（超10帧显示视频暂停键，否则显示LIVE）
+    // 动态生成角标（>10帧仅显示蓝色暂停键图标，≤10帧显示蓝色实况图标 + 小写 live）
     function renderBadge(frameCount, extraStyle = "") {
       const count = Number(frameCount) || 1;
       if (count > 10) {
         return `
-          <div class="lp-badge-live" style="${extraStyle}">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16"></rect>
-              <rect x="14" y="4" width="4" height="16"></rect>
-            </svg>
+          <div class="lp-badge-live" style="padding:4px 7px;${extraStyle}">
+            ${PAUSE_BLUE_SVG}
           </div>
         `;
       }
       return `
         <div class="lp-badge-live" style="${extraStyle}">
-          <span class="lp-badge-live-dot"></span>LIVE
+          ${LIVE_BLUE_SVG}<span style="text-transform:lowercase;">live</span>
         </div>
       `;
     }
@@ -238,7 +365,6 @@ const plugin = {
     function openLightbox(data) {
       const videoSrc = data.videoSrc || "";
       const imgSrc = data.imgSrc || (data.frames && data.frames[0]) || "";
-      const text = data.text || "";
       const fCount = data.frames ? data.frames.length : 1;
 
       ctx.ui.openModal((modalEl, { close }) => {
@@ -263,21 +389,14 @@ const plugin = {
           <div style="position:absolute;top:12px;right:12px;z-index:10;">
             <button id="lpLightboxClose" style="width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;">✕</button>
           </div>
-          <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;max-height:75vh;overflow:hidden;">
+          <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;max-height:82vh;overflow:hidden;">
             ${renderBadge(fCount, "top:12px;left:12px;")}
             ${
               videoSrc
-                ? `<video src="${videoSrc}" autoplay loop playsinline webkit-playsinline style="width:100%;max-height:75vh;object-fit:contain;display:block;"></video>`
-                : `<img src="${imgSrc}" style="width:100%;max-height:75vh;object-fit:contain;display:block;" />`
+                ? `<video src="${videoSrc}" controls autoplay loop playsinline webkit-playsinline style="width:100%;max-height:82vh;object-fit:contain;display:block;"></video>`
+                : `<img src="${imgSrc}" style="width:100%;max-height:82vh;object-fit:contain;display:block;" />`
             }
           </div>
-          ${
-            text
-              ? `<div style="padding:14px 18px;font-size:14px;color:#f3f4f6;line-height:1.5;background:#14171d;border-top:1px solid rgba(255,255,255,0.06);word-break:break-word;">
-                   <span style="color:#38bdf8;font-weight:600;margin-right:6px;">附言：</span>${escapeHtml(text)}
-                 </div>`
-              : ""
-          }
         `;
 
         const closeBtn = modalEl.querySelector("#lpLightboxClose");
@@ -299,7 +418,7 @@ const plugin = {
         el.setAttribute("data-lp-msg-id", msgId);
       }
 
-      // 兼容旧版的已被删除文本
+      // 兼容已被删除状态
       if (data.deleted || msg.content === "[该 Live/Video 已被删除]" || msg.content === "[该实况已被删除]") {
         el.style.display = "block";
         el.innerHTML = renderDeletedHTML();
@@ -308,22 +427,21 @@ const plugin = {
 
       const videoSrc = data.videoSrc || "";
       const imgSrc = data.imgSrc || (data.frames && data.frames[0]) || "";
-      const text = data.text || "";
       const fCount = data.frames ? data.frames.length : 1;
       const autoPlay = ctx.system.settings.get("autoPlay") !== false;
 
+      // 纯净画面卡片：无底部文字遮罩，点击直接放大查看
       el.style.display = "block";
       el.innerHTML = `
-        <div class="lp-chat-live-root" style="max-width:260px;border-radius:14px;overflow:hidden;background:#181a20;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.25);font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
-          <div class="lp-chat-card-media" title="点击放大查看 Live/Video">
+        <div class="lp-chat-live-root" style="max-width:230px;border-radius:14px;overflow:hidden;background:#181a20;border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 12px rgba(0,0,0,0.25);font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+          <div class="lp-chat-card-media" title="点击放大查看">
             ${renderBadge(fCount)}
             ${
               videoSrc
-                ? `<video src="${videoSrc}" ${autoPlay ? "autoplay" : ""} loop muted playsinline webkit-playsinline style="width:100%;max-height:240px;object-fit:cover;display:block;pointer-events:none;"></video>`
-                : `<img src="${imgSrc}" style="width:100%;max-height:240px;object-fit:cover;display:block;pointer-events:none;" />`
+                ? `<video src="${videoSrc}" ${autoPlay ? "autoplay" : ""} loop muted playsinline webkit-playsinline style="width:100%;max-height:260px;object-fit:cover;display:block;pointer-events:none;"></video>`
+                : `<img src="${imgSrc}" style="width:100%;max-height:260px;object-fit:cover;display:block;pointer-events:none;" />`
             }
           </div>
-          ${text ? `<div style="padding:10px 12px;font-size:14px;color:#f3f4f6;line-height:1.4;word-break:break-word;">${escapeHtml(text)}</div>` : ""}
         </div>
       `;
 
@@ -336,44 +454,109 @@ const plugin = {
       }
     });
 
-    // ── 3. 聊天输入栏扩展面板按钮 ──────────────────────────────
-    const offInputSlot = ctx.ui.slot("chat.inputToolbar", (el, props) => {
-      el.innerHTML = "";
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.style.cssText = `
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        border-radius: 18px;
-        background: rgba(56, 189, 248, 0.12);
-        color: #38bdf8;
-        border: 1px solid rgba(56, 189, 248, 0.25);
-        font-size: 13px;
-        font-weight: 500;
-        cursor: pointer;
-        margin: 4px 6px 4px 0;
-      `;
-      btn.innerHTML = `
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-        </svg>
-        <span>发 Live/Video</span>
-      `;
+    // ── 3. 可拖拽贴边半隐藏悬浮球（唯一发送入口） ──────────────
+    function mountFloatingBall() {
+      const old = document.getElementById(FLOAT_BALL_ID);
+      if (old) old.remove();
 
-      btn.onclick = () => {
-        let sid = props?.sessionId || currentSessionId;
-        if (!sid) {
-          const match = window.location.hash.match(/session[=/]([a-zA-Z0-9_-]+)/);
-          if (match) sid = match[1];
+      let pos = { top: 220, side: "right" };
+      try {
+        const saved = ctx.system.storage.get(POS_KEY);
+        if (saved && typeof saved.top === "number") pos = saved;
+      } catch (e) {}
+
+      const ball = document.createElement("div");
+      ball.id = FLOAT_BALL_ID;
+      ball.title = "发送 Live / Video";
+      ball.innerHTML = FLOAT_BALL_SVG;
+
+      const applyPos = () => {
+        const maxTop = Math.max(60, window.innerHeight - 64);
+        const clampedTop = Math.min(maxTop, Math.max(52, pos.top));
+        ball.style.top = `${clampedTop}px`;
+        if (pos.side === "left") {
+          ball.style.left = "0px";
+          ball.style.right = "auto";
+          ball.classList.add("dock-left");
+          ball.classList.remove("dock-right");
+        } else {
+          ball.style.right = "0px";
+          ball.style.left = "auto";
+          ball.classList.add("dock-right");
+          ball.classList.remove("dock-left");
         }
-        openSendModal(sid);
       };
 
-      el.appendChild(btn);
-      return () => btn.remove();
-    });
+      applyPos();
+      document.body.appendChild(ball);
+
+      let isDragging = false;
+      let hasMoved = false;
+      let startX = 0;
+      let startY = 0;
+      let initRect = null;
+
+      const onPointerDown = (e) => {
+        isDragging = true;
+        hasMoved = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        initRect = ball.getBoundingClientRect();
+        ball.classList.add("dragging");
+        ball.classList.remove("dock-left", "dock-right");
+        if (ball.setPointerCapture && e.pointerId !== undefined) {
+          try { ball.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+
+      const onPointerMove = (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) hasMoved = true;
+        if (!hasMoved) return;
+
+        const nextLeft = Math.min(window.innerWidth - 44, Math.max(0, initRect.left + dx));
+        const nextTop = Math.min(window.innerHeight - 54, Math.max(44, initRect.top + dy));
+        ball.style.left = `${nextLeft}px`;
+        ball.style.top = `${nextTop}px`;
+        ball.style.right = "auto";
+      };
+
+      const onPointerUp = async (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        ball.classList.remove("dragging");
+        if (ball.releasePointerCapture && e.pointerId !== undefined) {
+          try { ball.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+
+        if (!hasMoved) {
+          applyPos();
+          const sid = await getActiveSessionId();
+          openSendModal(sid);
+          return;
+        }
+
+        const rect = ball.getBoundingClientRect();
+        pos.side = rect.left + rect.width / 2 < window.innerWidth / 2 ? "left" : "right";
+        pos.top = rect.top;
+        applyPos();
+        try { ctx.system.storage.set(POS_KEY, pos); } catch (_) {}
+      };
+
+      ball.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+
+      return () => {
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerup", onPointerUp);
+        ball.remove();
+      };
+    }
+
+    const unmountBall = mountFloatingBall();
 
     // ── 4. 拦截 LLM 请求：打字发出时注入动作切片（静默不抢答） ──
     const offTransform = ctx.hooks.transform("llm.request", async (payload) => {
@@ -388,7 +571,7 @@ const plugin = {
           {
             type: "text",
             text: `【用户向你发送了一段 Live Photo 或短视频】\n` +
-                  (pendingLive.text ? `用户随图附言：“${pendingLive.text}”\n` : "") +
+                  (pendingLive.text ? `画面描述/附言：“${pendingLive.text}”\n` : "") +
                   `下方是你看到的这组影像中按先后顺序提取的 ${frameCount} 张关键动作截片画面。请观察连续画面中人物的动作转变、神态与现场细节，自然地做出真实回应：`
           }
         ];
@@ -414,10 +597,10 @@ const plugin = {
       return payload;
     }, { priority: 90, timeoutMs: 40000 });
 
-    // ── 5. 发送实况弹窗 ───────────────────────────────────────
+    // ── 5. 发送实况弹窗（直接 push 上屏并立即刷新） ──────────────
     function openSendModal(sessionId) {
       if (!sessionId) {
-        ctx.ui.toast("未检测到当前聊天室，请先进入一个角色的对话界面");
+        showDownToast("请先进入一个聊天窗口");
         return;
       }
 
@@ -427,8 +610,6 @@ const plugin = {
         let mediaDataUrl = "";
         let isVideo = false;
         let currentFile = null;
-
-        const optionsArr = [4, 6, 8, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
 
         modalEl.style.cssText = `
           width: min(92vw, 420px);
@@ -446,14 +627,16 @@ const plugin = {
 
         modalEl.innerHTML = `
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-            <div style="font-size:16px;font-weight:700;color:#fff;">发送 Live/Video</div>
+            <div style="font-size:16px;font-weight:700;color:#fff;display:inline-flex;align-items:center;gap:6px;">
+              ${LIVE_BLUE_SVG}<span>发送 Live / Video</span>
+            </div>
             <button id="lpCloseBtn" style="background:none;border:none;color:#9ca3af;font-size:18px;cursor:pointer;padding:4px 8px;">✕</button>
           </div>
 
-          <div id="lpUploadArea" style="border:2px dashed rgba(56,189,248,0.35);border-radius:14px;padding:24px 12px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.02);">
+          <div id="lpUploadArea" style="border:2px dashed rgba(0,122,255,0.45);border-radius:14px;padding:24px 12px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.02);">
             <input type="file" id="lpFileInput" accept="image/*,video/*" style="display:none;" />
-            <div style="color:#38bdf8;font-size:14px;font-weight:600;">点击选取 Live/Video</div>
-            <div style="font-size:11px;color:#9ca3af;margin-top:4px;">支持 .mov / .mp4 / 动图，自动拆解动作帧</div>
+            <div style="color:#007aff;font-size:14px;font-weight:600;">点击选取 Live / Video</div>
+            <div style="font-size:11px;color:#9ca3af;margin-top:4px;">支持 .mov / .mp4 / 动图，自动按 1秒=1帧 拆解动作帧</div>
           </div>
 
           <div id="lpPreviewArea" style="display:none;margin-top:12px;">
@@ -463,24 +646,22 @@ const plugin = {
               <div id="lpPreviewBadgeContainer">${renderBadge(selectedFrameCount)}</div>
             </div>
 
-            <!-- 帧数下拉选择器 -->
+            <!-- 帧数手动修改输入框（1~60帧） -->
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:12px;color:#9ca3af;">
-              <span>拆解关键帧数量：</span>
-              <select id="lpFrameSelect" style="background:#111;color:#fff;border:1px solid #333;border-radius:6px;padding:2px 6px;font-size:12px;outline:none;cursor:pointer;">
-                ${optionsArr.map(n => `<option value="${n}">${n} 帧</option>`).join("")}
-              </select>
+              <span>拆解帧数（≤10帧显示 live，>10帧显示暂停标）：</span>
+              <input type="number" id="lpFrameInput" min="1" max="60" value="${selectedFrameCount}" style="width:68px;background:#111;color:#fff;border:1px solid #333;border-radius:6px;padding:4px 8px;font-size:12px;outline:none;text-align:center;" />
             </div>
 
             <div id="lpFrameList" style="display:grid;grid-template-columns:repeat(5, 1fr);gap:4px;margin-top:8px;max-height:110px;overflow-y:auto;padding-right:4px;"></div>
           </div>
 
           <div style="margin-top:12px;">
-            <textarea id="lpCaption" placeholder="附带一句话对TA说（选填）..." style="width:100%;height:56px;background:#111317;border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;padding:8px;font-size:13px;resize:none;box-sizing:border-box;outline:none;"></textarea>
+            <textarea id="lpCaption" placeholder="画面描述或附言（供AI识别理解，不在气泡表面露出）..." style="width:100%;height:56px;background:#111317;border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;padding:8px;font-size:13px;resize:none;box-sizing:border-box;outline:none;"></textarea>
           </div>
 
           <div style="margin-top:14px;display:flex;gap:10px;">
             <button id="lpCancelBtn" style="flex:1;height:38px;border-radius:19px;border:1px solid rgba(255,255,255,0.1);background:#22252d;color:#9ca3af;font-size:14px;cursor:pointer;">取消</button>
-            <button id="lpSubmitBtn" disabled style="flex:2;height:38px;border-radius:19px;border:none;background:linear-gradient(135deg, #0284c7, #38bdf8);color:#fff;font-size:14px;font-weight:600;cursor:pointer;opacity:0.5;">放入聊天</button>
+            <button id="lpSubmitBtn" disabled style="flex:2;height:38px;border-radius:19px;border:none;background:#007aff;color:#fff;font-size:14px;font-weight:600;cursor:pointer;opacity:0.5;">发送</button>
           </div>
         `;
 
@@ -498,18 +679,21 @@ const plugin = {
         const frameList = modalEl.querySelector("#lpFrameList");
         const submitBtn = modalEl.querySelector("#lpSubmitBtn");
         const captionInput = modalEl.querySelector("#lpCaption");
-        const frameSelect = modalEl.querySelector("#lpFrameSelect");
+        const frameInput = modalEl.querySelector("#lpFrameInput");
 
         uploadArea.onclick = () => fileInput.click();
 
         async function runExtract(count) {
-          const t = ctx.ui.toast(`正在生成 ${count} 个关键动作帧，请稍候...`, { durationMs: 0 });
+          const validCount = Math.min(60, Math.max(1, parseInt(count, 10) || 1));
+          selectedFrameCount = validCount;
+          frameInput.value = String(validCount);
+
           try {
             frameList.innerHTML = "";
-            badgeContainer.innerHTML = renderBadge(count);
+            badgeContainer.innerHTML = renderBadge(validCount);
 
             if (isVideo) {
-              extractedFrames = await extractFramesFromVideo(videoPreview, count);
+              extractedFrames = await extractFramesFromVideo(videoPreview, validCount);
             } else {
               const compressed = await compressImg(imgPreview);
               extractedFrames = [compressed];
@@ -524,17 +708,17 @@ const plugin = {
               `;
               frameList.appendChild(fEl);
             });
-          } finally {
-            t.close();
+          } catch (err) {
+            console.warn("[LivePhoto] extract error:", err);
           }
         }
 
-        // 初始化下拉框值
-        frameSelect.value = selectedFrameCount.toString();
-        if (!frameSelect.value) frameSelect.value = "8";
-
-        frameSelect.onchange = async (e) => {
-          selectedFrameCount = parseInt(e.target.value, 10);
+        frameInput.onchange = async (e) => {
+          let val = parseInt(e.target.value, 10);
+          if (!Number.isFinite(val) || val < 1) val = 1;
+          if (val > 60) val = 60;
+          e.target.value = String(val);
+          selectedFrameCount = val;
           if (currentFile) {
             await runExtract(selectedFrameCount);
           }
@@ -546,7 +730,6 @@ const plugin = {
           currentFile = file;
 
           isVideo = file.type.startsWith("video/") || file.name.toLowerCase().endsWith(".mov");
-          const t = ctx.ui.toast("正在读取媒体并抽帧...", { durationMs: 0 });
 
           try {
             mediaDataUrl = await readFileDataUrl(file);
@@ -555,11 +738,27 @@ const plugin = {
               imgPreview.style.display = "none";
               videoPreview.style.display = "block";
               videoPreview.src = mediaDataUrl;
+
+              await new Promise((res) => {
+                const timer = setTimeout(res, 2000);
+                videoPreview.onloadedmetadata = () => {
+                  clearTimeout(timer);
+                  res();
+                };
+              });
+
+              // 按 1秒=1帧 自动计算帧数（上限 60 帧）
+              const dur = Math.max(1, Math.round(videoPreview.duration || selectedFrameCount));
+              selectedFrameCount = Math.min(60, dur);
+              frameInput.value = String(selectedFrameCount);
+
               await videoPreview.play().catch(() => {});
             } else {
               videoPreview.style.display = "none";
               imgPreview.style.display = "block";
               imgPreview.src = mediaDataUrl;
+              selectedFrameCount = 1;
+              frameInput.value = "1";
             }
 
             uploadArea.style.display = "none";
@@ -569,9 +768,7 @@ const plugin = {
 
             await runExtract(selectedFrameCount);
           } catch (err) {
-            ctx.ui.toast("读取 Live/Video 失败：" + (err.message || "解析错误"));
-          } finally {
-            t.close();
+            showDownToast("读取失败，请重试");
           }
         };
 
@@ -597,7 +794,7 @@ const plugin = {
             createdMsg = await ctx.data.messages.push({
               sessionId,
               role: "user",
-              content: `[Live/Video] ${caption}`,
+              content: caption ? `[Live/Video] ${caption}` : `[Live/Video]`,
               rawContent: JSON.stringify(metaPayload),
               mediaType: "plugin:livephoto",
               mediaData: metaPayload
@@ -607,6 +804,21 @@ const plugin = {
           }
 
           const msgId = createdMsg?.id || (typeof createdMsg === "string" ? createdMsg : null);
+
+          // 立即触发宿主重绘，无需退出聊天重进
+          try {
+            if (msgId && typeof ctx.data?.messages?.update === "function") {
+              await ctx.data.messages.update(msgId, {
+                mediaType: "plugin:livephoto",
+                mediaData: metaPayload
+              });
+            }
+          } catch (_) {}
+
+          try {
+            window.dispatchEvent(new CustomEvent("chat:message:updated", { detail: { messageId: msgId, sessionId } }));
+            window.dispatchEvent(new PopStateEvent("popstate", { state: window.history.state }));
+          } catch (_) {}
 
           const historyList = ctx.system.storage.get(HISTORY_KEY) || [];
           historyList.unshift({
@@ -623,14 +835,14 @@ const plugin = {
           if (historyList.length > 60) historyList.pop();
           ctx.system.storage.set(HISTORY_KEY, historyList);
 
-          ctx.ui.toast("已放入！在对话框敲字即可互动");
           close();
+          showDownToast("已发送");
         };
       });
     }
 
-    // ── 6. 相册弹窗（带防挤压与独立滚动查看） ─────────────
-    function openAlbumModal() {
+    // ── 6. 相册弹窗（带防挤压、纵向滑动、单选/多选/全选/反选/删除） ───
+    function openAlbumModal(onChanged) {
       ctx.ui.openModal((modalEl, { close }) => {
         let isSelecting = false;
         let selectedIds = new Set();
@@ -663,22 +875,24 @@ const plugin = {
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 8px;
           `;
 
           const titleBox = document.createElement("div");
           titleBox.innerHTML = `
             <div style="font-size:16px;font-weight:700;letter-spacing:0.3px;">Live/Video 相册</div>
-            <div style="font-size:11px;color:#9ca3af;margin-top:2px;">共 ${list.length} 条记录（删除后聊天框将提示已删除）</div>
+            <div style="font-size:11px;color:#9ca3af;margin-top:2px;">共 ${list.length} 条记录（上下滑动浏览，删除后聊天框将同步提示已删除）</div>
           `;
           topBar.appendChild(titleBox);
 
           const rightActions = document.createElement("div");
-          rightActions.style.cssText = "display:flex;align-items:center;gap:8px;";
+          rightActions.style.cssText = "display:flex;align-items:center;gap:6px;flex-wrap:wrap;";
 
           if (list.length > 0) {
             if (!isSelecting) {
               const selBtn = document.createElement("button");
-              selBtn.style.cssText = "padding:4px 10px;border-radius:6px;border:1px solid #38bdf8;background:rgba(56,189,248,0.1);color:#38bdf8;font-size:12px;font-weight:500;cursor:pointer;";
+              selBtn.style.cssText = "padding:4px 10px;border-radius:6px;border:1px solid #007aff;background:rgba(0,122,255,0.12);color:#007aff;font-size:12px;font-weight:500;cursor:pointer;";
               selBtn.textContent = "多选管理";
               selBtn.onclick = () => {
                 isSelecting = true;
@@ -698,6 +912,18 @@ const plugin = {
               };
               rightActions.appendChild(allBtn);
 
+              const invBtn = document.createElement("button");
+              invBtn.style.cssText = "padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#d1d5db;font-size:12px;cursor:pointer;";
+              invBtn.textContent = "反选";
+              invBtn.onclick = () => {
+                list.forEach((it) => {
+                  if (selectedIds.has(it.id)) selectedIds.delete(it.id);
+                  else selectedIds.add(it.id);
+                });
+                render();
+              };
+              rightActions.appendChild(invBtn);
+
               const delBtn = document.createElement("button");
               delBtn.style.cssText = "padding:4px 10px;border-radius:6px;border:none;background:#ef4444;color:#fff;font-size:12px;font-weight:600;cursor:pointer;";
               delBtn.textContent = `删除 (${selectedIds.size})`;
@@ -709,14 +935,15 @@ const plugin = {
                 if (window.confirm(`确认删除选中的 ${selectedIds.size} 条记录吗？聊天记录中将同步变为“已删除”提示。`)) {
                   const set = new Set(selectedIds);
                   const targets = list.filter((it) => set.has(it.id));
-                  
+
                   await deleteLinkedMessages(targets);
 
                   const remain = list.filter((it) => !set.has(it.id));
                   ctx.system.storage.set(HISTORY_KEY, remain);
                   selectedIds.clear();
                   isSelecting = false;
-                  ctx.ui.toast("已批量删除");
+                  if (typeof onChanged === "function") onChanged();
+                  showDownToast("已批量删除");
                   render();
                 }
               };
@@ -786,8 +1013,8 @@ const plugin = {
                   ${renderBadge(fCount, "top:4px;left:4px;padding:2px 5px;font-size:8px;")}
                 </div>
                 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
-                  <div style="font-size:11px;color:#9ca3af;">${timeStr} · ${fCount} 帧动作拆解</div>
-                  <div style="font-size:13px;color:#f3f4f6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(item.text || "(无附言)")}</div>
+                  <div style="font-size:11px;color:#9ca3af;">${timeStr} · ${fCount} 帧</div>
+                  <div style="font-size:13px;color:#f3f4f6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(item.text || "(无描述)")}</div>
                   <div style="display:flex;gap:8px;margin-top:4px;">
                     <button class="lp-card-del" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.1);color:#ef4444;font-size:11px;cursor:pointer;">删除</button>
                   </div>
@@ -820,7 +1047,8 @@ const plugin = {
                   await deleteLinkedMessages(item);
                   const remain = list.filter((it) => it.id !== item.id);
                   ctx.system.storage.set(HISTORY_KEY, remain);
-                  ctx.ui.toast("已删除");
+                  if (typeof onChanged === "function") onChanged();
+                  showDownToast("已删除");
                   render();
                 }
               };
@@ -836,35 +1064,43 @@ const plugin = {
       });
     }
 
-    // ── 7. 后台设置挂载「相册」入口 ─────────────────────────
+    // ── 7. 后台设置挂载「相册」折叠入口 ─────────────────────────
     const offSettingsSection = ctx.ui.slot("settings.section", (el) => {
-      el.innerHTML = "";
-      const container = document.createElement("div");
-      container.style.cssText = `
-        padding: 12px 16px 14px;
-        border-top: 1px solid color-mix(in srgb, var(--c-card-border, #e5e7eb) 20%, transparent);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      `;
+      const renderEntry = () => {
+        el.innerHTML = "";
+        const container = document.createElement("div");
+        container.style.cssText = `
+          padding: 12px 16px 14px;
+          border-top: 1px solid color-mix(in srgb, var(--c-card-border, #e5e7eb) 20%, transparent);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          cursor: pointer;
+        `;
 
-      const list = ctx.system.storage.get(HISTORY_KEY) || [];
-      container.innerHTML = `
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--c-text-title, #fff);">Live/Video 相册</div>
-          <div style="font-size:11px;opacity:0.6;margin-top:2px;">已存储 ${list.length} 条 Live/Video 记录，支持多选批量管理</div>
-        </div>
-        <button id="lpOpenAlbumBtn" class="ui-btn ui-btn-outline" style="padding:5px 14px;font-size:12px;font-weight:600;min-height:32px;">
-          打开相册
-        </button>
-      `;
+        const list = ctx.system.storage.get(HISTORY_KEY) || [];
+        container.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${LIVE_BLUE_SVG}
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--c-text-title, #fff);">相册</div>
+              <div style="font-size:11px;opacity:0.6;margin-top:2px;">已存储 ${list.length} 条记录，点击展开滑动管理</div>
+            </div>
+          </div>
+          <button id="lpOpenAlbumBtn" class="ui-btn ui-btn-outline" style="padding:5px 14px;font-size:12px;font-weight:600;min-height:32px;cursor:pointer;">
+            打开相册 ›
+          </button>
+        `;
 
-      container.querySelector("#lpOpenAlbumBtn").onclick = () => {
-        openAlbumModal();
+        container.onclick = () => {
+          openAlbumModal(() => renderEntry());
+        };
+
+        el.appendChild(container);
       };
 
-      el.appendChild(container);
-      return () => container.remove();
+      renderEntry();
+      return () => { el.innerHTML = ""; };
     });
 
     // ── 辅助工具函数 ──────────────────────────────────────────
@@ -892,7 +1128,7 @@ const plugin = {
       }
 
       const dur = video.duration || 1;
-      const count = Math.max(2, frameCount || 8);
+      const count = Math.max(1, frameCount || 8);
       const times = [];
       const step = dur / (count + 1);
 
@@ -961,8 +1197,9 @@ const plugin = {
     return () => {
       removeCSS();
       offSessionOpened();
+      offHeaderSlot();
       offKind();
-      offInputSlot();
+      unmountBall();
       offTransform();
       offSettingsSection();
     };
