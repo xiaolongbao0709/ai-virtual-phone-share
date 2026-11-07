@@ -811,7 +811,17 @@
 .chat-room-wrapper[data-threads-room] .chat-quote-message > .threads-bilingual.threads-quote-answer,
 :root.chat-room-wrapper[data-threads-room] .chat-quote-message > .threads-bilingual.threads-quote-answer {background:none; padding:0;}
 .chat-room-wrapper[data-threads-room] .chat-quote-message > .threads-bilingual > .chat-bilingual-section:first-child,
-:root.chat-room-wrapper[data-threads-room] .chat-quote-message > .threads-bilingual > .chat-bilingual-section:first-child {padding:7px 12px; border-radius:18px; background:var(--threads-message-bg,#f3f3f3);}
+:root.chat-room-wrapper[data-threads-room] .chat-quote-message > .threads-bilingual > .chat-bilingual-section:first-child {padding:7px 12px; border-radius:var(--threads-shape,18px); background:var(--threads-message-bg,#f3f3f3);}
+.chat-room-wrapper[data-threads-room] .threads-quote-source,
+:root.chat-room-wrapper[data-threads-room] .threads-quote-source {align-self:flex-start; align-items:flex-start; width:fit-content; max-width:100%; box-sizing:border-box;}
+.chat-room-wrapper[data-threads-room] .chat-bubble-role-user .threads-quote-source,
+:root.chat-room-wrapper[data-threads-room] .chat-bubble-role-user .threads-quote-source {align-self:flex-end;}
+.chat-room-wrapper[data-threads-room] .threads-quote-reference,
+:root.chat-room-wrapper[data-threads-room] .threads-quote-reference {width:fit-content; min-width:0; max-width:100%; box-sizing:border-box;}
+.chat-room-wrapper[data-threads-room] .threads-quote-text,
+:root.chat-room-wrapper[data-threads-room] .threads-quote-text {width:fit-content; min-width:0; max-width:100%; box-sizing:border-box;}
+.chat-room-wrapper[data-threads-room] .voice-msg-bubble,
+:root.chat-room-wrapper[data-threads-room] .voice-msg-bubble {border-radius:var(--threads-shape,22px);}
 .chat-room-wrapper[data-threads-room] .threads-input .chat-plus-menu[data-threads-level="more"],
 :root.chat-room-wrapper[data-threads-room] .threads-input .chat-plus-menu[data-threads-level="more"] {position:static; grid-column:1 / -1; grid-row:3; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px 7px; width:auto; max-width:none; max-height:42dvh; padding:10px; border:0; border-radius:16px; background:#f6f6f6; box-shadow:none;}
 .chat-room-wrapper[data-threads-room] .threads-input .chat-plus-menu[data-threads-level="more"] .chat-plus-menu-item,
