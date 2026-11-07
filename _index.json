@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-07T01:47:44.817Z",
+  "generatedAt": "2026-11-07T01:54:43.119Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -516,6 +516,7 @@
       "type": "dir",
       "path": "资源/Js插件/发送实况动图和短视频给char",
       "files": [
+        "资源/Js插件/发送实况动图和短视频给char/2.0 Live Photo & Video Sending .js",
         "资源/Js插件/发送实况动图和短视频给char/Live Photo & Video Sending .js",
         "资源/Js插件/发送实况动图和短视频给char/实况动图10.0.js"
       ],
@@ -524,7 +525,7 @@
       "author": "可丽饼",
       "avatar": "资源/Js插件/发送实况动图和短视频给char/.avatar.png",
       "ownerHash": "9513e264a6366c34aac41042a44b4bf38aed76d4e7d2d64e098b3531e29e03c9",
-      "updatedAt": "2026-11-07T10:46:04+09:00"
+      "updatedAt": "2026-11-07T10:52:27+09:00"
     },
     {
       "folder": "Js插件",
