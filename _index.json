@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-07T06:10:35.125Z",
+  "generatedAt": "2026-11-07T06:19:12.116Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "消息列表美化",
-      "count": 10
+      "count": 11
     },
     {
       "name": "游戏",
@@ -7410,6 +7410,26 @@
       "avatar": "资源/消息列表美化/仿LINE主页/.avatar.png",
       "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
       "updatedAt": "2026-08-17T23:39:27+08:00"
+    },
+    {
+      "folder": "消息列表美化",
+      "name": "仿Threads列表美化",
+      "dirName": "仿Threads列表美化",
+      "type": "dir",
+      "path": "资源/消息列表美化/仿Threads列表美化",
+      "files": [
+        "资源/消息列表美化/仿Threads列表美化/threads-chat-pages.css",
+        "资源/消息列表美化/仿Threads列表美化/threads-chat-pages.js"
+      ],
+      "images": [
+        "资源/消息列表美化/仿Threads列表美化/retouch_2026110705595185.jpg",
+        "资源/消息列表美化/仿Threads列表美化/retouch_2026110706001714.jpg"
+      ],
+      "description": "[雪花][粗]禁止二传 自用二改随意[/粗]\n[粗]\n[/粗]\n*对四个页面都进行了一些修改，左上角的英文代替原有返回键，点击即可返回。底部导航栏改成了有滑块动效的类悬浮窗胶囊导航。\n*大概样式可见图，朋友圈和个人主页的文字点击即可编辑。\n[粗]\n[/粗]\n注意事项：需搭配JS插件食用，CSS文件导入到消息列表的美化中（千万不要导入到聊天室），线上美化中有同款聊天室美化",
+      "author": "Glück",
+      "avatar": "资源/消息列表美化/仿Threads列表美化/.avatar.png",
+      "ownerHash": "25fd32b42ec207c34a53156ae23c7c270064dcdcb47a2eb0c6d31281d2f8c9a1",
+      "updatedAt": "2026-11-07T15:16:49+09:00"
     },
     {
       "folder": "消息列表美化",
