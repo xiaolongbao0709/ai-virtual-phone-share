@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-07T03:50:14.412Z",
+  "generatedAt": "2026-11-07T06:10:35.125Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "线上美化",
-      "count": 57
+      "count": 58
     },
     {
       "name": "线上聊天状态栏",
@@ -8235,6 +8235,26 @@
       "avatar": "资源/线上美化/一起听四色/.avatar.png",
       "ownerHash": "c76d001b2c70156ba8e7cd67192a641e1dc8a44e4c1472151374999d68b5c934",
       "updatedAt": "2026-10-03T14:38:39+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "仿Threads美化",
+      "dirName": "仿Threads美化",
+      "type": "dir",
+      "path": "资源/线上美化/仿Threads美化",
+      "files": [
+        "资源/线上美化/仿Threads美化/threads-chat-room.css",
+        "资源/线上美化/仿Threads美化/threads-chat-room.js"
+      ],
+      "images": [
+        "资源/线上美化/仿Threads美化/retouch_2026110705584325.jpg",
+        "资源/线上美化/仿Threads美化/retouch_2026110705585894.jpg"
+      ],
+      "description": "[粗][雪花]禁止二传 自用二改请随意[/粗]\n[粗]\n[/粗]\n*详细样式可见下图，新加上的好友会显示大头像+名字。\n*表情包排列也进行了一些修改，还有弹窗以及长按消息所出现的编辑框。\n*备注名和备注名下方的简介可在css里自行修改。\n\n\n注意事项：需搭配[绿]JS插件[/绿]一起食用，CSS文件导入单人聊天室内!!",
+      "author": "Glück",
+      "avatar": "资源/线上美化/仿Threads美化/.avatar.png",
+      "ownerHash": "25fd32b42ec207c34a53156ae23c7c270064dcdcb47a2eb0c6d31281d2f8c9a1",
+      "updatedAt": "2026-11-07T15:08:51+09:00"
     },
     {
       "folder": "线上美化",
