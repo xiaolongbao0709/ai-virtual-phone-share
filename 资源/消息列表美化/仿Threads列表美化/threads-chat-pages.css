@@ -1,0 +1,413 @@
+/* Threads 聊天列表与朋友圈 CSS。用于聊天 App 的外观 CSS。
+   包含 Messages、导航、联系人、个人页和白色帖子流，不包含聊天室样式。
+   要同时美化聊天室，请另外粘贴 threads-chat-room.css。
+   个人页签名和 Moments 卡片小句子支持直接点击编辑，保存在列表插件设置中。
+   朋友圈资料卡装饰文字：修改 --threads-moments-caption 的引号内文字。 */
+.chat-app[data-threads-pages] .threads-messages-page,
+.chat-app[data-threads-pages] .threads-contacts-page,
+.chat-app[data-threads-pages] .threads-moments-page,
+.chat-app[data-threads-pages] .threads-profile-page,
+.chat-app[data-threads-pages] > .chat-tab-bar {
+ --threads-moments-caption:"a little space for everyday life";
+ --c-header-bg:#fff; --c-page-body-bg:#fff; --c-card:#fff; --c-card-border:#ededed;
+ --c-panel:#fff; --c-panel-border:#e6e6e6; --c-text-title:#171717; --c-text:#777;
+ --c-input:#f5f5f5; --c-input-border:transparent; --c-icon:#858585; --c-icon-active:#171717;
+ background:#fff; color:#171717; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; --threads-profile-signature:"慢慢来，也没关系。";
+}
+.chat-app[data-threads-pages] .page-shell:not(.chat-room-wrapper) > .page-header { background:rgba(255,255,255,.96); box-shadow:none; border-bottom:0; }
+.chat-app[data-threads-pages] .page-shell:not(.chat-room-wrapper) > .page-header .page-title { font-weight:700; letter-spacing:-.3px; }
+.chat-app[data-threads-pages] .page-shell:not(.chat-room-wrapper) > .page-body { background:#fff; }
+.chat-app[data-threads-pages] .chat-tab-bar { background:rgba(255,255,255,.97); border-top:1px solid #f0f0f0; box-shadow:none; backdrop-filter:blur(14px); }
+.chat-app[data-threads-pages] .chat-tab { color:#aaa; }
+.chat-app[data-threads-pages] .chat-tab-active { color:#111; }
+.chat-app[data-threads-pages] .chat-search-bar { border:0; border-radius:15px; background:#f5f5f5; box-shadow:none; }
+.chat-app[data-threads-pages] .contact-item,
+.chat-app[data-threads-pages] .chat-contact-item { background:transparent; box-shadow:none; border-radius:0; border-bottom:1px solid #f3f3f3; }
+.chat-app[data-threads-pages] .contact-name,
+.chat-app[data-threads-pages] .chat-contact-name { color:#141414; font-weight:600; }
+.chat-app[data-threads-pages] .minimal-avatar-wrapper,
+.chat-app[data-threads-pages] .contact-avatar { border-radius:50%; overflow:hidden; }
+.chat-app[data-threads-pages] .contact-letter-header { background:#fff; color:#9a9a9a; font-size:11px; font-weight:500; border-bottom:1px solid #f3f3f3; }
+.chat-app[data-threads-pages] .contact-alpha-index { color:#8a8a8a; }
+.chat-app[data-threads-pages] .user-profile-page-root::before { display:none; }
+.chat-app[data-threads-pages] .threads-profile-identity { flex-direction:row-reverse; padding:6px 20px 24px; gap:17px; }
+.chat-app[data-threads-pages] .threads-profile-identity > .shrink-0 > div { width:68px; height:68px; box-shadow:none !important; border:0; }
+.chat-app[data-threads-pages] .threads-profile-wallet { min-height:100px; border-radius:16px; background:#f6f6f6 !important; box-shadow:none !important; border:1px solid #eee !important; padding:15px 17px; }
+.chat-app[data-threads-pages] .threads-profile-wallet .absolute,
+.chat-app[data-threads-pages] .threads-profile-wallet [class*="bg-gradient"] { display:none; }
+.chat-app[data-threads-pages] .threads-profile-wallet [style*="Georgia"] { font-family:inherit !important; font-size:25px; }
+.chat-app[data-threads-pages] .threads-profile-shortcuts { border-radius:0; background:none; box-shadow:none !important; border-bottom:1px solid #eee; margin:0 18px 12px; padding:10px 0 19px; }
+.chat-app[data-threads-pages] .threads-profile-shortcuts button > div { background:#f5f5f5; color:#333; border-radius:50%; }
+.chat-app[data-threads-pages] .threads-profile-section { border-radius:0; box-shadow:none !important; border-bottom:1px solid #eee; padding:0; margin:0 20px 12px; }
+.chat-app[data-threads-pages] .minimal-list-item { border-radius:0; box-shadow:none; border-bottom:1px solid #f3f3f3; padding-top:12px; padding-bottom:12px; }
+.chat-app[data-threads-pages] .minimal-unread-count { background:#191919; color:#fff; }
+.chat-app[data-threads-pages] .user-profile-page-root .menu-group { background:#fff; border:0; border-radius:0; box-shadow:none; }
+.chat-app[data-threads-pages] .user-profile-page-root .menu-item { border-bottom:1px solid #f1f1f1; }
+.chat-app[data-threads-pages] .user-profile-page-root .menu-label { color:#171717; }
+.chat-app[data-threads-pages] .user-profile-page-root .glass-icon { background:none; box-shadow:none; filter:grayscale(1); }
+.chat-app[data-threads-pages] .threads-messages-page > .page-header .page-title { display:none; }
+.chat-app[data-threads-pages] .threads-messages-page .minimal-avatar-wrapper { width:48px; height:48px; flex-shrink:0; border-radius:50%; }
+.chat-app[data-threads-pages] .threads-messages-page .minimal-online-dot { display:none; }
+.chat-app[data-threads-pages] .threads-session-dot { width:6px; height:6px; flex-shrink:0; border-radius:50%; background:#171717; }
+.chat-app[data-threads-pages] .minimal-list-item[data-unread="true"] .threads-session-preview > span { color:#202020; font-weight:500; }
+.chat-app[data-threads-pages] .threads-messages-page [hidden] { display:none !important; }
+/* Messages: 标题、搜索与列表统一 24px 左右留白。 */
+.chat-app[data-threads-pages] .threads-messages-page > .page-header .page-header-content { grid-template-columns:minmax(0,1fr) 40px;padding:8px 24px 4px; min-height:58px;}
+.chat-app[data-threads-pages] .threads-messages-heading { font-size:30px; font-weight:750; letter-spacing:-1.1px; color:#111; line-height:1.2;border:0; padding:0; margin:0; background:none; cursor:pointer; text-align:left;}
+.chat-app[data-threads-pages] .threads-messages-heading:active {opacity:.6;}
+.chat-app[data-threads-pages] .threads-messages-search { padding-top:22px; padding-bottom:8px;padding:19px 24px 12px;}
+.chat-app[data-threads-pages] .threads-messages-search .chat-search-bar {height:46px; border-radius:15px; padding:0 14px;}
+.chat-app[data-threads-pages] .threads-session-list {padding:0 24px 22px;}
+.chat-app[data-threads-pages] .threads-messages-page .minimal-list-item { display:flex; align-items:center; gap:12px; padding:12px 0; background:transparent !important; border:0; min-height:76px;margin:0; width:100%;}
+.chat-app[data-threads-pages] .threads-session-name {font-size:15px; color:#111; font-weight:500; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; line-height:1.3;}
+.chat-app[data-threads-pages] .threads-session-info { display:flex; flex-direction:column; justify-content:center;gap:4px; flex:1; min-width:0;}
+.chat-app[data-threads-pages] .threads-session-preview { display:flex; gap:4px; align-items:baseline; min-width:0; color:#8b8b8b;font-size:12.5px; line-height:1.45;}
+.chat-app[data-threads-pages] .threads-session-preview > span { overflow:hidden; white-space:nowrap; text-overflow:ellipsis; min-width:0;flex:0 1 auto;}
+.chat-app[data-threads-pages] .threads-session-preview > small { flex-shrink:0;font-size:12px; color:#a0a0a0;}
+/* 白色帖子流：头像和作者在顶栏，正文与操作栏占整行。 */
+.chat-app[data-threads-pages] .moments-feed-page {background:#fff; --c-page-body-bg:#fff; --c-header-bg:#fff;}
+.chat-app[data-threads-pages] .threads-moments-page .feed-cover-shell {margin-bottom:8px; padding-top:calc(var(--page-header-safe-top,48px) + 58px + 28px); background:#fff;}
+.chat-app[data-threads-pages] .feed-cover-bg {opacity:0; pointer-events:none;}
+.chat-app[data-threads-pages] .threads-moments-page .feed-profile {width:calc(100% - 48px); margin:0 24px; padding:24px 16px !important; display:grid; grid-template-columns:minmax(0,1fr) 64px; align-items:center; gap:14px 18px; background:transparent; border:1px solid #e8e8eb; border-radius:16px; box-shadow:none;}
+.chat-app[data-threads-pages] .threads-moments-page .feed-profile-info {grid-column:1; grid-row:1;}
+.chat-app[data-threads-pages] .threads-moments-page .feed-profile-avatar {grid-column:2; grid-row:1;}
+.chat-app[data-threads-pages] .threads-moments-page .feed-profile::before {content:var(--threads-moments-caption,"a little space for everyday life"); grid-column:1; grid-row:2; font-size:10px; font-weight:400; line-height:1.5; letter-spacing:.15px; color:#aaaab2; overflow-wrap:anywhere; pointer-events:none;}
+.chat-app[data-threads-pages] .threads-moments-page .feed-profile::after {content:"✧"; grid-column:2; grid-row:2; justify-self:end; width:44px; font-size:15px; font-weight:400; line-height:1; text-align:right; color:#b8b8c0; background:linear-gradient(#dedee3,#dedee3) left center / 26px 1px no-repeat; pointer-events:none;}
+.chat-app[data-threads-pages] .feed-profile-info {flex:1; margin:0; min-width:0;}
+.chat-app[data-threads-pages] .feed-profile-avatar {width:64px; height:64px; border:0; transform:none; flex-shrink:0;}
+.chat-app[data-threads-pages] .feed-profile-name {font-size:23px; font-weight:750; color:#111;}
+.chat-app[data-threads-pages] .feed-profile-stats {display:none;}
+.chat-app[data-threads-pages] .feed-profile-signature {font-size:13px; color:#888;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] {display:block; padding:21px 41px 0; margin:0; border:0; border-bottom:1px solid #ededed; border-radius:0; background:#fff; color:#171717;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-header {display:flex; align-items:center; gap:11px; margin:0 0 14px; position:relative;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-author-avatar {width:41px; height:41px; flex-shrink:0; border-radius:50%;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-author {min-width:0; display:flex; flex-wrap:wrap; column-gap:7px; row-gap:1px;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-author-name {font-size:15px; line-height:1.35; font-weight:650; color:#171717; overflow-wrap:anywhere;}
+.chat-app[data-threads-pages] .threads-post-time {font-size:12px; color:#999; white-space:nowrap;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-more-btn {display:grid; place-items:center; width:32px; height:32px; padding:0; border:0; background:none; color:#777; opacity:1;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-more-btn svg {width:22px; height:22px;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-content {font-size:16px; line-height:1.65; color:#202020; margin:0 0 13px; width:100%;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-media {margin-bottom:14px;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-media img {border-radius:12px;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-action-row {justify-content:flex-start; margin:0; padding:1px 0 18px;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-actions {display:flex; align-items:center; gap:25px;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-actions > button {display:flex; align-items:center; justify-content:center; gap:6px; width:auto; min-width:25px; height:27px; padding:0; border:0; background:none; color:#555; font-size:13px;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-actions > button svg {width:22px; height:22px; color:inherit;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-like-btn[data-liked="true"] {color:#f23b54;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-post-delete-btn {color:#999;}
+.chat-app[data-threads-pages] .feed-post[data-threads-post] .feed-feedback-section {display:block; margin:0; padding:0; background:#fff;}
+.chat-app[data-threads-pages] .threads-comment-list {border-top:1px solid #eee; background:#fff;}
+.chat-app[data-threads-pages] .threads-comments-label {display:flex; align-items:center; gap:6px; padding:13px 0 11px; font-size:13px; font-weight:600; color:#555;}
+.chat-app[data-threads-pages] .threads-comments-label > span {font-weight:400; color:#aaa;}
+.chat-app[data-threads-pages] .threads-comment-thread {padding:12px 0 18px; border-bottom:1px solid #f3f3f3;}
+.chat-app[data-threads-pages] .threads-comment-thread:last-child {border-bottom:0;}
+.chat-app[data-threads-pages] .threads-comment {display:grid; grid-template-columns:30px minmax(0,1fr); column-gap:10px; row-gap:4px; position:relative; background:#fff;}
+.chat-app[data-threads-pages] .threads-comment-avatar {grid-column:1; grid-row:1 / span 3; width:30px; height:30px; border-radius:50%; overflow:hidden; background:#f5f5f5; z-index:1;}
+.chat-app[data-threads-pages] .threads-comment-avatar img {width:100%; height:100%; object-fit:cover;}
+.chat-app[data-threads-pages] .threads-comment-header {grid-column:2; display:flex; flex-wrap:nowrap; align-items:center; gap:6px; min-height:23px; padding-right:27px;}
+.chat-app[data-threads-pages] .threads-comment-header > strong {font-size:14px; line-height:1.4; font-weight:600; color:#171717; overflow-wrap:anywhere; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;}
+.chat-app[data-threads-pages] .threads-comment-header > time,
+ .chat-app[data-threads-pages] .threads-comment-author-badge {font-size:12px; color:#aaa; font-weight:400; flex-shrink:0; white-space:nowrap;}
+.chat-app[data-threads-pages] .threads-comment-body {grid-column:2; font-size:14px; line-height:1.65; color:#222; overflow-wrap:anywhere; cursor:pointer;}
+.chat-app[data-threads-pages] .threads-comment-reply {grid-column:2; justify-self:start; display:flex; align-items:center; gap:6px; margin-top:5px; padding:0; height:29px; border:0; background:none; color:#777; font-size:12px; cursor:pointer;}
+.chat-app[data-threads-pages] .threads-comment-menu {position:absolute; right:0; top:0;}
+.chat-app[data-threads-pages] .threads-comment-menu > button {display:grid; place-items:center; width:25px; height:25px; padding:0; border:0; background:none; color:#999; cursor:pointer;}
+.chat-app[data-threads-pages] .threads-comment-actions {position:absolute; right:0; top:28px; width:112px; padding:5px; background:#fff; border:1px solid #eee; border-radius:12px; box-shadow:0 6px 24px #0000000c; z-index:30;}
+.chat-app[data-threads-pages] .threads-comment-actions > button {display:flex; align-items:center; gap:8px; width:100%; padding:9px; border:0; border-radius:7px; background:none; font-size:12px; color:#333; cursor:pointer;}
+.chat-app[data-threads-pages] .threads-comment-actions > button:hover {background:#f6f6f6;}
+.chat-app[data-threads-pages] .threads-comment-children {position:relative; margin:12px 0 0 14px; padding:0 0 0 26px; border-left:0; display:flex; flex-direction:column; gap:18px;}
+.chat-app[data-threads-pages] .threads-comment-children::before {content:""; position:absolute; left:0; bottom:auto; width:17px; height:14px; border-left:1.5px solid #e6e6e6; border-bottom:1.5px solid #e6e6e6; border-bottom-left-radius:14px; background:transparent; top:1px;}
+
+.chat-app[data-threads-pages] .threads-comment-reply-target {font-size:12px; color:#999;}
+
+/* 固定悬浮导航：轻透白色玻璃、细边缘高光、内嵌选中胶囊。 */
+
+.chat-app[data-threads-pages]:has(> .threads-tabbar) {--threads-nav-height:62px; --threads-nav-bottom:max(14px,env(safe-area-inset-bottom,0px)); --threads-nav-reserve:calc(var(--threads-nav-height) + var(--threads-nav-bottom) + 18px);}
+
+.chat-app[data-threads-pages] .threads-tabbar {position:absolute; left:18px; right:18px; bottom:var(--threads-nav-bottom,14px); width:auto; max-width:400px; height:var(--threads-nav-height,64px); min-height:var(--threads-nav-height,64px); margin-inline:auto; padding:6px; box-sizing:border-box; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); align-items:center; gap:4px; border-radius:999px; border:1px solid rgba(255,255,255,.95); background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.84)); box-shadow:0 8px 24px rgba(20,20,28,.065),0 1px 4px rgba(20,20,28,.025),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(0,0,0,.02); backdrop-filter:blur(22px) saturate(125%); -webkit-backdrop-filter:blur(22px) saturate(125%); z-index:20;}
+
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab {position:relative; display:grid; place-items:center; width:100%; height:48px; min-height:0; padding:0; margin:0; gap:0; border-radius:999px; border:0; background:transparent; color:#85858b; box-sizing:border-box; transition:background-color .18s ease,color .18s ease,box-shadow .18s ease,transform .14s ease;}
+
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab-active {background:linear-gradient(180deg,#f2f2f3,#ededee); color:#171717; box-shadow:inset 0 1px 2px rgba(0,0,0,.025),0 1px 0 rgba(255,255,255,.9);}
+
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab-active::before,
+ .chat-app[data-threads-pages] .threads-tabbar .chat-tab-active::after {content:none;}
+
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab > svg {position:relative; display:block; width:24px; height:24px; z-index:1;}
+
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab-active .lucide-house {fill:none; stroke-width:1.9;}
+
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab:active {transform:scale(.96);}
+
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab:focus-visible {outline:2px solid #aaa; outline-offset:2px;}
+
+.chat-app[data-threads-pages]:has(> .threads-tabbar):not([data-room-active]):not([data-tabbar-hidden]) > .chat-main-content .page-shell > .page-body {padding-bottom:max(112px,var(--threads-nav-reserve)); scroll-padding-bottom:var(--threads-nav-reserve);}
+
+@media(prefers-reduced-motion:reduce) {.chat-app[data-threads-pages] .threads-tabbar .chat-tab {transition:none;}}
+
+/* 个人主页：资料、展示按钮、银行入口及圆角线框内的快捷图标。 */
+
+.chat-app[data-threads-pages] .threads-profile-page > .page-header {background:#fff !important; border-bottom:0 !important;}
+
+.chat-app[data-threads-pages] .threads-profile-page > .page-header .page-header-content {grid-template-columns:minmax(0,1fr) 40px; padding:8px 24px 4px; min-height:58px;}
+.chat-app[data-threads-pages] .threads-profile-page > .page-header .page-title {display:none;}
+.chat-app[data-threads-pages] .threads-profile-page > .page-body {top:calc(var(--page-header-safe-top,48px) + 58px);}
+
+.chat-app[data-threads-pages] .threads-profile-menu-decoration {display:grid; place-items:center; width:40px; height:40px; color:#222; user-select:none; cursor:default;}
+
+.chat-app[data-threads-pages] .threads-profile-summary {display:grid; grid-template-columns:minmax(0,1fr) 76px; column-gap:18px; padding:26px 24px 20px; background:#fff;}
+
+.chat-app[data-threads-pages] .threads-profile-copy {grid-column:1; grid-row:1; min-width:0;}
+
+.chat-app[data-threads-pages] .threads-profile-copy h1 {margin:0; font-size:24px; line-height:1.25; font-weight:650; color:#171717; overflow-wrap:anywhere;}
+
+.chat-app[data-threads-pages] .threads-profile-signature {margin-top:7px; font-size:14px; line-height:1.5; color:#929292; overflow-wrap:anywhere;}
+
+.chat-app[data-threads-pages] .threads-profile-signature::before {content:var(--threads-profile-signature,"慢慢来，也没关系。"); white-space:pre-wrap; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden;}
+
+.chat-app[data-threads-pages] .threads-profile-avatar {grid-column:2; grid-row:1 / span 2; align-self:start; width:76px; height:76px; border-radius:50%; border:3px solid #fff; background:#f5f5f5; box-shadow:0 2px 12px #00000009; overflow:hidden; display:grid; place-items:center; box-sizing:border-box;}
+
+.chat-app[data-threads-pages] .threads-profile-avatar img {width:100%; height:100%; object-fit:cover;}
+
+.chat-app[data-threads-pages] .threads-profile-avatar > svg {width:34px; height:34px; color:#aaa;}
+
+.chat-app[data-threads-pages] .threads-profile-counts {grid-column:1; grid-row:2; margin:18px 0 0; display:flex; flex-wrap:wrap; gap:7px; color:#999; font-size:13px; line-height:1.5; font-weight:400;}
+
+.chat-app[data-threads-pages] .threads-profile-actions {display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:0 24px 18px;}
+
+.chat-app[data-threads-pages] .threads-profile-action {display:flex; align-items:center; justify-content:center; height:38px; padding:0 12px; border-radius:12px; font-family:inherit; font-size:13px; font-weight:500; line-height:1.3; box-sizing:border-box; text-align:center;}
+
+.chat-app[data-threads-pages] .threads-profile-edit {background:#fff; color:#333; border:1px solid #dedede; user-select:none; cursor:default;}
+
+.chat-app[data-threads-pages] .threads-profile-bank {background:#fff; color:#333; border:1px solid #dedede; cursor:pointer;}
+
+.chat-app[data-threads-pages] .threads-profile-bank:active {background:#f7f7f7;}
+
+.chat-app[data-threads-pages] .threads-profile-entries {display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); justify-items:center; gap:10px; margin:0 24px 16px; padding:8px 0; border:1px solid #ededed; border-radius:16px; background:#fff; box-shadow:none;}
+
+.chat-app[data-threads-pages] .threads-profile-entries > button {display:grid; place-items:center; width:46px; height:46px; padding:0; border:0; border-radius:12px; background:transparent; color:#444; cursor:pointer;}
+
+.chat-app[data-threads-pages] .threads-profile-entries > button:active {background:#ededf0;}
+
+.chat-app[data-threads-pages] .threads-profile-entries > button:focus-visible,
+ .chat-app[data-threads-pages] .threads-profile-bank:focus-visible {outline:2px solid #aaa; outline-offset:3px;}
+
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section {margin:0 24px 8px; padding:0; border:0; border-radius:0; background:#fff; box-shadow:none !important;}
+
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section > button,
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section > div {padding:10px 0; min-height:54px; border-bottom:1px solid #f4f4f4;}
+
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section > button > svg,
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section > div > svg {color:#888; opacity:.8; stroke-width:1.5;}
+
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section .ts-14 {font-size:13px; line-height:1.4; font-weight:500;}
+
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section .ts-11 {font-size:11px; line-height:1.4; font-weight:400; color:#999; opacity:1;}
+
+.chat-app[data-threads-pages] .threads-profile-page .ui-toggle[data-checked] {background:#272727;}
+
+/* 主页下半部分用轻量分组承接资料区；功能和开关仍沿用原有交互。 */
+
+.chat-app[data-threads-pages] .threads-profile-group-label {margin:17px 26px 8px; color:#999; font-size:11px; line-height:1.5; font-weight:500; letter-spacing:.2px;}
+
+.chat-app[data-threads-pages] .threads-profile-group-card {margin:0 24px 0; padding:0 14px; background:#fff; border:1px solid #ededed; border-radius:15px; overflow:hidden;}
+
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-group-card .threads-profile-section {margin:0; padding:0; border:0; background:none; box-shadow:none !important;}
+
+.chat-app[data-threads-pages] .threads-profile-group-card > .threads-profile-section:last-child > :last-child {border-bottom:0;}
+
+.chat-app[data-threads-pages] .threads-profile-group-card .threads-profile-section > button .ts-11 {display:none;}
+
+/* Contacts：单一标题、轻量申请入口和留有独立空间的字母索引。 */
+
+.chat-app[data-threads-pages] .threads-contacts-page > .page-header .page-header-content {grid-template-columns:minmax(0,1fr) 40px; padding:8px 24px 4px; min-height:58px;}
+
+.chat-app[data-threads-pages] .threads-contacts-page > .page-header .page-title {display:none;}
+
+.chat-app[data-threads-pages] .threads-contacts-page [hidden] {display:none !important;}
+
+.chat-app[data-threads-pages] .threads-contacts-content {padding:0 24px;}
+
+.chat-app[data-threads-pages] .threads-contacts-search {padding:19px 0 14px;}
+
+.chat-app[data-threads-pages] .threads-contacts-search .chat-search-bar {height:46px; border-radius:15px; padding:0 14px;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .minimal-list-item {display:flex; align-items:center; gap:14px; margin:0; padding:13px 0; min-height:76px; width:100%; border:0; background:none; box-sizing:border-box;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .minimal-avatar-wrapper {flex-shrink:0; border-radius:50%; overflow:hidden;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .minimal-online-dot {display:none;}
+
+.chat-app[data-threads-pages] .threads-contact-info {min-width:0; height:auto; min-height:48px; gap:4px;}
+
+.chat-app[data-threads-pages] .threads-contact-name {font-size:16px; line-height:1.3; font-weight:500; color:#171717;}
+
+.chat-app[data-threads-pages] .threads-contact-preview {font-size:14px; line-height:1.4; color:#999; font-weight:400; opacity:1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+
+.chat-app[data-threads-pages] .threads-new-friends-wrap {margin:0 0 14px;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .threads-new-friends-row {gap:11px; padding:0 13px; min-height:58px; border:1px solid #ededed; border-radius:15px; background:#fff; text-align:left; cursor:pointer;}
+
+.chat-app[data-threads-pages] .threads-new-friends-row[aria-disabled="true"] {cursor:default;}
+
+.chat-app[data-threads-pages] .threads-new-friends-row:focus-visible {outline:2px solid #aaa; outline-offset:3px;}
+
+.chat-app[data-threads-pages] .threads-new-friends-row > .threads-new-friends-icon {width:34px; height:34px; background:none; color:#555; border-radius:0;}
+
+.chat-app[data-threads-pages] .threads-new-friends-icon svg {width:23px; height:23px; stroke:currentColor; stroke-width:1.6;}
+
+.chat-app[data-threads-pages] .threads-new-friends-row .ts-16 {font-size:14px; font-weight:500; color:#333;}
+
+.chat-app[data-threads-pages] .threads-new-friends-row .minimal-unread-count {height:19px; min-width:19px; padding:0 6px; background:#222; color:#fff; font-size:11px;}
+
+.chat-app[data-threads-pages] .threads-contact-ai {margin:0; padding-right:18px;}
+
+.chat-app[data-threads-pages] .threads-contact-groups {gap:0; padding-right:18px;}
+
+.chat-app[data-threads-pages] .threads-contact-section {scroll-margin-top:8px;}
+
+.chat-app[data-threads-pages] .threads-contact-section + .threads-contact-section {margin-top:6px;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .contact-letter-header {padding:8px 0 1px; border:0; background:none; color:#aaa; font-size:11px; line-height:1.4; font-weight:500; letter-spacing:.7px;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .contact-alpha-index {right:3px; top:calc(var(--page-header-safe-top,48px) + var(--page-header-content-height,54px) + 160px); bottom:calc(var(--threads-nav-height,62px) + var(--threads-nav-bottom,14px) + 18px); width:26px; transform:none; align-items:center; justify-content:center; pointer-events:none;}
+
+.chat-app[data-threads-pages] .threads-contact-index-list {display:flex; flex-direction:column; align-items:center; max-height:100%; padding:2px 0; overflow-y:auto; scrollbar-width:none; pointer-events:auto;}
+
+.chat-app[data-threads-pages] .threads-contact-index-list::-webkit-scrollbar {display:none;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .contact-alpha-letter {flex:0 0 22px; width:24px; height:22px; min-height:22px; padding:0; border:0; border-radius:7px; background:none; color:#929299; font-size:10.5px; line-height:1; font-weight:500;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .contact-alpha-letter:active {background:#efeff1; color:#333;}
+
+.chat-app[data-threads-pages] .threads-contacts-page .contact-alpha-letter:focus-visible {outline:1px solid #bbb; outline-offset:-2px;}
+
+.chat-app[data-threads-pages] .threads-moments-page > .page-header {background:#fff !important;}
+
+.chat-app[data-threads-pages] .threads-moments-page > .page-header .page-header-content {grid-template-columns:minmax(0,1fr) 40px; padding:8px 24px 4px; min-height:58px;}
+
+.chat-app[data-threads-pages] .threads-moments-page > .page-header .page-title {display:none;}
+
+.chat-app[data-threads-pages] .threads-comment-header > .threads-comment-author-badge {padding:2px 6px; border-radius:7px; background:#edf7fb; color:#6aa5ba; font-size:10px; font-weight:500;}
+
+.chat-app[data-threads-pages] .threads-comment-thread > .threads-comment[data-has-replies]::before {content:""; position:absolute; left:14px; top:36px; bottom:-14px; width:1.5px; background:#e6e6e6;}
+
+.chat-app[data-threads-pages] .threads-show-replies {display:flex; align-items:center; align-self:flex-start; gap:8px; margin:0 0 0 40px; padding:0; min-height:28px; border:0; background:none; color:#999; font-size:12px; cursor:pointer;}
+
+.chat-app[data-threads-pages] .threads-show-replies-arrow {display:grid; place-items:center; width:17px; height:17px; border-radius:50%; background:#242424; color:#fff; font-size:12px; line-height:1;}
+
+/* Standalone adapters target native markup; no React component changes required. */
+.chat-app {--threads-pages-css-ready:1;}
+.chat-app[data-threads-pages] [data-threads-hidden="pages"] {display:none !important;}
+.chat-app[data-threads-pages] [data-threads-folded] {display:none !important;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab > span {display:none;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab-active .threads-nav-mail rect {fill:currentColor;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab-active .threads-nav-mail path {stroke:#fff;}
+.chat-app[data-threads-pages] .threads-new-friends-icon {background:#f5f5f6 !important; color:#555; border-radius:50%;}
+.chat-app[data-threads-pages] .threads-new-friends-icon svg {stroke:#555;}
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section {margin:0 24px 0; padding:0 14px; border:1px solid #ededed; border-radius:15px; background:#fff; box-shadow:none !important;}
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section > div {padding:10px 0;}
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section[data-threads-section="first"] {border-bottom:0; border-bottom-left-radius:0; border-bottom-right-radius:0;}
+.chat-app[data-threads-pages] .threads-profile-page .threads-profile-section[data-threads-section="last"] {border-top:0; border-top-left-radius:0; border-top-right-radius:0;}
+.chat-app[data-threads-pages] .threads-native-comment-row {gap:10px; padding:11px 0;}
+.chat-app[data-threads-pages] .threads-native-comment-row {display:flex; align-items:flex-start;}
+.chat-app[data-threads-pages] .threads-native-comment-row > .feed-comment-content {flex:1; min-width:0;}
+.chat-app[data-threads-pages] .threads-native-comment-row .feed-comment-avatar {width:30px; height:30px; border-radius:50%;}
+.chat-app[data-threads-pages] .threads-native-comment-heading {position:relative; display:flex; align-items:center; gap:6px; min-height:23px; padding-right:27px; margin-bottom:2px;}
+.chat-app[data-threads-pages] .threads-native-comment-heading strong {min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-size:14px; font-weight:600; color:#222;}
+.chat-app[data-threads-pages] .threads-native-comment-heading time {flex-shrink:0; font-size:12px; color:#aaa;}
+.chat-app[data-threads-pages] .threads-native-comment-heading .threads-comment-author-badge {padding:2px 6px; border-radius:7px; background:#edf7fb; color:#6aa5ba; font-size:10px; font-weight:500;}
+.chat-app[data-threads-pages] .threads-native-comment-more {position:absolute; right:0; top:0; display:grid; place-items:center; width:25px; height:25px; padding:0; border:0; background:none; color:#999; cursor:pointer;}
+.chat-app[data-threads-pages] .threads-native-comment-more svg {width:19px; height:19px;}
+.chat-app[data-threads-pages] .threads-native-comment-row .feed-comment-body {font-size:14px; line-height:1.65;}
+.chat-app[data-threads-pages] .threads-native-comment-row .feed-comment-meta {margin-top:5px; font-size:12px;}
+.chat-app[data-threads-pages] .feed-comment-replies {position:relative; margin:0 0 0 14px; padding-left:25px; border-left:1.5px solid #e6e6e6;}
+.chat-app[data-threads-pages] .feed-comment-replies::before {content:""; position:absolute; left:-1.5px; top:-18px; width:1.5px; height:18px; background:#e6e6e6;}
+.chat-app[data-threads-pages] .feed-comment-replies .threads-show-replies {margin:4px 0 0;}
+
+/* Thread replies follow the avatar column; buttons delegate native actions. */
+.chat-app[data-threads-pages] .feed-comment-root {position:relative;}
+.chat-app[data-threads-pages] .feed-comment-root > .threads-native-comment-row {position:relative; padding-bottom:10px;}
+.chat-app[data-threads-pages] .feed-comment-root:has(> .feed-comment-replies) > .threads-native-comment-row::before {content:""; position:absolute; left:14px; top:48px; bottom:-11px; width:1.5px; background:#e6e6e6;}
+.chat-app[data-threads-pages] .feed-comment-replies {width:calc(100% - 14px); box-sizing:border-box; margin:0 0 0 14px; padding:0 0 0 26px; border:0; gap:4px;}
+.chat-app[data-threads-pages] .feed-comment-replies::before {content:""; position:absolute; left:0; top:-1px; width:16px; height:27px; border-left:1.5px solid #e6e6e6; border-bottom:1.5px solid #e6e6e6; border-bottom-left-radius:14px; background:none;}
+.chat-app[data-threads-pages] .feed-comment-child {position:relative; padding-top:8px; padding-bottom:7px;}
+.chat-app[data-threads-pages] .feed-comment-child .feed-comment-avatar {width:28px; height:28px; flex-shrink:0;}
+.chat-app[data-threads-pages] .feed-comment-child .feed-comment-reply-prefix,
+
+.chat-app[data-threads-pages] .feed-comment-child .feed-comment-reply-target,
+
+.chat-app[data-threads-pages] .feed-comment-child .feed-comment-reply-colon {display:none;}
+.chat-app[data-threads-pages] .threads-native-comment-row .feed-comment-meta {display:flex; align-items:center; gap:0; min-height:32px; margin-top:6px;}
+.chat-app[data-threads-pages] .threads-comment-reply-action {display:inline-flex; align-items:center; justify-content:flex-start; gap:6px; min-width:34px; min-height:32px; padding:3px 8px 3px 0; border:0; border-radius:0; background:none; color:#656565; font:inherit; font-size:12px; cursor:pointer;}
+.chat-app[data-threads-pages] .threads-comment-reply-action svg {display:block; width:21px; height:21px; stroke-width:1.6;}
+.chat-app[data-threads-pages] .threads-comment-reply-action:hover {color:#111;}
+.chat-app[data-threads-pages] .feed-comment-replies .threads-show-replies {display:flex; align-items:center; gap:9px; min-height:32px; margin:5px 0 8px; padding:0; font-size:12px; color:#999;}
+.chat-app[data-threads-pages] .threads-replies-portrait {position:relative; display:flex; align-items:center; width:31px; height:24px; flex-shrink:0;}
+.chat-app[data-threads-pages] .threads-replies-portrait img {display:block; width:20px; height:20px; border-radius:50%; object-fit:cover; background:#f3f3f3;}
+.chat-app[data-threads-pages] .threads-replies-portrait img[hidden] {display:none;}
+.chat-app[data-threads-pages] .threads-replies-arrow {position:absolute; right:0; display:grid; place-items:center; width:19px; height:19px; border:2px solid #fff; border-radius:50%; background:#222; color:#fff;}
+.chat-app[data-threads-pages] .threads-replies-arrow svg {width:12px; height:12px; stroke-width:2;}
+
+/* Messages: keep the accepted avatar/header/navigation sizes; refine hierarchy. */
+.chat-app[data-threads-pages] .threads-messages-search {padding:19px 24px 8px;}
+.chat-app[data-threads-pages] .threads-messages-page .minimal-list-item {box-sizing:border-box; min-height:72px; padding:10px 0; gap:12px;}
+.chat-app[data-threads-pages] .threads-messages-page .threads-session-info {display:flex; flex-direction:column; align-items:stretch; justify-content:center; flex:1 1 0%; min-width:0; gap:3px;}
+.chat-app[data-threads-pages] .threads-messages-page .threads-session-name {display:block; font-size:15px; line-height:1.35; font-weight:550; color:#303033;}
+.chat-app[data-threads-pages] .threads-messages-page .threads-session-preview {display:flex; align-items:baseline; gap:4px; font-size:12.5px; line-height:1.45; color:#949494;}
+.chat-app[data-threads-pages] .threads-messages-page .threads-session-preview > span {flex:0 1 auto; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.chat-app[data-threads-pages] .threads-messages-page .threads-session-preview > small {flex:0 0 auto; font-size:12px; font-weight:400; line-height:inherit; color:#a2a2a2;}
+.chat-app[data-threads-pages] .threads-messages-page .minimal-list-item[data-threads-unread="true"] .threads-session-preview > span {color:#303030; font-weight:500;}
+.chat-app[data-threads-pages] .threads-messages-page .threads-session-dot {align-self:center; display:block; width:6px; height:6px; flex:0 0 6px; margin-left:4px; border-radius:50%; background:#202020;}
+
+/* One shared selection pill; native tab buttons retain their click handlers. */
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab {z-index:1; transition:color .25s ease,transform .14s ease;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab-active {background:transparent; box-shadow:none; color:#171717;}
+.chat-app[data-threads-pages] .threads-tabbar > .threads-nav-slider {position:absolute; left:0; top:0; display:block; width:var(--threads-nav-w,0px); height:var(--threads-nav-h,48px); transform:translate(var(--threads-nav-x,0px),var(--threads-nav-y,0px)); border-radius:999px; background:linear-gradient(180deg,#f2f2f3,#ededee); box-shadow:inset 0 1px 2px rgba(0,0,0,.025),0 1px 0 rgba(255,255,255,.9); pointer-events:none; z-index:0; opacity:0;}
+.chat-app[data-threads-pages] .threads-tabbar[data-threads-slider-ready] > .threads-nav-slider {opacity:1; transition:transform .25s cubic-bezier(.22,.72,.24,1),width .25s ease,height .25s ease;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab > svg {grid-area:1 / 1; transition:opacity .18s ease;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab > .threads-nav-solid {opacity:0; fill:currentColor; stroke:none;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab > .threads-nav-solid[data-threads-icon="mail"] path {fill:none; stroke:#fff; stroke-width:1.6;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab-active > svg[data-threads-key="icon"] {opacity:0;}
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab-active > .threads-nav-solid {opacity:1;}
+@media(prefers-reduced-motion:reduce) {.chat-app[data-threads-pages] .threads-tabbar[data-threads-slider-ready] > .threads-nav-slider,
+.chat-app[data-threads-pages] .threads-tabbar .chat-tab > svg {transition:none;}}
+
+/* Contacts shares Messages' 24px content gutters and 48px avatars. */
+.chat-app[data-threads-pages] .threads-contacts-page > .page-header .page-header-content {padding-left:24px; padding-right:24px;}
+.chat-app[data-threads-pages] .threads-contacts-content {padding:0 24px;}
+.chat-app[data-threads-pages] .threads-contacts-search {padding:19px 0 8px;}
+.chat-app[data-threads-pages] .threads-contacts-page .minimal-list-item {min-height:72px; padding:10px 0; gap:12px;}
+.chat-app[data-threads-pages] .threads-contacts-page .minimal-avatar-wrapper {width:48px; height:48px; flex:0 0 48px;}
+.chat-app[data-threads-pages] .threads-contacts-page .threads-contact-info {display:flex; flex:1 1 0%; flex-direction:column; justify-content:center; gap:3px; min-width:0; min-height:0; height:auto;}
+.chat-app[data-threads-pages] .threads-contacts-page .threads-contact-name {font-size:15px; font-weight:550; line-height:1.35; color:#303033;}
+.chat-app[data-threads-pages] .threads-contacts-page .threads-contact-preview {display:block; min-width:0; font-size:12.5px; line-height:1.45; color:#949494; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.chat-app[data-threads-pages] .threads-new-friends-wrap {margin:10px 0 8px;}
+.chat-app[data-threads-pages] .threads-contacts-page .threads-new-friends-row {min-height:48px; padding:6px 11px; gap:10px; border:1px solid #ededee; border-radius:13px; background:#fff;}
+.chat-app[data-threads-pages] .threads-new-friends-row > .threads-new-friends-icon {display:grid; place-items:center; flex:0 0 28px; width:28px; height:28px; border-radius:50%; background:#f5f5f6 !important;}
+.chat-app[data-threads-pages] .threads-new-friends-row .threads-new-friends-icon svg {width:19px; height:19px;}
+.chat-app[data-threads-pages] .threads-new-friends-row .threads-contact-name {font-size:13px; font-weight:500;}
+.chat-app[data-threads-pages] .threads-new-friends-row .threads-contact-info {min-height:28px;}
+.chat-app[data-threads-pages] .threads-new-friends-arrow {display:grid; place-items:center; flex:0 0 16px; color:#aaa;}
+.chat-app[data-threads-pages] .threads-new-friends-arrow svg {width:13px; height:13px;}
+.chat-app[data-threads-pages] .threads-contact-ai {margin:0; padding-right:18px;}
+.chat-app[data-threads-pages] .threads-contact-groups {gap:0; padding-right:18px;}
+.chat-app[data-threads-pages] .threads-contacts-page .contact-letter-header {margin:0; padding:8px 0 2px; font-size:10px; font-weight:500; line-height:1.4; color:#aaa;}
+.chat-app[data-threads-pages] .threads-contact-section + .threads-contact-section {margin-top:2px;}
+.chat-app[data-threads-pages] .threads-contacts-page .contact-alpha-index {right:3px; width:20px; padding:0; pointer-events:auto;}
+.chat-app[data-threads-pages] .threads-contacts-page .contact-alpha-letter {width:20px; height:22px; flex:0 0 22px; font-size:10px; pointer-events:auto;}
+
+/* Uniform 2px thread stroke; visible reply avatars form one continuous chain. */
+.chat-app[data-threads-pages] .feed-comment-root:has(> .feed-comment-replies) > .threads-native-comment-row::before {width:2px; bottom:0; background:#e3e3e6;}
+.chat-app[data-threads-pages] .feed-comment-replies::before {box-sizing:border-box; left:0; top:-1px; width:16px; height:26px; border-left:2px solid #e3e3e6; border-bottom:2px solid #e3e3e6; border-bottom-left-radius:14px; background:none;}
+.chat-app[data-threads-pages] .feed-comment-replies > .feed-comment-child:not([data-threads-folded]):has(~ .feed-comment-child:not([data-threads-folded]))::after {content:""; position:absolute; left:13px; top:44px; bottom:-8px; width:2px; border:0; background:#e3e3e6; pointer-events:none;}
+
+/* Editable text remains plain typography; no pencil icon. */
+.chat-app[data-threads-pages] .threads-profile-signature[data-threads-edit-copy]::before {content:none !important;}
+.chat-app[data-threads-pages] .threads-moments-page .feed-profile[data-threads-editable-caption]::before {content:none !important;}
+.chat-app[data-threads-pages] .threads-moments-caption {grid-column:1; grid-row:2; min-width:0; font-size:10px; font-weight:400; line-height:1.5; letter-spacing:.15px; color:#aaaab2; overflow-wrap:anywhere; pointer-events:auto;}
+.chat-app[data-threads-pages] [data-threads-edit-copy] {display:block; min-height:1.5em; cursor:text; white-space:pre-wrap; overflow-wrap:anywhere;}
+.chat-app[data-threads-pages] [data-threads-edit-copy][data-empty]::after {content:"点击添加一句话"; color:#b3b3ba;}
+.chat-app[data-threads-pages] [data-threads-edit-copy]:focus-visible {outline:1px solid #d2d2d8; outline-offset:3px; border-radius:3px;}
+.chat-app[data-threads-pages] .threads-editable-copy-input {display:block; box-sizing:border-box; width:100%; min-width:0; height:1.7em; margin:0; padding:0 0 1px; border:0; border-bottom:1px solid #d6d6dd; border-radius:0; background:transparent; color:inherit; font:inherit; line-height:inherit; letter-spacing:inherit; outline:none; box-shadow:none;}
+
