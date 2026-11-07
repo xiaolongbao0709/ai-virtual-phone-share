@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-07T09:30:39.895Z",
+  "generatedAt": "2026-11-07T09:38:57.234Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "线上美化",
-      "count": 58
+      "count": 59
     },
     {
       "name": "线上聊天状态栏",
@@ -8796,6 +8796,29 @@
       "avatar": "资源/线上美化/简白 by koi/.avatar.png",
       "ownerHash": "168992d163bb3fcaf4ae9bdda07ebcba4591c3533f28260f0bf1dba76ae93ccc",
       "updatedAt": "2026-09-19T16:59:22+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "简系by淅沥沥",
+      "dirName": "简系by淅沥沥",
+      "type": "dir",
+      "path": "资源/线上美化/简系by淅沥沥",
+      "files": [
+        "资源/线上美化/简系by淅沥沥/float｜简蓝by淅沥沥.txt",
+        "资源/线上美化/简系by淅沥沥/简粉by淅沥沥.txt",
+        "资源/线上美化/简系by淅沥沥/简绿by淅沥沥.txt"
+      ],
+      "images": [
+        "资源/线上美化/简系by淅沥沥/1000247011.jpg",
+        "资源/线上美化/简系by淅沥沥/1000247749.jpg",
+        "资源/线上美化/简系by淅沥沥/1000247767.jpg",
+        "资源/线上美化/简系by淅沥沥/1000247785.jpg"
+      ],
+      "description": "三版颜色\n顶栏底栏仿了qq\n翻译的文字会显示在气泡上\n其他预览图可以在小红书上查看",
+      "author": "淅淅沥",
+      "avatar": "资源/线上美化/简系by淅沥沥/.avatar.png",
+      "ownerHash": "c76d001b2c70156ba8e7cd67192a641e1dc8a44e4c1472151374999d68b5c934",
+      "updatedAt": "2026-11-07T18:37:04+09:00"
     },
     {
       "folder": "线上美化",
