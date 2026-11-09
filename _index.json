@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-09T12:33:24.680Z",
+  "generatedAt": "2026-11-09T18:25:31.589Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 165
+      "count": 166
     },
     {
       "name": "应用bug改善",
@@ -5136,6 +5136,20 @@
       "avatar": "资源/应用/匿语Mask/.avatar.png",
       "ownerHash": "1f4ce1e97032d0c95ecbaf16d8ff0332fd1e2b5e4424b4cd66cc94e0c2fb08b6",
       "updatedAt": "2026-09-30T17:19:59+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "同频听歌",
+      "dirName": "同频听歌",
+      "type": "dir",
+      "path": "资源/应用/同频听歌",
+      "files": [],
+      "images": [],
+      "description": "跑了款同频音乐APP\n支持封面/背景图本地替换、同步滚动歌词、网易云歌单与本地MP4导入、角色切歌互动”）",
+      "author": "年下牛逼",
+      "avatar": "资源/应用/同频听歌/.avatar.png",
+      "ownerHash": "edd573a4885f89144553b646828274937b3de9b1ba8839937412b4279843c195",
+      "updatedAt": "2026-11-10T03:22:30+09:00"
     },
     {
       "folder": "应用",
