@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-11T09:31:22.840Z",
+  "generatedAt": "2026-11-11T09:40:45.830Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 167
+      "count": 168
     },
     {
       "name": "应用bug改善",
@@ -6545,6 +6545,24 @@
       "avatar": "资源/应用/让ta来填填问卷吧~[蝴蝶结]/.avatar.png",
       "ownerHash": "cdec925f9e2d6a79f64c584d0e0286f334fd96c5312717c1b5659b9dc42955d3",
       "updatedAt": "2026-09-04T20:43:24+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "记忆档案",
+      "dirName": "记忆档案",
+      "type": "dir",
+      "path": "资源/应用/记忆档案",
+      "files": [],
+      "images": [
+        "资源/应用/记忆档案/1000037741.jpg",
+        "资源/应用/记忆档案/1000037742.jpg",
+        "资源/应用/记忆档案/1000037744.jpg"
+      ],
+      "description": "你可以在这个app给每个char创建记忆片段，char会记得这些记忆片段。支持标签方便管理。\n\n你可以选择某段记忆，让chara根据这段记忆与你发起对话。\n效果如图做出来没玩多久，不知道talk about和continue topic这两个按钮有没有明显区别。",
+      "author": "Ray",
+      "avatar": "",
+      "ownerHash": "60314ac9ea6dedb965defd5b714e0c29c3a63e72e6bf8a3963c5d314fd5e5b4f",
+      "updatedAt": "2026-11-11T18:38:06+09:00"
     },
     {
       "folder": "应用",
