@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-11T09:40:45.830Z",
+  "generatedAt": "2026-11-11T10:00:35.545Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -6552,17 +6552,18 @@
       "dirName": "记忆档案",
       "type": "dir",
       "path": "资源/应用/记忆档案",
-      "files": [],
+      "files": [
+        "资源/应用/记忆档案/memory.lane.archive-1.0.0.zip"
+      ],
       "images": [
         "资源/应用/记忆档案/1000037741.jpg",
-        "资源/应用/记忆档案/1000037742.jpg",
-        "资源/应用/记忆档案/1000037744.jpg"
+        "资源/应用/记忆档案/1000037742.jpg"
       ],
-      "description": "你可以在这个app给每个char创建记忆片段，char会记得这些记忆片段。支持标签方便管理。\n\n你可以选择某段记忆，让chara根据这段记忆与你发起对话。\n效果如图做出来没玩多久，不知道talk about和continue topic这两个按钮有没有明显区别。",
+      "description": "你可以在这个app给每个char创建记忆片段，char会记得这些记忆片段。支持标签方便管理。\n\n你可以选择某段记忆，让chara根据这段记忆与你发起对话。\n\n效果如图做出来没玩多久，不知道talk about和continue topic这两个按钮有没有明显区别。\n\n\n目前不知为何上传文件失效，悲哀，不知道大家看得见文件吗。",
       "author": "Ray",
-      "avatar": "",
+      "avatar": "资源/应用/记忆档案/.avatar.png",
       "ownerHash": "60314ac9ea6dedb965defd5b714e0c29c3a63e72e6bf8a3963c5d314fd5e5b4f",
-      "updatedAt": "2026-11-11T18:38:06+09:00"
+      "updatedAt": "2026-11-11T18:58:19+09:00"
     },
     {
       "folder": "应用",
