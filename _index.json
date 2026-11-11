@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-10T12:56:01.348Z",
+  "generatedAt": "2026-11-11T09:14:03.475Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 91
+      "count": 92
     },
     {
       "name": "MCP",
@@ -704,6 +704,22 @@
       "avatar": "资源/Js插件/导入cai聊天记录/.avatar.png",
       "ownerHash": "51f3d36b8170e02b0c1715d8e1642c17b6cf43a8dd50915b49d44bcb019842b2",
       "updatedAt": "2026-11-05T14:05:00+09:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "导入cai聊天记录（可分角色版）",
+      "dirName": "导入cai聊天记录（可分角色版）",
+      "type": "dir",
+      "path": "资源/Js插件/导入cai聊天记录（可分角色版）",
+      "files": [
+        "资源/Js插件/导入cai聊天记录（可分角色版）/cai聊天记录导入可分角色版.js"
+      ],
+      "images": [],
+      "description": "[粗][绿]！！！！！使用前先导出备份！！！！！[/绿][/粗]\n需要先创建角色再导入聊天记录\n有问题小红书找:Kit宝（汤泡饭",
+      "author": "kit宝",
+      "avatar": "",
+      "ownerHash": "51f3d36b8170e02b0c1715d8e1642c17b6cf43a8dd50915b49d44bcb019842b2",
+      "updatedAt": "2026-11-11T18:11:07+09:00"
     },
     {
       "folder": "Js插件",
