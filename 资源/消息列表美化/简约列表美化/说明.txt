@@ -2,4 +2,4 @@
 🚫二传二卖
 
 整体美化风格和修改文案的位置如图所示
-模仿了iOS、iCity和ins
+借鉴了iOS、iCity和ins的页面
