@@ -1,0 +1,2251 @@
+﻿/* ===== 可替换文案 / 颜色变量 ===== */
+:root {
+  --color-black: #252525;
+  --text-journal-subtitle: "：可编辑文案";
+  --text-search-placeholder: "万物与我都是荒诞的静寂，此时我想你。";
+  --text-search-date: "Saturday, Nov 7";
+  --text-handle: "@user_id";
+  --text-contacts-title: "休恋逝水.";
+  --text-char-id: "@char_id";
+  --text-comment-count: "9条评论";
+  --text-location: "冰岛";
+
+  /* 卡片上方四行：前三行黑色，第四行蓝色 */
+  --text-above-line-1: "Across a hundred years and two worlds";
+  --text-above-line-2: "I found no rest";
+  --text-above-line-3: "until you became my shore";
+  --text-above-line-4: "www.tiktok.com/@user_id";
+
+  /* 面板内第二行 */
+  --text-past-30-days: "过去 30 天内有 2.4 万次浏览";
+
+  /* 三个数字 */
+  --num-posts: "99";
+  --num-fans: "520";
+  --num-following: "1,314";
+
+  /* 快捷入口图片 */
+  --icon-2-image: url("https://bee-reg-ab.imagency.cn/e/513ebffd527732fd5ef06c29615ee5cc.jpg");
+  --icon-3-image: url("https://bee-reg-ab.imagency.cn/e/5de83be58647e97cbff363c957e5defa.jpg");
+
+  /* 快捷入口文字 */
+  --label-1: "新建";
+  --label-2: "表情包";
+  --label-3: "美化css";
+
+  /* 文字遮罩浓度：0 = 图全露（文字可能看不清），1 = 完全遮住图 */
+  --tile-mask: 0.55;
+  /* 遮罩底色，跟随主题；也可写 rgba(0,0,0,1) 之类 */
+  --tile-mask-color: var(--c-page-bg, #ffffff);
+
+  /* 七个条目各自的图床地址，不用换图的写 none */
+  --tile-bg-1: url("https://你的图床/1.jpg"); /* 追发规则与延迟控制 */
+  --tile-bg-2: url("https://你的图床/2.jpg"); /* 离线推送与定时消息 */
+  --tile-bg-3: url("https://你的图床/3.jpg"); /* 回车发送 */
+  --tile-bg-4: url("https://你的图床/4.jpg"); /* 语音/视频来电振动 */
+  --tile-bg-5: url("https://你的图床/5.jpg"); /* 浏览器后台通知 */
+  --tile-bg-6: url("https://你的图床/6.jpg"); /* 扩展插件 */
+  --tile-bg-7: url("https://你的图床/7.jpg"); /* 底层调用大模型日志 */
+
+  /* 当前条目实际取用的图，由第 4 节切换，别手改 */
+  --tile-bg-img: none;
+}
+
+/* ============================================================
+   一、标题行（Journal 大标题 + 副标题）
+   ============================================================ */
+
+/* 1. 标题行容器：去掉背景，调整边距与搜索框左对齐 */
+.chat-app .px-5.pt-5.pb-3 > .flex.items-center.justify-between.mb-4.mt-2 {
+  display: flex !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 14px 12px 14px !important;
+}
+
+/* 2. 原 span 改为纵向排列，并隐藏原文字 */
+.chat-app .px-5.pt-5.pb-3 > .flex.items-center.justify-between.mb-4.mt-2 > span {
+  font-size: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+
+/* 3. 大标题：Journal */
+.chat-app .px-5.pt-5.pb-3 > .flex.items-center.justify-between.mb-4.mt-2 > span::before {
+  content: "Journal" !important;
+  font-size: 28px !important;
+  font-weight: bold !important;
+  font-family: inherit !important;
+  line-height: 1.2 !important;
+  color: var(--c-text-title, #2C3440) !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* 4. 下方小字 */
+.chat-app .px-5.pt-5.pb-3 > .flex.items-center.justify-between.mb-4.mt-2 > span::after {
+  content: var(--text-journal-subtitle) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0.3px !important;
+  color: #8A9099 !important;
+  margin-top: 4px !important;
+}
+
+/* ============================================================
+   二、搜索框（Journal 页）
+   ============================================================ */
+
+/* 1. 搜索框主卡片 */
+.chat-app .px-5.pt-5.pb-3 .chat-search-bar {
+  background-color: var(--c-card) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  position: relative !important;
+  padding-bottom: 36px !important;
+  box-sizing: border-box !important;
+}
+
+/* 2. 隐藏放大镜 SVG */
+.chat-app .px-5.pt-5.pb-3 .chat-search-bar > svg {
+  display: none !important;
+}
+
+/* 3. 输入框内边距 */
+.chat-app .px-5.pt-5.pb-3 .chat-search-input {
+  padding-left: 16px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  padding-right: 16px !important;
+}
+
+/* 4. 隐藏原生 placeholder，用伪元素写文案 */
+.chat-app .px-5.pt-5.pb-3 .chat-search-input::placeholder {
+  color: transparent !important;
+}
+.chat-app .px-5.pt-5.pb-3 .chat-search-bar::before {
+  content: var(--text-search-placeholder) !important;
+  position: absolute !important;
+  left: 16px !important;
+  top: 22px !important;
+  transform: translateY(-50%) !important;
+  font-size: 15px !important;
+  color: var(--c-icon, #8A9099) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* 5. 聚焦或有内容时，隐藏占位文案 */
+.chat-app .px-5.pt-5.pb-3 .chat-search-bar:has(.chat-search-input:focus)::before,
+.chat-app .px-5.pt-5.pb-3 .chat-search-bar:has(.chat-search-input:not(:placeholder-shown))::before {
+  display: none !important;
+}
+
+/* 6. 底部行：全宽分割线 + 左侧日期 + 右侧横向三点 */
+.chat-app .px-5.pt-5.pb-3 .chat-search-bar::after {
+  content: var(--text-search-date) !important;
+  position: absolute !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 14px !important;
+  box-sizing: border-box !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+  font-size: 13px !important;
+  color: var(--c-icon, #8A9099) !important;
+  font-weight: 500 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238A9099'%3E%3Ccircle cx='5' cy='12' r='2'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Ccircle cx='19' cy='12' r='2'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 16px center !important;
+  background-size: 18px 18px !important;
+  pointer-events: none !important;
+}
+
+/* ============================================================
+   三、页面头部：返回按钮 + 头像 + 编辑按钮
+   ============================================================ */
+
+/* 返回按钮：左箭头 → 向下箭头 */
+.page-header-content > span:first-child .page-back-btn > svg {
+  transform: rotate(-90deg) !important;
+}
+
+/* 头像容器：黑色描边 + 1.5px 间隙 + 取消裁剪 */
+.page-header-content > span:first-child .page-back-btn + div > div:first-child {
+  position: relative !important;
+  overflow: visible !important;
+  outline: 2px solid #000 !important;
+  outline-offset: 1.5px !important;
+}
+
+/* 图片自己裁圆 */
+.page-header-content > span:first-child .page-back-btn + div > div:first-child > img {
+  border-radius: 50% !important;
+  display: block !important;
+}
+
+/* 右下角“+”角标 */
+.page-header-content > span:first-child .page-back-btn + div > div:first-child::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -3px !important;
+  bottom: -3px !important;
+  width: 14px !important;
+  height: 14px !important;
+  box-sizing: border-box !important;
+  background-color: #000 !important;
+  border: 1.5px solid #fff !important;
+  border-radius: 50% !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5v14M5 12h14' stroke='%23fff' stroke-width='3' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 8px 8px !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* 隐藏绿点 */
+.page-header-content > span:first-child .page-back-btn + div > div:nth-child(2) > div > span:first-child {
+  display: none !important;
+}
+
+/* 隐藏原“在线”文字（保留占位） */
+.page-header-content > span:first-child .page-back-btn + div > div:nth-child(2) > div > span:last-child {
+  font-size: 0 !important;
+  display: inline-block !important;
+}
+
+/* 伪元素显示 @user_id */
+.page-header-content > span:first-child .page-back-btn + div > div:nth-child(2) > div > span:last-child::after {
+  content: var(--text-handle) !important;
+  font-size: 13px !important;
+  color: var(--c-icon, #888) !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+/* 右上角编辑按钮：隐藏原生 svg，保留占位 */
+.page-header-right .relative:first-child .page-back-btn > svg {
+  opacity: 0 !important;
+}
+
+/* 按钮作为伪元素定位参考 */
+.page-header-right .relative:first-child .page-back-btn {
+  position: relative !important;
+}
+
+/* 方形加笔图标 */
+.page-header-right .relative:first-child .page-back-btn::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 18px !important;
+  height: 18px !important;
+  background-color: #2C3440 !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/%3E%3Cpath d='M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/%3E%3Cpath d='M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z'/%3E%3C/svg%3E") !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  pointer-events: none !important;
+}
+
+/* ============================================================
+   四、页面标题：日记页“动态” → “日记”
+   ============================================================ */
+.chat-app .page-header-content:has(.page-header-right .page-back-btn[title="发布朋友圈"]) .page-title {
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+}
+.chat-app .page-header-content:has(.page-header-right .page-back-btn[title="发布朋友圈"]) .page-title::after {
+  content: "日记" !important;
+  display: inline-block;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--c-text-title, #2C3440);
+  line-height: 1.2;
+}
+
+/* ============================================================
+   五、联系人页
+   ============================================================ */
+
+/* 1) 标题行：显示 + 文案替换 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .pt-5.pb-1 {
+  padding-top: 18px !important;
+  padding-bottom: 10px !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .pt-5.pb-1 > .flex.items-center.justify-between.mb-4.mt-2 {
+  display: flex !important;
+  margin: 0 0 12px !important;
+  padding: 0 14px !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .pt-5.pb-1 > .flex.items-center.justify-between.mb-4.mt-2 .ts-28 {
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .pt-5.pb-1 > .flex.items-center.justify-between.mb-4.mt-2 .ts-28::after {
+  content: var(--text-contacts-title) !important;
+  display: inline-block;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  color: var(--c-text-title, #2C3440);
+}
+
+/* 2) 搜索框：压扁到 34px */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .chat-search-bar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 14px !important;
+  width: auto !important;
+  height: 34px !important;
+  min-height: 0 !important;
+  max-height: 34px !important;
+  padding: 0 12px !important;
+  box-sizing: border-box !important;
+  border-radius: 10px !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .chat-search-bar .chat-search-input {
+  height: 100% !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .chat-search-bar > svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* 2b) 搜索栏最右侧麦克风图标 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .chat-search-bar::after {
+  content: "" !important;
+  flex: 0 0 auto !important;
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  background-color: var(--c-icon, #8A9099) !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='23'/%3E%3Cline x1='8' y1='23' x2='16' y2='23'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='23'/%3E%3Cline x1='8' y1='23' x2='16' y2='23'/%3E%3C/svg%3E") !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  pointer-events: none !important;
+}
+
+/* 3) 条目基础 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .minimal-list-item {
+  position: relative !important;
+  background: #FFFFFF !important;
+  border: none !important;
+  border-radius: 16px !important;
+  margin: 0 14px 10px !important;
+  padding: 8px 16px 8px 30px !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+}
+
+/* 4) 顶部包裹层 .mb-3 卡片化 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3 {
+  background: #FFFFFF !important;
+  border-radius: 16px !important;
+  margin-left: 14px !important;
+  margin-right: 14px !important;
+  margin-bottom: 10px !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3 .minimal-list-item {
+  background: transparent !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 8px 16px 8px 30px !important;
+  box-shadow: none !important;
+}
+
+/* 5) 相邻包裹层合并 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3:has(+ .mb-3) {
+  margin-bottom: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3 + .mb-3 {
+  margin-top: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+/* 6) 字母组内连续条目合并 + 内分割线 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .minimal-list-item:has(+ .minimal-list-item) {
+  margin-bottom: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .minimal-list-item + .minimal-list-item {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .minimal-list-item + .minimal-list-item::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 30px !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: rgba(0, 0, 0, 0.06) !important;
+  pointer-events: none !important;
+}
+
+/* 7) 统一内容区最小高度，文字垂直居中 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .minimal-list-item > .flex-1.overflow-hidden {
+  height: auto !important;
+  min-height: 38px !important;
+  justify-content: center !important;
+}
+
+/* 8) 头像隐藏 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .minimal-list-item .minimal-avatar-wrapper {
+  display: none !important;
+}
+
+/* 9) New Friends 左侧圆形图标同步隐藏 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .minimal-list-item > div[class*="c-action-blue"] {
+  display: none !important;
+}
+
+/* 10) 昵称与描述间距调小 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .minimal-list-item .flex-1.flex.flex-col.gap-1 {
+  gap: 2px !important;
+}
+
+/* 11) 字母头与条目卡片左边缘对齐 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) .contact-letter-header {
+  padding-left: 14px !important;
+}
+
+/* 12) "New Friends" → "新朋友" */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3.mt-3 .minimal-list-item .ts-16 {
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3.mt-3 .minimal-list-item .ts-16::after {
+  content: "新朋友" !important;
+  display: inline-block;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  font-family: inherit !important;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+  color: var(--c-text-title, #2C3440);
+}
+
+/* 13) New Friends 卡片上方日期文案 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3.mt-3 {
+  position: relative !important;
+  overflow: visible !important;
+  margin-top: 34px !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3.mt-3::before {
+  content: "Today";
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.5px;
+  color: var(--c-text-title, #2C3440);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* 14) 新朋友行与下一行之间的分割线 */
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3.mt-3 + .mb-3 {
+  position: relative !important;
+}
+.chat-app .px-5:has(> .pt-5.pb-1 > .chat-search-bar) > .mb-3.mt-3 + .mb-3::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 30px !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: rgba(0, 0, 0, 0.06) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* ============================================================
+   六、分组按钮（chat-list-tab）
+   ============================================================ */
+.chat-app *:has(> .chat-list-tab) {
+  display: flex !important;
+  width: 100% !important;
+  align-items: center !important;
+  gap: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.chat-app .chat-list-tab {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  position: relative !important;
+  padding: 8px 4px 10px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--c-text-body, #6E7480) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.2px !important;
+  transition: color 0.2s ease !important;
+}
+.chat-app .chat-list-tab.active,
+.chat-app .chat-list-tab[class*="active"],
+.chat-app .chat-list-tab[aria-selected="true"] {
+  color: var(--c-text-title, #2C3440) !important;
+  font-weight: 600 !important;
+}
+.chat-app .chat-list-tab::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 0 !important;
+  transform: translateX(-50%) !important;
+  width: 0 !important;
+  height: 2px !important;
+  border-radius: 2px !important;
+  background-color: var(--c-text-title, #2C3440) !important;
+  transition: width 0.22s ease !important;
+}
+.chat-app .chat-list-tab.active::after,
+.chat-app .chat-list-tab[class*="active"]::after,
+.chat-app .chat-list-tab[aria-selected="true"]::after {
+  width: 28px !important;
+}
+
+/* ============================================================
+   七、消息页头像（四宫格方形小格）
+   ============================================================ */
+.chat-app .px-5.pt-2.flex.flex-col .minimal-avatar-wrapper,
+.chat-app .px-5.pt-2.flex.flex-col .minimal-avatar-wrapper > img,
+.chat-app .px-5.pt-2.flex.flex-col .minimal-avatar-wrapper > div,
+.chat-app .px-5.pt-2.flex.flex-col .minimal-avatar-wrapper > div > img {
+  border-radius: 18px !important;
+}
+.chat-app .px-5.pt-2.flex.flex-col .minimal-avatar-wrapper > div,
+.chat-app .px-5.pt-2.flex.flex-col .minimal-avatar-wrapper > div > img {
+  border-radius: 0 !important;
+}
+
+/* ============================================================
+   八、消息页列表：第 1 条独立卡片 + 其余合并 + 分组标题
+   ============================================================ */
+
+/* 1) 第 1 条独立卡片 */
+.chat-app .px-5.pt-2.flex.flex-col > .minimal-list-item {
+  background: var(--c-card, #FFFFFF) !important;
+  border: 1px solid color-mix(in srgb, var(--c-card-border, #E0E0E0) 55%, transparent) !important;
+  border-radius: 18px !important;
+  margin: 0 0 10px !important;
+  padding: 16px 18px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+}
+.chat-app .px-5.pt-2.flex.flex-col > .minimal-list-item:first-child {
+  position: relative !important;
+  overflow: visible !important;
+  margin-top: 34px !important;
+}
+
+/* 2) 第 2 条起的包裹 div */
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item) {
+  background: var(--c-card, #FFFFFF) !important;
+  border: 1px solid color-mix(in srgb, var(--c-card-border, #E0E0E0) 55%, transparent) !important;
+  border-radius: 18px !important;
+  margin: 0 0 10px !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item):nth-child(2) {
+  position: relative !important;
+  overflow: visible !important;
+  margin-top: 76px !important;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item):last-of-type {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* 包裹层内条目：透明、无边框、无阴影 */
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item) > .minimal-list-item {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 16px 18px !important;
+  box-shadow: none !important;
+  filter: none !important;
+  overflow: visible !important;
+}
+
+/* 3) 包裹层相邻合并 */
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item):has(+ div:not(.minimal-list-item)) {
+  margin-bottom: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item) + div:not(.minimal-list-item) {
+  margin-top: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+/* 4) 合并段内条目之间的浅分隔线 */
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item) > .minimal-list-item:has(+ .minimal-list-item) {
+  border-bottom: 1px solid color-mix(in srgb, var(--c-card-border, #E0E0E0) 40%, transparent) !important;
+}
+
+/* 5) 置顶标题 */
+.chat-app .px-5.pt-2.flex.flex-col > .minimal-list-item:first-child::before {
+  content: "置顶";
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+  color: var(--c-icon, #8A9099);
+  white-space: nowrap;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A9099' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 14px 14px;
+}
+
+/* 6) 合并组标题：特别关心 */
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item):nth-child(2)::before {
+  content: "特别关心";
+  position: absolute;
+  bottom: calc(100% + 52px);
+  left: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+  color: var(--c-icon, #8A9099);
+  white-space: nowrap;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A9099' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 14px 14px;
+}
+
+/* 7) 合并组标题：我的好友 */
+.chat-app .px-5.pt-2.flex.flex-col > div:not(.minimal-list-item):nth-child(2)::after {
+  content: "我的好友";
+  position: absolute;
+  bottom: calc(100% + 18px);
+  left: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+  color: var(--c-icon, #8A9099);
+  white-space: nowrap;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A9099' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 14px 14px;
+}
+
+/* ============================================================
+   九、朋友圈：顶部资料区
+   ============================================================ */
+.chat-app .feed-profile {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+.chat-app .feed-profile-avatar {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.chat-app .feed-profile-name,
+.chat-app .feed-profile-signature-text,
+.chat-app .feed-profile-stats {
+  text-align: center !important;
+}
+.chat-app .feed-profile-signature-text {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+  font-size: 14px !important;
+  color: var(--c-text-title, #2C3440) !important;
+  opacity: 1 !important;
+  line-height: 1.6 !important;
+}
+.chat-app .feed-profile-stats {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  width: 100% !important;
+}
+.chat-app .feed-profile-name::after {
+  content: var(--text-handle);
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.2px;
+  color: var(--c-icon, #8A9099);
+}
+.chat-app .feed-profile-stat-value {
+  font-size: 15px !important;
+  color: #8FB2C8 !important;
+  font-weight: 400 !important;
+}
+
+/* 签名两侧引号 */
+.chat-app .feed-profile-signature-text::before,
+.chat-app .feed-profile-signature-text::after {
+  content: "" !important;
+  display: inline-block !important;
+  width: 13px !important;
+  height: 13px !important;
+  vertical-align: -1px !important;
+  background-color: currentColor !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  opacity: 0.45 !important;
+}
+.chat-app .feed-profile-signature-text::before {
+  margin-right: 5px !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23000'%3E%3Cpath d='M7.2 19.6c-2.7 0-4.7-2.1-4.7-4.9 0-4.1 2.8-7.8 7-9.8l1.2 1.9C8.3 8.2 6.7 10 6.3 12.1c.4-.1.8-.2 1.2-.2 2.2 0 3.9 1.7 3.9 3.9 0 2.3-1.8 3.8-4.2 3.8z'/%3E%3Cpath d='M16.9 19.6c-2.7 0-4.7-2.1-4.7-4.9 0-4.1 2.8-7.8 7-9.8l1.2 1.9c-2.4 1.4-4 3.2-4.4 5.3.4-.1.8-.2 1.2-.2 2.2 0 3.9 1.7 3.9 3.9 0 2.3-1.8 3.8-4.2 3.8z'/%3E%3C/g%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23000'%3E%3Cpath d='M7.2 19.6c-2.7 0-4.7-2.1-4.7-4.9 0-4.1 2.8-7.8 7-9.8l1.2 1.9C8.3 8.2 6.7 10 6.3 12.1c.4-.1.8-.2 1.2-.2 2.2 0 3.9 1.7 3.9 3.9 0 2.3-1.8 3.8-4.2 3.8z'/%3E%3Cpath d='M16.9 19.6c-2.7 0-4.7-2.1-4.7-4.9 0-4.1 2.8-7.8 7-9.8l1.2 1.9c-2.4 1.4-4 3.2-4.4 5.3.4-.1.8-.2 1.2-.2 2.2 0 3.9 1.7 3.9 3.9 0 2.3-1.8 3.8-4.2 3.8z'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+.chat-app .feed-profile-signature-text::after {
+  margin-left: 5px !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23000' transform='rotate(180 12 12)'%3E%3Cpath d='M7.2 19.6c-2.7 0-4.7-2.1-4.7-4.9 0-4.1 2.8-7.8 7-9.8l1.2 1.9C8.3 8.2 6.7 10 6.3 12.1c.4-.1.8-.2 1.2-.2 2.2 0 3.9 1.7 3.9 3.9 0 2.3-1.8 3.8-4.2 3.8z'/%3E%3Cpath d='M16.9 19.6c-2.7 0-4.7-2.1-4.7-4.9 0-4.1 2.8-7.8 7-9.8l1.2 1.9c-2.4 1.4-4 3.2-4.4 5.3.4-.1.8-.2 1.2-.2 2.2 0 3.9 1.7 3.9 3.9 0 2.3-1.8 3.8-4.2 3.8z'/%3E%3C/g%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23000' transform='rotate(180 12 12)'%3E%3Cpath d='M7.2 19.6c-2.7 0-4.7-2.1-4.7-4.9 0-4.1 2.8-7.8 7-9.8l1.2 1.9C8.3 8.2 6.7 10 6.3 12.1c.4-.1.8-.2 1.2-.2 2.2 0 3.9 1.7 3.9 3.9 0 2.3-1.8 3.8-4.2 3.8z'/%3E%3Cpath d='M16.9 19.6c-2.7 0-4.7-2.1-4.7-4.9 0-4.1 2.8-7.8 7-9.8l1.2 1.9c-2.4 1.4-4 3.2-4.4 5.3.4-.1.8-.2 1.2-.2 2.2 0 3.9 1.7 3.9 3.9 0 2.3-1.8 3.8-4.2 3.8z'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+/* 签名移到「昵称下面、关注数据上面」 */
+.chat-app .feed-profile-info {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.chat-app .feed-profile-info > .feed-profile-name {
+  order: 1 !important;
+}
+.chat-app .feed-profile-info > .feed-profile-signature {
+  order: 2 !important;
+  margin-top: 2px !important;
+}
+.chat-app .feed-profile-info > .feed-profile-stats {
+  order: 3 !important;
+  margin-top: 6px !important;
+}
+
+/* 封面渐变 */
+.chat-app .feed-cover-bg {
+  -webkit-mask-image: linear-gradient(black 20%, transparent 80%) !important;
+  mask-image: linear-gradient(black 20%, transparent 80%) !important;
+}
+
+/* ============================================================
+   十、朋友圈：单条动态
+   ============================================================ */
+
+/* 时间戳前的时钟 */
+.chat-app .feed-post-time::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 15px !important;
+  height: 15px !important;
+  margin-right: 4px !important;
+  vertical-align: -3px !important;
+  background-color: currentColor !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E") !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  opacity: 0.85 !important;
+}
+
+/* 作者昵称下方 @ */
+.chat-app .feed-post-author-name::after {
+  content: var(--text-char-id);
+  display: block;
+  margin-top: -1px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+  color: #A8AEB6;
+}
+
+/* 点赞摘要 */
+.chat-app .feed-like-summary {
+  position: relative !important;
+  padding-top: 10px !important;
+  align-items: center !important;
+}
+.chat-app .feed-like-summary::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: color-mix(in srgb, var(--c-card-border, #E0E0E0) 55%, transparent) !important;
+}
+.chat-app .feed-like-summary-icon {
+  margin-top: 0 !important;
+}
+.chat-app .feed-like-summary-icon svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+.chat-app .feed-like-summary-text {
+  color: #4F7F9B !important;
+  opacity: 1 !important;
+}
+
+/* 反馈区间距 */
+.chat-app .feed-feedback-section {
+  gap: 4px !important;
+}
+.chat-app .feed-feedback-section .feed-comments {
+  margin-top: 0 !important;
+}
+
+/* “N条评论”行 */
+.chat-app .feed-feedback-section .feed-comments::before {
+  content: var(--text-comment-count);
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 22px 2px 24px;
+  margin-bottom: -4px !important;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #A8AEB6;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A8AEB6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 14.5a3 3 0 0 1-3 3H7.5L3.8 20.7a.5.5 0 0 1-.8-.4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A8AEB6' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat;
+  background-position: left calc(50% + 2px), right center !important;
+  background-size: 17px 17px, 14px 14px;
+}
+
+/* 操作行：点赞 → 评论 → 时间 → 删除 */
+.chat-app .feed-post-action-row {
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+.chat-app .feed-post-actions {
+  display: contents !important;
+}
+.chat-app .feed-post-like-btn {
+  order: 1 !important;
+}
+.chat-app .feed-post-comment-btn {
+  order: 2 !important;
+}
+.chat-app .feed-post-time {
+  order: 3 !important;
+}
+.chat-app .feed-post-delete-btn {
+  order: 4 !important;
+}
+
+/* 评论按钮：方形气泡 */
+.chat-app .feed-post-comment-btn {
+  position: relative !important;
+  width: 19px !important;
+  height: 19px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--c-icon, #8A9099) !important;
+}
+.chat-app .feed-post-comment-btn svg {
+  display: none !important;
+}
+.chat-app .feed-post-comment-btn::after {
+  content: "" !important;
+  display: block !important;
+  width: 17px !important;
+  height: 17px !important;
+  background-color: currentColor !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 14.5a3 3 0 0 1-3 3H7.5L3.8 20.7a.5.5 0 0 1-.8-.4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 14.5a3 3 0 0 1-3 3H7.5L3.8 20.7a.5.5 0 0 1-.8-.4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z'/%3E%3C/svg%3E") !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+}
+
+/* ============================================================
+   十一、朋友圈：评论
+   ============================================================ */
+.chat-app .feed-comment-content {
+  position: relative !important;
+}
+.chat-app .feed-comment-content > .feed-comment-main > .feed-comment-author {
+  padding-right: 100px !important;
+}
+.chat-app .feed-comment-content > .feed-comment-main > .feed-comment-body {
+  padding-right: 28px !important;
+}
+.chat-app .feed-comment-reply-btn {
+  display: none !important;
+}
+
+/* 评论时间戳：昵称行右侧，带时钟 */
+.chat-app .feed-comment-content > .feed-comment-meta > .feed-comment-time {
+  position: absolute !important;
+  top: 0 !important;
+  right: 32px !important;
+  margin: 0 !important;
+  font-size: 11px !important;
+  line-height: 1.8 !important;
+  color: var(--c-icon, #8A9099) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+.chat-app .feed-comment-content > .feed-comment-meta > .feed-comment-time::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 13px !important;
+  height: 13px !important;
+  margin-right: 3px !important;
+  flex-shrink: 0 !important;
+  background-color: currentColor !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E") !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  opacity: 0.85 !important;
+}
+
+/* 编辑按钮：正文右侧，无图标透明可点区 */
+.chat-app .feed-comment-meta .ml-auto .feed-comment-icon-button:first-child {
+  position: absolute !important;
+  top: 26px !important;
+  right: 0 !important;
+  margin: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  background: transparent !important;
+  color: transparent !important;
+}
+.chat-app .feed-comment-meta .ml-auto .feed-comment-icon-button:first-child svg {
+  display: none !important;
+}
+.chat-app .feed-comment-meta .ml-auto .feed-comment-icon-button:first-child::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* 删除按钮：昵称行最右，三点菜单 */
+.chat-app .feed-comment-meta .ml-auto .feed-comment-icon-button:last-child {
+  position: absolute !important;
+  top: -3px !important;
+  right: 0 !important;
+  margin: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--c-icon, #8A9099) !important;
+}
+.chat-app .feed-comment-meta .ml-auto .feed-comment-icon-button:last-child svg {
+  display: none !important;
+}
+.chat-app .feed-comment-meta .ml-auto .feed-comment-icon-button:last-child::after {
+  content: "" !important;
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  background-color: currentColor !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Ccircle cx='19' cy='12' r='2'/%3E%3Ccircle cx='5' cy='12' r='2'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Ccircle cx='19' cy='12' r='2'/%3E%3Ccircle cx='5' cy='12' r='2'/%3E%3C/svg%3E") !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+}
+
+/* meta 行塌陷 */
+.chat-app .feed-comment-meta {
+  margin-top: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+}
+
+/* 评论条间距 */
+.chat-app .feed-comments {
+  gap: 10px !important;
+}
+
+/* 评论数行下方分割线（第一条一级评论顶部） */
+.chat-app .feed-comments > .feed-comment-root:first-child {
+  position: relative !important;
+  padding-top: 14px !important;
+}
+.chat-app .feed-comments > .feed-comment-root:first-child::before {
+  content: "" !important;
+  position: absolute !important;
+  top: -2px !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: color-mix(in srgb, var(--c-card-border, #E0E0E0) 55%, transparent) !important;
+}
+
+/* ============================================================
+   十二、朋友圈：卡片外壳
+   ============================================================ */
+.chat-app .feed-post {
+  background: var(--c-card, #FFFFFF) !important;
+  border: 1px solid color-mix(in srgb, var(--c-card-border, #E0E0E0) 55%, transparent) !important;
+  border-radius: 0 !important;
+  margin: 0 14px 10px !important;
+  padding: 16px 18px !important;
+  width: auto !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* 朋友圈：动态图片圆角 2px */
+.chat-app .feed-post .chat-photo-card,
+.chat-app .feed-post .chat-photo-card-placeholder,
+.chat-app .feed-post .chat-photo-card-image,
+.chat-app .feed-post [class*="feed-post-image"],
+.chat-app .feed-post [class*="feed-post-media"],
+.chat-app .feed-post [class*="feed-post-photo"],
+.chat-app .feed-post [class*="grid"] > *,
+.chat-app .feed-post [class*="grid"] img,
+.chat-app .feed-post .feed-post-content ~ * img:not([class*="avatar"]):not(.rounded-full),
+.chat-app .feed-post .feed-post-content ~ *:has(img):not(.feed-feedback-section),
+.chat-app .feed-post .feed-post-content ~ * *:has(> img):not([class*="avatar"]):not(.rounded-full) {
+  border-radius: 2px !important;
+}
+
+/* 签名下方新增一行：实心 SVG 图标 + 地点 */
+.chat-app .feed-profile-signature {
+  position: relative !important;
+}
+.chat-app .feed-profile-signature::after {
+  content: var(--text-location);
+  display: block;
+  width: fit-content;
+  margin: 8px auto 0;
+  padding-left: 20px;
+  box-sizing: border-box;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238A9099'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 16px 16px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.2px;
+  color: var(--c-icon, #8A9099);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ============================================================
+   十三、评论区域与头像美化
+   ============================================================ */
+
+/* 取消「回复的评论」缩进 */
+.feed-comment-replies {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  margin-top: 6px !important;
+}
+
+/* 评论头像（父/子）统一 28px */
+.feed-comment-avatar,
+.feed-comment-avatar-root,
+.feed-comment-avatar-child {
+  width: 28px !important;
+  height: 28px !important;
+  margin-top: 0 !important;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--c-input);
+}
+.feed-comment-avatar img,
+.feed-comment-avatar-root img,
+.feed-comment-avatar-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 动态（帖子）作者头像 36px */
+.feed-post-author-avatar {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--c-input);
+}
+.feed-post-author-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 评论行间距 */
+.feed-comment-row {
+  gap: 8px !important;
+}
+
+/* 子评论内容与父评论左边缘对齐 */
+.feed-comment-child .feed-comment-content {
+  padding-left: 0;
+}
+
+/* 悬停时评论正文轻微高亮 */
+.feed-comment-row:hover .feed-comment-body {
+  color: var(--c-text-title);
+}
+
+/* 评论区昵称 */
+.feed-comment-author {
+  color: #252525 !important;
+  font-weight: 550 !important;
+  font-size: 13.5px !important;
+  opacity: 1 !important;
+}
+
+/* 评论组间分割线 */
+.feed-comment-root {
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid var(--c-card-border, #e5e5e5);
+}
+.feed-comment-root:last-child {
+  padding-bottom: 0 !important;
+  border-bottom: none;
+}
+
+/* AI助手右侧“AI” → 曲别针图标 */
+.chat-app .px-5.pt-2.flex.flex-col > .minimal-list-item:first-child .ts-12 {
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  color: var(--c-icon, #8A9099) !important;
+}
+.chat-app .px-5.pt-2.flex.flex-col > .minimal-list-item:first-child .ts-12::after {
+  content: "" !important;
+  display: inline-block !important;
+  width: 14px !important;
+  height: 14px !important;
+  background-color: currentColor !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551'/%3E%3C/svg%3E") !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+}
+
+/* ============================================================
+   十四、标题栏 · 仅 Contacts 页
+   判定：右上角是「无 title / 无 aria-label 的按钮」
+   ============================================================ */
+
+/* 1. 整体布局：左对齐 */
+.chat-app .page-header-content:has(> .page-header-right > button:not([title]):not([aria-label])) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+}
+
+/* 2. 返回按钮：取消绝对定位，作为第一个 flex item */
+.chat-app .page-header-content:has(> .page-header-right > button:not([title]):not([aria-label])) > .page-back-btn:first-of-type {
+  position: static !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+}
+
+/* 3. 标题：取消居中，紧贴返回按钮右侧 */
+.chat-app .page-header-content:has(> .page-header-right > button:not([title]):not([aria-label])) > .page-title {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  margin: 0 0 0 -4px !important;
+  text-align: left !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* 4. 右侧按钮容器：推到最右 */
+.chat-app .page-header-content:has(> .page-header-right > button:not([title]):not([aria-label])) > .page-header-right {
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+}
+
+/* 5. 右上角按钮：隐藏原生 SVG，并把按钮设为伪元素定位参照 */
+.chat-app .page-header-content:has(> .page-header-right > button:not([title]):not([aria-label])) > .page-header-right > .page-back-btn {
+  position: relative !important;
+}
+.chat-app .page-header-content:has(> .page-header-right > button:not([title]):not([aria-label])) > .page-header-right > .page-back-btn > svg {
+  display: none !important;
+}
+
+/* 6. 重绘图标：圆圈 + 横向三点 */
+.chat-app .page-header-content:has(> .page-header-right > button:not([title]):not([aria-label])) > .page-header-right > .page-back-btn::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 22px !important;
+  height: 22px !important;
+  background-color: currentColor !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3Ccircle cx='7' cy='12' r='1.3' fill='%23000'/%3E%3Ccircle cx='12' cy='12' r='1.3' fill='%23000'/%3E%3Ccircle cx='17' cy='12' r='1.3' fill='%23000'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3Ccircle cx='7' cy='12' r='1.3' fill='%23000'/%3E%3Ccircle cx='12' cy='12' r='1.3' fill='%23000'/%3E%3Ccircle cx='17' cy='12' r='1.3' fill='%23000'/%3E%3C/svg%3E") !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  pointer-events: none !important;
+}
+
+/* ============================================================
+   十五、底部导航栏（居中 · 5 槽均分 · 中间微凸悬浮假按钮）
+   ============================================================ */
+.chat-app .chat-tab-bar {
+  position: fixed !important;
+  left: 56px !important;
+  right: 56px !important;
+  bottom: calc(36px + env(safe-area-inset-bottom, 0px)) !important;
+  width: auto !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 4px !important;
+  box-sizing: border-box !important;
+  border-radius: 999px !important;
+  border: 1px solid color-mix(in srgb, var(--c-card-border, #E0E0E0) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--c-card, #FFFFFF) 72%, transparent) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  overflow: visible !important;
+}
+
+/* 五槽排序：tab1 tab2 [假按钮] tab3 tab4 */
+.chat-app .chat-tab-bar .chat-tab:nth-child(1) {
+  order: 1 !important;
+}
+.chat-app .chat-tab-bar .chat-tab:nth-child(2) {
+  order: 2 !important;
+}
+.chat-app .chat-tab-bar .chat-tab:nth-child(3) {
+  order: 4 !important;
+}
+.chat-app .chat-tab-bar .chat-tab:nth-child(4) {
+  order: 5 !important;
+}
+
+/* 假按钮：50px 灰圆 + 4px 描边，凸出 6px */
+.chat-app .chat-tab-bar::before {
+  content: "" !important;
+  position: absolute !important;
+  top: -6px !important;
+  left: 50% !important;
+  width: 50px !important;
+  height: 50px !important;
+  margin-left: -25px !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  border: 4px solid color-mix(in srgb, var(--c-card, #FFFFFF) 85%, transparent) !important;
+  background-color: var(--nav-fab-bg, #6B7280) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg transform='rotate(270 12 12)'%3E%3Cpath d='M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z'/%3E%3Cpath d='m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18'/%3E%3Cpath d='m2.3 2.3 7.286 7.286'/%3E%3Ccircle cx='11' cy='11' r='2'/%3E%3C/g%3E%3C/svg%3E") !important;
+  background-size: 22px 22px !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-clip: padding-box !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  -webkit-mask-image:
+    linear-gradient(to bottom, #000 0 6px, transparent 6px),
+    radial-gradient(circle at center, #000 0 21px, transparent 21px) !important;
+  -webkit-mask-composite: source-over !important;
+  mask-image:
+    linear-gradient(to bottom, #000 0 6px, transparent 6px),
+    radial-gradient(circle at center, #000 0 21px, transparent 21px) !important;
+  mask-composite: add !important;
+}
+
+/* 第 3 槽占位 */
+.chat-app .chat-tab-bar::after {
+  content: "" !important;
+  order: 3 !important;
+  flex: 1 1 0% !important;
+  height: 54px !important;
+  background: transparent !important;
+  border: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 真按钮：54px 高，五槽各占 1/5 */
+.chat-app .chat-tab-bar .chat-tab {
+  flex: 1 1 0% !important;
+  height: 54px !important;
+  min-height: 54px !important;
+  max-height: 54px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 999px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  letter-spacing: 0 !important;
+  color: var(--c-icon, #8A9099) !important;
+  transition: color 0.2s ease !important;
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* 隐藏文字与原生 svg */
+.chat-app .chat-tab-bar .chat-tab > span,
+.chat-app .chat-tab-bar .chat-tab > p,
+.chat-app .chat-tab-bar .chat-tab > small,
+.chat-app .chat-tab-bar .chat-tab > label {
+  display: none !important;
+}
+.chat-app .chat-tab-bar .chat-tab > *:not(svg):not(svg *) {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+.chat-app .chat-tab-bar .chat-tab svg {
+  display: none !important;
+}
+
+/* 去掉旧的每按钮圆底 */
+.chat-app .chat-tab-bar .chat-tab::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* 图标：22px，居中 */
+.chat-app .chat-tab-bar .chat-tab::before {
+  content: "" !important;
+  display: block !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  background-color: currentColor !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  transform-origin: center center !important;
+  transition:
+    background-color 0.2s ease,
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* 选中态：图标变黑 + 放大 */
+.chat-app .chat-tab-bar .chat-tab.chat-tab-active::before,
+.chat-app .chat-tab-bar .chat-tab.active::before,
+.chat-app .chat-tab-bar .chat-tab[class*="active"]::before {
+  background-color: var(--nav-active-color, #111111) !important;
+  transform: scale(1.18) !important;
+}
+
+/* 四个图标 */
+.chat-app .chat-tab-bar .chat-tab:nth-child(1)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E") !important;
+}
+.chat-app .chat-tab-bar .chat-tab:nth-child(2)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E") !important;
+}
+/* 第 3 个：日记本（notebook-pen） */
+.chat-app .chat-tab-bar .chat-tab:nth-child(3)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4'/%3E%3Cpath d='M2 6h4'/%3E%3Cpath d='M2 10h4'/%3E%3Cpath d='M2 14h4'/%3E%3Cpath d='M2 18h4'/%3E%3Cpath d='M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4'/%3E%3Cpath d='M2 6h4'/%3E%3Cpath d='M2 10h4'/%3E%3Cpath d='M2 14h4'/%3E%3Cpath d='M2 18h4'/%3E%3Cpath d='M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z'/%3E%3C/svg%3E") !important;
+}
+.chat-app .chat-tab-bar .chat-tab:nth-child(4)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/%3E%3Cpath d='M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E") !important;
+}
+
+/* ============================================================
+   十六、统计数据行（帖子 / 粉丝 / 关注）
+   ============================================================ */
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:not(.opacity-20) {
+  display: inline-flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span.opacity-20 {
+  display: none !important;
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) {
+  justify-content: flex-start !important;
+  gap: 70px;
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(1),
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(3),
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(5) {
+  font-size: 0;
+  line-height: 0;
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(1)::before {
+  content: "帖子";
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(3)::before {
+  content: "粉丝";
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(5)::before {
+  content: "关注";
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(1)::before,
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(3)::before,
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(5)::before {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:not(.opacity-20) > .font-bold {
+  font-size: 0 !important;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--c-text-title);
+  opacity: 1;
+  font-variant-numeric: tabular-nums;
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(1) > .font-bold::before {
+  content: var(--num-posts);
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(3) > .font-bold::before {
+  content: var(--num-fans);
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(5) > .font-bold::before {
+  content: var(--num-following);
+}
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(1) > .font-bold::before,
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(3) > .font-bold::before,
+.chat-app .ts-12:not(.chat-room-wrapper *, .chat-scroll-anchored *) > span:nth-child(5) > .font-bold::before {
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+/* ============================================================
+   十七、头像（黑色描边 + 右下角加号）
+   ============================================================ */
+.flex.items-center.gap-5 > .relative.shrink-0 > div[class*="rounded-full"] {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.flex.items-center.gap-5 > .relative.shrink-0::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 4px solid #cfcfcf;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+.flex.items-center.gap-5 > .relative.shrink-0::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  background-color: #000;
+  border: 2.5px solid #fff;
+  box-sizing: border-box;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 15px 15px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ============================================================
+   十八、头像上方徽章（手机在线 + 半圆 + 小圆）
+   ============================================================ */
+.flex.items-center.gap-5 {
+  position: relative;
+  padding-top: 22px !important;
+}
+.flex.items-center.gap-5 .ts-11 {
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 84px;
+  height: 30px;
+  padding: 0 !important;
+  justify-content: center;
+  background: #fff !important;
+  border-radius: 18px !important;
+  opacity: 1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 3;
+}
+.flex.items-center.gap-5 .ts-11::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  bottom: -6px;
+  width: 16px;
+  height: 8px;
+  background: #fff;
+  border-radius: 0 0 16px 16px;
+}
+.flex.items-center.gap-5 .ts-11::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  bottom: -16px;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #fff;
+  z-index: 3;
+}
+
+/* ============================================================
+   十九、银行卡卡片整体
+   ============================================================ */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  margin: -18px 6px 0 !important;
+}
+
+/* ============================================================
+   二十、底部三个按钮（编辑主页 / 分享主页 / 添加朋友）
+   ============================================================ */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-center.justify-between {
+  justify-content: flex-start !important;
+  gap: 6px !important;
+}
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-center.justify-between > span {
+  position: relative !important;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  color: #252525 !important;
+  font-size: 0 !important;
+  font-weight: 500;
+  letter-spacing: normal;
+}
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-center.justify-between > span:nth-child(1)::before,
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-center.justify-between > span:nth-child(2)::before {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  color: #252525;
+}
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-center.justify-between > span:nth-child(1)::before {
+  content: "编辑主页";
+}
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-center.justify-between > span:nth-child(2)::before {
+  content: "分享主页";
+}
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-center.justify-between > span:nth-child(2) > svg {
+  display: none !important;
+}
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-center.justify-between::after {
+  content: "";
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23252525' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg transform='translate(24,0) scale(-1,1)'%3E%3Cpath d='M2 21a8 8 0 0 1 13.292-6'/%3E%3Ccircle cx='10' cy='8' r='5'/%3E%3Cpath d='M19 16v6'/%3E%3Cpath d='M22 19h-6'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px 16px;
+}
+
+/* ============================================================
+   二十一、卡片上半部分：三行黑 + 一行蓝 + 浅灰面板
+   ============================================================ */
+
+/* 容器：蓝行 top 63 + 行高 16 + 间距 8 = 87 */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between {
+  position: relative !important;
+  padding-top: 87px !important;
+  margin-bottom: 8px !important;
+}
+
+/* 第一行：黑色，13px */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between::before {
+  content: var(--text-above-line-1);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  color: #252525;
+  white-space: nowrap;
+}
+
+/* 第二行：黑色，top 21 */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between > span {
+  display: block !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 21px !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  letter-spacing: normal !important;
+  color: #252525 !important;
+}
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between > span::before {
+  content: var(--text-above-line-2);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  color: #252525;
+}
+
+/* 第三行：黑色，top 42 */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between > div:first-child > div:nth-child(1) {
+  display: block !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 42px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  color: #252525 !important;
+}
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between > div:first-child > div:nth-child(1)::before {
+  content: var(--text-above-line-3);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  color: #252525;
+}
+
+/* 第四行：蓝色链接，top 63 */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between::after {
+  content: var(--text-above-line-4);
+  position: absolute;
+  left: 0;
+  top: 63px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #246bfd;
+  white-space: nowrap;
+  padding-left: 22px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23246bfd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 16px 16px;
+}
+
+/* 浅灰面板 */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between > div:first-child {
+  position: static !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  flex: 1 1 100% !important;
+  gap: 2px !important;
+  padding: 14px 12px !important;
+  background-color: #ececec !important;
+  border-radius: 10px !important;
+}
+
+/* 隐藏金额，保留第一个子 div 做第三行 */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between > div:first-child > div:nth-child(2) {
+  display: none !important;
+}
+
+/* 面板内第一行：你的面板 */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between > div:first-child::before {
+  content: "你的面板";
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #252525;
+  white-space: nowrap;
+}
+
+/* 面板内第二行：过去 30 天 */
+button[type="button"].rounded-2xl:not(.chat-room-wrapper *, .chat-scroll-anchored *) .relative.flex.items-start.justify-between > div:first-child::after {
+  content: var(--text-past-30-days);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #9ca3af;
+  white-space: nowrap;
+  padding-left: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 14px 14px;
+}
+
+/* ============================================================
+   二十二、三按钮快捷入口
+   ============================================================ */
+
+/* 1. 容器：透明 + 靠左 + 上内边距调小 */
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between {
+  background: transparent !important;
+  box-shadow: none !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 28px !important;
+  padding-top: 2px !important;
+  padding-left: 16px !important;
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button {
+  flex: 0 0 auto !important;
+}
+
+/* 2. 三个图标容器：统一圆形（默认 46px） */
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button > div {
+  border-radius: 50% !important;
+  width: 46px !important;
+  height: 46px !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+/* 3. 第一个按钮：50px 内圆 + 2px 细圈 + 2px 间隙 */
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(1) > div {
+  width: 50px !important;
+  height: 50px !important;
+  background-color: transparent !important;
+  outline: 2px solid #cfcfcf;
+  outline-offset: 2px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 18px 18px !important;
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(1) > div > svg {
+  display: none !important;
+}
+
+/* 4. 第二、三个按钮：47px 内圆 + 3.5px 粗圈 + 2.5px 间隙 */
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(2) > div,
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(3) > div {
+  width: 47px !important;
+  height: 47px !important;
+  outline: 3.5px solid #cfcfcf;
+  outline-offset: 2.5px;
+  background-size: cover !important;
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(2) > div {
+  background-image: var(--icon-2-image) !important;
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(3) > div {
+  background-image: var(--icon-3-image) !important;
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(2) > div > svg,
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(3) > div > svg {
+  display: none !important;
+}
+
+/* 5. 说明文字：隐藏原文 + 变量伪元素 */
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button > span {
+  font-size: 0 !important;
+  line-height: 1.2;
+  position: relative;
+  top: 5px;
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button > span::before {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--c-text-title);
+  white-space: nowrap;
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(1) > span::before {
+  content: var(--label-1);
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(2) > span::before {
+  content: var(--label-2);
+}
+div.mx-4.mb-4.rounded-2xl.flex.items-center.justify-between > button:nth-child(3) > span::before {
+  content: var(--label-3);
+}
+
+/* ============================================================
+   二十三、发布模态框（全屏化）
+   ============================================================ */
+.modal-overlay:has(.compose-modal) {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  background: var(--c-page-body-bg);
+  align-items: stretch;
+  justify-content: stretch;
+}
+.compose-modal {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+  animation: none;
+  background: var(--c-page-body-bg);
+}
+.compose-modal-header {
+  flex-shrink: 0;
+  padding: calc(var(--page-header-safe-top, 48px) + 10px) 16px 12px;
+  border-bottom: none;
+}
+.compose-modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.compose-top-area {
+  flex: none;
+  overflow: visible;
+}
+.compose-textarea {
+  flex: none;
+  height: auto;
+  min-height: calc(4.8em + 4px);
+  max-height: 45vh;
+  field-sizing: content;
+  overflow-y: auto;
+  resize: none;
+}
+.compose-nav-list {
+  margin-top: 0;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  border-bottom: none;
+}
+
+/* 隐藏原生 svg */
+.compose-modal .compose-header-icon:not(.compose-header-send) svg,
+.compose-modal .compose-header-send svg {
+  display: none;
+}
+
+/* 返回按钮：用边框画返回箭头 */
+.compose-modal .compose-header-icon:not(.compose-header-send) {
+  position: relative;
+}
+.compose-modal .compose-header-icon:not(.compose-header-send)::before {
+  content: "";
+  width: 11px;
+  height: 11px;
+  border-left: 1.8px solid currentColor;
+  border-bottom: 1.8px solid currentColor;
+  transform: rotate(45deg);
+  margin-left: 3px;
+}
+
+/* 发表按钮 */
+.compose-modal .compose-header-send {
+  width: auto;
+  min-width: 52px;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: #cfcfcf;
+  color: #ffffff;
+  font-size: calc(13.5px * var(--app-text-scale, 1));
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.15s;
+}
+.compose-modal .compose-header-send::after {
+  content: "发表";
+  line-height: 1;
+}
+.compose-modal .compose-header-send:active {
+  transform: scale(0.96);
+}
+.compose-modal .compose-header-send:disabled {
+  opacity: 1;
+  background: #e4e4e9;
+  color: #ffffff;
+}
+
+/* 隐藏原有标题 */
+.compose-modal .compose-modal-title {
+  display: none;
+}
+
+/* ============================================================
+   2. 父级：变成 3 列等宽网格
+   定位依据：直接子级里同时含 send / keyboard / puzzle 三张卡
+   注意：三个 :has() 是并列的顶层，参数内无 :has()，语法合法
+   ============================================================ */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 2px !important;
+  align-items: start !important;
+}
+
+/* 父级里的其它元素（第一张彩色卡、上方余额卡、标题等）整行占位 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > * {
+  grid-column: 1 / -1 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ============================================================
+   3. 三张卡不再生成盒子：白底 / 圆角 / 阴影 / px-4 py-1 全部消失
+      同时让 7 个条目提升到父级网格里参与排列
+   ============================================================ */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) {
+  display: contents !important;
+}
+
+/* ============================================================
+   4. 七个条目本体
+   ============================================================ */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * {
+  position: relative !important;
+  z-index: 1 !important;
+
+  /* 方形尖角 + 高 = 宽 × 1.5 */
+  aspect-ratio: 2 / 3 !important;
+  width: 100% !important;
+  height: auto !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 8px 8px 10px !important;
+  border: 0 !important;            /* 顺带清掉卡内每行的 border-b 分隔线 */
+  border-radius: 0 !important;     /* 尖角 */
+
+  /* 底色只作图片加载失败时的兜底；必须拆成 color + image，
+     否则 background 简写会把下面的 image 层冲掉 */
+  background-color: var(--c-card) !important;
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--tile-mask-color) calc(var(--tile-mask) * 100%), transparent),
+      color-mix(in srgb, var(--tile-mask-color) calc(var(--tile-mask) * 100%), transparent)
+    ),
+    var(--tile-bg-img) !important;
+  background-size: cover, cover !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat, no-repeat !important;
+
+  box-shadow: rgba(0, 0, 0, .024) 0 8px 24px;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 4px !important;
+  text-align: left !important;
+  overflow: hidden !important;
+  align-self: start !important;
+
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 4.1 逐个条目取图（图标在设置页唯一，命中即目标条目） */
+div.mx-4[class*="bg-[var(--c-card)]"] > *:has(> svg.lucide-send)             { --tile-bg-img: var(--tile-bg-1); }
+div.mx-4[class*="bg-[var(--c-card)]"] > *:has(> svg.lucide-satellite)        { --tile-bg-img: var(--tile-bg-2); }
+div.mx-4[class*="bg-[var(--c-card)]"] > *:has(> svg.lucide-keyboard)         { --tile-bg-img: var(--tile-bg-3); }
+div.mx-4[class*="bg-[var(--c-card)]"] > *:has(> svg.lucide-vibrate)          { --tile-bg-img: var(--tile-bg-4); }
+div.mx-4[class*="bg-[var(--c-card)]"] > *:has(> svg.lucide-bell)             { --tile-bg-img: var(--tile-bg-5); }
+div.mx-4[class*="bg-[var(--c-card)]"] > *:has(> svg.lucide-puzzle)           { --tile-bg-img: var(--tile-bg-6); }
+div.mx-4[class*="bg-[var(--c-card)]"] > *:has(> svg.lucide-file-code-corner) { --tile-bg-img: var(--tile-bg-7); }
+
+/* 4.2 右侧箭头隐藏 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * > svg[class*="chevron-right"] {
+  display: none !important;
+}
+
+/* 4.3 左侧功能图标：靠左、不缩放 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * > svg:first-child {
+  flex: none !important;
+  align-self: flex-start !important;
+  opacity: .7;
+}
+
+/* 4.4 文本区：撑满剩余高度，内容压到最下方、左对齐 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * > div {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-end !important;
+  text-align: left !important;
+  gap: 2px !important;
+}
+
+/* 4.5 标题 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * > div > span:first-child {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  color: var(--c-text-title);
+  word-break: break-word;
+  text-align: left !important;
+}
+
+/* 4.6 描述：左对齐，最多 4 行截断
+        :not(:first-child) 避免只有单个 span 时把标题一并吃掉 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * > div > span:last-child:not(:first-child) {
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+  color: var(--c-text);
+  opacity: .7;
+  word-break: break-word;
+  text-align: left !important;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+/* ============================================================
+   5. 开关 → 右上角 ▶ / ⏸ 图标
+      ▶ = 关闭；⏸ = 开启
+      用 mask 画，颜色由 background-color: currentColor 决定
+   ============================================================ */
+
+/* 5.1 底座：脱离文档流钉在右上角，清掉原胶囊造型 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * > button[class*="ui-toggle"] {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  z-index: 2 !important;
+  flex: none !important;
+  margin: 0 !important;
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-color: currentColor !important;
+  opacity: .5 !important;
+  -webkit-mask-repeat: no-repeat;  mask-repeat: no-repeat;
+  -webkit-mask-position: center;   mask-position: center;
+  -webkit-mask-size: contain;      mask-size: contain;
+  /* 默认 = ▶ 播放三角（未开启）：填充 + 圆角描边 */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000' stroke='%23000' stroke-width='4.5' stroke-linejoin='round'%3E%3Cpath d='M6.5 5.6 18 12 6.5 18.4Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000' stroke='%23000' stroke-width='4.5' stroke-linejoin='round'%3E%3Cpath d='M6.5 5.6 18 12 6.5 18.4Z'/%3E%3C/svg%3E");
+}
+
+/* 5.2 开启状态 = ⏸ 暂停 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * > button[class*="ui-toggle"]:is([aria-checked="true"], [data-checked="true"], [data-checked=""]) {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M7 5h3.6v14H7zM13.4 5H17v14h-3.6z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M7 5h3.6v14H7zM13.4 5H17v14h-3.6z'/%3E%3C/svg%3E");
+}
+
+/* 5.3 干掉原开关的圆点 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > * > button[class*="ui-toggle"] > span {
+  display: none !important;
+}
+
+/* ============================================================
+   6. 第一行三格上方的装饰图标（放大版 26px）
+   ============================================================ */
+
+/* 6.1 给上方留出空间，并放开 overflow（基础规则里有 hidden，不放开会被裁掉） */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > *:is(:has(> svg.lucide-send), :has(> svg.lucide-satellite), :has(> svg.lucide-keyboard)) {
+  margin-top: 30px !important;
+  overflow: visible !important;
+}
+
+/* 6.2 伪元素底座：26×26，居中在各自列的正上方 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > *:is(:has(> svg.lucide-send), :has(> svg.lucide-satellite), :has(> svg.lucide-keyboard))::before {
+  content: "";
+  position: absolute;
+  top: -36px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 26px;
+  background-color: currentColor;
+  opacity: .45;
+  -webkit-mask-repeat: no-repeat;  mask-repeat: no-repeat;
+  -webkit-mask-position: center;   mask-position: center;
+  -webkit-mask-size: contain;      mask-size: contain;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 6.3 九宫格 —— 追发规则与延迟控制 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > *:has(> svg.lucide-send)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M2 2.5h5v5H2zM9.5 2.5h5v5h-5zM17 2.5h5v5h-5zM2 9.5h5v5H2zM9.5 9.5h5v5h-5zM17 9.5h5v5h-5zM2 16.5h5v5H2zM9.5 16.5h5v5h-5zM17 16.5h5v5h-5z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M2 2.5h5v5H2zM9.5 2.5h5v5h-5zM17 2.5h5v5h-5zM2 9.5h5v5H2zM9.5 9.5h5v5h-5zM17 9.5h5v5h-5zM2 16.5h5v5H2zM9.5 16.5h5v5h-5zM17 16.5h5v5h-5z'/%3E%3C/svg%3E");
+}
+
+/* 6.3b 九宫格下方的横杠（放宽加粗版） */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > *:has(> svg.lucide-send)::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 54px;      /* 原 26px → 54px，比图标更宽 */
+  height: 2.3px;      /* 原 2px → 2.3px，略粗 */
+  background-color: currentColor;
+  opacity: .45;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 6.4 圆角方框 + 空心圆角三角 —— 离线推送与定时消息 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > *:has(> svg.lucide-satellite)::before,
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > *:has(> svg.lucide-satellite)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.6' y='2.6' width='18.8' height='18.8' rx='5.4'/%3E%3Cpath d='M9.9 8.9 15.9 12 9.9 15.1Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.6' y='2.6' width='18.8' height='18.8' rx='5.4'/%3E%3Cpath d='M9.9 8.9 15.9 12 9.9 15.1Z'/%3E%3C/svg%3E");
+}
+
+/* 6.5 相框 + 小人 —— 回车发送 */
+div:has(> .mx-4 > * > svg.lucide-send):has(> .mx-4 > * > svg.lucide-keyboard):has(> .mx-4 > * > svg.lucide-puzzle) > .mx-4:is(:has(> * > svg.lucide-send), :has(> * > svg.lucide-keyboard), :has(> * > svg.lucide-puzzle)) > *:has(> svg.lucide-keyboard)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.8' y='2.8' width='18.4' height='18.4' rx='4.6'/%3E%3Ccircle cx='12' cy='9.8' r='2.8'/%3E%3Cpath d='M7 18.4c.7-2.4 2.7-3.7 5-3.7s4.3 1.3 5 3.7'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.8' y='2.8' width='18.4' height='18.4' rx='4.6'/%3E%3Ccircle cx='12' cy='9.8' r='2.8'/%3E%3Cpath d='M7 18.4c.7-2.4 2.7-3.7 5-3.7s4.3 1.3 5 3.7'/%3E%3C/svg%3E");
+}
