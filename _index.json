@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T20:25:57.585Z",
+  "generatedAt": "2026-11-12T20:40:06.719Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -45,7 +45,7 @@
     },
     {
       "name": "应用反馈（与应用作者沟通渠道）",
-      "count": 9
+      "count": 10
     },
     {
       "name": "快捷指令模版",
@@ -7058,6 +7058,20 @@
       "avatar": "",
       "ownerHash": "967826da0a6d92bf811b4076cc20ed9a13e9801065336de1b42b97d8c33083fa",
       "updatedAt": "2026-10-12T11:45:31+08:00"
+    },
+    {
+      "folder": "应用反馈（与应用作者沟通渠道）",
+      "name": "许愿一个查找聊天记录的插件",
+      "dirName": "许愿一个查找聊天记录的插件",
+      "type": "dir",
+      "path": "资源/应用反馈（与应用作者沟通渠道）/许愿一个查找聊天记录的插件",
+      "files": [],
+      "images": [],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "f0e3968ce25366e1d63899f0f7e2e691caf83f710f3f244cb19dcb741f476513",
+      "updatedAt": "2026-11-13T05:37:38+09:00"
     },
     {
       "folder": "应用反馈（与应用作者沟通渠道）",
