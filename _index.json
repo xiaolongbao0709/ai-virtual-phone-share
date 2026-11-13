@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-13T02:45:46.920Z",
+  "generatedAt": "2026-11-13T05:00:18.708Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "线上美化",
-      "count": 59
+      "count": 60
     },
     {
       "name": "线上聊天状态栏",
@@ -8113,6 +8113,26 @@
       "avatar": "资源/线上美化/Kakaotalk_by小池/.avatar.png",
       "ownerHash": "6a08d4fbb179025747de726b73fc09d681a2a7d30e74d9d35f57f31a77b70b8d",
       "updatedAt": "2026-09-05T17:51:24+08:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "OnAir聊天室美化",
+      "dirName": "OnAir聊天室美化",
+      "type": "dir",
+      "path": "资源/线上美化/OnAir聊天室美化",
+      "files": [
+        "资源/线上美化/OnAir聊天室美化/OnAir-聊天室美化.css",
+        "资源/线上美化/OnAir聊天室美化/OnAir-聊天室美化.js"
+      ],
+      "images": [
+        "资源/线上美化/OnAir聊天室美化/retouch_2026111306210956.jpg",
+        "资源/线上美化/OnAir聊天室美化/retouch_2026111306225643.jpg"
+      ],
+      "description": "[雪花][粗]禁止二传大改 自用小改随意[/粗]\n\n\n*顶部和底部灵感来源于iMessage，备注名以及颜色都可以自行在css里进行更换。基础版本为黑白色系\n*心声点击角色“ON AIR”按钮即可展开，输入时顶部ONLINE会切换状态。\n\n\n注意事项：需搭配[红]Js插件[/红]食用，这次的只做了一些卡片还有整体的搭配，线下聊天和一些功能未进行适配。有bug可以在🍠搜Glück进行反馈",
+      "author": "Glück",
+      "avatar": "资源/线上美化/OnAir聊天室美化/.avatar.png",
+      "ownerHash": "2d219a36b42d6b520c9a72ca38913c044848e875ff08144a9eae53f5db8925b1",
+      "updatedAt": "2026-11-13T13:58:24+09:00"
     },
     {
       "folder": "线上美化",
