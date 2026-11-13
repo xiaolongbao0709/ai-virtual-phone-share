@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-13T05:00:18.708Z",
+  "generatedAt": "2026-11-13T06:33:14.816Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 92
+      "count": 93
     },
     {
       "name": "MCP",
@@ -885,6 +885,24 @@
       "avatar": "",
       "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
       "updatedAt": "2026-08-13T02:35:15+02:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "扩展插件收纳",
+      "dirName": "扩展插件收纳",
+      "type": "dir",
+      "path": "资源/Js插件/扩展插件收纳",
+      "files": [
+        "资源/Js插件/扩展插件收纳/插件收纳.js"
+      ],
+      "images": [
+        "资源/Js插件/扩展插件收纳/IMG_20261113_140727.jpg"
+      ],
+      "description": "✅二改\n🚫二传二卖\n有任何问题可反馈🍠@木叶淀粉酶\n\n\n用来收纳扩展插件的插件，将插件收成网格，点击以后展开，长按图标可拖动排序",
+      "author": "木叶淀粉酶",
+      "avatar": "资源/Js插件/扩展插件收纳/.avatar.png",
+      "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
+      "updatedAt": "2026-11-13T15:31:05+09:00"
     },
     {
       "folder": "Js插件",
