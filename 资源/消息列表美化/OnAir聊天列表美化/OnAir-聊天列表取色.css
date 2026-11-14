@@ -1,0 +1,337 @@
+
+/* ===== 自定义背景图（四个主页面共用） =====
+   把下方的 none 改成 url("你的图片直链")，例如：
+   --pod-background-image: url("https://你的图床域名/background.jpg");
+   需要图片直链，不是图床分享网页。恢复纯色时改回 none。
+   原有颜色变量仍保留；无图、图片加载前或加载失败时显示 --pod-page-bg。
+   不添加磨砂、模糊、背景动效或额外 JS。
+*/
+:root{--pod-background-image:url("图床链接");}
+/* 浅色取色版：卡片底色由 JS 从已加载头像采样；读取受限或无头像时沿用 --pod-card-bg。其余排版与纯白 v1.6.0 一致。 */
+/* On Air · News / Navigation v1.6.1 · 浅色头像取色版 | ee × codex
+   独立列表样式，放入聊天 App「外观 CSS」。不放入单个聊天室 CSS。
+   修改下方颜色即可微调；不用改聊天室 On Air 的文件。 */
+:root{--air-pages-ready:1;--pod-ink:#19191b;/* 标题、图标 */--pod-muted:#85858c;/* 摘要、时间 */--pod-line:#e5e5e8;/* 卡片细描边 */--pod-accent:#19191b;/* 导航选中色 *//* 所有节目卡片的统一底色，可自行调整 */--pod-card-bg:#F5F5F7;}
+/* 左右底栏统一 52px；选中块高 42px，上下内缩 5px。右侧快捷按钮不参与网格行高计算。 */
+.chat-app[data-pod-pages] .chat-tab-bar,
+:root.chat-app[data-pod-pages] .chat-tab-bar{position:absolute;left:16px;right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px));height:52px;min-height:0;padding:5px 72px 5px 8px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;z-index:60;overflow:visible;isolation:isolate;box-sizing:border-box;max-height:52px;grid-template-rows:minmax(0,1fr);align-items:stretch;align-content:stretch;}
+.chat-app[data-pod-pages] .chat-tab-bar::before,
+:root.chat-app[data-pod-pages] .chat-tab-bar::before{content:'';position:absolute;inset:0 64px 0 0;border:0;background:rgba(255,255,255,.9);border-radius:999px;box-shadow:0 5px 18px rgba(25,25,30,.065);z-index:-1;pointer-events:none;}
+.chat-app[data-pod-pages] .chat-tab,
+:root.chat-app[data-pod-pages] .chat-tab{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;min-width:0;min-height:0;padding:3px 0;border:0;border-radius:999px;background:transparent;color:#77777e;box-sizing:border-box;height:42px;max-height:42px;margin:0;width:100%;align-self:stretch;grid-row:1;}
+.chat-app[data-pod-pages] .chat-tab>svg,
+:root.chat-app[data-pod-pages] .chat-tab>svg{display:none;}
+.chat-app[data-pod-pages] .chat-tab>span:not(.pod-nav-icon),
+:root.chat-app[data-pod-pages] .chat-tab>span:not(.pod-nav-icon){font-size:8px!important;line-height:10px;color:inherit!important;}
+.chat-app[data-pod-pages] .chat-tab-active,
+:root.chat-app[data-pod-pages] .chat-tab-active{background:transparent;color:var(--pod-accent);}
+.pod-nav-icon{display:block;width:20px;height:20px;line-height:0;pointer-events:none;}
+.pod-nav-icon svg{width:20px;height:20px;display:block;}
+.pod-quick{width:52px;height:52px;display:grid;place-items:center;border:0;border-radius:50%;background:rgba(255,255,255,.9);color:#77777e;box-shadow:0 5px 18px rgba(25,25,30,.065);padding:0;touch-action:manipulation;position:absolute;top:0;right:0;bottom:auto;box-sizing:border-box;min-width:52px;min-height:52px;max-width:52px;max-height:52px;margin:0;}
+.pod-quick svg{width:22px;height:22px;pointer-events:none;}
+.pod-quick:active{background:#f0f0f2;}
+.chat-app[data-pod-pages][data-room-active] .pod-quick,
+:root.chat-app[data-pod-pages][data-room-active] .pod-quick,
+.chat-app[data-pod-pages][data-tabbar-hidden] .pod-quick,
+:root.chat-app[data-pod-pages][data-tabbar-hidden] .pod-quick{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages],
+:root.chat-app[data-pod-pages] [data-pod-page=messages]{background:transparent;color:var(--pod-ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;font-synthesis:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages]>.page-header,
+:root.chat-app[data-pod-pages] [data-pod-page=messages]>.page-header{background:transparent;border:0;box-shadow:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages]>.page-header .page-header-content,
+:root.chat-app[data-pod-pages] [data-pod-page=messages]>.page-header .page-header-content{height:64px;padding:0 22px;position:relative;align-items:center;}
+.chat-app[data-pod-pages] [data-pod-page=messages]>.page-header .page-header-content>span:first-child,
+:root.chat-app[data-pod-pages] [data-pod-page=messages]>.page-header .page-header-content>span:first-child,
+.chat-app[data-pod-pages] [data-pod-page=messages]>.page-header .page-title,
+:root.chat-app[data-pod-pages] [data-pod-page=messages]>.page-header .page-title{visibility:hidden;pointer-events:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-news{position:absolute;left:18px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:36px;height:36px;min-width:36px;min-height:36px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.66);color:var(--pod-ink);box-shadow:0 5px 18px rgba(25,25,30,.065);cursor:pointer;touch-action:manipulation;transition:transform .14s ease-out;}
+.chat-app[data-pod-pages] [data-pod-page=messages]>.page-body,
+:root.chat-app[data-pod-pages] [data-pod-page=messages]>.page-body{padding-bottom:100px;}
+.chat-app[data-pod-pages] [data-pod-search],
+:root.chat-app[data-pod-pages] [data-pod-search]{display:none;padding:6px 22px 12px;}
+.chat-app[data-pod-pages] [data-pod-search]>div:first-child,
+:root.chat-app[data-pod-pages] [data-pod-search]>div:first-child{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .chat-search-bar,
+:root.chat-app[data-pod-pages] [data-pod-page=messages] .chat-search-bar{height:44px;border:1px solid var(--pod-line);background:rgba(255,255,255,.95);border-radius:18px;box-shadow:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .chat-list-tabs,
+:root.chat-app[data-pod-pages] [data-pod-page=messages] .chat-list-tabs{display:none;}
+/* 三列紧凑节目卡片；保留原生头像和一行最新摘要。 */
+.chat-app[data-pod-pages] [data-pod-list]{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;padding:0 18px;margin:0;background:transparent;border:0;box-shadow:none;}
+.pod-section{grid-column:1/-1;margin:12px 0 0;min-width:0;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;color:var(--pod-ink);text-align:left;}
+.pod-section[data-pod-section=private]{order:0;}
+.pod-section[data-pod-section=group]{order:3;margin:0;padding:0;border:0;margin-top:18px;}
+.chat-app[data-pod-pages] [data-pod-kind=private]{order:1;min-width:0;margin:0;}
+.chat-app[data-pod-pages] [data-pod-kind=group]{order:4;min-width:0;margin:0;}
+.pod-empty{grid-column:1/-1;color:var(--pod-muted);font-size:12px;margin:0 0 8px;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-list-item{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 12px 19px 24px;column-gap:0;row-gap:5px;align-items:center;box-sizing:border-box;width:100%;min-width:0;min-height:0;height:auto;padding:10px 8px;margin:0;border:1px solid #e1e2e7;border-radius:16px;background:var(--pod-avatar-bg,var(--pod-card-bg,#F5F5F7));color:#27272d;box-shadow:0 1px 3px rgba(25,25,35,.025);cursor:pointer;position:relative;overflow:hidden;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-avatar-wrapper{grid-column:1/-1;grid-row:1;justify-self:center;width:88%;height:auto;min-width:0;margin:0;border-radius:9px;overflow:hidden;background:rgba(255,255,255,.2);box-shadow:0 1px 4px rgba(25,25,35,.04);aspect-ratio:1 / 1;max-width:86px;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-avatar-wrapper>img{width:100%;height:100%;border-radius:0;padding:0;object-fit:cover;display:block;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-online-dot{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-list-item>.flex-1,
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-list-item>.flex-1>div{display:contents;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-list-item .ts-16,
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-list-item .ts-12{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-list-item .ts-13{grid-column:1/-1;grid-row:3;min-width:0;font-size:11.5px;line-height:19px;font-weight:550;color:#2d2d33;opacity:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pod-card-time{grid-column:1/-1;grid-row:2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#74747d;font-size:8px;font-weight:400;line-height:12px;letter-spacing:0;font-variant-numeric:tabular-nums;}
+.pod-play{grid-column:1;grid-row:4;justify-self:stretch;display:flex;align-items:center;gap:4px;max-width:100%;min-width:0;height:23px;padding:0 6px;border:1px solid rgba(255,255,255,.88);border-radius:999px;background:rgba(255,255,255,.65);color:#404049;box-sizing:border-box;pointer-events:none;box-shadow:0 1px 3px rgba(25,25,35,.035),inset 0 1px 0 rgba(255,255,255,.7);width:100%;justify-content:center;}
+.pod-play-symbol{display:block;flex:none;width:8px;height:10px;line-height:0;}
+.pod-play svg{display:block;width:8px;height:10px;}
+.pod-time-label{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px;line-height:14px;font-weight:550;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .minimal-list-item:active{filter:brightness(.96);}
+.pod-section-label{display:block;font-size:21px;font-weight:720;line-height:27px;letter-spacing:-.45px;white-space:nowrap;color:var(--pod-ink);}
+.chat-app[data-pod-pages] [data-pod-native-empty],
+:root.chat-app[data-pod-pages] [data-pod-native-empty],
+.chat-app[data-pod-pages] [data-pod-newfriends],
+:root.chat-app[data-pod-pages] [data-pod-newfriends],
+.chat-app[data-pod-pages] [data-pod-compose],
+:root.chat-app[data-pod-pages] [data-pod-compose]{display:none!important;}
+.pod-actions{position:absolute;bottom:76px;right:16px;width:174px;background:white;border:1px solid var(--pod-line);border-radius:18px;padding:6px;box-shadow:0 5px 20px #17171912;z-index:61;}
+.pod-actions button{display:block;width:100%;text-align:left;padding:12px;border:0;background:none;color:var(--pod-ink);font-size:13px;}
+/* 两种图标都预先绘制，选中态由原生导航 class 控制，无动画循环。 */
+.pod-nav-icon [data-pod-variant=solid]{display:none;}
+.chat-app[data-pod-pages] .chat-tab-active [data-pod-variant=outline],
+:root.chat-app[data-pod-pages] .chat-tab-active [data-pod-variant=outline]{display:none;background:transparent;}
+.chat-app[data-pod-pages] .chat-tab-active [data-pod-variant=solid],
+:root.chat-app[data-pod-pages] .chat-tab-active [data-pod-variant=solid]{display:block;background:transparent;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .page-header-right button,
+:root.chat-app[data-pod-pages] [data-pod-page=messages] .page-header-right button{color:#53535b;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .page-header-right button svg,
+:root.chat-app[data-pod-pages] [data-pod-page=messages] .page-header-right button svg{width:22px;height:22px;stroke-width:1.8;}
+/* 底栏保留既有轻磨砂；节目单不增加模糊或底板。 */
+@supports (backdrop-filter:blur(5px)) or (-webkit-backdrop-filter:blur(5px)){
+.chat-app[data-pod-pages] .chat-tab-bar::before,
+:root.chat-app[data-pod-pages] .chat-tab-bar::before{backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}
+}
+.pod-dialog-overlay{position:absolute;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center;box-sizing:border-box;padding:20px 16px calc(86px + env(safe-area-inset-bottom,0px));background:rgba(28,28,35,.13);}
+.pod-dialog{box-sizing:border-box;width:100%;max-width:380px;max-height:min(65vh,480px);min-height:0;display:flex;flex-direction:column;padding:18px 14px 12px;background:rgba(255,255,255,.97);border:1px solid rgba(255,255,255,.9);border-radius:26px;box-shadow:0 14px 40px rgba(20,20,30,.16);animation:pod-sheet-in .16s ease-out;}
+.pod-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 3px 14px;}
+.pod-dialog-head h2{font-size:18px;line-height:24px;letter-spacing:-.4px;font-weight:650;color:var(--pod-ink);margin:0;}
+.pod-dialog-close{display:grid;place-items:center;flex:none;width:28px;height:28px;border:0;border-radius:50%;padding:0;background:#f0f0f3;color:#73737a;font:22px/1 sans-serif;}
+.pod-search-field{display:flex;align-items:center;gap:9px;flex:none;border:1px solid #e6e6ec;border-radius:15px;background:#f6f6f8;padding:0 12px;margin-bottom:8px;height:44px;}
+.pod-search-field>span{display:block;flex:none;width:18px;height:18px;color:#898991;}
+.pod-search-field svg{display:block;width:18px;height:18px;}
+.pod-search-field input{min-width:0;width:100%;height:42px;border:0;padding:0;background:transparent;outline:none;color:var(--pod-ink);font:14px/20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+.pod-search-results{min-height:0;overflow-y:auto;overscroll-behavior:contain;}
+.pod-search-result{width:100%;display:grid;grid-template-columns:36px minmax(0,1fr) auto;align-items:center;gap:10px;padding:11px 3px;border:0;border-bottom:1px solid #f0f0f3;border-radius:0;background:transparent;text-align:left;cursor:pointer;}
+.pod-search-result:active{background:#f5f5f7;}
+.pod-result-avatar{width:36px;height:36px;display:block;overflow:hidden;border-radius:11px;background:#f3f3f5;}
+.pod-result-avatar .minimal-avatar-wrapper{width:36px!important;height:36px!important;border-radius:11px;overflow:hidden;margin:0;}
+.pod-result-avatar img{display:block;width:100%;height:100%;object-fit:cover;}
+.pod-result-avatar .minimal-online-dot{display:none;}
+.pod-result-text{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.pod-result-text strong{font-size:13px;font-weight:580;line-height:18px;color:var(--pod-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pod-result-text small{font-size:11px;line-height:15px;color:#92929a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pod-result-time{font-size:9px;line-height:13px;color:#85858e;white-space:nowrap;}
+.pod-search-empty{font-size:13px;line-height:20px;text-align:center;color:#93939b;margin:25px 0;}
+.pod-search-hint{font-size:10px;line-height:14px;text-align:center;color:#aaaab0;margin:10px 0 0;}
+.pod-search-field:focus-within{border-color:#bcbcc6;background:#fafafc;}
+.pod-quick:focus-visible,
+.pod-search-result:focus-visible,
+.pod-dialog-close:focus-visible{outline:2px solid #aaaab4;outline-offset:2px;}
+@keyframes pod-sheet-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.pod-dialog{animation:none;}}
+/* 特别窄的屏幕退回两列，避免备注与时间过度挤压。 */
+@media(max-width:350px){.chat-app[data-pod-pages] [data-pod-list]{grid-template-columns:repeat(2,minmax(0,1fr));padding:0 16px;gap:12px 10px;}}
+/* News 电台标头与原生头像菜单入口。 */
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-copy{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-all{display:inline-flex;align-items:center;justify-content:flex-end;align-self:flex-end;gap:4px;flex:none;padding:0;color:#7d8d9f;font-size:11px;font-weight:550;line-height:27px;letter-spacing:0;white-space:nowrap;cursor:default;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-all>span{display:block;flex:none;width:11px;height:11px;line-height:0;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-all svg{display:block;width:11px;height:11px;}
+/* Group 空状态：静态图标与双行文字，无按钮或跳转。 */
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-empty[data-pod-empty=group]{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin:0;padding:23px 0 29px;text-align:center;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-empty-symbol{display:block;flex:none;width:34px;height:34px;line-height:0;color:#b9b9c2;margin:0 0 2px;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-empty-symbol svg{display:block;width:34px;height:34px;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-empty-label{display:block;margin:0;color:#9e9ea4;font-size:13px;font-weight:600;line-height:20px;letter-spacing:0;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-empty-caption{display:block;margin:1px 0 0;color:#b2b2b9;font-size:10.5px;font-weight:600;line-height:16px;letter-spacing:.35px;}
+/* 原生菜单按钮仅更换外观；不代理或替换其点击事件。 */
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-tag{display:block;color:#7c818c;font-size:8.5px;font-weight:750;line-height:12px;letter-spacing:1.05px;white-space:nowrap;}
+.chat-app[data-pod-pages] [data-pod-page=messages] [data-pod-profile-action]{display:grid;place-items:center;flex:none;width:36px;height:36px;min-width:36px;min-height:36px;padding:0;border:0;border-radius:50%;background:transparent;overflow:hidden;box-shadow:0 1px 4px rgba(25,25,35,.06);}
+.chat-app[data-pod-pages] [data-pod-page=messages] [data-pod-profile-action]>svg{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-user-avatar{display:block;width:36px;height:36px;border-radius:50%;overflow:hidden;line-height:0;background:#eeeff2;pointer-events:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-user-avatar>img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-avatar-fallback{display:grid;place-items:center;width:36px;height:36px;color:#797d86;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-avatar-fallback svg{display:block;width:20px;height:20px;}
+/* 返回按钮与底栏统一为无描边的半透明磨砂。 */
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-news>span{display:block;width:19px;height:19px;line-height:0;pointer-events:none;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-news svg{display:block;width:19px;height:19px;stroke-width:2.1;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-news:active{transform:translateY(-50%) scale(.96);}
+@supports (backdrop-filter:blur(5px)) or (-webkit-backdrop-filter:blur(5px)){.chat-app[data-pod-pages] [data-pod-page=messages] .pod-news{backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}}
+@media(max-width:350px){.chat-app[data-pod-pages] [data-pod-page=messages] .pod-news{left:16px;}}
+@media(prefers-reduced-motion:reduce){.chat-app[data-pod-pages] [data-pod-page=messages] .pod-news{transition:none;}}
+@supports (backdrop-filter:blur(5px)) or (-webkit-backdrop-filter:blur(5px)){.chat-app[data-pod-pages] .pod-quick{backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}}
+/* v1.5.0 · 四个主页面共用 18px 水平留白。仅作用于插件标记的主页面。 */
+.chat-app[data-pod-pages] [data-pod-page]{--page-header-content-height:52px;color:var(--pod-ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;font-synthesis:none;}
+.chat-app[data-pod-pages] [data-pod-page]>.page-header{background:transparent!important;border:0;box-shadow:none;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+.chat-app[data-pod-pages] [data-pod-page]>.page-header .page-header-content{height:52px;padding-left:18px;padding-right:18px;align-items:center;}
+.chat-app[data-pod-pages] [data-pod-page]>.page-header .page-title{visibility:hidden;pointer-events:none;}
+.chat-app[data-pod-pages] [data-pod-back]{display:grid;place-items:center;box-sizing:border-box;flex:none;width:36px;height:36px;min-width:36px;min-height:36px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.66);color:var(--pod-ink);box-shadow:0 5px 18px rgba(25,25,30,.065);}
+.chat-app[data-pod-pages] [data-pod-back]>svg{width:20px;height:20px;stroke-width:2;}
+.chat-app[data-pod-pages] [data-pod-page]>.page-body{padding-bottom:110px;}
+@supports(backdrop-filter:blur(5px)){.chat-app[data-pod-pages] [data-pod-back]{backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}}
+/* Contacts：保留原生列表、搜索与字母索引。卡片不添加虚构时间或无功能菜单。 */
+.chat-app[data-pod-pages] [data-pod-page=contacts]>.page-body{padding-top:calc(var(--page-header-safe-top,48px) + 60px);background:transparent;}
+.chat-app[data-pod-pages] [data-pod-directory]{padding:0 18px;}
+.chat-app[data-pod-pages] [data-pod-contact-search],.chat-app[data-pod-pages] [data-pod-directory] .contact-letter-header{display:none;}
+.chat-app[data-pod-pages] [data-pod-directory]>div:not([data-pod-owned]){margin-top:0;margin-bottom:0;}
+.pod-directory-head{display:flex;align-items:center;gap:7px;min-width:0;margin:5px 0 18px;color:var(--pod-ink);}
+.pod-directory-head strong{font-size:12px;line-height:20px;letter-spacing:.15px;font-weight:700;min-width:0;}
+.pod-directory-symbol{order:-1;display:block;width:19px;height:21px;flex:none;}
+.pod-directory-symbol svg{display:block;width:100%;height:100%;}
+.pod-directory-count{margin-left:auto;flex:none;font-size:9px;line-height:16px;font-weight:550;color:#97979e;letter-spacing:.4px;}
+.chat-app[data-pod-pages] [data-pod-contact]{box-sizing:border-box;position:relative;display:grid;grid-template-columns:minmax(0,1fr) 52px;grid-template-rows:20px 13px 18px;gap:3px 14px;align-items:center;width:100%;min-width:0;min-height:0;height:87px;padding:11px 13px;margin:0 0 10px;border:1px solid #e5e5e9;border-radius:18px;background:rgba(255,255,255,.72);box-shadow:none;}
+.chat-app[data-pod-pages] [data-pod-contact]>.flex-1{display:contents;}
+.chat-app[data-pod-pages] [data-pod-contact] .ts-16{grid-column:1;grid-row:1;font-size:14px;line-height:20px;letter-spacing:-.1px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--pod-ink);}
+.chat-app[data-pod-pages] [data-pod-contact] .ts-13{grid-column:1;grid-row:3;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;line-height:18px;color:#8b8b92;font-weight:400;opacity:1;}
+.pod-contact-code{grid-column:1;grid-row:2;font-size:9px;line-height:13px;letter-spacing:.65px;color:#a0a0a7;font-weight:500;}
+.chat-app[data-pod-pages] [data-pod-contact]>.minimal-avatar-wrapper{grid-column:2;grid-row:1/4;align-self:center;width:52px;height:52px;min-width:0;margin:0;border:0;border-radius:13px;overflow:hidden;background:#f0f0f3;box-shadow:none;}
+.chat-app[data-pod-pages] [data-pod-contact] .minimal-avatar-wrapper>img{display:block;width:100%;height:100%;object-fit:cover;border-radius:0;padding:0;}
+.chat-app[data-pod-pages] [data-pod-contact] .minimal-online-dot{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=contacts] .contact-alpha-index{right:3px;opacity:.6;}
+.chat-app[data-pod-pages] [data-pod-page=contacts] .contact-alpha-letter{font-size:8px;}
+/* Moments：不挪动 React 的原生资料节点，签名仍可点击编辑。音波为一张静态 SVG。 */
+.chat-app[data-pod-pages] [data-pod-page=feeds]>.page-body{display:block;padding-top:calc(var(--page-header-safe-top,48px) + 64px)!important;background:transparent;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-cover-shell{box-sizing:border-box;width:calc(100% - 36px);margin:0 18px 28px;padding:0;border:1px solid rgba(255,255,255,.8);border-radius:22px;background:rgba(255,255,255,.62);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 6px 20px rgba(32,34,42,.065),0 1px 3px rgba(32,34,42,.025);}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-cover-bg{opacity:0;mask-image:none!important;-webkit-mask-image:none!important;pointer-events:none;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile{box-sizing:border-box;position:relative;display:grid;grid-template-columns:64px minmax(0,1fr);grid-template-rows:17px auto 20px 17px;column-gap:14px;row-gap:12px;width:100%;padding:17px 16px 14px!important;pointer-events:none;}
+.pod-station-label,.pod-station-fm{font-size:8px;line-height:17px;font-weight:600;letter-spacing:1.05px;color:#93939a;white-space:nowrap;}
+.pod-station-label{grid-column:1/3;grid-row:1;}
+.pod-station-fm{grid-column:2;grid-row:1;justify-self:end;letter-spacing:.6px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile-avatar{box-sizing:border-box;grid-column:1;grid-row:2/4;align-self:start;width:64px;height:72px;border-radius:15px;overflow:hidden;border:0;background:#eeeef1;transform:none;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile-avatar img{width:100%;height:100%;object-fit:cover;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile-info{grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:7px;min-width:0;margin:0;pointer-events:auto;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile-name{font-size:20px;line-height:26px;font-weight:650;letter-spacing:-.5px;overflow-wrap:anywhere;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile-stats{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile-signature{margin:0;min-width:0;color:#7f7f87;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile-signature-text{font-size:11px;line-height:1.55;font-weight:400;opacity:1;display:block;overflow-wrap:anywhere;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-profile-signature-input{font-family:inherit;font-size:11px;line-height:1.55;color:#66666e;border-color:#b8b8bf;max-width:100%;}
+.pod-station-wave{grid-column:2;grid-row:3;align-self:center;display:block;min-width:0;width:100%;height:19px;color:#73737b;}
+.pod-station-wave svg{display:block;width:100%;height:19px;}
+.pod-station-caption,.pod-station-stay{grid-column:1/3;grid-row:4;font-size:7px;line-height:17px;letter-spacing:.5px;color:#a0a0a6;font-weight:550;}
+.pod-station-stay{justify-self:end;color:#76767e;font-size:8px;letter-spacing:.25px;}
+/* 帖子：FIELD NOTE、原译文、配图与原生操作。所有按钮沿用原事件。 */
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post{box-sizing:border-box;position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto auto auto auto auto auto;column-gap:11px;row-gap:0;width:calc(100% - 36px);padding:0 0 23px;margin:0 18px 24px;border:0;border-bottom:1px solid #e9e9ed;background:transparent;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-header,.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-action-row{display:contents;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-author-avatar{grid-column:1;grid-row:1/3;width:34px;height:34px;border-radius:50%;overflow:hidden;transform:translateX(3px);}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-author-avatar img{width:100%;height:100%;object-fit:cover;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-author{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;padding-right:64px;margin:0 0 13px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-author-name{font-size:12px;line-height:17px;font-weight:600;color:#2b2b30;overflow-wrap:anywhere;}
+.pod-field-note{font-size:8px;line-height:12px;color:#a0a0a6;letter-spacing:.7px;font-weight:500;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-time{grid-column:2;grid-row:1;align-self:start;justify-self:end;font-size:9px;line-height:17px;color:#a1a1a7;white-space:nowrap;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-content{grid-column:2;grid-row:3;min-width:0;width:100%;font-size:13px;line-height:1.8;margin:0 0 12px;font-weight:450;color:#303035;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-content .chat-bilingual-toggle{display:block;padding:0;margin:7px 0 9px;border:0;background:none;font-size:10px;line-height:16px;color:#9b9ba1;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .chat-bilingual-divider{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-content .chat-bilingual-section-translation{position:relative;box-sizing:border-box;border:0;border-radius:13px;background:#f0f0f2;color:#77777f;padding:10px 11px 10px 23px;font-size:12px;line-height:1.65;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-content .chat-bilingual-section-translation::before{content:'▸';position:absolute;left:10px;top:10px;font-size:10px;color:#6f6f77;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-location{grid-column:2;grid-row:4;font-size:10px;line-height:16px;margin:0 0 8px;color:#96969e;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-media{grid-column:2;grid-row:5;min-width:0;margin:0 0 12px;gap:8px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-media>div{max-width:100%;min-width:0;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-media .chat-media-file-card{width:100%;max-width:100%;padding:0;border:0;background:none;box-shadow:none;overflow:hidden;border-radius:17px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-media img{display:block;max-width:100%;height:auto;max-height:350px;object-fit:cover;border-radius:17px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] [data-pod-has-media]>.feed-post-location{grid-row:5;z-index:1;align-self:end;justify-self:start;margin:0 0 23px 10px;padding:4px 8px;border-radius:999px;background:rgba(60,60,65,.38);color:#fff;opacity:1;font-size:8px;line-height:14px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-actions{grid-column:2;grid-row:6;display:flex;gap:16px;align-items:center;min-height:28px;margin:0 0 14px;padding-right:0;justify-self:start;width:max-content;max-width:calc(100% - 42px);}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-actions button{color:#65656d;min-width:25px;min-height:28px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-delete-btn{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-more-btn{grid-column:2;grid-row:6;align-self:start;justify-self:end;display:grid;place-items:center;width:32px;height:28px;min-width:0;min-height:0;padding:0;margin:0 0 14px;border:0;border-radius:9px;background:none;color:#92929a;opacity:1;z-index:2;position:relative;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-post-action-menu{top:var(--pod-menu-top,100%);bottom:auto;right:0;max-width:100%;background:#fff;border:1px solid #e5e5e9;box-shadow:0 5px 18px #1b1b2510;z-index:15;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-feedback-section{grid-column:2;grid-row:7;display:flex;gap:12px;min-width:0;margin:0;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-like-summary{font-size:10px;line-height:16px;color:#93939a;}
+/* 点赞行：去掉原生图标的 4px 下移和 SVG 基线留白，固定对齐文字首行。 */
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-like-summary-icon{display:flex;align-items:center;justify-content:center;align-self:flex-start;flex-shrink:0;width:15px;height:16px;margin-top:0;line-height:0;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-like-summary-icon svg{display:block;flex-shrink:0;width:15px;height:15px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comments{display:flex;flex-direction:column;gap:15px;margin:0;}
+.pod-listener-notes{order:-1;display:flex;align-items:center;gap:9px;font-size:8px;line-height:15px;font-weight:650;letter-spacing:.55px;color:#77777f;margin:0 0 3px;}
+.pod-listener-notes::before{content:'';display:block;width:20px;height:1px;background:#9b9ba2;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment{min-width:0;margin:0;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-row{position:relative;display:block;padding:0 0 0 10px;border-left:1px solid #dfdfe4;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-avatar{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-author{font-size:10px;line-height:16px;font-weight:600;opacity:1;color:#4f4f57;padding-right:68px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-body{font-size:12px;line-height:1.75;margin-top:3px;color:#6e6e76;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-meta{min-height:20px;gap:5px;font-size:9px;color:#a2a2a8;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-time{font-size:9px;white-space:nowrap;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-replies{margin:12px 0 0;padding-left:12px;gap:10px;border-left:0;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-inline-translation-toggle{color:#9999a1!important;font-size:9px;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-icon-button{width:22px;height:22px;opacity:.65;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-notif-banner,.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-empty-state,.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-load-more-row{grid-column:1/-1;margin-left:18px;margin-right:18px;}
+/* Profile：原生钱包与三个快捷入口只重排、不复制点击逻辑。 */
+.chat-app[data-pod-pages] [data-pod-page=me]::before{display:none!important;}
+.chat-app[data-pod-pages] [data-pod-page=me]>.page-body{position:relative!important;top:auto!important;bottom:auto;background:transparent!important;padding-top:calc(var(--page-header-safe-top,48px) + 52px)!important;}
+.chat-app[data-pod-pages] [data-pod-profile-layout]{box-sizing:border-box;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:23px 8px;width:100%;max-width:none;margin:0;padding:10px 24px 35px;}
+.chat-app[data-pod-pages] [data-pod-profile-hero]{box-sizing:border-box;order:0;grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) 68px;grid-template-rows:16px auto 20px auto;gap:8px 14px;min-width:0;margin:0;padding:17px 16px 16px;border:1px solid rgba(255,255,255,.8);border-radius:21px;background:rgba(255,255,255,.62);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 6px 20px rgba(32,34,42,.065),0 1px 3px rgba(32,34,42,.025);}
+.pod-personal-channel{grid-column:1/3;grid-row:1;font-size:9px;line-height:16px;letter-spacing:1px;font-weight:600;color:#8b8b93;}
+.chat-app[data-pod-pages] [data-pod-profile-copy],.chat-app[data-pod-pages] [data-pod-profile-name-row]{display:contents;}
+.chat-app[data-pod-pages] [data-pod-profile-name-row]>:not([data-pod-profile-name]){display:none;}
+.chat-app[data-pod-pages] [data-pod-profile-name]{grid-column:1;grid-row:2;align-self:center;min-width:0;font-size:25px;line-height:32px;letter-spacing:-.7px;font-weight:650;color:#29292f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chat-app[data-pod-pages] [data-pod-profile-avatar]{box-sizing:border-box;grid-column:2;grid-row:2/5;align-self:center;display:grid;place-items:center;width:68px;height:68px;border:1px solid rgba(255,255,255,.9);border-radius:50%;overflow:hidden;background:rgba(255,255,255,.7);box-shadow:0 2px 6px rgba(30,32,40,.035);position:relative;z-index:1;top:4px;}
+.chat-app[data-pod-pages] [data-pod-profile-avatar]>img{width:100%;height:100%;object-fit:cover;}
+.chat-app[data-pod-pages] [data-pod-profile-stats]{grid-column:1;grid-row:4;justify-content:flex-start;display:flex;gap:9px;flex-wrap:wrap;margin:1px 0 0;font-size:9px;line-height:16px;color:#888890;font-weight:400;}
+.chat-app[data-pod-pages] [data-pod-profile-stats]>span:nth-child(n+4){display:none;}
+.chat-app[data-pod-pages] [data-pod-profile-stats] .font-bold{font-weight:550;}
+.pod-library-heading,.pod-console-heading{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;margin:0;color:#303037;font-size:16px;line-height:22px;font-weight:650;letter-spacing:-.2px;}
+.pod-library-heading{order:1;}
+.pod-console-heading{order:3;padding-top:20px;border-top:1px solid #e7e7eb;}
+.pod-heading-en{font-size:9px;line-height:16px;letter-spacing:.8px;color:#a0a0a7;font-weight:500;}
+.chat-app[data-pod-pages] [data-pod-wallet-shortcut],.chat-app[data-pod-pages] [data-pod-shortcut]{box-sizing:border-box;order:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:9px;min-width:0;width:100%;height:auto;min-height:0;padding:0;margin:0;border:0;border-radius:0;background:none!important;box-shadow:none!important;color:#66666e!important;text-align:center;}
+.chat-app[data-pod-pages] [data-pod-wallet-shortcut]{grid-column:1;border:0!important;}
+.chat-app[data-pod-pages] [data-pod-wallet-shortcut]>:not([data-pod-owned]){display:none;}
+.pod-wallet-icon,.chat-app[data-pod-pages] [data-pod-shortcut]>div:first-child{box-sizing:border-box;display:grid;place-items:center;width:43px;height:43px;background:rgba(255,255,255,.72);color:#777780;border:0;border-radius:13px;box-shadow:inset 0 1px 0 #fff,0 3px 10px rgba(30,32,40,.065),0 1px 2px rgba(30,32,40,.025);}
+.pod-wallet-icon svg,.chat-app[data-pod-pages] [data-pod-shortcut]>div:first-child svg{display:block;width:22px;height:22px;color:#777780;stroke-width:1.55;}
+.pod-wallet-label,.chat-app[data-pod-pages] [data-pod-shortcut]>span{font-size:10px;line-height:16px;font-weight:500;color:#686870;white-space:nowrap;}
+.chat-app[data-pod-pages] [data-pod-shortcuts]{display:contents;}
+.chat-app[data-pod-pages] [data-pod-shortcut="0"]{grid-column:2;}
+.chat-app[data-pod-pages] [data-pod-shortcut="1"]{grid-column:3;}
+.chat-app[data-pod-pages] [data-pod-shortcut="2"]{grid-column:4;}
+.chat-app[data-pod-pages] [data-pod-settings-group]{order:4;grid-column:1/-1;display:flex;flex-direction:column;gap:0;min-width:0;margin:0;padding:0;border:0;background:none;box-shadow:none!important;margin-top:-23px;}
+.chat-app[data-pod-pages] [data-pod-settings-group]>button,.chat-app[data-pod-pages] [data-pod-settings-group]>div{box-sizing:border-box;display:flex;align-items:center;gap:12px;width:100%;min-height:65px;padding:13px 0;border:0;border-bottom:1px solid #e9e9ed;border-radius:0;background:none;color:#494951;text-align:left;}
+.chat-app[data-pod-pages] [data-pod-settings-group] .ts-14{font-size:12px;line-height:19px;color:#484850;font-weight:550;}
+.chat-app[data-pod-pages] [data-pod-settings-group] .ts-11{font-size:10px;line-height:17px;color:#a0a0a7;font-weight:400;opacity:1;}
+.chat-app[data-pod-pages] [data-pod-settings-group] svg{color:#9b9ba3;}
+.chat-app[data-pod-pages] [data-pod-settings-group] .ui-toggle[data-checked]{background:#4a4a52;}
+@media(max-width:350px){.pod-directory-head strong{font-size:11px;}.pod-directory-count{font-size:8px;}.pod-station-caption{font-size:6px;letter-spacing:.1px;}.pod-station-stay{font-size:7px;}.chat-app[data-pod-pages] [data-pod-profile-hero]{column-gap:9px;padding-left:13px;padding-right:13px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 6px 20px rgba(32,34,42,.065),0 1px 3px rgba(32,34,42,.025);}.pod-wallet-label,.chat-app[data-pod-pages] [data-pod-shortcut]>span{font-size:9px;}}
+/* 四页共用同一底色；仅列表主内容层生效，不修改聊天室。 */
+:root{--pod-page-bg:#ffffff;/* 四页背景颜色 */}
+/* 只在一个主内容底层绘制背景，四页内容层透明；聊天室不受这个背景项控制。 */
+.chat-app[data-pod-pages]:not([data-room-active]):not([data-tabbar-hidden])>.chat-main-content{background-color:var(--pod-page-bg,#ffffff)!important;background-image:var(--pod-background-image,none)!important;background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;}
+.chat-app[data-pod-pages]:not([data-room-active]):not([data-tabbar-hidden]) [data-pod-page],.chat-app[data-pod-pages]:not([data-room-active]):not([data-tabbar-hidden]) [data-pod-page]>.page-body{background:transparent!important;}
+.chat-app[data-pod-pages] [data-pod-header]{position:relative;}
+.pod-header-fm{position:absolute;right:18px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:5px;height:36px;color:#a0a0a8;pointer-events:none;width:60px;justify-content:center;border-radius:999px;background:rgba(255,255,255,.66);box-shadow:0 5px 18px rgba(25,25,30,.065);box-sizing:border-box;padding:0 10px;}
+.pod-header-fm svg{display:block;width:20px;height:20px;}
+.pod-header-fm small{font-size:7px;line-height:12px;letter-spacing:1px;font-weight:550;}
+.chat-app[data-pod-pages] [data-pod-settings-first]{margin-top:0;}
+.chat-app[data-pod-pages] [data-pod-settings-hidden]{display:none!important;}
+.pod-console-tabs{order:3;grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:-7px 0 0;position:relative;isolation:isolate;}
+.pod-console-tabs button{box-sizing:border-box;display:grid;place-items:center;min-width:0;min-height:36px;margin:0;padding:8px 6px;border:0;border-radius:999px;background:transparent;color:#9999a1;font-family:inherit;font-size:12px;font-weight:550;line-height:20px;cursor:pointer;position:relative;z-index:1;}
+.pod-console-tabs button[aria-pressed=true]{background:transparent;color:#35353d;}
+.pod-console-tabs button:focus-visible{outline:2px solid #a8a8b1;outline-offset:2px;}
+@media(prefers-reduced-motion:no-preference){.pod-console-tabs button{transition:background .15s ease,color .15s ease;position:relative;z-index:1;}}
+/* 个人频道：固定 0:00 / 5:19 的静态进度条装饰，不播放、不计时。 */
+.pod-personal-timeline{grid-column:1;grid-row:3;align-self:center;display:block;width:144px;height:20px;color:#85858d;pointer-events:none;}
+.pod-personal-timeline svg{display:block;width:144px;height:20px;}
+.chat-app[data-pod-pages] [data-pod-profile-face-wrap]{position:relative;isolation:isolate;display:block;grid-column:2;grid-row:2/5;align-self:center;width:68px;height:76px;}
+/* 栏目标识：只增加静态小图案，标题字号保持原值。 */
+.pod-section-label{display:inline-flex;align-items:center;gap:6px;}
+.pod-section-symbol{display:block;flex:none;width:18px;height:18px;color:#92929a;line-height:0;}
+.pod-section-symbol svg{display:block;width:18px;height:18px;stroke-width:1.5;}
+.chat-app[data-pod-pages] [data-pod-page=contacts]>.page-header .page-header-right>button{display:grid;place-items:center;box-sizing:border-box;width:36px;height:36px;min-width:36px;min-height:36px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.66);box-shadow:0 5px 18px rgba(25,25,30,.065);}
+/* 两个滑块只在切换时做一次 transform 过渡；无循环动画或脚本计时器。 */
+.chat-app[data-pod-pages] .chat-tab-bar[data-pod-selected="0"]{--pod-nav-index:0;}
+.chat-app[data-pod-pages] .chat-tab-bar[data-pod-selected="1"]{--pod-nav-index:1;}
+.chat-app[data-pod-pages] .chat-tab-bar[data-pod-selected="2"]{--pod-nav-index:2;}
+.chat-app[data-pod-pages] .chat-tab-bar[data-pod-selected="3"]{--pod-nav-index:3;}
+.pod-nav-selection{position:absolute;left:8px;top:5px;width:calc((100% - 80px)/4);height:42px;border-radius:999px;background:rgba(228,230,235,.68);pointer-events:none;z-index:0;transform:translateX(calc(var(--pod-nav-index,0)*100%));}
+.chat-app[data-pod-pages] .chat-tab{z-index:1;}
+.pod-console-tabs{--pod-console-index:0;}
+.pod-console-tabs[data-pod-selected="1"]{--pod-console-index:1;}
+.pod-console-tabs::before{content:'';position:absolute;left:0;top:0;bottom:0;width:calc((100% - 6px)/2);border-radius:999px;background:rgba(231,232,236,.65);pointer-events:none;z-index:0;transform:translateX(calc(var(--pod-console-index,0)*(100% + 6px)));}
+@media(prefers-reduced-motion:no-preference){.pod-nav-selection,.pod-console-tabs::before{transition:transform .22s cubic-bezier(.22,.7,.25,1);}}
+/* 唱片仅保留两道间隔较开的浅弧；头像在前，圆盘在后。 */
+.pod-profile-record{display:block;position:absolute;right:-10px;top:6px;width:64px;height:64px;z-index:0;line-height:0;pointer-events:none;}
+.pod-profile-record svg{display:block;width:100%;height:100%;}
+/* 子回复用轻底色和缩进区分；保留原生编辑、删除和翻译入口。 */
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-child{position:relative;display:block;box-sizing:border-box;padding:10px 12px 7px;border:0;border-radius:12px;background:rgba(245,245,248,.78);}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-child .feed-comment-author{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;padding-right:58px;line-height:16px;}
+.pod-reply-target{font-size:9px;line-height:16px;font-weight:400;color:#96969e;overflow-wrap:anywhere;}
+.pod-reply-target:empty{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-child .feed-comment-reply-prefix,
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-child .feed-comment-reply-target,
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-child .feed-comment-reply-colon{display:none;}
+.chat-app[data-pod-pages] [data-pod-page=feeds] .feed-comment-child .feed-comment-time{position:absolute;right:12px;top:10px;line-height:16px;}
