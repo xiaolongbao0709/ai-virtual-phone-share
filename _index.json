@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-13T07:17:51.839Z",
+  "generatedAt": "2026-11-14T11:55:44.736Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -61,7 +61,7 @@
     },
     {
       "name": "消息列表美化",
-      "count": 12
+      "count": 13
     },
     {
       "name": "游戏",
@@ -7514,6 +7514,28 @@
       "avatar": "资源/气泡美化/轻松熊气泡/.avatar.png",
       "ownerHash": "59487540ec3a874f053164cfffcf8b9db2adabfb2fb2cf12be0fbdce438b0d30",
       "updatedAt": "2026-10-09T13:44:43+08:00"
+    },
+    {
+      "folder": "消息列表美化",
+      "name": "OnAir聊天列表美化",
+      "dirName": "OnAir聊天列表美化",
+      "type": "dir",
+      "path": "资源/消息列表美化/OnAir聊天列表美化",
+      "files": [
+        "资源/消息列表美化/OnAir聊天列表美化/OnAir-聊天列表.css",
+        "资源/消息列表美化/OnAir聊天列表美化/OnAir-聊天列表.js",
+        "资源/消息列表美化/OnAir聊天列表美化/OnAir-聊天列表取色.css",
+        "资源/消息列表美化/OnAir聊天列表美化/OnAir-聊天列表取色.js"
+      ],
+      "images": [
+        "资源/消息列表美化/OnAir聊天列表美化/retouch_2026111419333265.jpg",
+        "资源/消息列表美化/OnAir聊天列表美化/retouch_2026111419334289.jpg"
+      ],
+      "description": "[雪花][粗]禁二传大改 自用小改请随意[/粗]\n[粗]\n[/粗]\n灵感来源于IOS的播客app，改着改着就改成了现在这样\n做了两个版本，另一个版本会自己从角色卡上面取颜色作为卡片的背景色\n消息和联系人界面的搜索以及朋友圈的发帖功能都收到了导航栏，界面背景可以自行在css里面上传进行改变\n\n\n注意事项：需要搭配[红]JS插件[/红]食用，可能有些地方会有bug..？问问小卷应该可以解决",
+      "author": "Glück",
+      "avatar": "资源/消息列表美化/OnAir聊天列表美化/.avatar.png",
+      "ownerHash": "2d219a36b42d6b520c9a72ca38913c044848e875ff08144a9eae53f5db8925b1",
+      "updatedAt": "2026-11-14T20:53:18+09:00"
     },
     {
       "folder": "消息列表美化",
