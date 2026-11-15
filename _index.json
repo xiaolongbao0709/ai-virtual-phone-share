@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-15T12:24:11.972Z",
+  "generatedAt": "2026-11-15T15:43:19.743Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -4602,6 +4602,7 @@
       "type": "dir",
       "path": "资源/应用/[雪花]",
       "files": [
+        "资源/应用/[雪花]/据说是优化了流畅度，但手机应用太多了我也不确定 (27).zip",
         "资源/应用/[雪花]/更新一下儿(520).zip"
       ],
       "images": [
@@ -4614,7 +4615,7 @@
       "author": "鸢尾纪事",
       "avatar": "资源/应用/[雪花]/.avatar.png",
       "ownerHash": "b32246b26f03c91edd579c26cfef21927824a0cfbc453ec3277e4ced15645125",
-      "updatedAt": "2026-11-15T12:44:04+09:00"
+      "updatedAt": "2026-11-16T00:40:47+09:00"
     },
     {
       "folder": "应用",
