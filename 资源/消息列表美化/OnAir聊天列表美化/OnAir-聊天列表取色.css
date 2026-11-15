@@ -6,7 +6,7 @@
    原有颜色变量仍保留；无图、图片加载前或加载失败时显示 --pod-page-bg。
    不添加磨砂、模糊、背景动效或额外 JS。
 */
-:root{--pod-background-image:url("图床链接");}
+:root{--pod-background-image:url("https://i.249595.xyz/2026/11/14/8qZFtrR8.jpg");/* 在这里填写 url("图片直链") */}
 /* 浅色取色版：卡片底色由 JS 从已加载头像采样；读取受限或无头像时沿用 --pod-card-bg。其余排版与纯白 v1.6.0 一致。 */
 /* On Air · News / Navigation v1.6.1 · 浅色头像取色版 | ee × codex
    独立列表样式，放入聊天 App「外观 CSS」。不放入单个聊天室 CSS。
@@ -57,9 +57,9 @@
 :root.chat-app[data-pod-pages] [data-pod-page=messages] .chat-list-tabs{display:none;}
 /* 三列紧凑节目卡片；保留原生头像和一行最新摘要。 */
 .chat-app[data-pod-pages] [data-pod-list]{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;padding:0 18px;margin:0;background:transparent;border:0;box-shadow:none;}
-.pod-section{grid-column:1/-1;margin:12px 0 0;min-width:0;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;color:var(--pod-ink);text-align:left;}
+.pod-section{grid-column:1/-1;margin:18px 0 8px;min-width:0;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;color:var(--pod-ink);text-align:left;}
 .pod-section[data-pod-section=private]{order:0;}
-.pod-section[data-pod-section=group]{order:3;margin:0;padding:0;border:0;margin-top:18px;}
+.pod-section[data-pod-section=group]{order:3;margin:11px 0 8px;padding:0;border:0;}
 .chat-app[data-pod-pages] [data-pod-kind=private]{order:1;min-width:0;margin:0;}
 .chat-app[data-pod-pages] [data-pod-kind=group]{order:4;min-width:0;margin:0;}
 .pod-empty{grid-column:1/-1;color:var(--pod-muted);font-size:12px;margin:0 0 8px;}
@@ -133,7 +133,7 @@
 /* 特别窄的屏幕退回两列，避免备注与时间过度挤压。 */
 @media(max-width:350px){.chat-app[data-pod-pages] [data-pod-list]{grid-template-columns:repeat(2,minmax(0,1fr));padding:0 16px;gap:12px 10px;}}
 /* News 电台标头与原生头像菜单入口。 */
-.chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-copy{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-copy{display:flex;flex-direction:column;gap:9px;min-width:0;}
 .chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-all{display:inline-flex;align-items:center;justify-content:flex-end;align-self:flex-end;gap:4px;flex:none;padding:0;color:#7d8d9f;font-size:11px;font-weight:550;line-height:27px;letter-spacing:0;white-space:nowrap;cursor:default;}
 .chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-all>span{display:block;flex:none;width:11px;height:11px;line-height:0;}
 .chat-app[data-pod-pages] [data-pod-page=messages] .pod-section-all svg{display:block;width:11px;height:11px;}
@@ -311,6 +311,9 @@
 .pod-section-label{display:inline-flex;align-items:center;gap:6px;}
 .pod-section-symbol{display:block;flex:none;width:18px;height:18px;color:#92929a;line-height:0;}
 .pod-section-symbol svg{display:block;width:18px;height:18px;stroke-width:1.5;}
+/* Heartbeat 双心图案的绘制重心偏上；仅下移该图标，不改变标题字号和 Group 标识。
+*/
+.chat-app[data-pod-pages] [data-pod-page=messages] .pod-section[data-pod-section=private] .pod-section-symbol{transform:translateY(2px);}
 .chat-app[data-pod-pages] [data-pod-page=contacts]>.page-header .page-header-right>button{display:grid;place-items:center;box-sizing:border-box;width:36px;height:36px;min-width:36px;min-height:36px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.66);box-shadow:0 5px 18px rgba(25,25,30,.065);}
 /* 两个滑块只在切换时做一次 transform 过渡；无循环动画或脚本计时器。 */
 .chat-app[data-pod-pages] .chat-tab-bar[data-pod-selected="0"]{--pod-nav-index:0;}
