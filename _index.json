@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-15T10:07:27.584Z",
+  "generatedAt": "2026-11-15T11:23:35.525Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -5561,7 +5561,6 @@
       "type": "dir",
       "path": "资源/应用/异世界",
       "files": [
-        "资源/应用/异世界/iword3.0.0.zip",
         "资源/应用/异世界/食用指南.pdf"
       ],
       "images": [
@@ -5574,7 +5573,7 @@
       "author": "弓米弓",
       "avatar": "",
       "ownerHash": "398bef97c57b99c7ede28bd75acdbccec715355bec77da13d0b58722df591216",
-      "updatedAt": "2026-11-15T19:05:00+09:00"
+      "updatedAt": "2026-11-15T20:21:58+09:00"
     },
     {
       "folder": "应用",
