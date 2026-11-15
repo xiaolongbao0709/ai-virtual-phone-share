@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-15T03:46:11.296Z",
+  "generatedAt": "2026-11-15T05:28:14.964Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 169
+      "count": 170
     },
     {
       "name": "应用bug改善",
@@ -6469,6 +6469,22 @@
       "avatar": "资源/应用/考公错题软件/.avatar.png",
       "ownerHash": "120fb2230dafecee5ae5be0a1b49abdc9b4ed42491e25793739f3a496a3773ae",
       "updatedAt": "2026-09-28T19:01:13+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "考点工坊",
+      "dirName": "考点工坊",
+      "type": "dir",
+      "path": "资源/应用/考点工坊",
+      "files": [
+        "资源/应用/考点工坊/kaodian.workshop-1.3.0 (1).zip"
+      ],
+      "images": [],
+      "description": "把要背诵的文件复制粘贴进去，这个可以让角色自动给你拆解背诵考点，然后背完了有出题，考点可以导出可以朗读，我加的用的自带系统原声，目前用起来比那个陪我学的手感好，有问题去小红书找我就行。可以二改，我把原文件发你就行",
+      "author": "一去二三里",
+      "avatar": "",
+      "ownerHash": "bdec2167b79ad74d54a709ec1bd3d0a0ea8303a56614011c59c940f4e4d8819b",
+      "updatedAt": "2026-11-15T14:25:41+09:00"
     },
     {
       "folder": "应用",
