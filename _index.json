@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-16T06:48:17.012Z",
+  "generatedAt": "2026-11-16T07:25:42.806Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -5558,7 +5558,7 @@
     },
     {
       "folder": "应用",
-      "name": "异世界3.0",
+      "name": "异世界3.1.2",
       "dirName": "异世界",
       "type": "dir",
       "path": "资源/应用/异世界",
@@ -5576,7 +5576,7 @@
       "author": "弓米弓",
       "avatar": "",
       "ownerHash": "398bef97c57b99c7ede28bd75acdbccec715355bec77da13d0b58722df591216",
-      "updatedAt": "2026-11-16T15:46:07+09:00"
+      "updatedAt": "2026-11-16T16:23:05+09:00"
     },
     {
       "folder": "应用",
