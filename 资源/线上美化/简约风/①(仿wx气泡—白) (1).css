@@ -1,300 +1,354 @@
+/* ══════════════════════════════════════════════════════════════════
+   ① 仿微信气泡 · 白 —— 完整注入版（一整段，可直接粘入 CSS 注入窗口）
+   组成：时间戳控制台 → A2 标题栏 → 仿微信气泡板块 → 时间戳样式块
+         → 简约风输入栏 → 消息区相框（纯白）
+   说明：标题栏 / 输入栏 / 相框 / 气泡原文一字未改；
+         时间戳样式块为新增，插件 c插件(时间戳).js 原样通用，不用改。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════════
+   ⏱️ 气泡时间戳 · 样式控制台（完成版 · 仿微信气泡适配）
+   变量集中放在最上面，方便按审美随时调整；每条都写了「调大 / 调小会怎样」。
+   插件会把同名变量写到每条消息自己身上覆盖这里的默认值（插件优先，不冲突）；
+   插件禁用后自动回落到这里的数值。
+   ══════════════════════════════════════════════════════════════════ */
+:root {
+  /* ───────── ① 位置类（长期保留，随时微调） ───────── */
+
+  --ts-gap: 1.25px;       /* 时间行离气泡底边的距离。调大→整行往下挪、离气泡更远；调小→更贴气泡；可填负数让它钻到气泡里 */
+  --ts-offset-x: 5px;     /* 左右内收量，两边镜像一起动。调大→AI 侧往右、你侧往左，两边都往屏幕里缩（往气泡内侧收）；调小/填负→往屏幕外走，可能贴到屏幕边。0＝正好贴齐气泡边缘 */
+  --ts-quote-shift: 20px; /* 【只在带引用框的消息上生效】额外往下挪多少。默认 20px 躲开「返信」标签和引用小字；嫌空档大就调小，觉得挤就调大 */
+
+  /* ───────── ② 风格类（长期保留，以后换审美就改这里） ───────── */
+
+  --ts-text: "7/58 PM";   /* 显示的文字，默认写死的假时间（兜底用）。装了插件后，插件会把每条消息自己的真实发送时间写到这里，覆盖这个假值；格式 7/58 PM，AM/PM 大写、无秒、无日期。没装插件 / 没勾房间时这行根本不会画出来 */
+  --ts-font: 'Josefin Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; /* 字体名字。字体链接由插件注入；没填 / 加载失败就自动回后面的系统字体，不会空白 */
+  --ts-size: 12px;        /* 时间文字大小。调大→字更大更抢眼；调小→更秀气收敛 */
+  --ts-line-height: 1;    /* 行高。调大→这行占的高度变高；调小→更紧凑 */
+  --ts-color: #666666;    /* 时间文字颜色。改色号即可，如 #000000 更黑、#999999 更淡 */
+  --ts-letter-spacing: 0.02em; /* 字与字之间的额外间距。调大→更松散；调小→更紧凑 */
+
+  /* 用户侧专属：PM 后面那个双勾（AI 侧不显示） */
+  --ts-check-size: 13px;  /* 双勾图标大小。调大→勾更醒目；调小→更含蓄 */
+  --ts-check-color: #666666; /* 双勾颜色。插件会按这个颜色重新生成图标并覆盖下面那行，实现在面板里调色 */
+  --ts-check-gap: 5px;    /* PM 与双勾之间的空隙。调大→离得远；调小→贴得近 */
+  --ts-check-y: -1px;     /* 双勾单独的上下微调（只动勾，不动时间文字）。默认 -1＝略微上移更贴合；调大→勾往下；填更负→更往上；0＝与时间文字同一水平线 */
+  --ts-check-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23666666' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m7 12l5 5L22 7M2 12l5 5m5-5l5-5'/%3E%3C/svg%3E"); /* 双勾图案本体，平时不用动；插件接管颜色时会整体替换它 */
+
+  /* ───────── ③ 诊断辅助（默认关闭；需要复核位置时改回红色） ───────── */
+  --ts-debug-bg: transparent;  /* 想重新看整行边界：改回 rgba(255, 59, 48, 0.18) */
+  --ts-debug-line: transparent; /* 想重新看红框：改回 #ff3b30 */
+}
+
 /* =========================================================
- *  B1
- *  音乐卡片标题栏样式 (请配合插件使用) 
- *  作者: DeepSeek & Claude  
- *  ========================================================= */   
+ *  A2(进度条双色版)
+ *  音乐卡片标题栏样式 (请配合插件使用)
+ *  作者: DeepSeek & Claude
+ * ========================================================= */
 
-:root {   
-  /* --- 🟢 1. 卡片整体布局 --- */    
-  --my-card-height: 76px;         /* 卡片高度 (调大变高， 调小变矮) */  
+:root {
+  /* --- 🟢 1. 卡片整体布局 --- */
+  --my-card-height: 76px;         /* 卡片高度 (调大变高，调小变矮) */
   --my-card-radius: 24px;         /* 卡片圆角 (调大变圆，0为直角) */
-  --my-card-margin-x: 12px;       /* 卡片左右边距 (调大变窄，0为贴边) */  
-  --my-card-margin-top: -34px;    /* 卡片向上移动距离 (负数越大越靠上) */ 
+  --my-card-margin-x: 12px;       /* 卡片左右边距 (调大变窄，0为贴边) */
+  --my-card-margin-top: -34px;    /* 卡片向上移动距离 (负数越大越靠上) */
 
-  /* --- 🖼️ 2. 封面图片 (插件提供) --- */   
+  /* --- 🖼️ 2. 封面图片 (插件提供) --- */
   --my-img-size: 60px;            /* 图片宽高 (正方形) */
   --my-img-radius: 14px;          /* 图片圆角 */
-  --my-img-left: 12px;            /* 图片距离卡片左侧 */    
-  --my-img-top: 8px;              /* 图片距离卡片顶部 */ 
+  --my-img-left: 12px;            /* 图片距离卡片左侧 */
+  --my-img-top: 8px;              /* 图片距离卡片顶部 */
 
-  /* --- 📝 3. 歌名文字 (插件提供) --- */ 
-  --my-title-left: 102px;         /* 歌名距离卡片左侧 */ 
+  /* --- 📝 3. 歌名文字 (插件提供) --- */
+  --my-title-left: 102px;         /* 歌名距离卡片左侧 */
   --my-title-top: 11px;           /* 歌名距离卡片顶部 */
   --my-title-max-width: 160px;    /* 歌名最大宽度 (超出自动变省略号...) */
-  --my-title-color: #404040;      /* 歌名颜色 (可改为 #FF0000 等) */  
+  --my-title-color: #333333;      /* 歌名颜色 (可改为 #FF0000 等) */
 
-  /* --- 🔴 4. 坐标针图标 (返回键) --- */   
-  --my-drop-left: 87px;           /* 图标水平位置 */ 
-  --my-drop-top: -2px;            /* 图标垂直位置 */  
+  /* --- 🔴 4. 坐标针图标 (返回键) --- */
+  --my-drop-left: 87px;           /* 图标水平位置 */
+  --my-drop-top: -2px;            /* 图标垂直位置 */
 
-  /* --- ⏳ 5. 对方正在输入提示 --- */   
-  --my-typing-left: 102.5px;      /* 提示文字水平位置 */    
+  /* --- ⏳ 5. 对方正在输入提示 --- */
+  --my-typing-left: 102.5px;      /* 提示文字水平位置 */
   --my-typing-top: 35px;          /* 提示文字垂直位置 */
 
-  /* --- 🎧 6. 进度条与图标 --- */    
-  --my-play-left: 21.25%;         /* 暂停键水平位置 (按宽度百分比) */ 
-  --my-play-bottom: 10px;         /* 暂停键距离底部 */    
-  --my-play-size: 19px;           /* 暂停键图标大小 */ 
+  /* --- 🎧 6. 进度条与图标 --- */
+  --my-play-left: 21.25%;         /* 暂停键水平位置 (按宽度百分比) */
+  --my-play-bottom: 10px;         /* 暂停键距离底部 */
+  --my-play-size: 19px;           /* 暂停键图标大小 */
 
-  --my-icon-size: 18px;           /* 所有图标(坐标针/音符)的统一大小 */  
-  --my-icon-color: #d98fb3;       /* 所有图标的统一颜色 */ 
+  --my-icon-size: 18px;           /* 所有图标(坐标针/音符)的统一大小 */
+  --my-icon-color: #333333;       /* 所有图标的统一颜色 */
 
-  /* --- ▬ 7. 进度条线条 --- */    
-  --my-line-left: 28%;            /* 线条起点 (百分比) */   
-  --my-line-right: 13%;           /* 线条终点 (距离右侧百分比) */    
-  --my-line-bottom: 18px;         /* 线条距离底部 */  
+  /* --- ▬ 7. 进度条线条 --- */
+  --my-line-left: 28%;            /* 线条起点 (百分比) */
+  --my-line-right: 13%;           /* 线条终点 (距离右侧百分比) */
+  --my-line-bottom: 18px;         /* 线条距离底部 */
   --my-line-height: 3px;          /* 线条粗细 */
+  
+  /* 👇 新增：进度条颜色控制 👇 */
+  --my-line-active-color: #888888; /* ⬅️ 走过部分颜色 (中灰) */
+  --my-line-bg-color: #d1d1d1;     /* ⬅️ 未走部分颜色 (浅灰) */
 
-  /* --- ⚫ 8. 进度条圆点 --- */    
-  --my-dot-left: 70%;             /* 圆点位置 (百分比) */ 
-  --my-dot-size: 11px;            /* 圆点大小 */   
-  --my-dot-bottom: 14px;          /* 圆点距离底部 */  
+  /* --- ⚫ 8. 进度条圆点 --- */
+  --my-dot-left: 70%;             /* 圆点位置 (百分比) */
+  --my-dot-size: 11px;            /* 圆点大小 */
+  --my-dot-bottom: 14px;          /* 圆点距离底部 */
 
-  /* --- ⏰ 9. 时间文字 5:20 --- */ 
+  /* --- ⏰ 9. 时间文字 5:20 --- */
   --my-time-right: 14px;          /* 距离右侧 */
-  --my-time-bottom: 10px;         /* 距离底部 */ 
+  --my-time-bottom: 10px;         /* 距离底部 */
 
-  /* --- 🔵 10. 小音符图标 (设置键) --- */ 
-  --my-note-right: 9px;           /* 距离右侧 */  
-  --my-note-top: -2px;            /* 距离顶部 */ 
+  /* --- 🔵 10. 小音符图标 (设置键) --- */
+  --my-note-right: 9px;           /* 距离右侧 */
+  --my-note-top: -2px;            /* 距离顶部 */
 
-  /* 自动同步系统留白， 切勿修改 */ 
+  /* 自动同步系统留白，切勿修改 */
   --page-header-content-height: var(--my-card-height);
 }
 
-/* =========================================================    
- *   基础卡片与原生文字处理  
- *  ========================================================= */ 
+/* =========================================================
+ * 基础卡片与原生文字处理
+ * ========================================================= */
 
-/* 去除原生标题栏的背景与毛玻璃 */   
+/* 去除原生标题栏的背景与毛玻璃 */
 .chat-room-main-pane.page-header {
   background: none !important;
-  backdrop-filter: none !important;   
-  -webkit-backdrop-filter: none !important;   
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
 }
 
-/* 绘制白色卡片外壳 */   
+/* 绘制白色卡片外壳 */
 .chat-room-main-pane.page-header .page-header-content {
-  background: #ffffff !important; 
+  background: #ffffff !important;
   border-radius: var(--my-card-radius) !important;
   margin: 0 var(--my-card-margin-x) !important;
-  border: 1px solid #eee !important; 
-  box-shadow: 0 4px 15px rgba(0,0,0,0.04) !important;    
-  position: relative !important;    
+  border: 1px solid #eee !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.04) !important;
+  position: relative !important;
   transform: translateY(var(--my-card-margin-top)) !important;
-  overflow: visible !important;   
+  overflow: visible !important;
 }
 
 /* 隐藏原生网名文字 (使用透明色隐藏，防止撑破布局) */
-.chat-room-main-pane.page-header .page-title {   
-  position: absolute !important;   
+.chat-room-main-pane.page-header .page-title {
+  position: absolute !important;
   inset: 0 !important;
-  color: transparent !important;  
-  text-shadow: none !important;   
-  pointer-events: none !important;   
-}
-
-/* 重定位“对方正在输入中”提示 */ 
-.chat-room-main-pane.page-header .chat-typing-indicator {    
-  position: absolute !important;   
-  left: var(--my-typing-left) !important; 
-  top: var(--my-typing-top) !important; 
-  bottom: auto !important;
-  transform: none !important;   
-  max-width: none !important; 
-  overflow: visible !important;
-  color: #999 !important;   
-  font-size: 11px !important;   
-  z-index: 5 !important;    
-}
-
-/* =========================================================  
- * 插件数据对接区 (图片与文字由插件动态注入)    
- *   ========================================================= */   
-
-/* 将插件容器抬高，覆盖在卡片上方 */ 
-.chat-room-main-pane.page-header + .chat-plugin-header {
-  top: calc(var(--page-header-safe-top, 48px) + var(--my-card-margin-top)) !important;
-  left: var(--my-card-margin-x) !important; 
-  right: var(--my-card-margin-x) !important; 
-  height: 0 !important; 
-  z-index: 11 !important;    
+  color: transparent !important;
+  text-shadow: none !important;
   pointer-events: none !important;
 }
 
-/* 真实封面图 */    
-.plugin-music-avatar {  
+/* 重定位“对方正在输入中”提示 */
+.chat-room-main-pane.page-header .chat-typing-indicator {
   position: absolute !important;
-  left: var(--my-img-left) !important;   
-  top: var(--my-img-top) !important;    
-  width: var(--my-img-size) !important; 
-  height: var(--my-img-size) !important;   
-  border-radius: var(--my-img-radius) !important;   
+  left: var(--my-typing-left) !important;
+  top: var(--my-typing-top) !important;
+  bottom: auto !important;
+  transform: none !important;
+  max-width: none !important;
+  overflow: visible !important;
+  color: #999 !important;
+  font-size: 11px !important;
+  z-index: 5 !important;
+}
+
+/* =========================================================
+ * 插件数据对接区 (图片与文字由插件动态注入)
+ * ========================================================= */
+
+/* 将插件容器抬高，覆盖在卡片上方 */
+.chat-room-main-pane.page-header + .chat-plugin-header {
+  top: calc(var(--page-header-safe-top, 48px) + var(--my-card-margin-top)) !important;
+  left: var(--my-card-margin-x) !important;
+  right: var(--my-card-margin-x) !important;
+  height: 0 !important;
+  z-index: 11 !important;
+  pointer-events: none !important;
+}
+
+/* 真实封面图 */
+.plugin-music-avatar {
+  position: absolute !important;
+  left: var(--my-img-left) !important;
+  top: var(--my-img-top) !important;
+  width: var(--my-img-size) !important;
+  height: var(--my-img-size) !important;
+  border-radius: var(--my-img-radius) !important;
   object-fit: cover !important;
-  z-index: 10 !important;  
-  pointer-events: none !important;   
+  z-index: 10 !important;
+  pointer-events: none !important;
 }
 
 /* 真实歌名文字 */
-.plugin-music-title {    
-  position: absolute !important;   
+.plugin-music-title {
+  position: absolute !important;
   left: var(--my-title-left) !important;
   top: var(--my-title-top) !important;
-  font-size: 16px !important;   
-  color: var(--my-title-color) !important;   
-  font-weight: bold !important;   
-  display: block !important;  
-  white-space: nowrap !important;    
-  overflow: hidden !important;    
-  text-overflow: ellipsis !important;    
-  max-width: var(--my-title-max-width) !important; 
-  z-index: 10 !important;    
-  pointer-events: none !important;    
+  font-size: 16px !important;
+  color: var(--my-title-color) !important;
+  font-weight: bold !important;
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: var(--my-title-max-width) !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
 }
 
 /* =========================================================
- *  UI 装饰图标绘制 (使用 SVG Mask 技术，支持颜色修改)  
- * ========================================================= */    
+ * UI 装饰图标绘制 (使用 SVG Mask 技术，支持颜色修改)
+ * ========================================================= */
 
-/* 播放/暂停键 */    
-.chat-room-main-pane.page-header .page-title::before {   
-  content: "" !important;   
-  position: absolute !important; 
-  left: var(--my-play-left) !important;  
-  bottom: var(--my-play-bottom) !important;    
-  width: var(--my-play-size) !important;  
-  height: var(--my-play-size) !important;  
+/* 播放/暂停键 */
+.chat-room-main-pane.page-header .page-title::before {
+  content: "" !important;
+  position: absolute !important;
+  left: var(--my-play-left) !important;
+  bottom: var(--my-play-bottom) !important;
+  width: var(--my-play-size) !important;
+  height: var(--my-play-size) !important;
   background-color: var(--my-icon-color) !important;
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16h2V8H9zm4 0h2V8h-2zm-1 6q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8'/%3E%3C/svg%3E") !important;
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16h2V8H9zm4 0h2V8h-2zm-1 6q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8'/%3E%3C/svg%3E") !important;
-  -webkit-mask-size: contain !important; 
+  -webkit-mask-size: contain !important;
   mask-size: contain !important;
   -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;  
-  -webkit-mask-position: center !important;    
-  mask-position: center !important;    
-  z-index: 5 !important;  
-  pointer-events: none !important;    
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
 }
 
-/* 进度条底线 */    
-.chat-room-main-pane.page-header .page-header-content::after { 
-  content: "" !important;  
-  position: absolute !important;  
+/* 进度条底线（已加入双色进度控制） */
+.chat-room-main-pane.page-header .page-header-content::after {
+  content: "" !important;
+  position: absolute !important;
   left: var(--my-line-left) !important;
-  right: var(--my-line-right) !important;    
-  bottom: var(--my-line-bottom) !important;    
-  height: var(--my-line-height) !important;  
-  background: #d1d1d1 !important;    
+  right: var(--my-line-right) !important;
+  bottom: var(--my-line-bottom) !important;
+  height: var(--my-line-height) !important;
+  
+  /* 👇 核心改动：利用渐变，以圆点位置为分界线 👇 */
+  background: linear-gradient(
+    to right, 
+    var(--my-line-active-color) calc((var(--my-dot-left) - var(--my-line-left)) / (100% - var(--my-line-left) - var(--my-line-right)) * 100%), 
+    var(--my-line-bg-color) 0
+  ) !important;
+  
   border-radius: 2px !important;
   z-index: 1 !important;
-  pointer-events: none !important;   
+  pointer-events: none !important;
 }
 
-/* 进度条圆点 */   
-.chat-room-main-pane.page-header .page-title::after {   
-  content: "" !important;  
+/* 进度条圆点 */
+.chat-room-main-pane.page-header .page-title::after {
+  content: "" !important;
   position: absolute !important;
   left: var(--my-dot-left) !important;
-  bottom: var(--my-dot-bottom) !important; 
+  bottom: var(--my-dot-bottom) !important;
   width: var(--my-dot-size) !important;
-  height: var(--my-dot-size) !important;    
-  background: #888 !important;  
-  border-radius: 50% !important;   
+  height: var(--my-dot-size) !important;
+  background: #888888 !important; /* 这里我改成了和中灰一致的 #888888，你也可以改成单独的变量 */
+  border-radius: 50% !important;
   z-index: 2 !important;
-  pointer-events: none !important; 
+  pointer-events: none !important;
 }
 
 /* 时间 5:20 */
-.chat-room-main-pane.page-header .page-header-right::before { 
-  content: "5:20" !important;    
-  position: absolute !important; 
+.chat-room-main-pane.page-header .page-header-right::before {
+  content: "5:20" !important;
+  position: absolute !important;
   right: var(--my-time-right) !important;
-  bottom: var(--my-time-bottom) !important;    
-  font-size: 12px !important;    
-  color: #000000 !important; 
+  bottom: var(--my-time-bottom) !important;
+  font-size: 12px !important;
+  color: #000000 !important;
   z-index: 3 !important;
-  pointer-events: none !important;  
+  pointer-events: none !important;
 }
 
 /* =========================================================
- * 按钮与点击热区 (视觉与点击区分离) 
- * ========================================================= */ 
+ * 按钮与点击热区 (视觉与点击区分离)
+ * ========================================================= */
 
-/* 禁用原生点击动画，防止按钮乱跳 */  
-.chat-room-main-pane.page-header .page-back-btn:active {   
+/* 禁用原生点击动画，防止按钮乱跳 */
+.chat-room-main-pane.page-header .page-back-btn:active {
   transform: none !important;
-  opacity: 1 !important;   
+  opacity: 1 !important;
 }
 
-/* 隐藏原生图标， 建立透明的点击大热区 */  
+/* 隐藏原生图标，建立透明的点击大热区 */
 .chat-room-main-pane.page-header .page-back-btn {
   position: absolute !important;
-  color: transparent !important;   
-  background: transparent !important;    
+  color: transparent !important;
+  background: transparent !important;
   border: none !important;
-  width: 44px !important;  
-  height: 44px !important; 
-  z-index: 20 !important;    
-  margin: 0 !important;  
+  width: 44px !important;
+  height: 44px !important;
+  z-index: 20 !important;
+  margin: 0 !important;
   padding: 0 !important;
-  top: calc(var(--page-header-safe-top, 48px) - 10px) !important;    
+  top: calc(var(--page-header-safe-top, 48px) - 10px) !important;
 }
-.chat-room-main-pane.page-header .page-back-btn svg {  
-  display: none !important;   
+.chat-room-main-pane.page-header .page-back-btn svg {
+  display: none !important;
 }
 
-/* 🔴 坐标针图标 */    
-.chat-room-main-pane.page-header .page-header-content > .page-back-btn {   
-  left: calc(var(--my-drop-left) - 22px) !important;   
+/* 🔴 坐标针图标 */
+.chat-room-main-pane.page-header .page-header-content > .page-back-btn {
+  left: calc(var(--my-drop-left) - 22px) !important;
 }
-.chat-room-main-pane.page-header .page-header-content > .page-back-btn::before {   
+.chat-room-main-pane.page-header .page-header-content > .page-back-btn::before {
   content: "" !important;
-  position: absolute !important;   
-  top: calc(var(--my-drop-top) - (var(--page-header-safe-top, 48px) - 10px) + 16px) !important;    
+  position: absolute !important;
+  top: calc(var(--my-drop-top) - (var(--page-header-safe-top, 48px) - 10px) + 16px) !important;
   left: 50% !important;
-  transform: translateX(-50%) !important;   
-  width: var(--my-icon-size) !important;    
-  height: var(--my-icon-size) !important;   
-  background-color: var(--my-icon-color) !important; 
+  transform: translateX(-50%) !important;
+  width: var(--my-icon-size) !important;
+  height: var(--my-icon-size) !important;
+  background-color: var(--my-icon-color) !important;
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 22q-2.65 0-4.325-.837T6 19q0-.475.213-.875t.637-.75q.35-.25.763-.2t.662.4t.188.763T8.05 19q.325.4 1.5.7T12 20t2.45-.3t1.5-.7q-.35-.25-.413-.663t.188-.762t.663-.4t.762.2q.425.35.638.75T18 19q0 1.325-1.675 2.163T12 22m.025-5.5q2.475-1.825 3.725-3.662T17 9.15q0-2.55-1.625-3.85T12 4T8.625 5.3T7 9.15q0 1.675 1.225 3.488t3.8 3.862m-.625 1.925q-.3-.1-.55-.3q-2.95-2.35-4.4-4.587T5 9.15q0-1.775.638-3.113T7.275 3.8t2.25-1.35T12 2t2.475.45t2.25 1.35t1.638 2.238T19 9.15q0 2.15-1.45 4.388t-4.4 4.587q-.25.2-.55.3t-.6.1t-.6-.1M12 11q.825 0 1.413-.587T14 9t-.587-1.412T12 7t-1.412.588T10 9t.588 1.413T12 11m0-2'/%3E%3C/svg%3E") !important;
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 22q-2.65 0-4.325-.837T6 19q0-.475.213-.875t.637-.75q.35-.25.763-.2t.662.4t.188.763T8.05 19q.325.4 1.5.7T12 20t2.45-.3t1.5-.7q-.35-.25-.413-.663t.188-.762t.663-.4t.762.2q.425.35.638.75T18 19q0 1.325-1.675 2.163T12 22m.025-5.5q2.475-1.825 3.725-3.662T17 9.15q0-2.55-1.625-3.85T12 4T8.625 5.3T7 9.15q0 1.675 1.225 3.488t3.8 3.862m-.625 1.925q-.3-.1-.55-.3q-2.95-2.35-4.4-4.587T5 9.15q0-1.775.638-3.113T7.275 3.8t2.25-1.35T12 2t2.475.45t2.25 1.35t1.638 2.238T19 9.15q0 2.15-1.45 4.388t-4.4 4.587q-.25.2-.55.3t-.6.1t-.6-.1M12 11q.825 0 1.413-.587T14 9t-.587-1.412T12 7t-1.412.588T10 9t.588 1.413T12 11m0-2'/%3E%3C/svg%3E") !important;
-  -webkit-mask-size: contain !important;  
-  mask-size: contain !important;  
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
   -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;  
-  -webkit-mask-position: center !important; 
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
   mask-position: center !important;
   pointer-events: none !important;
 }
 
 /* 🔵 小音符图标 */
-.chat-room-main-pane.page-header .page-header-right {   
+.chat-room-main-pane.page-header .page-header-right {
   position: static !important;
 }
-.chat-room-main-pane.page-header .page-header-right .page-back-btn {    
-  right: calc(var(--my-card-margin-x) + var(--my-note-right) - 22px) !important;   
+.chat-room-main-pane.page-header .page-header-right .page-back-btn {
+  right: calc(var(--my-card-margin-x) + var(--my-note-right) - 22px) !important;
 }
-.chat-room-main-pane.page-header .page-header-right .page-back-btn::before { 
-  content: "" !important;   
+.chat-room-main-pane.page-header .page-header-right .page-back-btn::before {
+  content: "" !important;
   position: absolute !important;
-  top: calc(var(--my-note-top) - (var(--page-header-safe-top, 48px) - 10px) + 16px) !important;  
-  left: 50% !important;    
-  transform: translateX(-50%) !important;  
-  width: var(--my-icon-size) !important; 
-  height: var(--my-icon-size) !important;    
-  background-color: var(--my-icon-color) !important;  
+  top: calc(var(--my-note-top) - (var(--page-header-safe-top, 48px) - 10px) + 16px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: var(--my-icon-size) !important;
+  height: var(--my-icon-size) !important;
+  background-color: var(--my-icon-color) !important;
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 9.85L19.14 7h-.5v3.79L16.35 8.5l-.71.71L18.43 12l-2.79 2.79l.71.71l2.29-2.29V17h.5L22 14.15L19.85 12zm-2.36-.94l.94.94l-.94.94zm.94 5.24l-.94.94v-1.88zM9.64 3v10.55c-.59-.34-1.27-.55-2-.55c-2.21 0-4 1.79-4 4s1.79 4 4 4s4-1.79 4-4V7h4V3z'/%3E%3C/svg%3E") !important;
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 9.85L19.14 7h-.5v3.79L16.35 8.5l-.71.71L18.43 12l-2.79 2.79l.71.71l2.29-2.29V17h.5L22 14.15L19.85 12zm-2.36-.94l.94.94l-.94.94zm.94 5.24l-.94.94v-1.88zM9.64 3v10.55c-.59-.34-1.27-.55-2-.55c-2.21 0-4 1.79-4 4s1.79 4 4 4s4-1.79 4-4V7h4V3z'/%3E%3C/svg%3E") !important;
-  -webkit-mask-size: contain !important;    
-  mask-size: contain !important;   
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
   -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;    
-  -webkit-mask-position: center !important;    
-  mask-position: center !important;   
-  pointer-events: none !important;   
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  pointer-events: none !important;
 }
+
 /* ══════════════════════════════════════════════════════════════════
    ⚙️ 极简风 (仿微信气泡)    
    Creator: DeepSeek & Claude
@@ -307,7 +361,7 @@
   --ai-subtext: "(?´･ω･`)🤍 …";             /* AI侧网名下方的个性签名/副文案 */   
 
   --user-name: "@guest";                 /* 用户侧显示的网名 */  
-  --user-subtext: "🍥i misssu…";             /* 用户侧网名下方的个性签名/副文案 */
+  --user-subtext: "🤍i misssu…";             /* 用户侧网名下方的个性签名/副文案 */
 
   --side-pad: 6px;                       /* 全局总闸：聊天界面离手机左右屏幕边缘的距离 (调大整体会向中间挤) */  
   --bubble-radius: 6px;                  /* 气泡的圆角弧度 (数值越大越圆润，调成 0 就是方块) */
@@ -323,7 +377,7 @@
      ══════════════════════════════════════════════════════════════ */  
   --avatar-ring-gap: 3.5px;              /* 镂空距离： 头像与最外圈细线之间的空白间距 */   
   --avatar-ring-width: 1.5px;            /* 外圈粗细： 最外层那圈线的粗细程度 */ 
-  --avatar-ring-user-color: #fad9e8;     /* 用户侧外圈的颜色 (支持色号如 #ff0000 或 rgba) */ 
+  --avatar-ring-user-color: #d0d0d0;     /* 用户侧外圈的颜色 (支持色号如 #ff0000 或 rgba) */ 
   --avatar-ring-ai-color: #d0d0d0;       /* AI侧外圈的颜色 */ 
 
   /* ══════════════════════════════════════════════════════════════    
@@ -331,23 +385,18 @@
      ══════════════════════════════════════════════════════════════ */ 
   --avatar-badge-size: 15px;             /* 徽标大小： 右下角加号图标的尺寸 */
   --avatar-badge-bg: #ffffff;            /* 徽标底色： 加号背后的圆形实心底色 (默认纯白) */   
-  --avatar-badge-color: #f5d1ea;         /* 加号颜色： 加号图标本身的颜色 (已按要求改回) 👈 */  
+  --avatar-badge-color: #555555;         /* 加号颜色： 加号图标本身的颜色 (默认深灰) */  
   --avatar-badge-right: -4.5px;          /* 左右微调：控制徽标向左或向右移动 (负数向外偏) */  
   --avatar-badge-bottom: -5px;           /* 上下微调：控制徽标向上或向下移动 (负数向外偏) */ 
 
   /* ══════════════════════════════════════════════════════════════
      ⚪【气泡底色与纯色块颜色控制台】 (彻底告别描边)
      ══════════════════════════════════════════════════════════════ */
-  /* 👇 气泡加深与备选颜色 👇 */
-  --bubble-bg-user: #EBC9DF;             /* 用户侧气泡底色：比你之前的 f5e4f5 加深了一档 */
-                                         /* 备选加深色：
-                                             (再深一点点)
-                                            #DFBEDF (更明显的深粉)
-                                            #D4A5D4 (偏紫的浓郁粉) */
-  --bubble-bg-ai: #F2F2F2;               /* AI侧气泡底色：浅灰色 (已按要求改回) */
+  --bubble-bg-user: #d0d0d0;             /* 用户侧气泡底色：纯灰 */    
+  --bubble-bg-ai: #1a1a1a;               /* AI侧气泡底色：深黑 */  
 
-  --bubble-text-color-user: #FFFFFF;     /* 用户侧气泡内文字颜色： 纯白 (已按要求改回) */    
-  --bubble-text-color-ai: #333333;       /* AI侧气泡内文字颜色： 深灰色 (已按要求改回) */   
+  --bubble-text-color-user: #111111;     /* 用户侧气泡内文字颜色： 黑 */    
+  --bubble-text-color-ai: #ffffff;       /* AI侧气泡内文字颜色： 白 */   
 
   /* ══════════════════════════════════════════════════════════════ 
      🐾【小尾巴专属控制台】 (可随意调节上下)    
@@ -382,7 +431,7 @@
   --sub-top: 24px;                       /* 副文案距离网名顶部的垂直位置 (调大向下移，调小向上移) */
 
   --line-top: 46px;                      /* 虚线高度位置：控制名字下方那条虚线离顶部的距离 */
-  --line-width: 125px;                   /* 虚线与名字区域的宽度限制 */
+  --line-width: 130px;                   /* 虚线与名字区域的宽度限制 */
   --line-color: #d0d0d0;                 /* 虚线颜色：默认浅灰 */ 
   --line-thickness: 2px;                 /* 虚线粗细 */   
 
@@ -471,7 +520,7 @@
 
 .chat-msg-avatar img, .chat-msg-avatar * {
   border-radius: 50% !important; 
-  width: 100% !important;
+  width: 100% !important; 
   height: 100% !important;    
   object-fit: cover !important; 
 }
@@ -611,7 +660,7 @@
   z-index: 2 !important;
 }
 
-.chat-msg-wrapper[data-role="assistant"] .chat-bubble-role-assistant {
+.chat-msg-wrapper[data-role="assistant"] .chat-bubble-role-assistant:not(.chat-bubble-media) {
   margin-left: var(--bubble-shift-ai) !important;   
   background-color: var(--bubble-bg-ai) !important;   
   color: var(--bubble-text-color-ai) !important;   
@@ -622,7 +671,7 @@
   color: var(--bubble-text-color-ai) !important;
 }
 
-.chat-msg-wrapper[data-role="user"] .chat-bubble-role-user {   
+.chat-msg-wrapper[data-role="user"] .chat-bubble-role-user:not(.chat-bubble-media) {   
   margin-right: var(--bubble-shift-user) !important; 
   background-color: var(--bubble-bg-user) !important;
   color: var(--bubble-text-color-user) !important;    
@@ -637,7 +686,7 @@
   position: relative !important;
 }
 
-.chat-msg-wrapper[data-role="assistant"] .chat-msg-content-wrap::before {   
+.chat-msg-wrapper[data-role="assistant"]:not(:has(.chat-bubble-media)) .chat-msg-content-wrap::before {   
   display: block !important; 
   content: "" !important;   
   position: absolute !important;
@@ -651,7 +700,7 @@
   z-index: 1 !important;    
 }
 
-.chat-msg-wrapper[data-role="user"] .chat-msg-content-wrap::after {  
+.chat-msg-wrapper[data-role="user"]:not(:has(.chat-bubble-media)) .chat-msg-content-wrap::after {  
   display: block !important;   
   content: "" !important;    
   position: absolute !important;    
@@ -703,7 +752,7 @@
   position: absolute !important;    
   top: 50% !important;    
   transform: translateY(-50%) !important;
-  width: var(--quote-icon-size) !important;    
+  width: var(--quote-icon-size) !important;
   height: var(--quote-icon-size) !important;    
   background-color: var(--quote-text-color) !important;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 21q-3.45 0-6.012-2.287T3.05 13H5.1q.35 2.6 2.313 4.3T12 19q2.925 0 4.963-2.037T19 12t-2.037-4.962T12 5q-1.725 0-3.225.8T6.25 8H9v2H3V4h2v2.35q1.275-1.6 3.113-2.475T12 3q1.875 0 3.513.713t2.85 1.924t1.925 2.85T21 12t-.712 3.513t-1.925 2.85t-2.85 1.925T12 21m2.8-4.8L11 12.4V7h2v4.6l3.2 3.2z'/%3E%3C/svg%3E") center / contain no-repeat !important;
@@ -735,7 +784,7 @@
 
 /* 5.2 AI 的 L 线与返信方框 */ 
 .chat-msg-wrapper[data-role="assistant"] .chat-bubble-role-assistant:has(.chat-quote-preview)::before {  
-  content: "" !important;    
+  content: "" !important;   
   display: block !important; 
   position: absolute !important;    
   left: var(--quote-line-left) !important; 
@@ -800,6 +849,84 @@
   z-index: 5 !important; 
   background: transparent !important;   
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   ⏱️ 时间戳样式块（完成版 · 仿微信气泡适配）—— 新增内容
+   位置：气泡正下方、另起一行（数值沿用圆角版已调准的 1.25px / 5px）。
+
+   ★ 显示条件：只有插件给这条消息贴上 data-ts-show 记号才画。
+     插件没装 / 这个聊天室没勾 / 插件禁用 → 没有记号 → 一个字都不显示。
+
+   ★ 挂点与圆角版不同（关键）：
+     仿微信气泡里 .chat-msg-content-wrap 的四个伪元素已被
+     「小尾巴 + 副文案」全部占用，圆角版挂 content-wrap::after 会顶掉它们。
+     所以这里改用气泡自身的伪元素：
+       · 不带引用框 → 挂 .chat-bubble-role-*::after（此版未关闭气泡伪元素，空闲）
+       · 带引用框   → 气泡 ::before/::after 被「L 线 / 返信框」占用，
+                       改挂 .chat-quote-message::after（空闲，定位参照仍是气泡）
+   镜像只换左右对齐，文字本身不翻转、正常阅读。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ① 时间文字：两套挂点共用同一组样式（认插件记号） */
+.chat-msg-wrapper[data-ts-show][data-role="assistant"] .chat-bubble-role-assistant:not(:has(.chat-quote-preview))::after,
+.chat-msg-wrapper[data-ts-show][data-role="user"] .chat-bubble-role-user:not(:has(.chat-quote-preview))::after,
+.chat-msg-wrapper[data-ts-show][data-role="assistant"] .chat-bubble-role-assistant:has(.chat-quote-preview) .chat-quote-message::after,
+.chat-msg-wrapper[data-ts-show][data-role="user"] .chat-bubble-role-user:has(.chat-quote-preview) .chat-quote-message::after {
+  content: var(--ts-text) !important;
+  display: block !important;
+  position: absolute !important;
+  top: calc(100% + var(--ts-gap)) !important;
+  font-family: var(--ts-font) !important;
+  font-size: var(--ts-size) !important;
+  line-height: var(--ts-line-height) !important;
+  letter-spacing: var(--ts-letter-spacing) !important;
+  color: var(--ts-color) !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  z-index: 6 !important;
+  box-sizing: border-box !important;
+  background-repeat: no-repeat !important;
+  /* ↓ 诊断辅助：需要复核位置时把 --ts-debug-bg / --ts-debug-line 改回红色 */
+  background-color: var(--ts-debug-bg) !important;
+  outline: 2px solid var(--ts-debug-line) !important;
+}
+
+/* ② AI 侧：左端贴齐气泡左边缘（两套挂点各一份） */
+.chat-msg-wrapper[data-ts-show][data-role="assistant"] .chat-bubble-role-assistant:not(:has(.chat-quote-preview))::after,
+.chat-msg-wrapper[data-ts-show][data-role="assistant"] .chat-bubble-role-assistant:has(.chat-quote-preview) .chat-quote-message::after {
+  left: var(--ts-offset-x) !important;
+  right: auto !important;
+  text-align: left !important;
+}
+
+/* ③ 用户侧：右端贴齐气泡右边缘；右侧留出双勾位置，双勾画在同一行末尾 */
+.chat-msg-wrapper[data-ts-show][data-role="user"] .chat-bubble-role-user:not(:has(.chat-quote-preview))::after,
+.chat-msg-wrapper[data-ts-show][data-role="user"] .chat-bubble-role-user:has(.chat-quote-preview) .chat-quote-message::after {
+  right: var(--ts-offset-x) !important;
+  left: auto !important;
+  text-align: right !important;
+  padding-right: calc(var(--ts-check-size) + var(--ts-check-gap)) !important;
+  background-image: var(--ts-check-svg) !important;
+  background-position: right calc(50% + var(--ts-check-y)) !important;
+  background-size: var(--ts-check-size) var(--ts-check-size) !important;
+}
+
+/* ④ 引用框避让：带引用框的挂点额外往下挪，躲开「返信」标签和引用小字。
+   默认 20px；嫌空档大就调小，觉得挤就调大。
+   ⚠️ 这两行必须带 [data-role]：它和 ① 打平手、又写在 ① 后面，才能覆盖 ① 的 top。
+      少了它会被 ① 压过去，表现为时间戳压在引用条上、且调这个值完全没反应。 */
+.chat-msg-wrapper[data-ts-show][data-role="assistant"] .chat-bubble-role-assistant:has(.chat-quote-preview) .chat-quote-message::after,
+.chat-msg-wrapper[data-ts-show][data-role="user"] .chat-bubble-role-user:has(.chat-quote-preview) .chat-quote-message::after {
+  top: calc(100% + var(--ts-gap) + var(--ts-quote-shift)) !important;
+}
+
+/* ⑤ 带引用框的消息：把底部留白一起撑开，防止下移后的时间戳压到再下一条。
+   留白量由 --ts-gap / --ts-quote-shift / --ts-size 自动算出，改变量它跟着变。
+   这条是「追加覆盖」，不删原文那条 margin-bottom 规则。 */
+.chat-msg-wrapper[data-ts-show]:has(.chat-quote-preview) {
+  margin-bottom: calc(var(--ts-gap) + var(--ts-quote-shift) + var(--ts-size) + 8px) !important;
+}
+
 /*
 ========================================================================= 
  *   简约风输入栏 CSS · 纯白版 (请配合插件使用)    
@@ -813,9 +940,16 @@
     /*  
      *  ⬇️【底部图标颜色控制】⬇️   
      *  作用：控制左下角「加号」按钮 和 右下角「回复键/停止键」的图标颜色。  
-     *   怎么改： 直接替换下方的333333 即可。
+     *   怎么改： 直接替换下方的 #333333 即可。
+     *    
+     * 💡 颜色代码示例（十六进制）：    
+     * 默认黑： #333333   
+     *   宝石蓝： #007AFF   
+     *  马卡龙粉： #FF85A2 
+     *   玫瑰红： #FF3B30 
+     *   极简白： #FFFFFF (⚠️注意： 如果背景是白色，别改白色， 不然图标会隐形)
      */    
-    --bottom-btn-color: #404040; /* 底部按钮颜色 (已按要求改回) 👈 */    
+    --bottom-btn-color: #333333;    
 }
 
 .chat-input-bar {    
@@ -915,7 +1049,7 @@
     margin: 0 !important; 
     background: #ffffff !important;   
     border-radius: 20px !important;  
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;    
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;    
     z-index: 100 !important;    
     box-sizing: border-box !important;    
     overflow-x: hidden !important;
@@ -938,6 +1072,7 @@
     color: #b0b0b0 !important;
     opacity: 1 !important;  
 }
+
 /* =========================================================   
  * 聊天消息区悬浮磨砂玻璃相框 (全变量控制版)    
  * ========================================================= */ 
