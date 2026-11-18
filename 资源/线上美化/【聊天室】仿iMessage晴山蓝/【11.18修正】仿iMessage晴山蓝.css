@@ -1,0 +1,1002 @@
+﻿/* ══════════════════════════════════════════════════════════
+   主题变量（会话 CSS 会被自动加 .session-xxx 作用域，
+   :root 会映射到这个作用域上，所以这里定义的变量全房间可用）
+   ══════════════════════════════════════════════════════════ */
+:root {
+  /* ── 强调色 ── */
+  --my-accent: #8FB2C8;
+
+  /* ── 双方气泡 ── */
+  --bubble-user-bg: #8FB2C8;
+  --bubble-user-text: #FFFFFF;
+  --bubble-user-border: #8FB2C8;
+  --bubble-user-tail: url('https://i.ibb.co/CKcQMr3f/BLUE.png');
+
+  --bubble-other-bg: #E8E8EB;
+  --bubble-other-text: #000000;
+  --bubble-other-border: #DCDCDC;
+  --bubble-other-tail: url('https://i.ibb.co/QvFtCk1C/1781320697497.png');
+
+  /* ── 引用卡片 ── */
+  --quote-user-bg: rgba(123, 155, 172, 0.35);
+  --quote-user-text: rgba(255, 255, 255, 0.85);
+  --quote-user-label: rgba(255, 255, 255, 0.7);
+  --quote-user-bar: rgba(255, 255, 255, 0.4);
+
+  --quote-other-bg: rgba(0, 0, 0, 0.04);
+  --quote-other-text: rgba(0, 0, 0, 0.5);
+  --quote-other-label: #8FB2C8;
+  --quote-other-bar: #8FB2C8;
+
+  /* ── 顶部栏 ── */
+  --header-bg: #EEEEEE;
+  --header-border: #C0C0C0;
+  --header-avatar: url('https://i.ibb.co/hJ6gkpMD/IMG-20260408-220056.jpg');
+  --header-more-icon: url('https://i.ibb.co/svVDdY5V/1781708753200.png');
+  --header-back-color: #8FB2C8;
+  --header-arrow-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12' fill='none'%3E%3Cpath d='M1.5 1.5 L6 6 L1.5 10.5' stroke='%238E8E93' stroke-width='1.2' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E");
+
+  /* ── 底部输入栏 ── */
+  --input-bg: #F8F8F8;
+  --input-border: #DADBDF;
+  --input-text: #2C3440;
+  --input-icon: #C7C7CC;
+  --input-plus-bg: #E0E0E0;
+  --input-plus-line: #4A4A4A;
+  /* 发送按钮图标为写死的内联 SVG，不再使用 --send-icon 变量 */
+
+  /* ── 工具行（悬在输入栏上方的毛玻璃按钮） ── */
+  --tool-bg: #F8F8F8;           /* 已不参与渲染（毛玻璃用写死的 rgba） */
+  --tool-border: rgba(0, 0, 0, 0.06);  /* 已不参与渲染 */
+  --tool-icon: #8E8E93;         /* 图标灰 */
+  --tool-label: #2C3440;        /* 文字色 */
+  --tool-w: 66px;               /* 按钮宽 */
+  --tool-h: 28px;               /* 按钮高 */
+  --tool-radius: 10px;           /* 按钮圆角 */
+  --tool-gap: 8px;              /* 按钮间距 */
+  --tool-offset: 3px;           /* 工具行距输入栏顶边 */
+  --tool-glass: rgba(255, 255, 255, 0.30);   /* 毛玻璃底，越小越透 */
+  --tool-hairline: rgba(0, 0, 0, 0.12);      /* 毛玻璃边框 */
+  --tool-row-reserve: calc(var(--tool-h) + var(--tool-offset) + var(--tool-gap));
+
+  /* ── 番外指令条（已移到顶部栏下方） ── */
+  --theater-strip-offset: 90px;  /* 从状态栏底再往下挪多少，用来对准标题栏下沿 */
+
+  /* ── 系统文字 / 内心独白 ── */
+  --sys-text: #8E8E93;
+  --thought-text: #4A4A4A;
+
+  /* ── 翻译气泡 ── */
+  --translation-size: 13px;
+  --translation-color: #FFFFFF;
+  --translation-stroke: #000000;
+  --translation-stroke-width: 2px;
+  --translation-pad-y: 5px;        /* = 气泡 padding 的上下值，务必同步 */
+
+  /* ── 界面文案（改这里就能换字） ── */
+  --label-imessage: "iMessage消息";
+  --label-quote: "回复：";
+  --label-keep: "保留";
+  --label-whisper: "贴近耳边留言";
+  --label-monologue: "𝐈𝐧𝐧𝐞𝐫 𝐦𝐨𝐧𝐨𝐥𝐨𝐠𝐮𝐞";
+}
+
+
+/* ═══════════ 顶部栏 ═══════════ */
+
+.page-header {
+  background-color: var(--header-bg) !important;
+  border-bottom: 1px solid var(--header-border) !important;
+  padding-bottom: 0 !important;
+  min-height: auto !important;
+}
+
+.page-header-content {
+  padding-top: 14px !important;
+  padding-bottom: 2px !important;
+  align-items: flex-start !important;
+}
+
+.page-header,
+.page-header-content {
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+.page-header-content > .page-back-btn:first-child,
+.page-header-right .page-back-btn {
+  position: relative !important;
+  z-index: 101 !important;
+}
+
+.page-header-content > .page-back-btn:first-child svg {
+  stroke: var(--header-back-color) !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* 更多按钮 → 自定义图片 */
+.page-header-right .page-back-btn {
+  position: relative;
+  width: 37px !important;
+  height: 37px !important;
+  background-image: var(--header-more-icon) !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: none;
+}
+
+.page-header-right .page-back-btn svg {
+  display: none !important;
+}
+
+.page-title {
+  display: block !important;
+  text-align: center !important;
+  font-size: 13px !important;
+}
+
+/* 昵称上方圆形头像 */
+.page-title::before {
+  content: '';
+  display: block;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-image: var(--header-avatar);
+  background-size: cover;
+  background-position: center;
+  margin: 0 auto 4px;
+}
+
+/* 昵称右侧直角箭头 */
+.page-title::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 10px;
+  margin-left: 5px;
+  vertical-align: middle;
+  background-image: var(--header-arrow-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: translate(-1px, -1px);
+}
+
+
+/* ═══════════ 消息列表通用 ═══════════ */
+
+/* 底部留白多让出工具行的高度，最后一条消息不会被悬空按钮盖住 */
+.chat-scroll-anchored {
+  padding-top: 140px !important;
+  padding-bottom: calc(8px + var(--tool-row-reserve)) !important;
+}
+
+/* 番外指令条在场时，顶部多让一条的高度（条高约 30 + 间距 8） */
+.chat-room-wrapper:has(.chat-theater-mode-strip) .chat-scroll-anchored {
+  padding-top: 178px !important;
+}
+
+.chat-msg-wrapper:last-child {
+  margin-bottom: 0 !important;
+}
+
+.chat-msg-wrapper {
+  margin-bottom: 1px !important;
+}
+
+.chat-sys-msg {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: var(--sys-text) !important;
+  line-height: 1.4;
+}
+
+/* 时间戳上方标签 */
+div.flex.justify-center.w-full > span.chat-sys-msg {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center;
+  padding: 2px 8px !important;
+}
+
+div.flex.justify-center.w-full > span.chat-sys-msg::before {
+  content: var(--label-imessage);
+  display: block;
+  font-size: 12px;
+  color: var(--sys-text);
+  margin-bottom: 2px;
+  line-height: 1;
+}
+
+div.chat-sys-msg.break-all {
+  display: block !important;
+}
+
+/* 隐藏自己的头像 */
+.chat-msg-wrapper:has(.chat-bubble-role-user) img[class*="avatar"],
+.chat-msg-wrapper:has(.chat-bubble-role-user) .avatar,
+.chat-msg-wrapper:has(.chat-bubble-role-user) [class*="avatar"] {
+  display: none !important;
+}
+
+/* 对方消息容器：左对齐、垂直居中 */
+.chat-msg-wrapper[data-role="assistant"] {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+}
+
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-content-wrap {
+  order: -1 !important;
+}
+
+/* 头像占位（保留可点击，图片隐藏） */
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-avatar {
+  order: 2 !important;
+  margin-left: 8px !important;
+  width: 25px !important;
+  height: 25px !important;
+  pointer-events: auto !important;
+  background: transparent !important;
+}
+
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-avatar > div {
+  width: 25px !important;
+  height: 25px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border: none !important;
+  box-sizing: border-box;
+}
+
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-avatar img {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.chat-msg-wrapper[data-role="assistant"] .chat-monologue-heart {
+  order: 1 !important;
+}
+
+.ctx-menu {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+
+/* ═══════════ 聊天气泡 ═══════════ */
+
+.chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble),
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble) {
+  border-radius: 20px !important;
+  position: relative !important;
+  min-width: 40px !important;
+  max-width: 280px !important;
+  overflow: visible !important;
+  padding: 5px 10px !important;
+}
+
+/* 自己的气泡 */
+.chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble) {
+  background: var(--bubble-user-bg) !important;
+  color: var(--bubble-user-text) !important;
+  border: 1px solid var(--bubble-user-border) !important;
+}
+
+.chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble)::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: var(--bubble-user-tail) center/contain no-repeat;
+  transform: translate(9px, -1px) scaleY(-1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 对方的气泡 */
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble) {
+  background: var(--bubble-other-bg) !important;
+  color: var(--bubble-other-text) !important;
+  border: 1px solid var(--bubble-other-border) !important;
+}
+
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: var(--bubble-other-tail) center/contain no-repeat;
+  transform: translate(-9px, -1px) scaleY(-1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 气泡间距 */
+.chat-scroll-anchored > div:has(.chat-bubble-role-user) + div:has(.chat-bubble-role-user),
+.chat-scroll-anchored > div:has(.chat-bubble-role-user) + div:has(.chat-bubble-role-assistant),
+.chat-scroll-anchored > div:has(.chat-bubble-role-assistant) + div:has(.chat-bubble-role-user),
+.chat-scroll-anchored > div:has(.chat-bubble-role-assistant) + div:has(.chat-bubble-role-assistant) {
+  margin-top: -14px;
+}
+
+.chat-scroll-anchored > div:has(.chat-bubble-role-user) + div:has(.chat-bubble-role-assistant),
+.chat-scroll-anchored > div:has(.chat-bubble-role-assistant) + div:has(.chat-bubble-role-user) {
+  margin-top: 10px !important;
+}
+
+/* 连续消息隐藏尾巴 */
+.chat-msg-wrapper[data-consecutive] .chat-bubble-role-user:not(.chat-bubble-media):not(.voice-msg-bubble)::before,
+.chat-msg-wrapper[data-consecutive] .chat-bubble-role-assistant:not(.chat-bubble-media):not(.voice-msg-bubble)::before {
+  display: none !important;
+}
+
+
+/* ═══════════ 引用卡片 ═══════════ */
+
+.chat-quote-preview {
+  border: none !important;
+  border-radius: 14px !important;
+  padding: 8px 12px 8px 16px !important;
+  margin-bottom: 4px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.chat-quote-preview::before {
+  content: var(--label-quote);
+  display: block;
+  font-size: 11px;
+  font-weight: 700 !important;
+  margin-bottom: 2px;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+.chat-quote-preview::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 2px;
+}
+
+/* 自己气泡里的引用 */
+.chat-bubble-role-user .chat-quote-preview {
+  background: var(--quote-user-bg) !important;
+  color: var(--quote-user-text) !important;
+}
+.chat-bubble-role-user .chat-quote-preview::before {
+  color: var(--quote-user-label) !important;
+}
+.chat-bubble-role-user .chat-quote-preview::after {
+  background: var(--quote-user-bar) !important;
+}
+
+/* 对方气泡里的引用 */
+.chat-bubble-role-assistant .chat-quote-preview {
+  background: var(--quote-other-bg) !important;
+  color: var(--quote-other-text) !important;
+}
+.chat-bubble-role-assistant .chat-quote-preview::before {
+  color: var(--quote-other-label) !important;
+}
+.chat-bubble-role-assistant .chat-quote-preview::after {
+  background: var(--quote-other-bar) !important;
+}
+
+
+/* ═══════════ 语音消息 ═══════════ */
+
+.chat-msg-wrapper[data-role="user"] .voice-msg-bar,
+.chat-msg-wrapper[data-role="user"] .voice-msg-bars[data-playing] .voice-msg-bar {
+  background: var(--bubble-user-text);
+}
+.chat-msg-wrapper[data-role="user"] .voice-msg-dur {
+  color: var(--bubble-user-text);
+}
+.chat-msg-wrapper[data-role="user"] .voice-msg-icon-shell {
+  background-color: var(--bubble-user-text);
+}
+.chat-msg-wrapper[data-role="user"] .voice-msg-icon {
+  color: var(--my-accent);
+}
+
+.chat-msg-wrapper[data-role="assistant"] .voice-msg-icon-shell {
+  background-color: var(--my-accent);
+}
+.chat-msg-wrapper[data-role="assistant"] .voice-msg-icon {
+  color: #FFFFFF;
+}
+
+/* 转文字气泡偏移 */
+.chat-msg-wrapper[data-role="user"] .voice-msg-text-bubble {
+  transform: translateX(50px) !important;
+}
+.chat-msg-wrapper[data-role="assistant"] .voice-msg-text-bubble {
+  transform: translateX(-35px) !important;
+}
+
+.chat-msg-wrapper:has(.voice-msg-text-bubble) {
+  margin-bottom: 16px !important;
+}
+
+.chat-msg-wrapper .voice-msg-text-bubble {
+  position: relative !important;
+}
+
+/* “保留”标签 */
+.chat-msg-wrapper[data-role="user"] .voice-msg-text-bubble::after,
+.chat-msg-wrapper[data-role="assistant"] .voice-msg-text-bubble::after {
+  content: var(--label-keep);
+  position: absolute;
+  right: 2px;
+  bottom: -16px;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--my-accent);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* “贴近耳边留言”标签 */
+.chat-msg-wrapper[data-role="assistant"] .voice-msg-text-bubble::before {
+  content: var(--label-whisper);
+  position: absolute;
+  left: 3px;
+  bottom: -16px;
+  font-size: 11px;
+  color: var(--sys-text);
+  line-height: 1;
+  pointer-events: none;
+}
+
+
+/* ═══════════ 内心独白卡片 ═══════════ */
+
+.chat-thought-card {
+  transform: translateX(-35px) translateY(-5px) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.chat-thought-tape-left,
+.chat-thought-tape-right {
+  display: none !important;
+}
+
+.chat-thought-title {
+  font-size: 0 !important;
+  margin-bottom: 4px !important;
+}
+
+.chat-thought-title::before {
+  content: var(--label-monologue);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--my-accent);
+  font-style: italic;
+}
+
+.chat-thought-body {
+  position: relative;
+  margin-left: 8px;
+  padding: 6px 0;
+  background: transparent !important;
+  border: none !important;
+  overflow: visible !important;
+}
+
+.chat-thought-body .chat-markdown-paragraph {
+  font-style: normal !important;
+  color: var(--thought-text) !important;
+  line-height: 1.5 !important;
+  font-size: 13px !important;
+}
+
+/* 状态进度条 */
+.state-bar-track {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border-radius: 2px !important;
+  height: 3px !important;
+}
+.state-panel .ts-10 {
+  color: var(--sys-text) !important;
+  font-size: 10px !important;
+}
+
+.chat-thought-sig {
+  display: block !important;
+  color: var(--my-accent) !important;
+  font-size: 12px !important;
+}
+
+
+/* ═══════════ 底部输入栏 ═══════════ */
+
+.chat-input-bar.chat-room-main-pane {
+  display: grid !important;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  padding: 6px 8px 26px 8px;
+  gap: 8px;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.chat-input-actions {
+  display: contents !important;
+}
+
+/* 输入框：高度交给 JS 按内容计算（min(scrollHeight,120)），
+   这里只给上下限。写 height + !important 会把它钉死在单行高度。
+   右侧只剩发送按钮，留白从 168px 收到 52px */
+.chat-input-bar.chat-room-main-pane .chat-input-textarea {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  min-height: 34px;
+  max-height: 120px;
+  padding: 7px 52px 7px 12px !important;
+  line-height: 1.2 !important;
+  background: var(--input-bg) !important;
+  border: 0.5px solid var(--input-border);
+  color: var(--input-text);
+  font-size: calc(15px * var(--app-text-scale, 1));
+  resize: none;
+  border-radius: 18px !important;
+  overflow-y: auto;
+  z-index: 1;
+  position: relative;
+}
+
+/* 加号按钮：放在 grid 第 1 行（原来 absolute 锚输入栏底边，
+   菜单一展开输入栏变高，按钮会被推进面板区域而被盖住） */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(4) {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  justify-self: start;
+  margin-bottom: 3px;          /* 单行时与原 bottom: 29px 的视觉一致 */
+  position: relative !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: 2;
+  width: 28px !important;
+  height: 28px !important;
+  background-color: var(--input-plus-bg) !important;
+  background-image: none !important;
+  border: none !important;
+  outline: none !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(4) > svg {
+  display: none !important;
+}
+
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(4)::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 1.8px;
+  background-color: var(--input-plus-line);
+  border-radius: 1px;
+}
+
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(4)::before {
+  content: "";
+  position: absolute;
+  width: 1.8px;
+  height: 14px;
+  background-color: var(--input-plus-line);
+  border-radius: 1px;
+}
+
+/* 所有按钮的原始 svg 统一样式（图标 18px，颜色随变量） */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button > svg {
+  display: block;
+  color: var(--input-icon) !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* 发送按钮图标隐藏，图标改由写死的背景 SVG 提供 */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(5) > svg,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button[aria-label="发送"] > svg,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button[title="发送"] > svg {
+  display: none !important;
+}
+
+/* 发送按钮：默认态（无文字 / 禁言锁定 / 生成中）= 麦克风线条图标
+   同样回到 grid 第 1 行，不随加号菜单展开而位移 */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(5),
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button[aria-label="发送"],
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button[title="发送"] {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  justify-self: end;
+  margin-bottom: 5px;          /* 单行时与原 bottom: 31px 的视觉一致 */
+  margin-right: 8px;           /* 输入框右侧留白 52px 里，按钮距输入框右边 8px */
+  position: relative !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: 3;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50%;
+  background-color: transparent !important;
+  /* 麦克风：写死的内联 SVG（无图片、无 :root 变量），已去掉底部横线
+     stroke-width 控制粗细（1.4，更细改 1.2）
+     换颜色改 stroke='%234A4A4A'（# 必须写成 %23） */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='2.5' width='6' height='11' rx='3'/%3E%3Cpath d='M5.5 11a6.5 6.5 0 0 0 13 0'/%3E%3Cpath d='M12 17.5V21'/%3E%3C/svg%3E") !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-color 0.15s ease;
+}
+
+/* 有文字可发送：白色向上箭头 + 圆底强调色
+   :not(:disabled) 对应「输入框有内容」；再排除生成中的「停止本轮生成」 */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(5):not(:disabled):not([aria-label="停止本轮生成"]),
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button[aria-label="发送"]:not(:disabled),
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button[title="发送"]:not(:disabled) {
+  background-color: var(--my-accent, #8FB2C8) !important;
+  /* 白色向上箭头：写死的内联 SVG；stroke-width 1.9 比原来的 2.4 细 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V6'/%3E%3Cpath d='M6 12l6-6 6 6'/%3E%3C/svg%3E") !important;
+  /* 原来 contain 会撑满 24px 按钮；改成固定 13px，视觉更轻 */
+  background-size: 20px 20px !important;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
+/* ═══════════ 工具行：线下 / 表情 / 贴纸 / 生成 ═══════════
+   高透毛玻璃按钮，悬在输入栏顶边上方；横排：左图标 + 右文字 */
+
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(1),
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(2),
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(3),
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(6) {
+  position: absolute !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: calc(100% + var(--tool-offset)) !important;
+  width: var(--tool-w) !important;
+  height: var(--tool-h) !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;      /* 图标与文字上下居中对齐 */
+  justify-content: center !important;
+  gap: 5px;
+  border-radius: var(--tool-radius) !important;
+  /* ── 高透毛玻璃 ── */
+  background: var(--tool-glass) !important;
+  background-image: none !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+  border: 1px solid var(--tool-hairline) !important;
+  box-shadow: none !important;         /* 无阴影 */
+  z-index: 12;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 不支持毛玻璃的老内核：退回半透明白底，避免按钮变全透明看不见 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(1),
+  .chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(2),
+  .chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(3),
+  .chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(6) {
+    background: rgba(255, 255, 255, 0.82) !important;
+    border-color: var(--tool-hairline) !important;
+  }
+}
+
+/* 隐藏四个按钮里原有的 svg（::after 的文字标签保留） */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(1) > svg,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(2) > svg,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(3) > svg,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(6) > svg {
+  display: none !important;
+}
+
+/* 图标载体：14px 色块 + SVG 遮罩，颜色永远跟 --tool-icon 走
+   想更粗把 stroke-width 1.7 调 2；想更小把 14px 调 13px */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(1)::before,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(2)::before,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(3)::before,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(6)::before {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  background-color: var(--tool-icon);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  pointer-events: none;
+}
+
+/* ① 线下 → MapPin（Lucide 原样，与产品自带图标同款） */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(1)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0Z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0Z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+}
+
+/* ② 表情 → Smile */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(2)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M8 14s1.5 2 4 2 4-2 4-2'/%3E%3Cline x1='9' x2='9.01' y1='9' y2='9'/%3E%3Cline x1='15' x2='15.01' y1='9' y2='9'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M8 14s1.5 2 4 2 4-2 4-2'/%3E%3Cline x1='9' x2='9.01' y1='9' y2='9'/%3E%3Cline x1='15' x2='15.01' y1='9' y2='9'/%3E%3C/svg%3E");
+}
+
+/* ③ 贴纸 → Sticker */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(3)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z'/%3E%3Cpolyline points='14 3 14 8 21 8'/%3E%3Cpath d='M8 13h0'/%3E%3Cpath d='M16 13h0'/%3E%3Cpath d='M10 17c.5.3 1.2.5 2 .5s1.5-.2 2-.5'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z'/%3E%3Cpolyline points='14 3 14 8 21 8'/%3E%3Cpath d='M8 13h0'/%3E%3Cpath d='M16 13h0'/%3E%3Cpath d='M10 17c.5.3 1.2.5 2 .5s1.5-.2 2-.5'/%3E%3C/svg%3E");
+}
+
+/* ④ 生成 → Sparkles */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(6)::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .963L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z'/%3E%3Cpath d='M20 3v4'/%3E%3Cpath d='M22 5h-4'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .963L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z'/%3E%3Cpath d='M20 3v4'/%3E%3Cpath d='M22 5h-4'/%3E%3C/svg%3E");
+}
+
+/* 工具行文字：12px，与图标同处一行 */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(1)::after,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(2)::after,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(3)::after,
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(6)::after {
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--tool-label);
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+/* 横向位置：8 / 82 / 156 / 230（宽 66 + 间距 8） */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(1) { left: 8px !important; }
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(2) { left: 82px !important; }
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(3) { left: 156px !important; }
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(6) { left: 230px !important; }
+
+/* 按钮文字内容 */
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(1)::after { content: "线下"; }
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(2)::after { content: "表情"; }
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(3)::after { content: "贴纸"; }
+.chat-input-bar.chat-room-main-pane .chat-input-actions > button:nth-child(6)::after { content: "生成"; }
+
+
+/* ═══════════ 番外指令条：贴在顶部栏下方 ═══════════ */
+
+.chat-theater-mode-strip {
+  position: fixed !important;
+  top: calc(var(--safe-area-top, 48px) + var(--theater-strip-offset)) !important;
+  bottom: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  width: calc(var(--phone-screen-width, 100vw) - 20px) !important;
+  max-width: calc(100vw - 4px) !important;
+  z-index: 99 !important;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 5.5px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+
+.chat-theater-mode-title {
+  font-size: 13px;
+  line-height: 1.2;   /* 顺带钉住行高，条高不会随字体缩放漂 */
+  color: #333;
+}
+
+/* 番外指令条的关闭按钮：× 图标 → 文字「退出」 */
+.chat-theater-mode-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2px;
+  min-width: 28px;       /* 图标隐藏后按钮宽度会塌成 0，给个最小宽 */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 隐藏原来的 × svg */
+.chat-theater-mode-close > svg {
+  display: none !important;
+}
+
+/* 换成文字 */
+.chat-theater-mode-close::after {
+  content: "退出";
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 500;
+  color: #DCDCDC;
+  white-space: nowrap;
+}
+
+.chat-theater-mode-title {
+  font-size: 13px;
+  color: #333;
+}
+
+.chat-theater-mode-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #888;
+}
+
+
+/* ═══════════ 输入栏上方浮层（引用预览条） ═══════════ */
+
+.chat-quote-bar {
+  position: absolute !important;
+  bottom: calc(100% + var(--tool-row-reserve)) !important;
+  left: 8px;
+  right: 8px;
+  z-index: 13;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+}
+
+.chat-quote-bar::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 24px;
+  background: var(--my-accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+
+/* ═══════════ 加号菜单面板 ═══════════ */
+
+.chat-input-bar.chat-room-main-pane > .chat-input-actions + div,
+.chat-input-bar.chat-room-main-pane > .chat-plus-menu {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  z-index: 10;
+  background: var(--input-bg);
+  position: static !important;
+  margin-top: 4px;
+  margin-bottom: -26px;
+  border-top: 1px solid #e0e0e0;
+  align-self: end;
+}
+
+.chat-input-bar.chat-room-main-pane > .chat-plus-menu {
+  position: relative !important;
+  grid-row: 2 !important;
+  grid-column: 1 / -1 !important;
+  margin-top: 4px;
+  margin-bottom: -26px;
+  border-top: 1px solid #e0e0e0;
+  background: var(--input-bg);
+  z-index: 10;
+  align-self: end;
+}
+
+
+/* ═══════════ 翻译气泡：点文字展开 · 译文压在气泡下沿 · 不撑高气泡 ═══════════ */
+
+.chat-bubble-role-assistant,
+.chat-bubble-role-user {
+  overflow: visible !important;
+}
+
+/* 原文块做定位基准 */
+.chat-bilingual-block { position: relative !important; }
+
+/* 翻译按钮隐形，铺满原文块 */
+.chat-bilingual-toggle {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  text-decoration: none !important;
+  opacity: 0 !important;
+  z-index: 4 !important;
+  cursor: pointer !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chat-bilingual-divider { display: none !important; }
+
+/* 译文脱离文档流：不再撑高气泡；
+   下移到「块底 + 气泡 padding 下值」，再上移自身一半 → 气泡下沿穿过译文中线 */
+.chat-bilingual-section-translation {
+  position: absolute !important;
+  top: calc(100% + var(--translation-pad-y)) !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  text-align: left !important;
+}
+
+/* 译文文字：白字 + 加粗黑描边 + 非斜体 */
+.chat-bilingual-section-translation,
+.chat-bilingual-section-translation .chat-markdown,
+.chat-bilingual-section-translation .chat-markdown p,
+.chat-bilingual-section-translation .chat-markdown-paragraph,
+.chat-bilingual-section-translation .chat-markdown strong,
+.chat-bilingual-section-translation .chat-markdown em,
+.chat-bilingual-section-translation .chat-markdown li,
+.chat-bilingual-section-translation .chat-markdown blockquote {
+  color: var(--translation-color) !important;
+  font-size: var(--translation-size) !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0.02em;
+  opacity: 1 !important;
+  -webkit-text-stroke: var(--translation-stroke-width) var(--translation-stroke) !important;
+  paint-order: stroke fill;
+}
