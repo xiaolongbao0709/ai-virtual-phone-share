@@ -1,9 +1,9 @@
 /* STAY / Float · independently authored presentation adapter · ee × codex */
 export default {
   manifest: {
-    id: 'unit-89757-float-room', name: 'STAY·夜', apiVersion: 1,
-    version: '1.0.23', author: 'ee × codex',
-    description: '原紫绿夜间配色；修复顶部遮罩，支持原生背景与按秒数自适应语音长度与原生键盘收起自动回复兼容。',
+    id: 'unit-89757-float-room', name: 'STAY·昼', apiVersion: 1,
+    version: '1.0.25', author: 'ee × codex',
+    description: '连续文字、语音、表情包与引用只在首条显示姓名和时间；有气泡时间时隐藏重复的居中时间提示。',
     permissions: ['ui', 'chat.read'],
     settings: [{key: 'motion', label: '界面动效', type: 'boolean', default: true},{key:'rain',label:'背景数据雨',type:'boolean',default:true},{key:'rainOpacity',label:'数据雨透明度',type:'select',default:'18',options:[{value:'8',label:'8% 很淡'},{value:'13',label:'13% 柔和'},{value:'18',label:'18% 标准'},{value:'25',label:'25% 明显'},{value:'35',label:'35% 高亮'}]},{key:'rainSpeed',label:'数据雨速度',type:'select',default:'normal',options:[{value:'slow',label:'慢速'},{value:'normal',label:'标准'},{value:'fast',label:'快速'}]}],
   },
@@ -21,7 +21,7 @@ export default {
       const code=document.createElement('input');code.type='text';code.maxLength=7;code.placeholder='#RRGGBB';code.setAttribute('aria-label','数据雨颜色代码');code.style.cssText='width:105px;min-height:36px;padding:5px 8px;border:1px solid var(--c-panel-border);border-radius:4px;background:var(--c-input);color:var(--c-text-title);font-size:14px;';
       const reset=document.createElement('button');reset.type='button';reset.textContent='跟随主题';reset.style.cssText='min-height:36px;padding:5px 10px;border:1px solid var(--c-panel-border);border-radius:4px;background:var(--c-panel);color:var(--c-text-title);';
       const status=document.createElement('span');status.setAttribute('role','status');status.style.cssText='font-size:12px;color:var(--c-text);';
-      const defaultColor=()=>Array.from(controllers).map(c=>c.rainDefault()).find(Boolean)||'#b58bff';
+      const defaultColor=()=>Array.from(controllers).map(c=>c.rainDefault()).find(Boolean)||'#7087b0';
       const render=()=>{if(disposed)return;const selected=rainHex(ctx.system.settings.get('rainColor'));picker.value=selected||defaultColor();code.value=selected;status.textContent=selected?'普通字符与歌词共用此颜色':'当前跟随主题，普通字符与歌词同色';};
       const save=value=>{const selected=rainHex(value);if(!selected){status.textContent='请输入有效的 #RRGGBB 颜色';return;}ctx.system.settings.set('rainColor',selected);render();};
       picker.addEventListener('change',()=>save(picker.value));code.addEventListener('change',()=>save(code.value));reset.addEventListener('click',()=>{ctx.system.settings.set('rainColor','');render();});
@@ -128,6 +128,24 @@ export default {
         for(const row of Array.from(effectJobs.keys()))if(!room.contains(row))clearRowEffect(row);
         newestStamp=nextNewest;seenIds=new Set(rows.map(r=>r.id));motionPrimed=true;
       }
+      function hideCenterTimes(rows) {
+        const body=room.querySelector('.page-body.chat-room-main-pane');if(!body)return;
+        const hidden=new Set();
+        for(const row of rows){
+          const wrap=row.querySelector(':scope > .chat-msg-content-wrap');
+          if(!body.contains(row)||!wrap?.getAttribute('data-u89-time'))continue;
+          let anchor=row;while(anchor.parentElement&&anchor.parentElement!==body)anchor=anchor.parentElement;
+          // Native online date/time separators only; system messages and offline times keep their own UI.
+          const label=anchor.querySelector(':scope > .flex.justify-center > span.chat-sys-msg.select-none');
+          const line=label?.parentElement;if(!line)continue;
+          hidden.add(line);mark(line,'data-u89-center-time','');
+          if(line.style.getPropertyValue('display')!=='none'||line.style.getPropertyPriority('display')!=='important'){
+            mark(line,'style',line.getAttribute('style'));
+            line.style.setProperty('display','none','important');
+          }
+        }
+        for(const line of body.querySelectorAll('[data-u89-center-time]'))if(!hidden.has(line))restoreKeys(line,['style','data-u89-center-time']);
+      }
       function groupMessageRuns(rows,isGroup) {
         const body=room.querySelector('.page-body.chat-room-main-pane');if(!body)return;
         const anchors=new Map(),counts=new Map(),gaps=new Map();
@@ -140,8 +158,9 @@ export default {
           const wrap=row.querySelector(':scope > .chat-msg-content-wrap'),bubble=wrap?.querySelector('[data-msg-id][data-ui^="bubble-"]');
           const anchor=anchors.get(row),m=messages.get(bubble?.getAttribute('data-msg-id')),stamp=Date.parse(m?.createdAt||'');
           const role=row.getAttribute('data-role'),kind=row.getAttribute('data-u89-kind');
-          const quoted=!!bubble?.querySelector('.chat-quote-message');
-          const valid=!!wrap&&!!bubble&&Number.isFinite(stamp)&&(role==='user'||role==='assistant')&&(kind==='text'||kind==='audio')&&!quoted;
+          // Stickers and quoted text participate in sender/time grouping; native contents/layout stay intact.
+          const conversational=kind==='text'||kind==='audio'||(kind==='media'&&!!bubble?.querySelector(':scope > .chat-sticker'));
+          const valid=!!wrap&&!!bubble&&Number.isFinite(stamp)&&(role==='user'||role==='assistant')&&conversational;
           const author=role==='user'?'user':isGroup?(m?.senderCharacterId||m?.senderName||null):'assistant';
           let boundary=false;
           if(previous&&anchor!==previous.anchor){
@@ -527,6 +546,7 @@ export default {
         }
         decorateErrors();decorateOffline();
         groupMessageRuns(rows,!!session?.isGroup);
+        hideCenterTimes(rows);
         animateNewRows(rows);
         measure();
         prune();
