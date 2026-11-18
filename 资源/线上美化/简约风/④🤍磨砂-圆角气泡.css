@@ -11,37 +11,26 @@
    ══════════════════════════════════════════════════════════════════ */
 
 /* ══════════════════════════════════════════════════════════════════
-   ⏱️ 气泡时间戳 · 样式控制台（完成版）
-   变量集中放在最上面，方便按审美随时调整；每条都写了「调大 / 调小会怎样」。
-   插件会把同名变量写到每条消息自己身上覆盖这里的默认值（插件优先，不冲突）；
-   插件禁用后自动回落到这里的数值。
+   ⏱️ 气泡时间戳 · 出厂兜底值（不是调节面板）
+   ⚠️ 请到 c 插件面板里修改，在这里改没有效果：
+      插件会把同名变量写到每条消息上覆盖这里（插件优先）；
+      插件关闭时时间戳整个不显示，改这里也没意义。
+      仅 --ts-line-height、--ts-letter-spacing 两项插件未接管，改这里有效。
    ══════════════════════════════════════════════════════════════════ */
 :root {
-  /* ───────── ① 位置类（长期保留，随时微调） ───────── */
-
-  --ts-gap: 1.25px;       /* 时间行离气泡底边的距离。调大→整行往下挪、离气泡更远；调小→更贴气泡；可填负数让它钻到气泡里 */
-  --ts-offset-x: 5px;     /* 左右内收量，两边镜像一起动。调大→AI 侧往右、你侧往左，两边都往屏幕里缩（往气泡内侧收）；调小/填负→往屏幕外走，可能贴到屏幕边。0＝正好贴齐气泡边缘 */
-  --ts-quote-shift: 20px; /* 【只在带引用框的消息上生效】额外往下挪多少。默认 20px（实测与引用小字间距最协调）；嫌空档大就调小，觉得挤就调大 */
-
-  /* ───────── ② 风格类（长期保留，以后换审美就改这里） ───────── */
-
-  --ts-text: "7/58 PM";   /* 显示的文字，默认写死的假时间（兜底用）。★ 装了插件后，插件会把每条消息自己的真实发送时间写到这里，覆盖这个假值；格式 7/58 PM，AM/PM 大写、无秒、无日期、无「翻译」。没装插件 / 没勾房间时这行根本不会画出来 */
-  --ts-font: 'Josefin Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; /* 字体名字。字体链接由插件注入；没填 / 加载失败就自动回后面的系统字体，不会空白 */
-  --ts-size: 12px;        /* 时间文字大小。调大→字更大更抢眼；调小→更秀气收敛 */
-  --ts-line-height: 1;    /* 行高。调大→这行占的高度变高；调小→更紧凑 */
-  --ts-color: #666666;    /* 时间文字颜色。改色号即可，如 #000000 更黑、#999999 更淡 */
-  --ts-letter-spacing: 0.02em; /* 字与字之间的额外间距。调大→更松散；调小→更紧凑 */
-
-  /* 用户侧专属：PM 后面那个双勾（AI 侧不显示） */
-  --ts-check-size: 13px;  /* 双勾图标大小。调大→勾更醒目；调小→更含蓄 */
-  --ts-check-color: #666666; /* 双勾颜色。插件会按这个颜色重新生成图标并覆盖下面那行，实现在面板里调色 */
-  --ts-check-gap: 5px;    /* PM 与双勾之间的空隙。调大→离得远；调小→贴得近 */
-  --ts-check-y: -1px;     /* 双勾单独的上下微调（只动勾，不动时间文字）。默认 -1＝略微上移更贴合；调大→勾往下；填更负→更往上；0＝与时间文字同一水平线 */
-  --ts-check-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23666666' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m7 12l5 5L22 7M2 12l5 5m5-5l5-5'/%3E%3C/svg%3E"); /* 双勾图案本体，平时不用动；插件接管颜色时会整体替换它 */
-
-  /* ───────── ③ 诊断辅助（默认关闭；需要复核位置时改回红色） ───────── */
-  --ts-debug-bg: transparent;  /* 想重新看整行边界：改回 rgba(255, 59, 48, 0.18) */
-  --ts-debug-line: transparent; /* 想重新看红框：改回 #ff3b30 */
+  --ts-gap: 1.25px;
+  --ts-offset-x: 5px;
+  --ts-quote-shift: 20px;
+  --ts-font: 'Josefin Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ts-size: 12px;
+  --ts-line-height: 1;
+  --ts-color: #666666;
+  --ts-letter-spacing: 0.02em;
+  --ts-check-size: 13px;
+  --ts-check-color: #666666;
+  --ts-check-gap: 5px;
+  --ts-check-y: -1px;
+  --ts-check-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23666666' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m7 12l5 5L22 7M2 12l5 5m5-5l5-5'/%3E%3C/svg%3E");
 }
 
 /* =========================================================
@@ -413,7 +402,7 @@
   /* ──────────────────────────────────────────────────────────────
      一、全局骨架与消息列表间隙
      ────────────────────────────────────────────────────────────── */
-  --msg-list-gap: 8px;                 /* 消息间距：不同对话气泡之间的垂直距离 */
+  --msg-list-gap: 12px;                 /* 消息间距：不同对话气泡之间的垂直距离 */
   --msg-consec-gap: -4px;              /* 连续消息间距：同一个人连续发多条消息时，气泡之间的距离 */
   --msg-top-pad: 54px;                 /* 顶部留白：为网名和头像预留的顶部空间 (如果网名被遮挡可调大此值) */
 
@@ -843,7 +832,7 @@
 /* ① 时间文字：AI 侧 / 用户侧共用（认插件记号） */
 .chat-msg-wrapper[data-ts-show][data-role="assistant"] .chat-msg-content-wrap::after,
 .chat-msg-wrapper[data-ts-show][data-role="user"] .chat-msg-content-wrap::after {
-  content: var(--ts-text) !important;
+  content: var(--ts-text, "") !important;
   display: block !important;
   position: absolute !important;
   top: calc(100% + var(--ts-gap)) !important;
@@ -857,9 +846,6 @@
   z-index: 6 !important;
   box-sizing: border-box !important;
   background-repeat: no-repeat !important;
-  /* ↓ 诊断外衣：位置确认后把 --ts-debug-bg / --ts-debug-line 改成 transparent */
-  background-color: var(--ts-debug-bg) !important;
-  outline: 2px solid var(--ts-debug-line) !important;
 }
 
 /* ② AI 侧：左端贴齐气泡左边缘 */
@@ -1077,7 +1063,7 @@
   /* --- 📏 1. 相框位置与尺寸 (用外边距来框定大小) --- */
   --chat-frame-margin-top: 0px;      /* 相框距离上方音乐卡片的下边距 (调大变窄，调小变宽) */
   --chat-frame-margin-bottom: 0px;   /* 相框距离下方输入栏的上边距 */
-  --chat-frame-margin-x: 12px;        /* 相框距离屏幕左右边缘的距离 */
+  --chat-frame-margin-x: 14px;        /* 相框距离屏幕左右边缘的距离 */
   
   /* 🎯【专属变量：整体平移】 */
   --chat-frame-offset-y: -24px;         /* 相框整体上下平移：负数向上移，正数向下移 (高度绝对不变) */
