@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-18T04:51:01.842Z",
+  "generatedAt": "2026-11-18T05:34:26.450Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 171
+      "count": 172
     },
     {
       "name": "应用bug改善",
@@ -6449,6 +6449,22 @@
       "avatar": "资源/应用/纸上风月/.avatar.png",
       "ownerHash": "1d9cea70e311b630e92234fd8993a1076198434564b88f424df0aba8970847f4",
       "updatedAt": "2026-08-22T06:05:08+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "经期记录 app",
+      "dirName": "经期记录 app",
+      "type": "dir",
+      "path": "资源/应用/经期记录 app",
+      "files": [
+        "资源/应用/经期记录 app/Float_月相app.zip"
+      ],
+      "images": [],
+      "description": "月相 app 测试中",
+      "author": "momo",
+      "avatar": "",
+      "ownerHash": "6120ee8965959dfe9e5725850a85950cc7010d1cec6654544efa49dbd2a92315",
+      "updatedAt": "2026-11-18T14:31:38+09:00"
     },
     {
       "folder": "应用",
