@@ -1018,3 +1018,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 :root.chat-room-wrapper .chat-gift-card-status,
 :root.chat-room-wrapper .chat-gift-card-cell-value {color:#777777;}
 :root.chat-room-wrapper .u89-music-play {color:#888888;}
+
+/* STAY / Float：表情包上方的姓名与时间行跟随内容宽度。昼夜通用，追加到现有 CSS 末尾。 */
+:root.chat-room-wrapper .chat-msg-wrapper[id][data-u89-kind="media"] > .chat-msg-content-wrap:has(> [data-msg-id] > .chat-sticker) {
+  width: fit-content !important;
+}
+:root.chat-room-wrapper [data-msg-id][data-u89-kind="media"]:has(> .chat-sticker) {
+  width: fit-content;
+  max-width: 100%;
+}

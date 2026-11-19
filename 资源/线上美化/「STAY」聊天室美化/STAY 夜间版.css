@@ -910,3 +910,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 :root.chat-room-wrapper .u89-data-rain > span:nth-child(3n),
 :root.chat-room-wrapper .u89-data-rain > span[data-lyric="true"] {color:inherit;}
 :root.chat-room-wrapper .u89-data-rain > span::after {color:var(--u89-acid);}
+
+/* STAY / Float：表情包上方的姓名与时间行跟随内容宽度。昼夜通用，追加到现有 CSS 末尾。 */
+:root.chat-room-wrapper .chat-msg-wrapper[id][data-u89-kind="media"] > .chat-msg-content-wrap:has(> [data-msg-id] > .chat-sticker) {
+  width: fit-content !important;
+}
+:root.chat-room-wrapper [data-msg-id][data-u89-kind="media"]:has(> .chat-sticker) {
+  width: fit-content;
+  max-width: 100%;
+}
