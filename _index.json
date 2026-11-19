@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-19T13:48:30.964Z",
+  "generatedAt": "2026-11-19T13:59:09.925Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -10209,11 +10209,11 @@
       "images": [
         "资源/表情包/[音符][雪花]酱鱼的表情包，有点多，可以自助。/Image_1795095350240_194.png"
       ],
-      "description": "[太阳]省流:附件里有两三百个表情包。[太阳]\n\n\n[幽灵][蝴蝶结][蝴蝶结][蝴蝶结][幽灵]\n\n哦米。其实不太确定用github做图床会不会被骂orz，如果会可以提醒我。\n此入发现vercel自部署的小爪机用github做小图床放表情包很快。等我修修这个仓库，你们可以clone完上传自己的表情包。\n沉迷float小爪机中。\nOs:有特别想要的可以和我说，或者我思考一下怎么可以让你们网站导入直接commit，我放入网站里。\n或者去网站页面https://feasete.github.io/biao-qings/导出你想要的，现在只有我附件里上传的（／．＼）\n仓库:https://github.com/feasete/biao-qings。(还有bug版，不是很熟github建仓库，一个下午产物",
+      "description": "[太阳]省流:附件里有两三百个表情包。[太阳]\n还有就是图源网络，侵权联系我删除。(忘了叠这个甲了。补一下\n\n[幽灵][蝴蝶结][蝴蝶结][蝴蝶结][幽灵][蝴蝶结][蝴蝶结][蝴蝶结][幽灵]\n哦米。其实不太确定用github做图床会不会被骂orz，如果会可以提醒我。\n此入发现vercel自部署的小爪机用github做小图床放表情包很快。等我修修这个仓库，你们可以clone完上传自己的表情包。\n沉迷float小爪机中。\nOs:有特别想要的可以和我说，或者我思考一下怎么可以让你们网站导入直接commit，我放入网站里。\n或者去网站页面https://feasete.github.io/biao-qings/导出你想要的，现在只有我附件里上传的（／．＼）\n仓库:https://github.com/feasete/biao-qings。(还有bug版，不是很熟github建仓库，一个下午产物",
       "author": "酱鱼",
-      "avatar": "",
+      "avatar": "资源/表情包/[音符][雪花]酱鱼的表情包，有点多，可以自助。/.avatar.png",
       "ownerHash": "e13e2863cc19e91bd4861c92512c40561a96663e15593e3633dd0744552b1068",
-      "updatedAt": "2026-11-19T22:46:10+09:00"
+      "updatedAt": "2026-11-19T22:56:25+09:00"
     },
     {
       "folder": "表情包",
