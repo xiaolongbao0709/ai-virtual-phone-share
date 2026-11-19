@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-19T07:46:23.727Z",
+  "generatedAt": "2026-11-19T11:41:34.872Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 93
+      "count": 94
     },
     {
       "name": "MCP",
@@ -439,6 +439,24 @@
       "avatar": "",
       "ownerHash": "122da77ce3e09cb45fb3833d01053fa7d73663b1ed5d35d61b66d65a8b7cf4ea",
       "updatedAt": "2026-09-28T21:35:43+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "剧情时钟",
+      "dirName": "剧情时钟",
+      "type": "dir",
+      "path": "资源/Js插件/剧情时钟",
+      "files": [
+        "资源/Js插件/剧情时钟/时间调节.js"
+      ],
+      "images": [
+        "资源/Js插件/剧情时钟/1000082843.jpg"
+      ],
+      "description": "为了加速推动剧情，急急国王做了一个剧情时钟，转动钟表可推进时间，建议配合关闭时间感知食用。[小猫]\n搓的时候有点左脑搏右脑，如有问题可私信我，可二改\n🍠：638277265373",
+      "author": "Wynn",
+      "avatar": "资源/Js插件/剧情时钟/.avatar.png",
+      "ownerHash": "4faaf04de6174d4cafc14a20be6b0196f2fed4873c37acfdbdcbd630e561e359",
+      "updatedAt": "2026-11-19T20:38:55+09:00"
     },
     {
       "folder": "Js插件",
