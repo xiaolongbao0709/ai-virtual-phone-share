@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-19T07:22:51.954Z",
+  "generatedAt": "2026-11-19T07:46:23.727Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -21,7 +21,7 @@
     },
     {
       "name": "世界书",
-      "count": 12
+      "count": 13
     },
     {
       "name": "全局主题",
@@ -2653,6 +2653,22 @@
       "avatar": "",
       "ownerHash": "f9eb374b4a27ed2bb764b37367d62e17bfd0ea3b4a6530e6966d58309a830024",
       "updatedAt": "2026-10-26T23:03:30+09:00"
+    },
+    {
+      "folder": "世界书",
+      "name": "[星星]",
+      "dirName": "[星星]",
+      "type": "dir",
+      "path": "资源/世界书/[星星]",
+      "files": [
+        "资源/世界书/[星星]/角色自然对话.json"
+      ],
+      "images": [],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "87b72daf1a0ec5a6e69c1a09d8dd89cfef4217652a66c05731626ab6e23a1bf6",
+      "updatedAt": "2026-11-19T16:44:03+09:00"
     },
     {
       "folder": "世界书",
