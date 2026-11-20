@@ -1,0 +1,1498 @@
+/**
+ * @license MIT AND Apache-2.0 AND CC-BY-4.0
+ * SPDX-License-Identifier: MIT AND Apache-2.0 AND CC-BY-4.0
+ *
+ * ============================================================
+ *  THIRD-PARTY ICON NOTICES  -  ships with this file
+ *  Do not remove. This notice is part of the distributed copy.
+ * ============================================================
+ *
+ * This file contains 13 third-party SVG icons obtained via
+ * https://yesicon.app/ (an aggregator, NOT the rights holder).
+ * Licenses are granted PER ICON SET, not per site or per icon.
+ * All icons were recoloured, resized and inlined into this CSS
+ * as data: URIs. No other change was made to the icon artwork.
+ * The theme code below is unchanged by this notice.
+ *
+ * A. CONFIRMED CONTENTS AND COPYRIGHT NOTICES
+ *    [1] Tabler Icons  -  MIT
+ *        Copyright (c) 2020-2026 Paweł Kuna
+ *        https://tablericons.com/
+ *        https://github.com/tabler/tabler-icons
+ *        Icons: rosette-discount-check (outline + filled),
+ *               message-circle-up
+ *    [2] Material Symbols  -  Apache License 2.0
+ *        Copyright (c) Google LLC
+ *        https://fonts.google.com/icons
+ *        7 icons: person-heart, artist,
+ *        drive-file-move-rtl-rounded, folder-open-rounded,
+ *        heart-plus, bookmark-heart, mood-heart
+ *    [3] Material Design Icons  -  Apache License 2.0
+ *        Copyright (c) Pictogrammers
+ *        https://pictogrammers.com/docs/general/license
+ *        Icon: folder-marker
+ *    [4] Garden SVG Icons  -  Apache License 2.0
+ *        Copyright 2021 Zendesk
+ *        https://github.com/zendeskgarden/svg-icons
+ *        Icon: check-double-stroke-12
+ *    [5] Streamline  -  CC BY 4.0
+ *        Creator: Streamline
+ *        https://streamlinehq.com/
+ *        Icon: telegram-solid
+ *
+ * B. MODIFICATION NOTICE
+ *    Required by Apache-2.0 Section 4(b) and CC BY 4.0 Section 3(a)(2).
+ *    YES - the third-party icon artwork was MODIFIED: recoloured,
+ *    resized and inlined into this file as data: URIs.
+ *    This line is the prominent notice that changes were made.
+ *
+ * C. NOTICE / ATTRIBUTION
+ *    Required by Apache-2.0 Section 4(c) and 4(d).
+ *    The free SVG distributions of Tabler Icons, Material Symbols,
+ *    Material Design Icons and Garden SVG Icons do not include a
+ *    NOTICE text file. The attributions in section A are supplied
+ *    here, in the source form of this file, as the readable copy of
+ *    the required copyright, patent, trademark and attribution
+ *    notices. Section 4(d) expressly permits attribution notices to
+ *    appear in the source form or documentation.
+ *
+ * D. CC BY 4.0 ATTRIBUTION  (Section 3(a) of the legal code)
+ *    Creator / designated attribution party : Streamline
+ *    Title of the material                  : telegram-solid
+ *    Source URI                             : https://yesicon.app/
+ *                                            https://streamlinehq.com/
+ *    Copyright notice                       : Streamline
+ *    License notice                         : CC BY 4.0
+ *    License URI                            :
+ *        https://creativecommons.org/licenses/by/4.0/
+ *    Section 3(a)(3) permits supplying the URI OR the full text of
+ *    the Public License; the official URI is supplied here.
+ *    Modifications                          : indicated in section B
+ *    Warranty disclaimer                    : none was supplied with
+ *        the asset; no warranties are given (see the license deed).
+ *    No endorsement by Streamline is implied.
+ *    This credit is ALSO reproduced in the marketplace listing.
+ *    COPY THE FOLLOWING LINE INTO THE LISTING DESCRIPTION:
+ *    小圆贴纸图标：Streamline「telegram-solid」，CC BY 4.0
+ *    （https://creativecommons.org/licenses/by/4.0/），来源
+ *    yesicon.app 及 https://streamlinehq.com ，已改色并内联修改；
+ *    其余图标版权与许可声明见各文件开头。
+ *
+ * E. LICENSE TEXTS
+ *    The full MIT text and the full Apache License 2.0 English text
+ *    follow. Only the English Apache text is authoritative. The three
+ *    Apache-2.0 icon sets share ONE copy of that license text.
+ *    CC BY 4.0 is satisfied by its official URI in section D, as
+ *    expressly permitted by Section 3(a)(3) of the legal code.
+ *
+ * ------------------------------------------------------------
+ *  [1] MIT LICENSE  -  Tabler Icons
+ * ------------------------------------------------------------
+ * MIT License
+ *
+ * Copyright (c) 2020-2026 Paweł Kuna
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * ------------------------------------------------------------
+ *  [2] APACHE LICENSE, VERSION 2.0
+ *      Material Symbols / Material Design Icons / Garden SVG Icons
+ * ------------------------------------------------------------
+ *                                  Apache License
+ *                            Version 2.0, January 2004
+ *                         http://www.apache.org/licenses/
+ *
+ *    TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+ *
+ *    1. Definitions.
+ *
+ *       "License" shall mean the terms and conditions for use, reproduction,
+ *       and distribution as defined by Sections 1 through 9 of this document.
+ *
+ *       "Licensor" shall mean the copyright owner or entity authorized by
+ *       the copyright owner that is granting the License.
+ *
+ *       "Legal Entity" shall mean the union of the acting entity and all
+ *       other entities that control, are controlled by, or are under common
+ *       control with that entity. For the purposes of this definition,
+ *       "control" means (i) the power, direct or indirect, to cause the
+ *       direction or management of such entity, whether by contract or
+ *       otherwise, or (ii) ownership of fifty percent (50%) or more of the
+ *       outstanding shares, or (iii) beneficial ownership of such entity.
+ *
+ *       "You" (or "Your") shall mean an individual or Legal Entity
+ *       exercising permissions granted by this License.
+ *
+ *       "Source" form shall mean the preferred form for making modifications,
+ *       including but not limited to software source code, documentation
+ *       source, and configuration files.
+ *
+ *       "Object" form shall mean any form resulting from mechanical
+ *       transformation or translation of a Source form, including but
+ *       not limited to compiled object code, generated documentation,
+ *       and conversions to other media types.
+ *
+ *       "Work" shall mean the work of authorship, whether in Source or
+ *       Object form, made available under the License, as indicated by a
+ *       copyright notice that is included in or attached to the work
+ *       (an example is provided in the Appendix below).
+ *
+ *       "Derivative Works" shall mean any work, whether in Source or Object
+ *       form, that is based on (or derived from) the Work and for which the
+ *       editorial revisions, annotations, elaborations, or other modifications
+ *       represent, as a whole, an original work of authorship. For the purposes
+ *       of this License, Derivative Works shall not include works that remain
+ *       separable from, or merely link (or bind by name) to the interfaces of,
+ *       the Work and Derivative Works thereof.
+ *
+ *       "Contribution" shall mean any work of authorship, including
+ *       the original version of the Work and any modifications or additions
+ *       to that Work or Derivative Works thereof, that is intentionally
+ *       submitted to Licensor for inclusion in the Work by the copyright owner
+ *       or by an individual or Legal Entity authorized to submit on behalf of
+ *       the copyright owner. For the purposes of this definition, "submitted"
+ *       means any form of electronic, verbal, or written communication sent
+ *       to the Licensor or its representatives, including but not limited to
+ *       communication on electronic mailing lists, source code control systems,
+ *       and issue tracking systems that are managed by, or on behalf of, the
+ *       Licensor for the purpose of discussing and improving the Work, but
+ *       excluding communication that is conspicuously marked or otherwise
+ *       designated in writing by the copyright owner as "Not a Contribution."
+ *
+ *       "Contributor" shall mean Licensor and any individual or Legal Entity
+ *       on behalf of whom a Contribution has been received by Licensor and
+ *       subsequently incorporated within the Work.
+ *
+ *    2. Grant of Copyright License. Subject to the terms and conditions of
+ *       this License, each Contributor hereby grants to You a perpetual,
+ *       worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+ *       copyright license to reproduce, prepare Derivative Works of,
+ *       publicly display, publicly perform, sublicense, and distribute the
+ *       Work and such Derivative Works in Source or Object form.
+ *
+ *    3. Grant of Patent License. Subject to the terms and conditions of
+ *       this License, each Contributor hereby grants to You a perpetual,
+ *       worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+ *       (except as stated in this section) patent license to make, have made,
+ *       use, offer to sell, sell, import, and otherwise transfer the Work,
+ *       where such license applies only to those patent claims licensable
+ *       by such Contributor that are necessarily infringed by their
+ *       Contribution(s) alone or by combination of their Contribution(s)
+ *       with the Work to which such Contribution(s) was submitted. If You
+ *       institute patent litigation against any entity (including a
+ *       cross-claim or counterclaim in a lawsuit) alleging that the Work
+ *       or a Contribution incorporated within the Work constitutes direct
+ *       or contributory patent infringement, then any patent licenses
+ *       granted to You under this License for that Work shall terminate
+ *       as of the date such litigation is filed.
+ *
+ *    4. Redistribution. You may reproduce and distribute copies of the
+ *       Work or Derivative Works thereof in any medium, with or without
+ *       modifications, and in Source or Object form, provided that You
+ *       meet the following conditions:
+ *
+ *       (a) You must give any other recipients of the Work or
+ *           Derivative Works a copy of this License; and
+ *
+ *       (b) You must cause any modified files to carry prominent notices
+ *           stating that You changed the files; and
+ *
+ *       (c) You must retain, in the Source form of any Derivative Works
+ *           that You distribute, all copyright, patent, trademark, and
+ *           attribution notices from the Source form of the Work,
+ *           excluding those notices that do not pertain to any part of
+ *           the Derivative Works; and
+ *
+ *       (d) If the Work includes a "NOTICE" text file as part of its
+ *           distribution, then any Derivative Works that You distribute must
+ *           include a readable copy of the attribution notices contained
+ *           within such NOTICE file, excluding those notices that do not
+ *           pertain to any part of the Derivative Works, in at least one
+ *           of the following places: within a NOTICE text file distributed
+ *           as part of the Derivative Works; within the Source form or
+ *           documentation, if provided along with the Derivative Works; or,
+ *           within a display generated by the Derivative Works, if and
+ *           wherever such third-party notices normally appear. The contents
+ *           of the NOTICE file are for informational purposes only and
+ *           do not modify the License. You may add Your own attribution
+ *           notices within Derivative Works that You distribute, alongside
+ *           or as an addendum to the NOTICE text from the Work, provided
+ *           that such additional attribution notices cannot be construed
+ *           as modifying the License.
+ *
+ *       You may add Your own copyright statement to Your modifications and
+ *       may provide additional or different license terms and conditions
+ *       for use, reproduction, or distribution of Your modifications, or
+ *       for any such Derivative Works as a whole, provided Your use,
+ *       reproduction, and distribution of the Work otherwise complies with
+ *       the conditions stated in this License.
+ *
+ *    5. Submission of Contributions. Unless You explicitly state otherwise,
+ *       any Contribution intentionally submitted for inclusion in the Work
+ *       by You to the Licensor shall be under the terms and conditions of
+ *       this License, without any additional terms or conditions.
+ *       Notwithstanding the above, nothing herein shall supersede or modify
+ *       the terms of any separate license agreement you may have executed
+ *       with Licensor regarding such Contributions.
+ *
+ *    6. Trademarks. This License does not grant permission to use the trade
+ *       names, trademarks, service marks, or product names of the Licensor,
+ *       except as required for reasonable and customary use in describing the
+ *       origin of the Work and reproducing the content of the NOTICE file.
+ *
+ *    7. Disclaimer of Warranty. Unless required by applicable law or
+ *       agreed to in writing, Licensor provides the Work (and each
+ *       Contributor provides its Contributions) on an "AS IS" BASIS,
+ *       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *       implied, including, without limitation, any warranties or conditions
+ *       of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+ *       PARTICULAR PURPOSE. You are solely responsible for determining the
+ *       appropriateness of using or redistributing the Work and assume any
+ *       risks associated with Your exercise of permissions under this License.
+ *
+ *    8. Limitation of Liability. In no event and under no legal theory,
+ *       whether in tort (including negligence), contract, or otherwise,
+ *       unless required by applicable law (such as deliberate and grossly
+ *       negligent acts) or agreed to in writing, shall any Contributor be
+ *       liable to You for damages, including any direct, indirect, special,
+ *       incidental, or consequential damages of any character arising as a
+ *       result of this License or out of the use or inability to use the
+ *       Work (including but not limited to damages for loss of goodwill,
+ *       work stoppage, computer failure or malfunction, or any and all
+ *       other commercial damages or losses), even if such Contributor
+ *       has been advised of the possibility of such damages.
+ *
+ *    9. Accepting Warranty or Additional Liability. While redistributing
+ *       the Work or Derivative Works thereof, You may choose to offer,
+ *       and charge a fee for, acceptance of support, warranty, indemnity,
+ *       or other liability obligations and/or rights consistent with this
+ *       License. However, in accepting such obligations, You may act only
+ *       on Your own behalf and on Your sole responsibility, not on behalf
+ *       of any other Contributor, and only if You agree to indemnify,
+ *       defend, and hold each Contributor harmless for any liability
+ *       incurred by, or claims asserted against, such Contributor by reason
+ *       of your accepting any such warranty or additional liability.
+ *
+ *    END OF TERMS AND CONDITIONS
+ *
+ *    APPENDIX: How to apply the Apache License to your work.
+ *
+ *       To apply the Apache License to your work, attach the following
+ *       boilerplate notice, with the fields enclosed by brackets "[]"
+ *       replaced with your own identifying information. (Don't include
+ *       the brackets!)  The text should be enclosed in the appropriate
+ *       comment syntax for the file format. We also recommend that a
+ *       file or class name and description of purpose be included on the
+ *       same "printed page" as the copyright notice for easier
+ *       identification within third-party archives.
+ *
+ *    Copyright [yyyy] [name of copyright owner]
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+/* Soft Blank・标题栏 · 完成版1.0 */
+
+:root {
+  /* ========== 最常用 · 颜色 ========== */
+  /* 返回键颜色 */
+  --btn-back: #e8a8c8;
+  /* 设置键颜色 */
+  --btn-set: #e8a8c8;
+  /* 网名颜色 */
+  --name-color: #8e8e98;
+  /* 气泡颜文字颜色 */
+  --bubble-ink: #8e8e98;
+
+  /* ========== 常用 · 只改这里的数字 ========== */
+  /* 顶栏整体高度：调大变高，调小变矮；最小 90 */
+  --bar-h: 85px;
+  /* 气泡左右：调大往右、离头像更远；调小靠近头像。0＝正对头像中心 */
+  --bubble-x: 52px;
+  /* 气泡上下：调大往下，调小往上 */
+  --bubble-y: 10px;
+  /* 气泡最短宽：调大更宽（回复时会自动变长） */
+  --bubble-min-w: 34px;
+  /* 气泡高：调大更厚 */
+  --bubble-h: 21px;
+  /* 气泡字大小 */
+  --bubble-fs: 12px;
+  /* 气泡圆角：调大更圆 */
+  --bubble-rad: 11.5px;
+  /* 气泡左右留白：调大字离边更远 */
+  --bubble-pad: 6px;
+  /* 弧度：调大角更圆，调小更方 */
+  --card-round: 15px;
+  /* 留顶：调大卡片往下、顶部露更多深粉 */
+  --card-top: 57px;
+  /* 圆大小 */
+  --dot-d: 68px;
+  /* 圆上下：调大往下，调小往上 */
+  --dot-y: 36px;
+  /* 圆左右：0＝水平正中 */
+  --dot-x: 0px;
+  /* 圆边：灰圈粗细 */
+  --dot-bw: 4px;
+  /* 角标白底 */
+  --badge-d: 19.5px;
+  /* 角标图标大小 */
+  --badge-icon-d: 23.5px;
+  /* 角标左右：调大往右 */
+  --badge-dx: 24px;
+  /* 角标上下：调大往下 */
+  --badge-dy: 21px;
+  /* 按键上下 */
+  --btn-y: 4px;
+  /* 按键大小 */
+  --btn-size: 20px;
+  /* 网名大小 */
+  --name-size: 15px;
+  /* 网名上下 */
+  --name-y: 10px;
+  /* 网名左右 */
+  --name-x: 0px;
+
+  /* ========== 颜色 · 一般别动 ========== */
+  /* 卡片外的深粉 */
+  --c-deep: #f6d5ec;
+  /* 卡片本身的浅粉 */
+  --c-card: #fdeff6;
+  /* 白圆填充 */
+  --dot-bg: #ffffff;
+  /* 白圆那一圈描边 */
+  --dot-line: #ffffff;
+  /* 角标白底 */
+  --badge-bg: #ffffff;
+  /* 角标图标的粉色 */
+  --badge-icon: #f3c6dc;
+  /* 气泡白底 */
+  --bubble-bg: #ffffff;
+
+  /* ========== 高级 · 一般别动 ========== */
+  /* 气泡左下小尾巴：离气泡左边的距离 */
+  --bubble-tail-x: 12px;
+  /* 尾巴圆大小 */
+  --bubble-tail-d: 8.6px;
+  /* 尾巴往下探出多少（负数＝往下探） */
+  --bubble-tail-y: -4px;
+  /* 分离小点的左、下偏移与缩量 */
+  --bubble-tail-dx: -8.5px;
+  --bubble-tail-dy: 10.8px;
+  --bubble-tail-shrink: -1.5px;
+  /* 气泡柔影 */
+  --bubble-shadow: 0 1.4px 1.8px rgba(185,132,159,.38);
+  /* 联动：拖「顶栏整体高度」时坑位与消息区一起走 */
+  --page-header-content-height: calc(var(--bar-h) - 48px);
+  /* 头像图：由插件写入 url("data:…")，别手动改；空＝白圆照旧 */
+  --a2-avatar-url: ;
+}
+
+/* ---------- 深粉底：贴死左右两边，关掉原生毛玻璃 ---------- */
+.page-header {
+  background: var(--c-deep);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ---------- 浅粉圆角卡片 ---------- */
+.page-header::before {
+  content: "";
+  position: absolute;
+  inset: var(--card-top) 0 0 0;
+  background: var(--c-card);
+  border-radius: var(--card-round) var(--card-round) 0 0 / var(--card-round) var(--card-round) 0 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- 正中间：白色圆 ＋ 灰描边 ＋（插件填的）头像图 ---------- */
+.page-header::after {
+  content: "";
+  position: absolute;
+  left: calc(50% + var(--dot-x));
+  top: var(--dot-y);
+  transform: translate(-50%, -50%);
+  width: var(--dot-d);
+  height: var(--dot-d);
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--dot-bg);
+  border: var(--dot-bw) solid var(--dot-line);
+  background-image: var(--a2-avatar-url);
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---------- 白圆右下角标：白底圆 + 粉色徽章 ---------- */
+.page-header-safe-area::before,
+.page-header-safe-area::after {
+  content: "";
+  position: absolute;
+  left: calc(50% + var(--dot-x) + var(--badge-dx));
+  top: calc(var(--dot-y) + var(--badge-dy));
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.page-header-safe-area::before {
+  width: var(--badge-d);
+  height: var(--badge-d);
+  background: var(--badge-bg);
+  z-index: 2;
+}
+.page-header-safe-area::after {
+  width: var(--badge-icon-d);
+  height: var(--badge-icon-d);
+  background-color: var(--badge-icon);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M5 7.2A2.2 2.2 0 0 1 7.2 5h1a2.2 2.2 0 0 0 1.55-.64l.7-.7a2.2 2.2 0 0 1 3.12 0l.7.7c.412.41.97.64 1.55.64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58.23 1.138.64 1.55l.7.7a2.2 2.2 0 0 1 0 3.12l-.7.7a2.2 2.2 0 0 0-.64 1.55v1a2.2 2.2 0 0 1-2.2 2.2h-1a2.2 2.2 0 0 0-1.55.64l-.7.7a2.2 2.2 0 0 1-3.12 0l-.7-.7a2.2 2.2 0 0 0-1.55-.64h-1a2.2 2.2 0 0 1-2.2-2.2v-1a2.2 2.2 0 0 0-.64-1.55l-.7-.7a2.2 2.2 0 0 1 0-3.12l.7-.7A2.2 2.2 0 0 0 5 8.2z'/%3E%3Cpath d='m9 12l2 2l4-4'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M5 7.2A2.2 2.2 0 0 1 7.2 5h1a2.2 2.2 0 0 0 1.55-.64l.7-.7a2.2 2.2 0 0 1 3.12 0l.7.7c.412.41.97.64 1.55.64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58.23 1.138.64 1.55l.7.7a2.2 2.2 0 0 1 0 3.12l-.7.7a2.2 2.2 0 0 0-.64 1.55v1a2.2 2.2 0 0 1-2.2 2.2h-1a2.2 2.2 0 0 0-1.55.64l-.7.7a2.2 2.2 0 0 1-3.12 0l-.7-.7a2.2 2.2 0 0 0-1.55-.64h-1a2.2 2.2 0 0 1-2.2-2.2v-1a2.2 2.2 0 0 0-.64-1.55l-.7-.7a2.2 2.2 0 0 1 0-3.12l.7-.7A2.2 2.2 0 0 0 5 8.2z'/%3E%3Cpath d='m9 12l2 2l4-4'/%3E%3C/g%3E%3C/svg%3E");
+  z-index: 3;
+}
+
+/* ---------- 网名：恢复显示，落在两键同一行 ---------- */
+.page-title {
+  position: relative;
+  top: var(--name-y);
+  left: var(--name-x);
+  min-width: 0;
+  font-size: var(--name-size);
+  color: var(--name-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 2;
+}
+.chat-typing-indicator { display: none; }
+
+/* ---------- 常驻气泡：形状 CSS 画，文字 / 跳点由插件填 ---------- */
+.a2-hdr-bubble {
+  position: absolute;
+  left: calc(50% + var(--bubble-x));
+  top: var(--bubble-y);
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  min-width: var(--bubble-min-w);
+  height: var(--bubble-h);
+  padding: 0 var(--bubble-pad);
+  box-sizing: border-box;
+  background: var(--bubble-bg);
+  border-radius: var(--bubble-rad);
+  box-shadow: var(--bubble-shadow);
+  color: var(--bubble-ink);
+  font-size: var(--bubble-fs);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+.a2-hdr-bubble::after {
+  content: "";
+  position: absolute;
+  left: var(--bubble-tail-x);
+  bottom: var(--bubble-tail-y);
+  width: var(--bubble-tail-d);
+  height: var(--bubble-tail-d);
+  border-radius: 50%;
+  background: var(--bubble-bg);
+  box-shadow: var(--bubble-tail-dx) var(--bubble-tail-dy) 0 var(--bubble-tail-shrink) var(--bubble-bg);
+  pointer-events: none;
+}
+.a2-hdr-bubble .chat-typing-dots { margin-left: 3px; }
+
+/* ---------- 两个键：旧箭头/三点收起，换成 SVG ---------- */
+.page-back-btn > svg { display: none; }
+.page-back-btn::before {
+  content: "";
+  grid-area: 1 / 1;
+  place-self: center;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.page-back-btn[aria-label="返回"]::before {
+  background-color: var(--btn-back);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M12.725 16.325q.275-.275.275-.7t-.275-.7L11.8 14H15q.425 0 .713-.288T16 13q0-.425-.288-.713T15 12h-3.2l.925-.925q.275-.275.275-.7t-.275-.7q-.275-.275-.7-.275t-.7.275L8.7 12.3q-.275.275-.275.7t.275.7l2.625 2.625q.275.275.7.275t.7-.275ZM4 20q-.825 0-1.413-.588T2 18V6q0-.825.588-1.413T4 4h5.175q.4 0 .763.15t.637.425L12 6h8q.825 0 1.413.588T22 8v10q0 .825-.588 1.413T20 20H4Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M12.725 16.325q.275-.275.275-.7t-.275-.7L11.8 14H15q.425 0 .713-.288T16 13q0-.425-.288-.713T15 12h-3.2l.925-.925q.275-.275.275-.7t-.275-.7q-.275-.275-.7-.275t-.7.275L8.7 12.3q-.275.275-.275.7t.275.7l2.625 2.625q.275.275.7.275t.7-.275ZM4 20q-.825 0-1.413-.588T2 18V6q0-.825.588-1.413T4 4h5.175q.4 0 .763.15t.637.425L12 6h8q.825 0 1.413.588T22 8v10q0 .825-.588 1.413T20 20H4Z'/%3E%3C/svg%3E");
+}
+.page-back-btn[aria-label="更多"]::before {
+  background-color: var(--btn-set);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h5.175q.4 0 .763.15t.637.425L12 6h9q.425 0 .713.288T22 7t-.288.713T21 8H7.85q-1.55 0-2.7.975T4 11.45V18l1.975-6.575q.2-.65.738-1.037T7.9 10h12.9q1.025 0 1.613.813t.312 1.762l-1.8 6q-.2.65-.737 1.038T19 20z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h5.175q.4 0 .763.15t.637.425L12 6h9q.425 0 .713.288T22 7t-.288.713T21 8H7.85q-1.55 0-2.7.975T4 11.45V18l1.975-6.575q.2-.65.738-1.037T7.9 10h12.9q1.025 0 1.613.813t.312 1.762l-1.8 6q-.2.65-.737 1.038T19 20z'/%3E%3C/svg%3E");
+}
+
+/* ---------- 两键从头到尾能点：抬到气泡之上、允许命中，上下可拖 ---------- */
+.page-back-btn[aria-label="返回"],
+.page-back-btn[aria-label="更多"] {
+  position: relative;
+  top: var(--btn-y);
+  z-index: 3;
+  pointer-events: auto;
+}
+
+/* ---------- 层级修正：时间戳不再翻上标题栏 ---------- */
+.page-body {
+  isolation: isolate;
+}
+/* ══════════════════════════════════════════════════════════════════
+   Soft Blank聊天室美化
+   完成版1.1版
+   配套插件：Soft Blank聊天室气泡板块插件.js（真时间 ＋ 译文自适应间距）
+   一次设置：聊天室设置 → 关掉「折叠中文译文」，译文才会默认展开。
+   所有能调的都在各板块的变量里，注释写了「调大 / 调小」会怎样。
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ══ 零 · 最常用：颜色与内容 ══ */
+  /* 对方网名内容：改字，换引号里的内容（引号别删） */
+  --bubble-name-ai: "@z";
+  /* 对方文案内容：改字，换引号里的内容（引号别删） */
+  --bubble-sub-ai: "딩동ㅎㅇ";
+  /* 我方文案内容：改字，换引号里的内容（引号别删） */
+  --bubble-sub-self: "ㅋㅅㅋ";
+  /* 网名颜色 */
+  --bubble-name-ink: #485361;
+  /* 对方文案颜色：和下面那个可以填不同颜色，就是双色 */
+  --bubble-sub-ai-ink: #f5d1ea;
+  /* 我方文案颜色：只管我方，改它不会带动对方 */
+  --bubble-sub-self-ink: #8a939b;
+  /* 以下阴影 / 描边变量已停用，数值留着备查 */
+  --bubble-edge-ink: rgba(96,106,118,.38);
+  --bubble-edge-w: 2px;
+  --bubble-edge-blur: 5px;
+  --bubble-edge-spread: -2px;
+  --bubble-shadow-ink: rgba(0,0,0,.04);
+  /* 小圆贴纸粉色（换色同时把 --bubble-deco-img 串里 %23F6D5EC 换掉） */
+  --bubble-deco-color: #F6D5EC;
+  /* 写在图串里的颜色：两个小人 %23485361 ／ 双勾 %23ffffff ／ 贴纸 %23F6D5EC */
+
+  /* ══ 引用条配色（只换色，不动结构） ══ */
+  /* AI 侧：前面那一小条加深的长条颜色（左边竖线） */
+  --quote-ai-edge: #f6d5ec;
+  /* AI 侧：引用条底色。★ 不是气泡底色，气泡底色在一组里 */
+  --quote-ai-bg: #f5e4f5;
+  /* 我方：引用条底色。前面小长条保持系统原色，所以这里没有它的变量 */
+  --quote-self-bg: #ffffff;
+
+
+  /* ══ 一 · 配色 ══ */
+  /* 我方气泡底色：浅粉 */
+  --bubble-self-bg: #F6D5EC;
+  /* 对方气泡底色：调这里换色 */
+  --bubble-other-bg: #f2f2f2;
+  /* 我方气泡里文字：白 */
+  --bubble-self-ink: #ffffff;
+  /* 对方气泡里文字：黑 */
+  --bubble-other-ink: #111111;
+  /* 旧·我方外影子（左＋下）：已停用，数值保留 */
+  --bubble-shadow-self: -2px 2px 5px var(--bubble-shadow-ink);
+  /* 旧·对方外影子（右＋下）：已停用，数值保留 */
+  --bubble-shadow-other: 2px 2px 5px var(--bubble-shadow-ink);
+
+  /* ══ 二 · 气泡形状 ══ */
+  /* 圆角：调大更圆，调小更方 */
+  --bubble-radius: 10px;
+  /* 贴尾巴那一角削平多少：0＝全方，调大变圆 */
+  --bubble-corner-cut: 0px;
+  /* 小三角尾巴大小：调大角更明显，调小角更小 */
+  --bubble-tail-size: 8px;
+  /* 气泡内左右留白：调大字离边更远，调小更近 */
+  --bubble-pad-x: 14px;
+  /* 气泡内上下留白：调大气泡更厚，调小更扁 */
+  --bubble-pad-y: 10px;
+
+  /* ══ 三 · 右下角时间 ══ */
+  /* 时间字号：调大更大，调小更小 */
+  --bubble-ts-size: 9px;
+  /* 对方时间颜色 */
+  --bubble-ts-other-ink: #e79ccc;
+  /* 我方时间颜色 */
+  --bubble-ts-self-ink: #BDBDBD;
+  /* 时间离气泡下边：调大往上挪，调小更贴底 */
+  --bubble-ts-bottom: 3px;
+  /* 时间离气泡右边：调大往左挪，调小更贴右 */
+  --bubble-ts-right: 6px;
+  /* 对方假时间：没装插件时显示它；改字，换引号里的内容（引号别删） */
+  --bubble-ts-other: "19:02";
+  /* 我方假时间：没装插件时显示它；改字，换引号里的内容（引号别删） */
+  --bubble-ts-self: "19:05";
+  /* 双勾小图大小：调大更大，调小更小 */
+  --bubble-tick-size: 12px;
+  /* 时间字到双勾之间留多宽：调大更松，调小更紧 */
+  --bubble-tick-gap: 3px;
+  /* 双勾整张图：换颜色把串里 %23ffffff 改成别的六位色 */
+  --bubble-tick-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' d='m1 6l2.5 2.5l5-5m-2 5l5-5'/%3E%3C/svg%3E");
+
+  /* ══ 四 · 连发 ══ */
+  /* 连发挨多紧：调更负更紧，写 0px 就是普通间距 */
+  --bubble-consec-gap: -4px;
+
+  /* ══ 五 · 气泡位置 ══ */
+  /* 头像下面那行留多高：调大更松，调小更紧 */
+  --bubble-name-h: 6px;
+  /* 气泡往里靠：调大往里缩，写负值往外靠 */
+  --bubble-inset: 16px;
+  /* 头像整体上下：调大往下，调小往上；一般别动 */
+  --bubble-avatar-top: 0px;
+
+  /* ══ 六 · 第 1 行（小人 / 网名） ══ */
+  /* 我方第 1 行不写字，留空 */
+  --bubble-name-self: "";
+  --bubble-name-size: 11px;
+  /* 文字跟小人之间留多宽：调大更松，调小更紧 */
+  --bubble-name-gap: 2px;
+  /* 两个小人的图大小：调大更大，调小更小 */
+  --bubble-name-icon-size: 18px;
+
+  --bubble-ai-icon-x: 44px;
+  --bubble-ai-icon-y: 1px;
+  --bubble-ai-name-y: 4.5px;
+  --bubble-ai-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23485361' d='M4 20v-2.8q0-.85.438-1.562T5.6 14.55q1.55-.775 3.15-1.162T12 13h.35q-.275.45-.413.963T11.8 15q-1.35.025-2.687.363T6.5 16.35q-.225.125-.363.35T6 17.2v.8h7.075l2 2zm5.175-9.175Q8 9.65 8 8t1.175-2.825T12 4t2.825 1.175T16 8t-1.175 2.825T12 12t-2.825-1.175m4.238-1.412Q14 8.825 14 8t-.587-1.412T12 6t-1.412.588T10 8t.588 1.413T12 10t1.413-.587M17.9 20l-3.5-3.5q-.325-.325-.462-.7t-.138-.75q0-.8.575-1.425T15.85 13q.7 0 1.1.325t.95.875q.5-.5.913-.85T19.95 13q.925 0 1.488.638T22 15.074q0 .375-.15.75t-.45.675z'/%3E%3C/svg%3E");
+
+  --bubble-self-icon-x: 44px;
+  --bubble-self-icon-y: 1px;
+  --bubble-self-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23485361' d='M18.5 10H22v2h-2v5.5q0 1.05-.725 1.775T17.5 20t-1.775-.725T15 17.5t.725-1.775T17.5 15q.2 0 .45.038t.55.162zM3 20v-2.8q0-.875.438-1.575T4.6 14.55q1.55-.775 3.15-1.162T11 13q1.05 0 2.088.163t2.087.487q-.5.3-.9.725t-.7.925q-.65-.15-1.287-.225T11 15q-1.425 0-2.8.35t-2.7 1q-.225.125-.362.35T5 17.2v.8h8.025q.05.5.238 1t.512 1zm5.175-9.175Q7 9.65 7 8t1.175-2.825T11 4t2.825 1.175T15 8t-1.175 2.825T11 12t-2.825-1.175m4.238-1.412Q13 8.825 13 8t-.587-1.412T11 6t-1.412.588T9 8t.588 1.413T11 10t1.413-.587M11 18'/%3E%3C/svg%3E");
+
+  /* ══ 七 · 第 2 行（自定义文案） ══ */
+  --bubble-sub-size: 18px;
+  /* 第 2 行离顶部多远：调大往下（跟第 1 行拉开），调小往上（贴紧第 1 行） */
+  --bubble-sub-y: 20px;
+  /* 对方第 2 行离左边多远：调大往右，调小往左（更贴头像） */
+  --bubble-sub-x-ai: 44px;
+  /* 我方第 2 行离右边多远：调大往左，调小往右（更贴头像） */
+  --bubble-sub-x-self: 44px;
+
+  /* ══ 八 · 头像同心圆立体框 ══ */
+  /* 外面那圈白边多厚：调大圈更宽、头像看着离气泡更开；调小更贴 */
+  --bubble-avatar-ring-w: 2.5px;
+  /* 白圈颜色 */
+  --bubble-avatar-ring-color: #ffffff;
+  /* 贴着头像的那道细白线颜色（同心圆里层） */
+  --bubble-avatar-inner-line: rgba(255,255,255,.52);
+  /* 外圈下面的柔和投影：调深更立体，写 none 就关掉 */
+  --bubble-avatar-outer-shadow: rgba(0,0,0,.0);
+  /* 以下三项已停用（内阴影整段移除），数值按你调的留着备查 */
+  --bubble-avatar-inner-shadow: rgba(0,0,0,.1);
+  --bubble-avatar-inner-blur: 8px;
+  --bubble-avatar-inner-drop: 2px;
+
+  /* ══ 九 · AI 侧小圆贴纸 ══ */
+  /* 图案＋白圆底的大小：调大更大，调小更小（两者永远一样大） */
+  --bubble-deco-size: 16px;
+  /* 离气泡右边多远：调大往左挪（离时间更远），调小往右挪 */
+  --bubble-deco-x: 34px;
+  /* ★ 往下探出去多少：写负值＝探出气泡下边（一半里一半外）；
+     调更负＝露在外面更多，调成 0px＝整个缩回气泡里 */
+  --bubble-deco-y: -8px;
+  --bubble-deco-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Ccircle cx='7' cy='7' r='7' fill='white'/%3E%3Cpath fill='%23F6D5EC' fill-rule='evenodd' d='M.25 7a6.75 6.75 0 1 1 13.5 0A6.75 6.75 0 0 1 .25 7m9.002 4.064l1.045-7.932l-8.165 3.935l2.417.876l2.686-2.076a.5.5 0 1 1 .611.792L5.618 8.38v2.726l1.685-1.604z'/%3E%3C/svg%3E");
+  --bubble-deco-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath fill='black' fill-rule='evenodd' d='M.25 7a6.75 6.75 0 1 1 13.5 0A6.75 6.75 0 0 1 .25 7m9.002 4.064l1.045-7.932l-8.165 3.935l2.417.876l2.686-2.076a.5.5 0 1 1 .611.792L5.618 8.38v2.726l1.685-1.604z'/%3E%3C/svg%3E");
+}
+
+/* ── 气泡本体：只改普通文字气泡＋语音；卡片、独立预览一律不碰 ── */
+.chat-bubble-role-user:not(.chat-bubble-media),
+.chat-bubble-role-assistant:not(.chat-bubble-media) {
+  position: relative !important;          /* 锁住时间的定位基准，外层怎么动都不影响 */
+  padding: var(--bubble-pad-y) var(--bubble-pad-x) !important;
+  font-size: calc(13.5px * var(--app-text-scale, 1)) !important;
+  border-radius: var(--bubble-radius) !important;
+  overflow: hidden !important;
+}
+.chat-bubble-role-user:not(.chat-bubble-media) {
+  background: var(--bubble-self-bg) !important;
+  color: var(--bubble-self-ink) !important;
+  box-shadow: none !important;            /* 内描边 / 外投影一起关，每条都一样 */
+  border-top-right-radius: var(--bubble-corner-cut) !important;
+}
+.chat-bubble-role-assistant:not(.chat-bubble-media) {
+  background: var(--bubble-other-bg) !important;
+  color: var(--bubble-other-ink) !important;
+  box-shadow: none !important;            /* 内描边 / 外投影一起关，每条都一样 */
+  border-top-left-radius: var(--bubble-corner-cut) !important;
+}
+
+/* ── 小三角尾巴：挂在外层壳上，卡片／流式分段一律不长 ── */
+.chat-msg-content-wrap {
+  position: relative !important;          /* 只给尾巴和小装饰用；时间挂气泡自己，不受影响 */
+}
+.chat-msg-content-wrap:has(> [data-ui="bubble-bot"]):not(:has(.chat-bubble-media)):not(:has(.chat-stream-bubble))::before,
+.chat-msg-content-wrap:has(> [data-ui="bubble-user"]):not(:has(.chat-bubble-media)):not(:has(.chat-stream-bubble))::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  width: var(--bubble-tail-size) !important;
+  height: 14px !important;
+  pointer-events: none !important;
+}
+.chat-msg-content-wrap:has(> [data-ui="bubble-bot"]):not(:has(.chat-bubble-media)):not(:has(.chat-stream-bubble))::before {
+  left: calc(-1 * var(--bubble-tail-size)) !important;
+  background: var(--bubble-other-bg) !important;
+  clip-path: polygon(100% 0, 0 0, 100% 100%) !important;
+}
+.chat-msg-content-wrap:has(> [data-ui="bubble-user"]):not(:has(.chat-bubble-media)):not(:has(.chat-stream-bubble))::before {
+  right: calc(-1 * var(--bubble-tail-size)) !important;
+  background: var(--bubble-self-bg) !important;
+  clip-path: polygon(0 0, 100% 0, 0 100%) !important;
+}
+
+/* ── 时间：钉在气泡里右下角，跟字数无关；语音不摆 ── */
+.chat-bubble-role-user:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after,
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+  position: absolute !important;
+  right: var(--bubble-ts-right) !important;
+  bottom: var(--bubble-ts-bottom) !important;
+  font-size: var(--bubble-ts-size) !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+  content: var(--bubble-ts-other) !important;
+  color: var(--bubble-ts-other-ink) !important;
+}
+/* 我方：时间字 + 双勾整张图，装在同一个盒子里，物理上拆不开 */
+.chat-bubble-role-user:not(.chat-bubble-media):not(:has(.voice-msg-bubble))::after {
+  content: var(--bubble-ts-self) !important;
+  color: var(--bubble-ts-self-ink) !important;
+  padding-right: calc(var(--bubble-tick-size) + var(--bubble-tick-gap)) !important;
+  background-image: var(--bubble-tick-img) !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+  background-size: var(--bubble-tick-size) var(--bubble-tick-size) !important;
+}
+
+/* 装了插件显示真时间；没装回到 19:02 / 19:05 */
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(:has(.voice-msg-bubble))[data-ts]::after,
+.chat-bubble-role-user:not(.chat-bubble-media):not(:has(.voice-msg-bubble))[data-ts]::after {
+  content: attr(data-ts) !important;
+}
+
+/* 位置：头像不动，气泡在正下方、起点对齐 */
+.chat-msg-wrapper:has(.chat-msg-avatar):not(:has(.chat-stream-bubble)) {
+  padding-top: calc(40px + var(--bubble-name-h));
+}
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-avatar {
+  position: absolute !important;
+  top: var(--bubble-avatar-top) !important;
+  left: 0 !important;
+}
+.chat-msg-wrapper[data-role="user"] .chat-msg-avatar {
+  position: absolute !important;
+  top: var(--bubble-avatar-top) !important;
+  right: 0 !important;
+}
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-content-wrap {
+  margin-inline-start: var(--bubble-inset);
+}
+.chat-msg-wrapper[data-role="user"] .chat-msg-content-wrap {
+  margin-inline-end: var(--bubble-inset);
+}
+
+/* ── 连发：只留第一个头像，挨紧，两行装饰一起收掉 ── */
+.chat-msg-wrapper[data-consecutive] {
+  margin-top: var(--bubble-consec-gap) !important;
+  padding-top: 0 !important;
+}
+.chat-msg-wrapper[data-consecutive] .chat-msg-avatar,
+.chat-msg-wrapper[data-consecutive]::before,
+.chat-msg-wrapper[data-consecutive]::after {
+  display: none !important;
+}
+
+/* 头像同心圆立体框 */
+.chat-msg-wrapper:not(:has(.chat-stream-bubble)) .chat-msg-avatar {
+  border-radius: 50% !important;
+  box-shadow:
+    0 0 0 1px var(--bubble-avatar-inner-line),
+    0 0 0 var(--bubble-avatar-ring-w) var(--bubble-avatar-ring-color),
+    0 4px 10px var(--bubble-avatar-outer-shadow) !important;
+}
+/* 头像内阴影已移除，只留外圈白框 */
+
+/* 每轮连发，只在该轮最后一条挂一个小圆贴纸 */
+.chat-scroll-anchored > div:has(.chat-bubble-role-assistant):not(:has(+ div .chat-msg-wrapper[data-consecutive]))
+  .chat-msg-content-wrap:has(> [data-ui="bubble-bot"]):not(:has(.chat-bubble-media)):not(:has(.chat-stream-bubble)):not(:has(.voice-msg-bubble))::after {
+  content: "" !important;
+  position: absolute !important;
+  right: var(--bubble-deco-x) !important;
+  bottom: var(--bubble-deco-y) !important;
+  width: var(--bubble-deco-size) !important;
+  height: var(--bubble-deco-size) !important;
+  background-image: var(--bubble-deco-img) !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 100% 100% !important;
+  pointer-events: none !important;
+  z-index: 6 !important;
+}
+
+/* 网名两行装饰：只认带真气泡的消息；撤回/系统指令/语音转写不贴 */
+.chat-msg-wrapper[data-role="assistant"]:not(:has(.chat-stream-bubble)):has(> .chat-msg-content-wrap > [data-ui="bubble-bot"])::before,
+.chat-msg-wrapper[data-role="assistant"]:not(:has(.chat-stream-bubble)):has(> .chat-msg-content-wrap > [data-ui="bubble-bot"])::after,
+.chat-msg-wrapper[data-role="user"]:not(:has(.chat-stream-bubble)):has(> .chat-msg-content-wrap > [data-ui="bubble-user"])::after {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: calc(40px + var(--bubble-name-h)) !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+/* ── 第 1 行 · AI 侧：爱心小人 + 网名 ── */
+.chat-msg-wrapper[data-role="assistant"]:not(:has(.chat-stream-bubble)):has(> .chat-msg-content-wrap > [data-ui="bubble-bot"])::before {
+  content: var(--bubble-name-ai) !important;
+  font-size: var(--bubble-name-size) !important;
+  color: var(--bubble-name-ink) !important;
+  line-height: 1.4 !important;
+  padding-top: var(--bubble-ai-name-y) !important;
+  text-indent: calc(var(--bubble-ai-icon-x) + var(--bubble-name-icon-size) + var(--bubble-name-gap)) !important;
+  background-image: var(--bubble-ai-icon) !important;
+  background-repeat: no-repeat !important;
+  background-position: left var(--bubble-ai-icon-x) top var(--bubble-ai-icon-y) !important;
+  background-size: var(--bubble-name-icon-size) var(--bubble-name-icon-size) !important;
+}
+
+/* ── 第 2 行 · 两边各一句自定义文案（我方顺带挂音符小人） ── */
+.chat-msg-wrapper[data-role="assistant"]:not(:has(.chat-stream-bubble)):has(> .chat-msg-content-wrap > [data-ui="bubble-bot"])::after {
+  content: var(--bubble-sub-ai) !important;
+  font-size: var(--bubble-sub-size) !important;
+  color: var(--bubble-sub-ai-ink) !important;
+  line-height: 1.4 !important;
+  padding-top: var(--bubble-sub-y) !important;
+  text-indent: var(--bubble-sub-x-ai) !important;
+}
+.chat-msg-wrapper[data-role="user"]:not(:has(.chat-stream-bubble)):has(> .chat-msg-content-wrap > [data-ui="bubble-user"])::after {
+  content: var(--bubble-sub-self) !important;
+  font-size: var(--bubble-sub-size) !important;
+  color: var(--bubble-sub-self-ink) !important;
+  line-height: 1.4 !important;
+  padding-top: var(--bubble-sub-y) !important;
+  text-align: right !important;
+  padding-right: var(--bubble-sub-x-self) !important;
+  background-image: var(--bubble-self-icon) !important;
+  background-repeat: no-repeat !important;
+  background-position: right var(--bubble-self-icon-x) top var(--bubble-self-icon-y) !important;
+  background-size: var(--bubble-name-icon-size) var(--bubble-name-icon-size) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   十 · 译文外移
+   译文落在气泡下方间隙，不撑大气泡；间距由插件量好、变量控制。
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* 译文颜色：低饱和浅粉（不刺眼），想换别色改这里 */
+  --trans-ink: #898989;
+  /* 译文字号：调大更大，调小更紧凑 */
+  --trans-size: 13px;
+  /* 译文粗细：调小变细，700 是加粗 */
+  --trans-weight: 700;
+  /* 描边颜色：浅色壁纸上靠它把字托清楚 */
+  --trans-outline: #ffffff;
+  /* 描边厚度：调大更厚，写 0px 就没描边 */
+  --trans-outline-w: 2px;
+  /* 译文离气泡下边多远：调大往下挪，调小更贴 */
+  --trans-drop: 2px;
+  /* 译文左右缩进：跟气泡里的字对齐 */
+  --trans-pad-x: 14px;
+  /* 译文行高：调小两行更紧 */
+  --trans-line: 1.2;
+  /* 「中文 / 收起中文」按钮：none＝彻底拆掉；写 block 恢复 */
+  --trans-toggle: none;
+
+  /* ── 间距变量（都在这，随手拧）── */
+  /* 译文底 → 下一条消息（隔一会儿时是时间小胶囊）：
+     调大更松，调小更紧；改它立刻生效，不用重开聊天室 */
+  --trans-gap: 2px;
+  /* 没装插件时的兜底留白；装了插件由 --trans-h 接管，长短各自精确 */
+  --trans-space: 62px;
+  /* 保持 0px：拉回会把下一条头像拽进译文里 */
+  --trans-pull-max: 0px;
+  /* --trans-h 由插件写入，CSS 里不定义；没插件自动退回 --trans-space */
+}
+
+/* ① 只给带双语的气泡开口，别的气泡照旧 overflow:hidden */
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block),
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) {
+  overflow: visible !important;
+}
+
+/* ② 虚线不要；「中文 / 收起中文」按钮整个拆掉（按变量） */
+.chat-bubble-role-user:has(.chat-bilingual-block) .chat-bilingual-divider,
+.chat-bubble-role-assistant:has(.chat-bilingual-block) .chat-bilingual-divider {
+  display: none !important;
+}
+.chat-bubble-role-user:has(.chat-bilingual-block) .chat-bilingual-toggle,
+.chat-bubble-role-assistant:has(.chat-bilingual-block) .chat-bilingual-toggle {
+  display: var(--trans-toggle) !important;
+}
+
+/* ③ 译文整段出气泡，落到正下方间隙；紧凑排版，不占气泡高度 */
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation,
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation {
+  position: absolute !important;
+  top: calc(100% + var(--trans-drop)) !important;
+  bottom: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 0 var(--trans-pad-x) !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  opacity: 1 !important;
+  font-style: normal !important;
+  font-size: var(--trans-size) !important;
+  font-weight: var(--trans-weight) !important;
+  color: var(--trans-ink) !important;
+  line-height: var(--trans-line) !important;
+  white-space: normal !important;
+  text-shadow:
+    var(--trans-outline-w) 0 0 var(--trans-outline),
+    calc(-1 * var(--trans-outline-w)) 0 0 var(--trans-outline),
+    0 var(--trans-outline-w) 0 var(--trans-outline),
+    0 calc(-1 * var(--trans-outline-w)) 0 var(--trans-outline) !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+/* 宿主给译文内部 markdown 写了灰斜体，逐个盖掉 */
+.chat-bubble-role-user:has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown,
+.chat-bubble-role-assistant:has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown,
+.chat-bubble-role-user:has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown p,
+.chat-bubble-role-assistant:has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown p,
+.chat-bubble-role-user:has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown-paragraph,
+.chat-bubble-role-assistant:has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown-paragraph {
+  color: var(--trans-ink) !important;
+  font-size: var(--trans-size) !important;
+  font-weight: var(--trans-weight) !important;
+  font-style: normal !important;
+  line-height: var(--trans-line) !important;
+  opacity: 1 !important;
+  text-shadow:
+    var(--trans-outline-w) 0 0 var(--trans-outline),
+    calc(-1 * var(--trans-outline-w)) 0 0 var(--trans-outline),
+    0 var(--trans-outline-w) 0 var(--trans-outline),
+    0 calc(-1 * var(--trans-outline-w)) 0 var(--trans-outline) !important;
+}
+.chat-bubble-role-user:has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown > *,
+.chat-bubble-role-assistant:has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown > * {
+  overflow-x: visible !important;
+}
+
+/* 时间小胶囊抬一层，避免被译文压住；不改间距，不影响撤回条 */
+.chat-scroll-anchored > div > div:not(.chat-msg-wrapper):has(> .chat-sys-msg) > .chat-sys-msg {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* 让位：插件量出的 --trans-h ＋ 你调的 --trans-gap，只挂在消息壳上 */
+.chat-scroll-anchored > div:has(.chat-bilingual-section-translation) {
+  padding-bottom: calc(var(--trans-h, var(--trans-space)) + var(--trans-gap)) !important;
+}
+
+/* 清掉旧记号用的兼容规则，保持 0 即可 */
+.chat-scroll-anchored > div[data-a2-trans-pull] {
+  margin-top: calc(-1 * var(--trans-pull, 0px)) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   十一 · 系统原生引用条配色（只换色，不动结构、不碰气泡底色）
+   ══════════════════════════════════════════════════════════════════ */
+
+/* AI 侧：引用我方消息 → 小长条浅粉、底色浅粉紫 */
+.chat-msg-wrapper[data-role="assistant"] .chat-quote-preview {
+  background-color: var(--quote-ai-bg) !important;
+  border-left-color: var(--quote-ai-edge) !important;
+}
+
+/* 我方：小长条留系统原色（故意不写 border-left-color），只换底色为白 */
+.chat-msg-wrapper[data-role="user"] .chat-quote-preview {
+  background-color: var(--quote-self-bg) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   ① 文件夹输入栏
+   需配合输入栏插件才能更换头像；胶囊尺寸固定，不随输入长高。
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ══════════════════════════════════════════════
+     布局 · 已定稿
+     位置都调准了，插件也靠这些数找位置，不用动。
+     ══════════════════════════════════════════════ */
+  /* 第一个圆离左边 */
+  --folder-btn-pad: 14px;
+  /* 相邻两个圆的步距（自动算） */
+  --folder-btn-step: calc(var(--folder-btn-size) + var(--folder-btn-gap));
+  /* 头像离左边 */
+  --folder-avatar-left: 13px;
+  /* 头像上下位置（已调定） */
+  --folder-avatar-top: calc((var(--folder-body-h) - var(--folder-avatar-size)) / 2.8);
+  /* 徽章左右、上下微调（已调定） */
+  --folder-badge-x: 6px;
+  --folder-badge-y: 1.35px;
+  /* 徽章落点（自动算） */
+  --folder-badge-left: calc(var(--folder-avatar-left) + var(--folder-avatar-size) - var(--folder-badge-size) + var(--folder-badge-x));
+  --folder-badge-top: calc(var(--folder-tab-h) + var(--folder-avatar-top) + var(--folder-avatar-size) - var(--folder-badge-size) + var(--folder-badge-y));
+  /* 回复键上下位置（已调定） */
+  --folder-reply-y: calc((var(--folder-body-h) - var(--folder-reply-btn-size)) / 2);
+  /* 回复键离右边 */
+  --folder-in-pad: 13.5px;
+  /* 输入框左右留白（已调定） */
+  --folder-capsule-left: 72px;
+  --folder-capsule-right: 55px;
+  /* 弹出面板离输入栏的距离 */
+  --folder-panel-gap: 10px;
+
+  /* ══════════════════════════════════════════════
+     外观 · 可调整（下面这些都随你喜好，改数就行）
+     ══════════════════════════════════════════════ */
+
+  /* ── ① 形状 ── */
+  /* 上层页签厚度：想厚点就调大 */
+  --folder-tab-h: 28px;
+  /* 下层主体厚度：想厚点就调大 */
+  --folder-body-h: 72px;
+  /* 页签横着伸多长才收：想长点就调大 */
+  --folder-tab-w: 153px;
+  /* 页签右上角平坡的长度：想坡更缓就调大 */
+  --folder-sh-x: 90px;
+  /* 页签平坡往下弯多少：想更平就调小 */
+  --folder-sh-y: 77px;
+  /* 下层右端弧往前伸多长：想更平缓就调大 */
+  --folder-right-x: 65px;
+  /* 下层右端弧往下弯多少：想更圆就调大 */
+  --folder-right-y: 35px;
+
+  /* ── ② 配色 ── */
+  /* 下层主体底色（深粉）：换主题色改这里 */
+  --folder-bg: #F6D5EC;
+  /* 上层页签底色（浅粉）：换主题色改这里 */
+  --folder-tab-bg: #f5e4f5;
+
+  /* ── ③ 圆球与图标 ── */
+  /* 圆球大小：想胖点就调大 */
+  --folder-btn-size: 24px;
+  /* 上排 4 个圆球底色 */
+  --folder-tab-btn-bg: #ffffff;
+  /* 圆球描边颜色 */
+  --folder-btn-border: #ebebeb;
+  /* 圆球描边粗细：想明显点就调大 */
+  --folder-btn-border-w: 1px;
+  /* 4 个圆之间的间隔：想松点就调大 */
+  --folder-btn-gap: 8px;
+  /* 上排 4 个图案颜色：改这一处，4 个一起变 */
+  --folder-tab-icon-color: #b5bac7;
+  /* 回复键图案颜色：单独一个，不跟上面连动 */
+  --folder-reply-icon-color: #4a4a4a;
+  /* 上排 4 个图案大小 */
+  --folder-icon-size: 16px;
+  /* 回复键图案大小 */
+  --folder-reply-icon-size: 16px;
+  /* 生成中「停止」那个原生图案大小 */
+  --folder-native-icon-size: 18px;
+  /* 原生图案颜色 */
+  --folder-native-icon-color: #4a4a4a;
+
+  /* ── ④ 头像与徽章 ── */
+  /* 头像圈大小 */
+  --folder-avatar-size: 50px;
+  /* 头像圈里面底色 */
+  --folder-avatar-bg: #dadce5;
+  /* 头像框那一圈的颜色：想明显点就调深 */
+  --folder-avatar-ring: #ffffff;
+  /* 头像框那一圈的粗细：想粗点就调大 */
+  --folder-avatar-ring-w: 2.5px;
+  /* 徽章大小 */
+  --folder-badge-size: 23px;
+  /* 小勾的颜色：想明显点就调深 */
+  --folder-badge-color: #485361;
+  /* 小勾比徽章缩进去多少：想勾大点就调小 */
+  --folder-badge-inset: 3px;
+
+  /* ── ⑤ 回复键与输入框 ── */
+  /* 回复键那个圆的大小（单独一个） */
+  --folder-reply-btn-size: 32px;
+  /* 回复键圆的底色 */
+  --folder-btn-bg: #f5f5f7;
+  /* 输入框厚度：想扁点就调小 */
+  --folder-capsule-h: 36px;
+  /* 输入框底色 */
+  --folder-capsule-bg: #ffffff;
+  /* 输入框描边颜色 */
+  --folder-capsule-border: #f0f0f0;
+  /* 输入框描边粗细 */
+  --folder-capsule-border-w: 1px;
+  /* 输入框两头圆到什么程度：999px 是全圆，调小会变方 */
+  --folder-capsule-radius: 999px;
+  /* 字离输入框左右边的空白：想宽松点就调大 */
+  --folder-capsule-pad-x: 14px;
+  /* ★ 每行字占多高：调小行距更紧、胶囊里能多露一行；调大更疏 */
+  --folder-capsule-line: 18px;
+  /* ★ 字离输入框上下的空白：调小能多露一行，调大单行更居中 */
+  --folder-capsule-pad-y: 6px;
+  /* 没打字时那行提示字的颜色 */
+  --folder-placeholder-color: #b0b0b0;
+
+  /* ── ⑥ 弹出面板 ── */
+  /* 面板底色 */
+  --folder-panel-bg: #ffffff;
+  /* 面板圆角：想更圆就调大 */
+  --folder-panel-radius: 20px;
+  /* 面板影子：不想要就写 none */
+  --folder-panel-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  /* 加号面板格子间隔：想松点就调大 */
+  --folder-plus-gap: 12px;
+  /* 加号面板四周留白 */
+  --folder-plus-pad: 16px;
+}
+
+/* 外壳 */
+.chat-input-bar {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: auto !important;
+  height: calc(var(--folder-tab-h) + var(--folder-body-h)) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block !important;
+  box-sizing: border-box !important;
+  z-index: 10 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
+}
+
+/* 页签层（上层）*/
+.chat-input-bar::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: var(--folder-tab-w) !important;
+  height: var(--folder-tab-h) !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  background:
+    /* 加号位占位圆 */
+    radial-gradient(circle closest-side, var(--folder-tab-btn-bg) 0 86%, var(--folder-btn-border) 86% 100%, transparent 100%)
+      left var(--folder-btn-pad) center / var(--folder-btn-size) var(--folder-btn-size) no-repeat,
+    /* 贴图位占位圆 */
+    radial-gradient(circle closest-side, var(--folder-tab-btn-bg) 0 86%, var(--folder-btn-border) 86% 100%, transparent 100%)
+      left calc(var(--folder-btn-pad) + var(--folder-btn-step) + var(--folder-btn-step)) center / var(--folder-btn-size) var(--folder-btn-size) no-repeat,
+    var(--folder-tab-bg) !important;
+  border-radius: 0 var(--folder-sh-x) 0 0 / 0 var(--folder-sh-y) 0 0 !important;
+}
+
+/* 主体层（下层）*/
+.chat-input-bar::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: var(--folder-tab-h) !important;
+  bottom: 0 !important;
+  box-sizing: border-box !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  background:
+    /* 头像圈（图片由插件填入）*/
+    radial-gradient(circle closest-side,
+        var(--folder-avatar-bg) 0 calc(100% - var(--folder-avatar-ring-w)),
+        var(--folder-avatar-ring) calc(100% - var(--folder-avatar-ring-w)) 100%,
+        transparent 100%)
+      left var(--folder-avatar-left) top var(--folder-avatar-top) / var(--folder-avatar-size) var(--folder-avatar-size) no-repeat,
+    /* 回复键占位圆 */
+    radial-gradient(circle closest-side, var(--folder-btn-bg) 0 86%, var(--folder-btn-border) 86% 100%, transparent 100%)
+      right var(--folder-in-pad) top var(--folder-reply-y) / var(--folder-reply-btn-size) var(--folder-reply-btn-size) no-repeat,
+    var(--folder-bg) !important;
+  border-radius: 0 var(--folder-right-x) 0 0 / 0 var(--folder-right-y) 0 0 !important;
+}
+
+/* 输入框 */
+.chat-input-bar .chat-input-textarea {
+  position: absolute !important;
+  left: var(--folder-capsule-left) !important;
+  right: var(--folder-capsule-right) !important;
+  width: auto !important;
+  top: calc(var(--folder-tab-h) + (var(--folder-body-h) - var(--folder-capsule-h)) / 2) !important;
+  /* 胶囊固定高度：打多少行都只在里面滚动，不撑坏输入栏 */
+  height: var(--folder-capsule-h) !important;
+  min-height: var(--folder-capsule-h) !important;
+  max-height: var(--folder-capsule-h) !important;
+  margin: 0 !important;
+  /* 正常行高＋上下留白，多行滚动跟系统原生一致 */
+  padding: var(--folder-capsule-pad-y) var(--folder-capsule-pad-x) !important;
+  line-height: var(--folder-capsule-line) !important;
+  overflow: auto !important;
+  resize: none !important;
+  box-sizing: border-box !important;
+  background: var(--folder-capsule-bg) !important;
+  border: var(--folder-capsule-border-w) solid var(--folder-capsule-border) !important;
+  border-radius: var(--folder-capsule-radius) !important;
+  z-index: 5 !important;
+}
+.chat-input-bar .chat-input-textarea::placeholder {
+  color: var(--folder-placeholder-color) !important;
+  opacity: 1 !important;
+}
+
+/* 按钮排布 */
+.chat-input-bar .chat-input-actions {
+  display: block !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+/* 按钮共用外观 */
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"]),
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]),
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]),
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"],
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]),
+.chat-input-bar .chat-input-actions > button[aria-label="停止本轮生成"],
+.chat-input-bar .chat-input-actions > button[aria-label="停止线下生成"] {
+  position: absolute !important;
+  width: var(--folder-btn-size) !important;
+  height: var(--folder-btn-size) !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 50% !important;
+  background: var(--folder-btn-bg) !important;
+  border: var(--folder-btn-border-w) solid var(--folder-btn-border) !important;
+  box-sizing: border-box !important;
+  z-index: 6 !important;
+  opacity: 1 !important;
+  color: var(--folder-native-icon-color) !important;
+}
+.chat-input-bar .chat-input-actions > button > svg {
+  width: var(--folder-native-icon-size) !important;
+  height: var(--folder-native-icon-size) !important;
+}
+
+/* 上排 4 个圆（页签层内） */
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"]),
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]),
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]),
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] {
+  top: calc((var(--folder-tab-h) - var(--folder-btn-size)) / 2) !important;
+  background: var(--folder-tab-btn-bg) !important;
+}
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"]) {
+  left: var(--folder-btn-pad) !important;                                                       /* ③ 加号 */
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]) {
+  left: calc(var(--folder-btn-pad) + var(--folder-btn-step)) !important;                       /* ④ 小黄豆 */
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]) {
+  left: calc(var(--folder-btn-pad) + var(--folder-btn-step) + var(--folder-btn-step)) !important;  /* ⑤ 图片贴图 */
+}
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] {
+  left: calc(var(--folder-btn-pad) + var(--folder-btn-step) + var(--folder-btn-step) + var(--folder-btn-step)) !important;  /* ⑥ 线下 */
+}
+
+/* 回复 / 停止键位 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]),
+.chat-input-bar .chat-input-actions > button[aria-label="停止本轮生成"],
+.chat-input-bar .chat-input-actions > button[aria-label="停止线下生成"] {
+  top: calc(var(--folder-tab-h) + (var(--folder-body-h) - var(--folder-btn-size)) / 2) !important;
+  right: var(--folder-in-pad) !important;
+}
+
+/* 回复键独立尺寸 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]),
+.chat-input-bar .chat-input-actions > button[aria-label="停止本轮生成"],
+.chat-input-bar .chat-input-actions > button[aria-label="停止线下生成"] {
+  width: var(--folder-reply-btn-size) !important;
+  height: var(--folder-reply-btn-size) !important;
+  top: calc(var(--folder-tab-h) + var(--folder-reply-y)) !important;
+  right: var(--folder-in-pad) !important;
+}
+
+/* 隐藏发送键（保留停止键）*/
+.chat-input-bar .chat-input-actions > button[aria-label="发送"] {
+  display: none !important;
+}
+
+/* 弹出面板 */
+.chat-plus-menu,
+.chat-input-bar > div.h-\[220px\],
+.chat-emoji-panel-wrap,
+.chat-quote-bar,
+.chat-theater-mode-strip {
+  position: absolute !important;
+  bottom: calc(100% + var(--folder-panel-gap)) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  background: var(--folder-panel-bg) !important;
+  border-radius: var(--folder-panel-radius) !important;
+  box-shadow: var(--folder-panel-shadow) !important;
+  z-index: 100 !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+.chat-plus-menu {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: var(--folder-plus-gap) !important;
+  padding: var(--folder-plus-pad) !important;
+}
+
+/* 图标与换色 */
+
+/* 收起原生图标（停止键保留）*/
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"]) > svg,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]) > svg,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]) > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"] > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] > svg,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]) > svg {
+  display: none !important;
+}
+
+/* 图标共用外观 */
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"])::before,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::before,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::before,
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::before,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::before,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"])::before {
+  content: "" !important;
+  display: block !important;
+  width: var(--folder-icon-size) !important;
+  height: var(--folder-icon-size) !important;
+  flex: none !important;
+  background-color: var(--folder-tab-icon-color) !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+}
+
+/* 回复键图标独立颜色 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"])::before {
+  background-color: var(--folder-reply-icon-color) !important;
+}
+
+/* 加号位 · 爱心加号 */
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"])::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='m11 21l-3.175-2.85q-1.8-1.625-3.088-2.9t-2.125-2.4t-1.225-2.175T1 8.475q0-2.35 1.575-3.912T6.5 3q1.3 0 2.475.55T11 5.1q.85-1 2.025-1.55T15.5 3q2.025 0 3.4 1.138T20.775 7H18.65q-.45-1-1.325-1.5T15.5 5q-1.275 0-2.2.688T11.575 7.5h-1.15Q9.65 6.375 8.662 5.688T6.5 5q-1.425 0-2.463.988T3 8.474q0 .825.35 1.675t1.25 1.963t2.45 2.6T11 18.3q.65-.575 1.525-1.325t1.4-1.25l.225.225l.488.488l.487.487l.225.225q-.55.5-1.4 1.238t-1.5 1.312zm7-4v-3h-3v-2h3V9h2v3h3v2h-3v3z'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='m11 21l-3.175-2.85q-1.8-1.625-3.088-2.9t-2.125-2.4t-1.225-2.175T1 8.475q0-2.35 1.575-3.912T6.5 3q1.3 0 2.475.55T11 5.1q.85-1 2.025-1.55T15.5 3q2.025 0 3.4 1.138T20.775 7H18.65q-.45-1-1.325-1.5T15.5 5q-1.275 0-2.2.688T11.575 7.5h-1.15Q9.65 6.375 8.662 5.688T6.5 5q-1.425 0-2.463.988T3 8.474q0 .825.35 1.675t1.25 1.963t2.45 2.6T11 18.3q.65-.575 1.525-1.325t1.4-1.25l.225.225l.488.488l.487.487l.225.225q-.55.5-1.4 1.238t-1.5 1.312zm7-4v-3h-3v-2h3V9h2v3h3v2h-3v3z'/%3E%3C/svg%3E") !important;
+}
+
+/* 小黄豆位 · 笑脸 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M15.5 11q.625 0 1.063-.437T17 9.5t-.437-1.062T15.5 8t-1.062.438T14 9.5t.438 1.063T15.5 11m-7 0q.625 0 1.063-.437T10 9.5t-.437-1.062T8.5 8t-1.062.438T7 9.5t.438 1.063T8.5 11M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12q0-2.1.788-3.925T4.95 4.9t3.2-2.125T12.025 2q.4 0 .638.313t.187.737t-.35.675t-.725.275q-.875.025-1.712.238t-1.638.612q-1.975 1-3.2 2.9T4 12q0 3.325 2.338 5.663T12 20q2.475 0 4.45-1.35t2.9-3.5q.45-1.025.6-2.1t-.025-2.175q-.05-.425.15-.763t.6-.462t.75.05t.425.575q.25 1.475.075 2.962t-.775 2.838q-1.175 2.65-3.612 4.288T12 22m6.9-19.8q.5-.5.913-.85T20.95 1q.925 0 1.488.638T23 3.075q0 .375-.15.75t-.45.675l-2.8 2.8q-.3.3-.7.3t-.7-.3l-2.8-2.8q-.325-.325-.462-.7t-.138-.75q0-.8.575-1.425T16.85 1q.7 0 1.1.325t.95.875M12 17.5q1.45 0 2.688-.687T16.65 14.9q.175-.275-.012-.587T16.1 14H7.9q-.35 0-.537.313t-.013.587q.725 1.225 1.975 1.913T12 17.5'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M15.5 11q.625 0 1.063-.437T17 9.5t-.437-1.062T15.5 8t-1.062.438T14 9.5t.438 1.063T15.5 11m-7 0q.625 0 1.063-.437T10 9.5t-.437-1.062T8.5 8t-1.062.438T7 9.5t.438 1.063T8.5 11M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12q0-2.1.788-3.925T4.95 4.9t3.2-2.125T12.025 2q.4 0 .638.313t.187.737t-.35.675t-.725.275q-.875.025-1.712.238t-1.638.612q-1.975 1-3.2 2.9T4 12q0 3.325 2.338 5.663T12 20q2.475 0 4.45-1.35t2.9-3.5q.45-1.025.6-2.1t-.025-2.175q-.05-.425.15-.763t.6-.462t.75.05t.425.575q.25 1.475.075 2.962t-.775 2.838q-1.175 2.65-3.612 4.288T12 22m6.9-19.8q.5-.5.913-.85T20.95 1q.925 0 1.488.638T23 3.075q0 .375-.15.75t-.45.675l-2.8 2.8q-.3.3-.7.3t-.7-.3l-2.8-2.8q-.325-.325-.462-.7t-.138-.75q0-.8.575-1.425T16.85 1q.7 0 1.1.325t.95.875M12 17.5q1.45 0 2.688-.687T16.65 14.9q.175-.275-.012-.587T16.1 14H7.9q-.35 0-.537.313t-.013.587q.725 1.225 1.975 1.913T12 17.5'/%3E%3C/svg%3E") !important;
+}
+
+/* 贴图位 · 书签爱心 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M12 7.8q-.3-.375-.775-.587T10.2 7q-.9 0-1.55.65T8 9.2q0 .475.137.875t.563.95q.35.45.975 1.075t1.6 1.525q.15.15.337.225t.388.075t.387-.075t.338-.225q.95-.875 1.575-1.487t.975-1.088q.425-.55.575-.963T16 9.2q0-.9-.65-1.55T13.8 7q-.525 0-1.013.212T12 7.8M12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162z'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M12 7.8q-.3-.375-.775-.587T10.2 7q-.9 0-1.55.65T8 9.2q0 .475.137.875t.563.95q.35.45.975 1.075t1.6 1.525q.15.15.337.225t.388.075t.387-.075t.338-.225q.95-.875 1.575-1.487t.975-1.088q.425-.55.575-.963T16 9.2q0-.9-.65-1.55T13.8 7q-.525 0-1.013.212T12 7.8M12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162z'/%3E%3C/svg%3E") !important;
+}
+
+/* 线下位 · 文件夹坐标针 */
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::before,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M18.5 12c1.9 0 3.5 1.6 3.5 3.5c0 2.6-3.5 6.5-3.5 6.5S15 18.1 15 15.5c0-1.9 1.6-3.5 3.5-3.5m0 4.8c.7 0 1.3-.6 1.2-1.2c0-.6-.6-1.2-1.2-1.2s-1.2.5-1.2 1.2c0 .6.5 1.2 1.2 1.2M20 8H4v10h9.5c.29.68.63 1.35 1 2H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h8a2 2 0 0 1 2 2v3.34c-.58-.5-1.26-.89-2-1.11z'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='black' d='M18.5 12c1.9 0 3.5 1.6 3.5 3.5c0 2.6-3.5 6.5-3.5 6.5S15 18.1 15 15.5c0-1.9 1.6-3.5 3.5-3.5m0 4.8c.7 0 1.3-.6 1.2-1.2c0-.6-.6-1.2-1.2-1.2s-1.2.5-1.2 1.2c0 .6.5 1.2 1.2 1.2M20 8H4v10h9.5c.29.68.63 1.35 1 2H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h8a2 2 0 0 1 2 2v3.34c-.58-.5-1.26-.89-2-1.11z'/%3E%3C/svg%3E") !important;
+}
+
+/* 回复键位 · 回弯箭头 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"])::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12.004 19.98A9.9 9.9 0 0 1 7.7 19L3 20l1.3-3.9C1.976 12.663 2.874 8.228 6.4 5.726c3.526-2.501 8.59-2.296 11.845.48c1.994 1.701 2.932 4.045 2.746 6.349M19 22v-6m3 3l-3-3l-3 3'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12.004 19.98A9.9 9.9 0 0 1 7.7 19L3 20l1.3-3.9C1.976 12.663 2.874 8.228 6.4 5.726c3.526-2.501 8.59-2.296 11.845.48c1.994 1.701 2.932 4.045 2.746 6.349M19 22v-6m3 3l-3-3l-3 3'/%3E%3C/svg%3E") !important;
+}
+
+/* 回复键图标尺寸 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"])::before {
+  width: var(--folder-reply-icon-size) !important;
+  height: var(--folder-reply-icon-size) !important;
+}
+
+/* 头像徽章（纯装饰，点不动）*/
+
+
+.chat-input-bar .chat-input-actions::after {
+  content: "" !important;
+  position: absolute !important;
+  left: calc(var(--folder-badge-left) + var(--folder-badge-inset)) !important;
+  top: calc(var(--folder-badge-top) + var(--folder-badge-inset)) !important;
+  width: calc(var(--folder-badge-size) - var(--folder-badge-inset) * 2) !important;
+  height: calc(var(--folder-badge-size) - var(--folder-badge-inset) * 2) !important;
+  box-sizing: border-box !important;
+  background-color: var(--folder-badge-color) !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M0 0h24v24H0z'/%3E%3Cpath fill='black' d='M12.01 2.011a3.2 3.2 0 0 1 2.113.797l.154.145l.698.698a1.2 1.2 0 0 0 .71.341L15.82 4h1a3.2 3.2 0 0 1 3.195 3.018l.005.182v1c0 .27.092.533.258.743l.09.1l.697.698a3.2 3.2 0 0 1 .147 4.382l-.145.154l-.698.698a1.2 1.2 0 0 0-.341.71l-.008.135v1a3.2 3.2 0 0 1-3.018 3.195l-.182.005h-1a1.2 1.2 0 0 0-.743.258l-.1.09l-.698.697a3.2 3.2 0 0 1-4.382.147l-.154-.145l-.698-.698a1.2 1.2 0 0 0-.71-.341L8.2 20.02h-1a3.2 3.2 0 0 1-3.195-3.018L4 16.82v-1a1.2 1.2 0 0 0-.258-.743l-.09-.1l-.697-.698a3.2 3.2 0 0 1-.147-4.382l.145-.154l.698-.698a1.2 1.2 0 0 0 .341-.71L4 8.2v-1l.005-.182a3.2 3.2 0 0 1 3.013-3.013L7.2 4h1a1.2 1.2 0 0 0 .743-.258l.1-.09l.698-.697a3.2 3.2 0 0 1 2.269-.944m3.697 7.282a1 1 0 0 0-1.414 0L11 12.585l-1.293-1.292l-.094-.083a1 1 0 0 0-1.32 1.497l2 2l.094.083a1 1 0 0 0 1.32-.083l4-4l.083-.094a1 1 0 0 0-.083-1.32'/%3E%3C/g%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M0 0h24v24H0z'/%3E%3Cpath fill='black' d='M12.01 2.011a3.2 3.2 0 0 1 2.113.797l.154.145l.698.698a1.2 1.2 0 0 0 .71.341L15.82 4h1a3.2 3.2 0 0 1 3.195 3.018l.005.182v1c0 .27.092.533.258.743l.09.1l.697.698a3.2 3.2 0 0 1 .147 4.382l-.145.154l-.698.698a1.2 1.2 0 0 0-.341.71l-.008.135v1a3.2 3.2 0 0 1-3.018 3.195l-.182.005h-1a1.2 1.2 0 0 0-.743.258l-.1.09l-.698.697a3.2 3.2 0 0 1-4.382.147l-.154-.145l-.698-.698a1.2 1.2 0 0 0-.71-.341L8.2 20.02h-1a3.2 3.2 0 0 1-3.195-3.018L4 16.82v-1a1.2 1.2 0 0 0-.258-.743l-.09-.1l-.697-.698a3.2 3.2 0 0 1-.147-4.382l.145-.154l.698-.698a1.2 1.2 0 0 0 .341-.71L4 8.2v-1l.005-.182a3.2 3.2 0 0 1 3.013-3.013L7.2 4h1a1.2 1.2 0 0 0 .743-.258l.1-.09l.698-.697a3.2 3.2 0 0 1 2.269-.944m3.697 7.282a1 1 0 0 0-1.414 0L11 12.585l-1.293-1.292l-.094-.083a1 1 0 0 0-1.32 1.497l2 2l.094.083a1 1 0 0 0 1.32-.083l4-4l.083-.094a1 1 0 0 0-.083-1.32'/%3E%3C/g%3E%3C/svg%3E") !important;
+  z-index: 8 !important;
+  pointer-events: none !important;
+}

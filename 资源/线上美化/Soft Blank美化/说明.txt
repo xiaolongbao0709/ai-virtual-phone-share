@@ -1,0 +1,8 @@
+此美化为二改简约风
+感谢vel老师开放二改和分享权限，所有规则同步遵循vel老师
+改动：
+UI基本全改；核心的交互逻辑和插件生效机制继承
+输入栏标题栏头像单独存图
+
+
+纸飞机贴纸图标：Streamline，CC BY 4.0，creativecommons.org/licenses/by/4.0/，yesicon.app / streamlinehq.com，已改色；完整版权与许可声明见各文件开头。
