@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-20T10:27:13.999Z",
+  "generatedAt": "2026-11-20T12:53:15.417Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -81,7 +81,7 @@
     },
     {
       "name": "线上聊天状态栏",
-      "count": 31
+      "count": 32
     },
     {
       "name": "线下正则",
@@ -9997,6 +9997,24 @@
       "avatar": "",
       "ownerHash": "fafe02c203d6e36031b9f100bb083c184b4f867d8957ff4384f832bc1162cc57",
       "updatedAt": "2026-08-19T23:43:41+08:00"
+    },
+    {
+      "folder": "线上聊天状态栏",
+      "name": "仿备忘录",
+      "dirName": "仿备忘录",
+      "type": "dir",
+      "path": "资源/线上聊天状态栏/仿备忘录",
+      "files": [
+        "资源/线上聊天状态栏/仿备忘录/仿备忘录.json"
+      ],
+      "images": [
+        "资源/线上聊天状态栏/仿备忘录/IMG_5819.jpeg"
+      ],
+      "description": "二改自小北老师的“一枚普通的心声小卡片”，喜欢原版的数值和小北老师添加的一些内容！做了一个简单的仿备忘录美化！",
+      "author": "Miii",
+      "avatar": "",
+      "ownerHash": "fada36d579a1d8607b7ff77d4e71c809d54803f0ee59681cbadc45e5d4e03692",
+      "updatedAt": "2026-11-20T21:50:18+09:00"
     },
     {
       "folder": "线上聊天状态栏",
