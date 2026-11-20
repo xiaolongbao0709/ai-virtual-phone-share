@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-19T20:06:09.266Z",
+  "generatedAt": "2026-11-20T04:52:11.167Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -8548,16 +8548,16 @@
       "type": "dir",
       "path": "资源/线上美化/【聊天室】仿POP月见粉",
       "files": [
-        "资源/线上美化/【聊天室】仿POP月见粉/【聊天室】仿POP月见粉.txt"
+        "资源/线上美化/【聊天室】仿POP月见粉/【11.20更新】仿POP月见粉.css"
       ],
       "images": [
-        "资源/线上美化/【聊天室】仿POP月见粉/仿POP月见粉.jpg"
+        "资源/线上美化/【聊天室】仿POP月见粉/IMG_20261120_124821.jpg"
       ],
-      "description": "✅二改自用\n🚫二传二卖\n选择 导入-聊天室css 即可",
+      "description": "✅二改自用\n🚫二传二卖\n选择 导入-聊天室css 即可\n11.20更新：新增底部栏的美化，如图所示",
       "author": "木叶淀粉酶",
       "avatar": "资源/线上美化/【聊天室】仿POP月见粉/.avatar.png",
       "ownerHash": "9255ec1277ace06ef7aebf6566a04ad2844f9b543a7b06e6b1b0b7fe619d781c",
-      "updatedAt": "2026-08-14T10:48:48+08:00"
+      "updatedAt": "2026-11-20T13:49:53+09:00"
     },
     {
       "folder": "线上美化",
