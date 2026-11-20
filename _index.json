@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-20T14:05:42.406Z",
+  "generatedAt": "2026-11-20T16:03:57.367Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -8342,13 +8342,13 @@
         "资源/线上美化/Soft Blank美化/soft blank输入栏.js"
       ],
       "images": [
-        "资源/线上美化/Soft Blank美化/MEITU_20261120_212214698.jpg"
+        "资源/线上美化/Soft Blank美化/MEITU_20261120_233127035_113147.jpg"
       ],
       "description": "此美化为二改简约风\n感谢vel老师开放二改和分享权限，所有规则同步遵循vel老师\n改动：\nUI基本全改；核心的交互逻辑和插件生效机制继承\n输入栏标题栏头像单独存图\n\n\n纸飞机贴纸图标：Streamline，CC BY 4.0，creativecommons.org/licenses/by/4.0/，yesicon.app / streamlinehq.com，已改色；完整版权与许可声明见各文件开头。",
       "author": "山羊3",
       "avatar": "资源/线上美化/Soft Blank美化/.avatar.png",
       "ownerHash": "c0a4698d957b057e64c0309aef8426ac9f6cd4fab2577c4655c82d548ccdbabf",
-      "updatedAt": "2026-11-20T22:43:42+09:00"
+      "updatedAt": "2026-11-21T01:01:11+09:00"
     },
     {
       "folder": "线上美化",
