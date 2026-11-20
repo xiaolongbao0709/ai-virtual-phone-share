@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-20T13:07:31.551Z",
+  "generatedAt": "2026-11-20T13:40:38.704Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "线上美化",
-      "count": 62
+      "count": 63
     },
     {
       "name": "线上聊天状态栏",
@@ -8328,6 +8328,26 @@
       "avatar": "资源/线上美化/OnAir聊天室美化/.avatar.png",
       "ownerHash": "2d219a36b42d6b520c9a72ca38913c044848e875ff08144a9eae53f5db8925b1",
       "updatedAt": "2026-11-16T02:01:14+09:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "Soft Blank美化",
+      "dirName": "Soft Blank美化",
+      "type": "dir",
+      "path": "资源/线上美化/Soft Blank美化",
+      "files": [
+        "资源/线上美化/Soft Blank美化/MEITU_20261120_212214698.asset.jpg",
+        "资源/线上美化/Soft Blank美化/soft blank.css",
+        "资源/线上美化/Soft Blank美化/soft blank标题栏.js",
+        "资源/线上美化/Soft Blank美化/soft blank气泡.js",
+        "资源/线上美化/Soft Blank美化/soft blank输入栏.js"
+      ],
+      "images": [],
+      "description": "此美化为二改简约风\n感谢vel老师开放二改和分享权限，所有规则同步遵循vel老师\n改动：\nUI基本全改；核心的交互逻辑和插件生效机制继承\n输入栏标题栏头像单独存图\n\n\n纸飞机贴纸图标：Streamline，CC BY 4.0，creativecommons.org/licenses/by/4.0/，yesicon.app / streamlinehq.com，已改色；完整版权与许可声明见各文件开头。",
+      "author": "山羊3",
+      "avatar": "资源/线上美化/Soft Blank美化/.avatar.png",
+      "ownerHash": "c0a4698d957b057e64c0309aef8426ac9f6cd4fab2577c4655c82d548ccdbabf",
+      "updatedAt": "2026-11-20T22:38:18+09:00"
     },
     {
       "folder": "线上美化",
