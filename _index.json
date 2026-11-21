@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-21T04:15:59.197Z",
+  "generatedAt": "2026-11-21T10:03:47.749Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -25,7 +25,7 @@
     },
     {
       "name": "全局主题",
-      "count": 27
+      "count": 28
     },
     {
       "name": "剧情预设及正则",
@@ -2933,6 +2933,27 @@
       "avatar": "",
       "ownerHash": "88f102e0ef217cea73fe5b268e0c11999ebe72de7ee6c86765148d0313569196",
       "updatedAt": "2026-08-20T22:26:34+08:00"
+    },
+    {
+      "folder": "全局主题",
+      "name": "mistlove",
+      "dirName": "mistlove",
+      "type": "dir",
+      "path": "资源/全局主题/mistlove",
+      "files": [
+        "资源/全局主题/mistlove/mistlove.zip"
+      ],
+      "images": [
+        "资源/全局主题/mistlove/1000219459.jpg",
+        "资源/全局主题/mistlove/1000219460.jpg",
+        "资源/全局主题/mistlove/1000219461.jpg",
+        "资源/全局主题/mistlove/1000219462.jpg"
+      ],
+      "description": "图片素材来源素材网站，侵删\n图标位置可以自由变换，小组件可以自己改自己想要的\n都可以二改发布，带上烬苏辞就可以，下面是预览图",
+      "author": "烬苏辞",
+      "avatar": "",
+      "ownerHash": "882742064e8e3724c9cfb1c1b7dc6515a691d7f1c486eae9a08a5d5e94054a1b",
+      "updatedAt": "2026-11-21T19:01:15+09:00"
     },
     {
       "folder": "全局主题",
