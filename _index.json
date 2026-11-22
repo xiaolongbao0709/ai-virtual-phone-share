@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T09:32:39.169Z",
+  "generatedAt": "2026-11-22T14:54:45.304Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 172
+      "count": 171
     },
     {
       "name": "应用bug改善",
@@ -6853,22 +6853,6 @@
       "avatar": "",
       "ownerHash": "3ffb2d814e68e11b89c49a72e216e75a125c5368590600ea4e3ae62341a547fa",
       "updatedAt": "2026-10-14T17:02:08+08:00"
-    },
-    {
-      "folder": "应用",
-      "name": "聊天档案",
-      "dirName": "资源档案",
-      "type": "dir",
-      "path": "资源/应用/资源档案",
-      "files": [
-        "资源/应用/资源档案/chat-archive-v3.3.0.zip"
-      ],
-      "images": [],
-      "description": "会把聊天记录放在档案里，机可以搜到，图片不会记录，只有搜索的时候用到模型\n每天会新开一页，每页上限500条，超过会自动新开一页\n\n11.8 更新:编辑的消息会在档案里同步\n测试中...",
-      "author": "七个七七",
-      "avatar": "",
-      "ownerHash": "c27ed9c81cc575e5d865b1a4dc6e2f9cd9d27a3f2f775141d179f923a58bc770",
-      "updatedAt": "2026-11-08T03:13:47+09:00"
     },
     {
       "folder": "应用",
