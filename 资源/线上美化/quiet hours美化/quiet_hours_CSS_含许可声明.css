@@ -1,0 +1,1292 @@
+/* ============================================================================
+   THIRD-PARTY NOTICES - quiet hours chat theme (CSS)
+   ============================================================================
+   SCOPE
+   Three icons in this file are derived from Google Material icon sets and
+   are licensed under the Apache License, Version 2.0 (January 2004).
+   All other CSS rules, layout, variables and the six CC0 icons are outside
+   this notice. Nothing here asserts a licence over the author's own CSS.
+   Colons and fixed columns are a reading aid only; no licence prescribes
+   file layout, and no user-interface credit is required.
+
+   ---------------------------------------------------------------------------
+   1. LICENSE TEXT (redistribution condition: give recipients a copy)
+   ---------------------------------------------------------------------------
+   ASF licenses index            : https://www.apache.org/licenses/
+   Authoritative English text    : https://www.apache.org/licenses/LICENSE-2.0
+   Plain-text official copy      : https://www.apache.org/licenses/LICENSE-2.0.txt
+   ASF licensing FAQ             : https://www.apache.org/foundation/license-faq.html
+   ASF "Apply the license"       : https://www.apache.org/legal/apply-license.html
+   SPDX entry / short id         : https://spdx.org/licenses/Apache-2.0.html
+   OSI license page              : https://opensource.org/license/apache-2.0
+   The complete, unmodified English text of Apache License 2.0 follows this
+   notice at the top of this file. The same text is also shipped as the
+   separate files LICENSE and LICENSE_Apache-2.0.txt. One full copy per
+   distribution is sufficient; the embedded copy alone satisfies this
+   condition when this CSS is distributed by itself. Only the English text
+   of the licence is authoritative.
+
+   ---------------------------------------------------------------------------
+   2. UPSTREAM ICON SOURCES (redistribution condition: retain notices)
+   ---------------------------------------------------------------------------
+   Browse / download (Google)    : https://fonts.google.com/icons
+   Iconify collection index      : https://github.com/iconify/icon-sets/blob/master/collections.md
+   Iconify set - Material Symbols: https://icon-sets.iconify.design/material-symbols/
+   Iconify set - ic              : https://icon-sets.iconify.design/ic/
+   Iconify data - symbols        : https://api.iconify.design/material-symbols.json
+   Iconify data - ic             : https://api.iconify.design/ic.json
+   Browse UI used by author      : https://yesicon.app/
+   Per-icon URL form             : https://yesicon.app/zh-Hans/PREFIX/ICON-NAME
+   Author-supplied example       : https://yesicon.app/zh-Hans/tabler/checks
+
+   A. material-symbols:forward-to-inbox-rounded
+      Set         : Material Symbols
+      Author      : Google
+      License     : Apache-2.0
+      Upstream    : https://github.com/google/material-design-icons
+      LICENSE     : https://github.com/google/material-design-icons/blob/master/LICENSE
+      Used in     : --icon-reply (reply / offline send button)
+
+   B. ic:baseline-add-a-photo
+      Set         : Google Material Icons
+      Author      : Material Design Authors
+      License     : Apache-2.0
+      Upstream    : https://github.com/material-icons/material-icons
+      LICENSE     : https://github.com/material-icons/material-icons/blob/master/LICENSE
+      Used in     : --icon-red (composer front key / plus slot)
+   The "ic" prefix maps to material-icons/material-icons, not to
+   google/material-design-icons.
+
+   C. ic:baseline-voice-over-off
+      Set         : Google Material Icons
+      Author      : Material Design Authors
+      License     : Apache-2.0
+      Upstream    : https://github.com/material-icons/material-icons
+      LICENSE     : https://github.com/material-icons/material-icons/blob/master/LICENSE
+      Used in     : --icon-blue (composer front key / capsule toggle)
+   The original per-icon comments are also kept above each --icon-*
+   variable in the author's code below. Upstream SVG files contain no
+   copyright header, no Apache notice and no comment block, only path data
+   and the SVG namespace, so no file-level notice is carried over.
+
+   ---------------------------------------------------------------------------
+   3. MODIFICATIONS (redistribution condition: prominent change notice)
+   ---------------------------------------------------------------------------
+   SVG path data was extracted, converted to data:image/svg+xml URIs,
+   resized, recoloured and embedded into custom selectors. This notice is
+   placed at the top of the file so that it cannot be detached from the
+   modified material.
+
+   ---------------------------------------------------------------------------
+   4. NOTICE FILE (redistribution condition: only if the Work has one)
+   ---------------------------------------------------------------------------
+   Root listings of both upstream repositories were checked: each contains
+   a LICENSE file and no NOTICE file. This condition is not triggered, and
+   no NOTICE text is reproduced. Google, Apache and ASF names identify
+   provenance only and imply no endorsement.
+
+   ---------------------------------------------------------------------------
+   5. CC0 ICONS - NOT ENUMERATED
+   ---------------------------------------------------------------------------
+   CC0 1.0 Universal is a public domain dedication with no conditions. It
+   imposes no attribution, no source-link and no licence-copy duty. The six
+   CC0 icons are therefore not enumerated, no CC0 URL is recorded and no
+   CC0 text is attached. The "(CC0)" marks in the author's code are
+   descriptive labels, not notices. CC0 does not affect third-party
+   trademark, patent, privacy or publicity rights, and no author
+   endorsement is implied.
+
+   ---------------------------------------------------------------------------
+   6. REFERENCES CHECKED BUT NOT CONTAINED IN THIS FILE
+   ---------------------------------------------------------------------------
+   SVG namespace URI
+         W3C namespace                 : http://www.w3.org/2000/svg
+         SVG2 structure chapter        : https://www.w3.org/TR/SVG2/struct.html
+         Current SVG specification     : https://www.w3.org/TR/SVG/
+        Occurs only as the xmlns attribute of inline data:image/svg+xml
+        URIs. It is a W3C XML namespace identifier, not a licensed asset
+        and not a source attribution.
+   DM Sans / Google Fonts
+         Specimen                      : https://fonts.google.com/specimen/DM+Sans
+         Upstream                      : https://github.com/googlefonts/dm-fonts
+         SIL OFL 1.1                   : https://openfontlicense.org/
+        Zero occurrences of @import, "DM Sans" and "fonts.googleapis" in
+        the non-comment CSS rules; no font file is bundled.
+   Tabler Icons "checks"
+         Author-supplied link          : https://yesicon.app/zh-Hans/tabler/checks
+         Site                          : https://tabler.io/icons
+         Upstream                      : https://github.com/tabler/tabler-icons
+         Licence (MIT)                 : https://docs.tabler.io/ui/getting-started/license
+        Zero occurrences of "tabler" and "checks" in the non-comment CSS
+        rules; it belongs to another theme / plugin, not this CSS.
+   ============================================================================ */
+
+
+
+
+
+/* ===========================================================================
+   BEGIN VERBATIM APACHE LICENSE 2.0 TEXT - ENGLISH, AUTHORITATIVE
+   ===========================================================================
+
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+   =========================================================================== */
+
+/* quiet hours气泡板块 · 完成版第 1.0版  */
+
+:root {
+  /* ★ 置顶：对方网名，改引号里的字就能换 */
+  --deco-other-name: "아무데도";
+
+  /* ★ 第一组：装饰，放最显眼 */
+  --deco-color: #253047;          /* 两个符号和文字的颜色 */
+  --deco-icon-size: 14px;          /* 符号大小：调大更大，调小更小 */
+  --deco-text-size: 10.8px;        /* 网名/已讀 字号：调大字更大，调小字更小 */
+  --deco-text-gap: 5px;            /* 符号和文字之间留多宽：调大更松，调小更紧 */
+  --deco-avatar-gap: 12px;         /* 对面那行离头像多远：调大越靠右，调小越贴头像 */
+  --deco-self-gap: 6px;            /* 自己侧符号离小头像多远：调大更松，调小更紧 */
+  --deco-self-text: "已讀";        /* 自己侧那两个字（繁体，别改成简体） */
+
+  /* ★ 第二组：引用条 */
+  /* 引用条高度：原生是 25px，这里约一半；调大更高，调小更矮 */
+  --quote-h: 13px;
+  /* 引用条离气泡上边多远：调大离得远，调小更贴 */
+  --quote-gap: 6px;
+  /* 引用条左右往里缩多少：0 就是跟气泡边缘对齐，调大两边都往里缩 */
+  --quote-inset: 0px;
+  /* 引用条文字离左右边多远：调大文字更靠中间，调小更贴边 */
+  --quote-pad-x: 10px;
+  /* 引用条字号：调大字更大，调小字更小（跟着全局字号缩放） */
+  --quote-font-size: 10.8px;
+  /* 引用条底色 */
+  --quote-bg: rgba(0,0,0,.06);
+  /* 引用条侧边竖线粗细：调大线越粗，填 0 没线 */
+  --quote-line-w: 3px;
+  /* 引用条侧边竖线颜色 */
+  --quote-line-color: rgba(0,0,0,.15);
+  /* 引用条文字颜色 */
+  --quote-text: #A0A3A8;
+  /* 引用条圆角：调大更圆，调小更方 */
+  --quote-radius: 6px;
+
+  /* ★ 第三组：连发 / 自己侧头像 */
+  /* 连发气泡间距：调大更松，调小更紧 */
+  --bubble-group-gap: 5px;
+  /* 项目原本每条消息的间距，做减法用，一般别动 */
+  --bubble-list-gap: 16px;
+  /* 自己气泡离屏幕右边多远：调大往里缩，调小更贴边 */
+  --bubble-self-edge: 8px;
+  /* 自己小圆头像大小：调大更大，调小更小 */
+  --avatar-self-size: 23px;
+  /* 小头像离气泡下边多远：调大离得远，调小更贴 */
+  --avatar-self-gap: 5px;
+  /* 小头像外面那圈圆描边宽度：调大圈越粗，填 0 没圈 */
+  --avatar-self-ring-w: 2px;
+  --avatar-self-ring-color: #FFFFFF;
+  --avatar-self-shadow: 0 2px 5px rgba(0,0,0,.18);
+
+  /* ★ 第四组：对面头像 */
+  /* 对面气泡往下挪多少＝上方留空高度：调大留白越高 */
+  --bubble-other-drop: 14px;
+  /* 对面头像边长：调大更大，调小更小 */
+  --avatar-other-size: 40px;
+  /* 对面头像方不方：调大越圆，调小越方；填 0 直角 */
+  --avatar-other-radius: 3px;
+  /* 对面头像白边宽度：调大越宽，填 0 没白边 */
+  --avatar-other-frame-w: 4px;
+  --avatar-other-frame-color: #FFFFFF;
+  --avatar-other-shadow: 0 4px 10px rgba(0,0,0,.18);
+  /* 对面连发第 2 条起头像藏多少：0 全藏，调大能看见淡淡的头像 */
+  --bubble-group-avatar-hide: 0;
+
+  /* 五、配色 */
+  --bubble-self-bg: #FFFFFF;      /* 我发的气泡底色 */
+  --bubble-self-border: #D2D2D2;  /* 我发的气泡描边颜色 */
+  --bubble-self-border-w: 1px;    /* 描边粗细：调大边越粗，调小边越细；填 0 关掉描边 */
+  --bubble-self-text: #1C1C1E;    /* 我发的气泡文字颜色 */
+  --bubble-other-bg: #F0F0F0;     /* 对方气泡底色 */
+  --bubble-other-text: #1C1C1E;   /* 对方气泡文字颜色 */
+
+  /* 六、圆角 */
+  --bubble-radius: 22px;          /* 四角圆度：调大更圆，调小更方 */
+  --bubble-radius-inner: 7px;     /* 连发靠内侧压方的角：调小规律更明显，调大更像全圆 */
+
+  /* 七、大小与文字 */
+  --bubble-pad-y: 10px;           /* 上下内边距：调大气泡更高，调小更矮 */
+  --bubble-pad-x: 14px;           /* 左右内边距：调大文字离边更远，调小更紧凑 */
+  --bubble-font-size: 13.5px;     /* 字号：调大字更大，调小字更小（跟着全局字号缩放） */
+  --bubble-line-height: normal;   /* 填 normal 是项目原样；改成数字如 1.4 后，调大行更松、调小更紧 */
+
+  /* 八、阴影 */
+  --bubble-shadow: 0 2px 6px rgba(0,0,0,.02); /* 填 none 关掉阴影 */
+
+  /* 九、两个符号图形（CC0），一般不用动（颜色走上面的 --deco-color） */
+  --deco-at-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3.5'/%3E%3Cpath d='M15.5 8.5v6a2 2 0 0 0 4 0V12a7.5 7.5 0 1 0-3 6'/%3E%3C/svg%3E");
+  --deco-self-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 7a5 5 0 0 1 10 2v4M6 10v4l-2 3h12M10 21h4M3 3l18 18'/%3E%3C/svg%3E");
+}
+
+/* 气泡本体：图片 / 网页预览类不套 */
+.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview),
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  box-sizing: border-box;
+  border-radius: var(--bubble-radius);
+  padding: var(--bubble-pad-y) var(--bubble-pad-x);
+  border: var(--bubble-self-border-w) solid transparent;
+  font-size: calc(var(--bubble-font-size) * var(--app-text-scale, 1));
+  line-height: var(--bubble-line-height);
+  box-shadow: var(--bubble-shadow);
+}
+.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  background: var(--bubble-self-bg);
+  border-color: var(--bubble-self-border);
+  color: var(--bubble-self-text);
+}
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  background: var(--bubble-other-bg);
+  color: var(--bubble-other-text);
+}
+.chat-bubble-role-user .chat-markdown,
+.chat-bubble-role-assistant .chat-markdown {
+  color: inherit;
+}
+
+/* 连发形状规律：靠内侧的角压方，一串头尾不一样 */
+.chat-msg-wrapper[data-consecutive][data-role="assistant"] .chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  border-top-left-radius: var(--bubble-radius-inner);
+}
+.chat-msg-wrapper[data-consecutive][data-role="user"] .chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  border-top-right-radius: var(--bubble-radius-inner);
+}
+.flex.flex-col.gap-4:has(+ .flex.flex-col.gap-4 > .chat-msg-wrapper[data-consecutive]) > .chat-msg-wrapper[data-role="assistant"] .chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  border-bottom-left-radius: var(--bubble-radius-inner);
+}
+.flex.flex-col.gap-4:has(+ .flex.flex-col.gap-4 > .chat-msg-wrapper[data-consecutive]) > .chat-msg-wrapper[data-role="user"] .chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  border-bottom-right-radius: var(--bubble-radius-inner);
+}
+
+/* 连发间距 */
+.chat-msg-wrapper[data-consecutive] {
+  margin-top: calc(var(--bubble-group-gap) - var(--bubble-list-gap));
+}
+.chat-msg-wrapper[data-consecutive][data-role="assistant"] .chat-msg-avatar {
+  opacity: var(--bubble-group-avatar-hide);
+  pointer-events: none;
+}
+
+/* ── 对面：方形头像 + 白边 + 投影，位置尺寸不动 ── */
+.chat-msg-wrapper[data-role="assistant"] .chat-msg-avatar > div {
+  width: var(--avatar-other-size);
+  height: var(--avatar-other-size);
+  border-radius: var(--avatar-other-radius);
+  box-shadow:
+    0 0 0 var(--avatar-other-frame-w) var(--avatar-other-frame-color),
+    var(--avatar-other-shadow);
+}
+/* 对面每轮开头那条：气泡下移，头像留在原位 → 上方留空 */
+.chat-msg-wrapper[data-role="assistant"]:not([data-consecutive]) .chat-msg-content-wrap {
+  margin-top: var(--bubble-other-drop);
+}
+
+/* ── 自己：竖排，气泡在上、头像在下，整体靠右贴边 ── */
+.chat-msg-wrapper[data-role="user"]:has(> .chat-msg-avatar) {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: var(--avatar-self-gap);
+  padding-right: var(--bubble-self-edge);
+}
+/* 自己头像先全部收掉，不占位，气泡才能往右推 */
+.chat-msg-wrapper[data-role="user"] .chat-msg-avatar {
+  display: none;
+}
+/* 每一轮连发只在最后一条下面放一个小圆头像（单发一条也算一轮） */
+.flex.flex-col.gap-4:not(:has(+ .flex.flex-col.gap-4 > .chat-msg-wrapper[data-consecutive])) > .chat-msg-wrapper[data-role="user"] .chat-msg-avatar {
+  display: flex;
+  opacity: 1;
+  width: var(--avatar-self-size);
+  height: var(--avatar-self-size);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 var(--avatar-self-ring-w) var(--avatar-self-ring-color),
+    var(--avatar-self-shadow);
+}
+/* 头像里的图片 / 默认小人跟着缩，圆角跟外层一致 */
+.chat-msg-wrapper[data-role="user"] .chat-msg-avatar > * {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+/* ══ 引用条：从气泡里抠出来，挪到气泡上方 ══ */
+
+/* 带引用的气泡放开裁剪，不然伸出去的引用条会被切掉 */
+.chat-bubble-role-user:has(.chat-quote-preview),
+.chat-bubble-role-assistant:has(.chat-quote-preview) {
+  position: relative;
+  overflow: visible;
+}
+
+.chat-quote-preview {
+  position: absolute;
+  bottom: calc(100% + var(--quote-gap));
+  left: var(--quote-inset);
+  right: var(--quote-inset);
+  height: var(--quote-h);
+  line-height: var(--quote-h);
+  padding: 0 var(--quote-pad-x);
+  margin: 0;
+  box-sizing: border-box;
+  background: var(--quote-bg);
+  border-left: var(--quote-line-w) solid var(--quote-line-color);
+  border-radius: 0 var(--quote-radius) var(--quote-radius) 0;
+  color: var(--quote-text);
+  font-size: calc(var(--quote-font-size) * var(--app-text-scale, 1));
+  /* 原生省略机制，一个字没改：单行、超出打省略号 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 自己侧镜像：加深的竖线和方角挪到末尾（右），圆角挪到前面（左）
+   文字方向、省略机制一律不动 */
+.chat-bubble-role-user .chat-quote-preview {
+  border-left: none;
+  border-right: var(--quote-line-w) solid var(--quote-line-color);
+  border-radius: var(--quote-radius) 0 0 var(--quote-radius);
+}
+
+/* 给引用条在气泡上方腾出位置（只加在内容区，不影响头像） */
+.chat-msg-content-wrap:has(.chat-quote-preview) {
+  padding-top: calc(var(--quote-h) + var(--quote-gap));
+}
+
+/* ══ 对面留空那一行：@ 符号 + 网名 ══ */
+.chat-msg-wrapper[data-role="assistant"]:not([data-consecutive])::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--avatar-other-size) + var(--deco-avatar-gap));
+  top: calc((var(--bubble-other-drop) - var(--deco-icon-size)) / 2);
+  width: var(--deco-icon-size);
+  height: var(--deco-icon-size);
+  background-color: var(--deco-color);
+  -webkit-mask-image: var(--deco-at-svg);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-image: var(--deco-at-svg);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+  pointer-events: none;
+}
+.chat-msg-wrapper[data-role="assistant"]:not([data-consecutive])::after {
+  content: var(--deco-other-name);
+  position: absolute;
+  left: calc(var(--avatar-other-size) + var(--deco-avatar-gap) + var(--deco-icon-size) + var(--deco-text-gap));
+  top: 0;
+  height: var(--bubble-other-drop);
+  line-height: var(--bubble-other-drop);
+  font-size: calc(var(--deco-text-size) * var(--app-text-scale, 1));
+  color: var(--deco-color);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ══ 自己侧：小头像左边那一行 = 已讀 + 符号（符号紧挨头像） ══ */
+.flex.flex-col.gap-4:not(:has(+ .flex.flex-col.gap-4 > .chat-msg-wrapper[data-consecutive])) > .chat-msg-wrapper[data-role="user"]::before {
+  content: "";
+  position: absolute;
+  right: calc(var(--bubble-self-edge) + var(--avatar-self-size) + var(--deco-self-gap));
+  bottom: calc((var(--avatar-self-size) - var(--deco-icon-size)) / 2);
+  width: var(--deco-icon-size);
+  height: var(--deco-icon-size);
+  background-color: var(--deco-color);
+  -webkit-mask-image: var(--deco-self-svg);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-image: var(--deco-self-svg);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+  pointer-events: none;
+}
+.flex.flex-col.gap-4:not(:has(+ .flex.flex-col.gap-4 > .chat-msg-wrapper[data-consecutive])) > .chat-msg-wrapper[data-role="user"]::after {
+  content: var(--deco-self-text);
+  position: absolute;
+  right: calc(var(--bubble-self-edge) + var(--avatar-self-size) + var(--deco-self-gap) + var(--deco-icon-size) + var(--deco-text-gap));
+  bottom: 0;
+  height: var(--avatar-self-size);
+  line-height: var(--avatar-self-size);
+  font-size: calc(var(--deco-text-size) * var(--app-text-scale, 1));
+  color: var(--deco-color);
+  white-space: nowrap;
+  pointer-events: none;
+}
+/* quiet hours标题的美化css */
+:root {
+  --safe-area-top: 28.8px;
+  --page-header-safe-top: 28.8px;
+  --a2-hdr-active: 1;
+  --a2-bar-bg: #E4E5EA;
+  --a2-circle-bg: #FFFFFF;
+  --a2-name-ink: #2C3440;
+  --a2-name-fs: 15.3px;
+  --a2-name-gap: 10px;
+  --a2-name-line-gap: 2px;
+  /* ★ 自定义文案：改引号里的字，引号别删 */
+  --a2-sub-text: "딩동 ㅎㅇ^보고 싶어요🤍...ㅠㅠ";
+  --a2-sub-fs: 10.5px;
+  --a2-sub-ink: #797E85;
+  --dot-d: 34px;
+  --a2-dot-overlap: 17px;
+  --a2-dot-gap: 2px;
+  --a2-dot-y: 0px;
+  --a2-right-gap: 8px;
+  --a2-right-pad: 0px;
+  --a2-btn-size: 20px;
+  --a2-btn-ink: #253047;
+  --bubble-x: 50px;
+  --bubble-y: 38px;
+  --bubble-min-w: 30px;
+  --bubble-h: 18px;
+  --bubble-fs: 10px;
+  --bubble-rad: 9px;
+  --bubble-pad: 5px;
+  --bubble-bg: #FFFFFF;
+  --bubble-ink: #8e8e98;
+  --bubble-shadow: 0 1.2px 1.6px rgba(60, 66, 80, .18);
+  --bubble-tail-x: 7px;
+  --bubble-tail-d: 6.4px;
+  --bubble-tail-y: -2.6px;
+  --bubble-tail-dx: 6.2px;
+  --bubble-tail-dy: 8px;
+  --bubble-tail-shrink: -1px;
+  --a2-avatar-url: ;
+  --a2-avatar-url-2: ;
+}
+.page-header {
+  background: var(--a2-bar-bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.page-header-content {
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+}
+.page-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--a2-name-line-gap);
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+  padding-left: var(--a2-name-gap);
+  font-size: var(--a2-name-fs);
+  color: var(--a2-name-ink);
+  line-height: 1.15;
+  white-space: nowrap;
+  z-index: 2;
+}
+.page-title::after {
+  content: var(--a2-sub-text);
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--a2-sub-fs);
+  font-weight: 400;
+  color: var(--a2-sub-ink);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.chat-typing-indicator {
+  display: none;
+}
+.page-header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 40px;
+  padding-right: var(--a2-right-pad);
+}
+.page-header-right::before,
+.page-header-right::after {
+  content: "";
+  display: block;
+  flex: none;
+  position: relative;
+  width: var(--dot-d);
+  height: var(--dot-d);
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--a2-circle-bg);
+  background-size: cover;
+  background-position: center;
+  transform: translateY(var(--a2-dot-y));
+  pointer-events: none;
+}
+.page-header-right::before {
+  order: 0;
+  z-index: 1;
+  background-image: var(--a2-avatar-url-2);
+}
+.page-header-right::after {
+  order: 1;
+  z-index: 2;
+  margin-left: calc(-1 * var(--a2-dot-overlap));
+  margin-right: var(--a2-right-gap);
+  box-shadow: 0 0 0 var(--a2-dot-gap) var(--a2-bar-bg);
+  background-image: var(--a2-avatar-url);
+}
+.page-header-right > .page-back-btn {
+  order: 2;
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
+.page-header-right > .page-back-btn > svg {
+  display: none;
+}
+/* 放大镜（CC0） */
+.page-header-right > .page-back-btn::before {
+  content: "";
+  grid-area: 1 / 1;
+  place-self: center;
+  width: var(--a2-btn-size);
+  height: var(--a2-btn-size);
+  background-color: var(--a2-btn-ink);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='m15.5 15.5 5 5'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='m15.5 15.5 5 5'/%3E%3C/svg%3E");
+}
+.a2-hdr-bubble {
+  display: none;
+  position: absolute;
+  left: calc(50% + var(--bubble-x));
+  top: var(--bubble-y);
+  transform: translateX(-50%);
+  align-items: center;
+  box-sizing: border-box;
+  min-width: var(--bubble-min-w);
+  height: var(--bubble-h);
+  padding: 0 var(--bubble-pad);
+  background: var(--bubble-bg);
+  border-radius: var(--bubble-rad);
+  box-shadow: var(--bubble-shadow);
+  color: var(--bubble-ink);
+  font-size: var(--bubble-fs);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+.a2-hdr-bubble::after {
+  content: "";
+  position: absolute;
+  right: var(--bubble-tail-x);
+  bottom: var(--bubble-tail-y);
+  width: var(--bubble-tail-d);
+  height: var(--bubble-tail-d);
+  border-radius: 50%;
+  background: var(--bubble-bg);
+  box-shadow: var(--bubble-tail-dx) var(--bubble-tail-dy) 0 var(--bubble-tail-shrink) var(--bubble-bg);
+  pointer-events: none;
+}
+.page-header:has(.chat-typing-indicator) .a2-hdr-bubble {
+  display: inline-flex;
+}
+.a2-hdr-bubble .chat-typing-dots {
+  margin-left: 0;
+}
+/* 输入栏板块 · 完成版第1.0版 —— */
+
+:root {
+  /* ★ 置顶：最常用的几个，放最显眼 */
+  --in-h: 54px;                /* 输入栏收起时一行总高：按你回报改成 54px；调大更高，调小更矮 */
+  --in-bg: #F7F7F8;            /* 输入栏底色：极浅灰，比白浓一点点；换色改这里 */
+  --in-pad-x: 10px;             /* 输入栏左右留白：调大整条往里缩，调小更贴边 */
+
+  /* ★ 图标（这轮换的，放最显眼） */
+  --in-icon-color: #253047;         /* 红键／蓝键／回复键 图标颜色：换色改这里 */
+  --in-key-icon-size: 20px;         /* 红键／蓝键 图标大小：调大更大，调小更小 */
+  --in-reply-icon-size: 22px;       /* 回复键图标大小：调大更大，调小更小 */
+  --in-capsule-icon-color: #253047; /* 三个小胶囊图标颜色：换色改这里 */
+  --in-capsule-icon-size: 13px;     /* 三个小胶囊图标大小：调大更大，调小更小 */
+  --in-capsule-icon-left: 4px;      /* 胶囊图标离左边缘：调大往右挪，调小更贴左；按你要求往前移了，别调成负数会跑出胶囊 */
+  --in-capsule-icon-to-label: 3px;  /* 图标到后面韩语标签之间的空：调大更松，调小更紧 */
+  --in-capsule-label-fs: 9px;       /* 胶囊韩语标签字号：调大字更大，调小字更小；按你要求偏小但看得清 */
+  --in-capsule-label-color: #253047;/* 胶囊韩语标签颜色：换色改这里 */
+
+  /* 三个胶囊的文字，做成变量方便你随时改；方括号只是你给我的分组记号，已去掉 */
+  --in-label-emoji: "이모지";        /* 第 1 个：表情（点开是小黄豆笑脸） */
+  --in-label-sticker: "스티커";      /* 第 2 个：表情贴图（点开是图片式贴纸） */
+  --in-label-offline: "위치";        /* 第 3 个：线下模式 / 返回线上 */
+
+  /* ★ 第二组：面板（顶起逻辑，第 03 版已定型，这轮没动） */
+  --in-panel-gap: 8px;          /* 面板与上面输入框之间的间距：调大离得远，调小更贴 */
+  --in-panel-col: 4;            /* 加号面板一行几个格子：调大一行更挤，调小更松 */
+  --in-panel-item-gap: 12px;    /* 格子之间间隔：调大更松，调小更紧 */
+  --in-panel-pad: 12px;         /* 面板四周留白：调大格子离边更远，调小更紧凑 */
+  --in-strip-h: 34px;           /* 引用条／番外条浮在栏上方时的高度：调大更高，调小更矮 */
+  --in-strip-bg: #FFFFFF;       /* 引用条／番外条底色 */
+
+  /* 输入框 */
+  --in-box-bg: #FFFFFF;         /* 输入框底色：纯白 */
+  --in-box-h: 32px;             /* 输入框高度：调大更粗，调小更细 */
+  --in-box-radius: 6px;         /* 输入框圆角：调大更圆，填 0 是直角方形 */
+  --in-box-left: 62px;          /* 输入框左边空出多少（放两个前置键）：调大输入框变短，调小变长 */
+  --in-box-right: 42px;         /* 输入框右边空出多少（放回复键）：调大输入框变短，调小变长 */
+  --in-box-border-w: 1px;       /* 输入框描边粗细：调大边越粗，填 0 没边 */
+  --in-box-border: #E3E3E6;     /* 输入框描边颜色 */
+  --in-box-pad-x: 10px;         /* 输入文字离左右边多远：调大字更靠中间，调小更贴边 */
+  --in-box-pad-y: 6px;          /* 输入文字离上下边多远：调大字更居中，调小更贴边 */
+  --in-box-fs: 13.5px;          /* 输入文字字号：调大字更大，调小字更小 */
+
+  /* 前置两个键位 */
+  --in-key-size: 22px;          /* 键位大小：调大更大，调小更小 */
+  --in-key-gap: 8px;            /* 两个键之间留多宽：调大更松，调小更紧 */
+
+  /* 回复 / 停止键 */
+  --in-reply-size: 26px;        /* 回复／停止键大小：调大更大，调小更小 */
+
+  /* 三个小胶囊（第一批常驻；插件以后改成点蓝色键才展开） */
+  --in-capsule-h: 18px;         /* 胶囊高度：调大更高，调小更矮 */
+  --in-capsule-w: 58px;         /* 胶囊宽度：调大更长，调小更短；已加宽到能放下韩语标签 */
+  --in-capsule-gap: 6px;        /* 胶囊之间留多宽：调大更松，调小更紧 */
+  --in-capsule-above: 10px;     /* 胶囊离输入栏上边多远：调大浮得更高，调小更贴 */
+  --in-capsule-bg: #FFFFFF;     /* 胶囊底色 */
+  --in-capsule-radius: 999px;   /* 胶囊圆角：999px 两头全圆，调小变方 */
+  --in-capsule-border-w: 1px;   /* 胶囊描边粗细：填 0 没边 */
+  --in-capsule-border: #E3E3E6; /* 胶囊描边颜色 */
+  --in-capsule-shadow: 0 2px 6px rgba(0,0,0,.08); /* 胶囊投影：填 none 关掉 */
+
+  /* ══════════ 图标图串 ══════════ */
+
+  /* 图标：material-symbols:forward-to-inbox-rounded（forward-to-inbox-rounded）
+     图标集：Material Symbols
+     作者：Google
+     协议：Apache 2.0（Apache License 2.0） */
+  --icon-reply: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='currentColor' d='M19.175 20H16q-.425 0-.712-.288T15 19t.288-.712T16 18h3.175l-.9-.9q-.3-.3-.287-.7t.312-.7q.3-.275.7-.287t.7.287l2.6 2.6q.15.15.225.325T22.6 19t-.075.375t-.225.325l-2.6 2.6q-.275.275-.687.288T18.3 22.3q-.275-.275-.275-.7t.275-.7zM4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v6.5q0 .45-.387.7t-.813.075q-.425-.125-.888-.2T19 13q-2.5 0-4.25 1.75T13 19q0 .425-.288.713T12 20zm8-9L5.3 6.8q-.425-.275-.862-.025T4 7.525q0 .225.1.413t.3.312l7.075 4.425q.25.15.525.15t.525-.15L19.6 8.25q.2-.125.3-.312t.1-.413q0-.5-.437-.75T18.7 6.8z'/%3E%3C/svg%3E");
+
+  /* 图标：ic:baseline-add-a-photo（baseline-add-a-photo）
+     图标集：Google Material Icons
+     作者：Material Design Authors
+     协议：Apache 2.0（Apache License 2.0） */
+  --icon-red: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='currentColor' d='M3 4V1h2v3h3v2H5v3H3V6H0V4zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5s-5 2.24-5 5s2.24 5 5 5m-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2s-1.43-3.2-3.2-3.2s-3.2 1.43-3.2 3.2'/%3E%3C/svg%3E");
+
+  /* 图标：ic:baseline-voice-over-off（baseline-voice-over-off）
+     图标集：Google Material Icons
+     作者：Material Design Authors
+     协议：Apache 2.0（Apache License 2.0） */
+  --icon-blue: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='128' height='128'%3E%3Cpath fill='currentColor' d='M12.99 9.18c0-.06.01-.12.01-.18c0-2.21-1.79-4-4-4c-.06 0-.12.01-.18.01zm-6.1-3.56L4.27 3L3 4.27l2.62 2.62C5.23 7.5 5 8.22 5 9c0 2.21 1.79 4 4 4c.78 0 1.5-.23 2.11-.62L19.73 21L21 19.73l-8.62-8.62zM9 15c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4m7.76-9.64l-1.68 1.69c.84 1.18.84 2.71 0 3.89l1.68 1.69c2.02-2.02 2.02-5.07 0-7.27M20.07 2l-1.63 1.63c2.77 3.02 2.77 7.56 0 10.74L20.07 16c3.9-3.89 3.91-9.95 0-14'/%3E%3C/svg%3E");
+
+  /* 以下三个图标（CC0） */
+  --icon-capsule-emoji: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1279' height='1279' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 12 5-5a2.8 2.8 0 0 1 4 4l-7 7a4.2 4.2 0 0 1-6-6l8-8a5.7 5.7 0 0 1 8 8l-8 8'/%3E%3C/svg%3E");     /* 曲别针 → 表情（小黄豆笑脸） */
+  --icon-capsule-sticker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1279' height='1279' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 4h9l8 8-8.5 8.5-8.5-8.5Z'/%3E%3Ccircle cx='8' cy='8' r='1'/%3E%3C/svg%3E"); /* 标签 → 表情贴图（用户添加的图片式贴纸） */
+  --icon-capsule-offline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1279' height='1279' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3 2 7 6 4v3l-6-2v4l2 2H8l2-2v-4l-6 2v-3l6-4Z'/%3E%3C/svg%3E"); /* 飞机 → 线下模式 / 返回线上 */
+}
+
+/* ── 外壳：不写死高度 ──
+   收起时只有 min-height（52px）；面板出现时由面板在流内撑高。
+   底边钉死在屏幕底部，所以是「整条栏往上长」，把输入框顶上去 —— 这就是原生逻辑。 */
+.chat-input-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  height: auto;
+  min-height: var(--in-h);
+  padding: 0 var(--in-pad-x);
+  margin: 0;
+  box-sizing: border-box;
+  display: block;
+  overflow: visible;
+  background: var(--in-bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ══ 红键图标（加号位）══
+   画在 ::before 上，底下那个透明的原声加号按钮照样能点、照样顶面板。
+   定位按固定行高算，不用 50%（栏变高时 50% 会飘）。 */
+.chat-input-bar::before {
+  content: "";
+  position: absolute;
+  left: var(--in-pad-x);
+  top: calc((var(--in-h) - var(--in-key-icon-size)) / 2);
+  width: var(--in-key-icon-size);
+  height: var(--in-key-icon-size);
+  pointer-events: none;
+  z-index: 1;
+  background-color: var(--in-icon-color);
+  -webkit-mask-image: var(--icon-red);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-image: var(--icon-red);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+}
+
+/* ══ 蓝键图标（收纳位）══
+   这一位原生没有按钮，纯视觉；点它展开胶囊的交互留给插件补。 */
+.chat-input-bar::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--in-pad-x) + var(--in-key-size) + var(--in-key-gap));
+  top: calc((var(--in-h) - var(--in-key-icon-size)) / 2);
+  width: var(--in-key-icon-size);
+  height: var(--in-key-icon-size);
+  pointer-events: none;
+  z-index: 1;
+  background-color: var(--in-icon-color);
+  -webkit-mask-image: var(--icon-blue);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-image: var(--icon-blue);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+}
+
+/* ── 输入框：纯白、方形、细长条 ── */
+.chat-input-bar .chat-input-textarea {
+  position: absolute;
+  left: var(--in-box-left);
+  right: var(--in-box-right);
+  top: calc((var(--in-h) - var(--in-box-h)) / 2);
+  width: auto;
+  height: var(--in-box-h);
+  min-height: var(--in-box-h);
+  max-height: var(--in-box-h);
+  margin: 0;
+  padding: var(--in-box-pad-y) var(--in-box-pad-x);
+  box-sizing: border-box;
+  background: var(--in-box-bg);
+  border: var(--in-box-border-w) solid var(--in-box-border);
+  border-radius: var(--in-box-radius);
+  font-size: calc(var(--in-box-fs) * var(--app-text-scale, 1));
+  line-height: 1.4;
+  outline: none;
+  resize: none;
+  overflow: auto;
+  z-index: 2;
+}
+
+/* ── 按钮层：改成不占位，子按钮才能各自绝对定位 ── */
+.chat-input-bar .chat-input-actions {
+  display: block;
+  padding: 0;
+  gap: 0;
+}
+
+/* 隐藏发送键：只藏线上的「发送」。
+   线下没有第 6 个回复键，最右那个「发送」就是让 AI 回话／发消息的入口，必须留着能点。 */
+.chat-input-bar:has(button[aria-label="线下模式"]) .chat-input-actions > button[aria-label="发送"] {
+  display: none;
+}
+
+/* 加号：挪到最左，图标由上面的 ::before 画，所以这个按钮保持透明但可点 */
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"]) {
+  position: absolute;
+  left: var(--in-pad-x);
+  top: calc((var(--in-h) - var(--in-key-size)) / 2);
+  width: var(--in-key-size);
+  height: var(--in-key-size);
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  z-index: 3;
+}
+
+/* 回复键 + 两种停止键 + 线下的发送键：同一个位置，谁在场谁显示 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]),
+.chat-input-bar .chat-input-actions > button[aria-label="停止本轮生成"],
+.chat-input-bar .chat-input-actions > button[aria-label="停止线下生成"],
+.chat-input-bar:has(button[aria-label="返回线上模式"]) .chat-input-actions > button[aria-label="发送"] {
+  position: absolute;
+  right: var(--in-pad-x);
+  top: calc((var(--in-h) - var(--in-reply-size)) / 2);
+  width: var(--in-reply-size);
+  height: var(--in-reply-size);
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  z-index: 3;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]) > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="停止本轮生成"] > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="停止线下生成"] > svg,
+.chat-input-bar:has(button[aria-label="返回线上模式"]) .chat-input-actions > button[aria-label="发送"] > svg {
+  width: var(--in-reply-size);
+  height: var(--in-reply-size);
+}
+
+/* ══ 回复键换图标 ══
+   线上回复键、线下那个「发送」键都套信封；生成中顶上来的停止键保持原生方块。 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]) > svg,
+.chat-input-bar:has(button[aria-label="返回线上模式"]) .chat-input-actions > button[aria-label="发送"] > svg {
+  display: none;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"])::before,
+.chat-input-bar:has(button[aria-label="返回线上模式"]) .chat-input-actions > button[aria-label="发送"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--in-icon-color);
+  -webkit-mask-image: var(--icon-reply);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: var(--in-reply-icon-size) var(--in-reply-icon-size);
+  mask-image: var(--icon-reply);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: var(--in-reply-icon-size) var(--in-reply-icon-size);
+  pointer-events: none;
+}
+
+/* ── 三个收纳键 → 小胶囊，浮在输入栏上方（常驻，点开逻辑留给插件）──
+   定位相对栏顶固定负值，不再用 bottom:100%（栏变高时会飞走） */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]),
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]),
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] {
+  position: absolute;
+  top: calc(-1 * (var(--in-capsule-above) + var(--in-capsule-h)));
+  width: var(--in-capsule-w);
+  height: var(--in-capsule-h);
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: var(--in-capsule-bg);
+  border: var(--in-capsule-border-w) solid var(--in-capsule-border);
+  border-radius: var(--in-capsule-radius);
+  box-shadow: var(--in-capsule-shadow);
+  z-index: 1;
+}
+/* 原生图标收起，改由 ::before 画 CC0 图标、::after 写韩语标签 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]) > svg,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]) > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"] > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] > svg {
+  display: none;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::before,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::before,
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::before,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::before {
+  content: "";
+  position: absolute;
+  left: var(--in-capsule-icon-left);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--in-capsule-icon-size);
+  height: var(--in-capsule-icon-size);
+  background-color: var(--in-capsule-icon-color);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+  pointer-events: none;
+}
+/* 表情（小黄豆笑脸）→ 曲别针 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::before {
+  -webkit-mask-image: var(--icon-capsule-emoji);
+  mask-image: var(--icon-capsule-emoji);
+}
+/* 表情贴图（图片式贴纸）→ 标签 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::before {
+  -webkit-mask-image: var(--icon-capsule-sticker);
+  mask-image: var(--icon-capsule-sticker);
+}
+/* 线下模式 / 返回线上 → 飞机 */
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::before,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::before {
+  -webkit-mask-image: var(--icon-capsule-offline);
+  mask-image: var(--icon-capsule-offline);
+}
+
+/* ══ 三个胶囊后面的韩语标签 ══
+   去掉了你用来分组的方括号，只留文字本身；字号单独抽了变量，偏小但看得清。 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::after,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::after,
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::after,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--in-capsule-icon-left) + var(--in-capsule-icon-size) + var(--in-capsule-icon-to-label));
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: calc(var(--in-capsule-label-fs) * var(--app-text-scale, 1));
+  line-height: 1;
+  font-weight: 500;
+  color: var(--in-capsule-label-color);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::after {
+  content: var(--in-label-emoji);
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::after {
+  content: var(--in-label-sticker);
+}
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::after,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::after {
+  content: var(--in-label-offline);
+}
+
+/* 三个胶囊横排位置：表情 / 表情贴图 / 线下 */
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]) {
+  left: var(--in-pad-x);
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]) {
+  left: calc(var(--in-pad-x) + var(--in-capsule-w) + var(--in-capsule-gap));
+}
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] {
+  left: calc(var(--in-pad-x) + (var(--in-capsule-w) + var(--in-capsule-gap)) * 2);
+}
+
+/* ══ 三个面板：还原原生「顶起」，不再是浮层卡片 ══
+   面板留在文档流里，排在第一行下面；栏底钉死，栏自己往上长。
+   白底、圆角、投影、浮层间距、高层级全删掉 —— 用不上了，也不再是一张卡片。
+   只保留一条关键：content-visible 压成 visible，治原生「只画一行」。 */
+.chat-plus-menu,
+.chat-input-bar > div.h-\[220px\],
+.chat-emoji-panel-wrap {
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  margin: 0 !important;
+  /* 用上内边距把标题行让出来：比 margin 稳，不会被外边距折叠吃掉，
+     面板盒子本身就把栏撑高，格子自然排在输入框下面 */
+  padding: calc(var(--in-h) + var(--in-panel-gap)) var(--in-panel-pad) var(--in-panel-pad) !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  z-index: auto !important;
+  content-visibility: visible !important;
+}
+.chat-plus-menu {
+  display: grid !important;
+  grid-template-columns: repeat(var(--in-panel-col), 1fr) !important;
+  gap: var(--in-panel-item-gap) !important;
+}
+
+/* 引用条 / 番外条：这两个原生排在输入框前面，不是面板，
+   仍浮在栏上方，但定位也改成相对栏顶固定，免得栏变高时飞走 */
+.chat-quote-bar,
+.chat-theater-mode-strip {
+  position: absolute !important;
+  bottom: auto !important;
+  top: calc(-1 * (var(--in-panel-gap) + var(--in-strip-h))) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: var(--in-strip-h) !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  background: var(--in-strip-bg) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08) !important;
+  z-index: 20 !important;
+  overflow: hidden !important;
+  content-visibility: visible !important;
+}
+
+/* ══ 留给插件的开关 ══
+   插件点蓝色键时给输入栏加/去 a2-capsules-hidden，用来收起／展开三个胶囊。
+   插件没启用时这个类不存在，胶囊照常驻 —— 所以 CSS 单干也不会突然变样。 */
+.chat-input-bar.a2-capsules-hidden .chat-input-actions > button:has(path[d^="M8 14s1.5"]),
+.chat-input-bar.a2-capsules-hidden .chat-input-actions > button:has(path[d^="M15.5 3H5"]),
+.chat-input-bar.a2-capsules-hidden .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar.a2-capsules-hidden .chat-input-actions > button[aria-label="返回线上模式"] {
+  display: none;
+}
+
+/* ══ 线下补位用的假胶囊 ══
+   插件检测到某个槽位原生按钮不存在时，插一个 div.a2-fake-capsule 进来。
+   它只是好看，点不了（pointer-events:none），也不会挡住任何真按钮。
+   三个 inline 变量由插件给：--a2-slot 第几个槽 / --a2-icon 图标 / --a2-label 文字。 */
+.a2-fake-capsule {
+  position: absolute;
+  top: calc(-1 * (var(--in-capsule-above) + var(--in-capsule-h)));
+  left: calc(var(--in-pad-x) + (var(--in-capsule-w) + var(--in-capsule-gap)) * var(--a2-slot, 0));
+  width: var(--in-capsule-w);
+  height: var(--in-capsule-h);
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: var(--in-capsule-bg);
+  border: var(--in-capsule-border-w) solid var(--in-capsule-border);
+  border-radius: var(--in-capsule-radius);
+  box-shadow: var(--in-capsule-shadow);
+  z-index: 1;
+  pointer-events: none;
+}
+.a2-fake-capsule::before {
+  content: "";
+  position: absolute;
+  left: var(--in-capsule-icon-left);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--in-capsule-icon-size);
+  height: var(--in-capsule-icon-size);
+  background-color: var(--in-capsule-icon-color);
+  -webkit-mask-image: var(--a2-icon);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-image: var(--a2-icon);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+}
+.a2-fake-capsule::after {
+  content: var(--a2-label, "");
+  position: absolute;
+  left: calc(var(--in-capsule-icon-left) + var(--in-capsule-icon-size) + var(--in-capsule-icon-to-label));
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: calc(var(--in-capsule-label-fs) * var(--app-text-scale, 1));
+  line-height: 1;
+  font-weight: 500;
+  color: var(--in-capsule-label-color);
+  white-space: nowrap;
+}
+
+/* 点蓝色键收起时，假胶囊跟真胶囊一起收，不然会孤零零留一个 */
+.chat-input-bar.a2-capsules-hidden .a2-fake-capsule {
+  display: none;
+}
