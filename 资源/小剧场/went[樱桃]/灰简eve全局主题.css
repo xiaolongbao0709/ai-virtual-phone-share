@@ -1,0 +1,456 @@
+
+/* ============================================
+    灰简eve全局 完整修复版 by 雪梨
+   ============================================ */
+
+#api-chat-screen .header {
+    background: #ffffff !important;
+    border-bottom: 1px solid rgba(0,0,0,0.06) !important;
+    height: 120px !important;
+    position: relative !important;
+    border-radius: 0 0 30px 30px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+    margin: 0 10px !important;
+    width: calc(100% - 20px) !important;
+}
+
+/* 搜索栏 */
+#api-chat-screen .header::before {
+    content: '다시 흐르는 시간' !important;
+    position: absolute !important;
+    top: 6px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 320px !important;
+    height: 38px !important;
+    background: #f0f0f0 !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    border-radius: 19px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #888888 !important;
+    font-size: 13px !important;
+    z-index: 10 !important;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.35-4.35'%3E%3C/path%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'%3E%3C/path%3E%3Cpath d='m6 6 12 12'%3E%3C/path%3E%3C/svg%3E") !important;
+    background-position: 14px center, calc(100% - 14px) center !important;
+    background-size: 16px 16px, 16px 16px !important;
+    background-repeat: no-repeat, no-repeat !important;
+    padding: 0 38px !important;
+    box-sizing: border-box !important;
+}
+
+/* ============================================
+   双头像 - 分别放在顶部栏左右两侧（往中间靠拢）
+   ============================================ */
+#api-chat-screen .header .header-title::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 80% !important;
+    left: 50px !important;
+    transform: translateY(-50%) !important;
+    width: 50px !important;
+    height: 50px !important;
+    background-image: url('shturl.cc/PhyqPcNsR1MYFwRhH9oSEjoYxsbHFsfEfJ8wsXCanZrRI') !important;
+    background-size: cover !important;
+    border-radius: 50% !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    z-index: 5 !important;
+}
+
+#api-chat-screen .header .header-title::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 80% !important;
+    right: 50px !important;
+    transform: translateY(-50%) !important;
+    width: 50px !important;
+    height: 50px !important;
+    background-image: url('shturl.cc/2Lo25nBHhvw3UxXuMogXbQalWW6RD2KvIiHcPBx1g0qDj') !important;
+    background-size: cover !important;
+    border-radius: 50% !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    z-index: 5 !important;
+}
+
+/* 标题居中，移除连接线 */
+#api-chat-screen .header .header-title {
+    position: absolute !important;
+    bottom: 40px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    text-align: center !important;
+    color: #333333 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    z-index: 5 !important;
+}
+
+/* ============================================
+   副标题
+   ============================================ */
+#api-chat-screen .header::after {
+    content: '   제가 당신께 드리는 선물입니다.' !important;
+    position: absolute !important;
+    bottom: 18px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    color: #999999 !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+    z-index: 5 !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* ============================================
+   其他样式
+   ============================================ */
+#api-chat-screen .header .back-btn {
+    position: absolute !important;
+    left: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 40px !important;
+    height: 40px !important;
+    background: transparent !important;
+    border: none !important;
+    opacity: 0 !important;
+    pointer-events: all !important;
+    cursor: pointer !important;
+    z-index: 100 !important;
+}
+#api-chat-screen .header .back-btn::before {
+    display: none !important;
+}
+
+#api-chat-screen .header .header-actions {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    gap: 8px !important;
+    z-index: 100 !important;
+}
+
+#api-chat-screen .header .header-actions .action-btn,
+#api-chat-screen .header .settings-btn {
+    width: 40px !important;
+    height: 40px !important;
+    background: transparent !important;
+    border: none !important;
+    opacity: 0 !important;
+    pointer-events: all !important;
+    cursor: pointer !important;
+}
+#api-chat-screen .header .header-actions .action-btn::before {
+    display: none !important;
+}
+
+/* ============================================
+   底部栏 - 椭圆形 + 上移 + 发送按钮图标修改
+   ============================================ */
+#api-chat-screen .chat-input-area {
+    position: relative !important;
+    width: calc(100% - 20px) !important;
+    height: 56px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    border-radius: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 16px !important;
+    gap: 12px !important;
+    z-index: 100 !important;
+    margin: 0 10px 10px 10px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+}
+
+#api-chat-screen .chat-input {
+    flex: 1 !important;
+    height: 36px !important;
+    background: #f5f5f5 !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    border-radius: 18px !important;
+    padding: 0 14px !important;
+    color: #333333 !important;
+    font-size: 14px !important;
+    outline: none !important;
+}
+
+#api-chat-screen .chat-input::placeholder {
+    color: #bbbbbb !important;
+}
+
+#api-chat-screen .send-button,
+button[title="获取AI回复"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+button[title="获取AI回复"] {
+    width: 30px !important;
+    height: 30px !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    overflow: visible !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+}
+button[title="获取AI回复"]::before {
+    content: '' !important;
+    position: absolute !important;
+    width: 26px !important;
+    height: 26px !important;
+    background-image: url('shturl.cc/qvsPNXalN9eG5tjTXtr9hceIdg2k5LJvRY3mwNS953x8') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 1 !important;
+    border: none !important;
+    box-shadow: none !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+button[title="获取AI回复"] * {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+/* 发送按钮 - 改成和AI回复按钮一样的图标和大小 */
+#api-chat-screen .send-button {
+    width: 30px !important;
+    height: 30px !important;
+    opacity: 1 !important;
+    margin-left: 10px !important;
+    flex-shrink: 0 !important;
+}
+#api-chat-screen .send-button::before {
+    content: '' !important;
+    position: absolute !important;
+    width: 26px !important;
+    height: 26px !important;
+    background-image: url('shturl.cc/qvsPNXalN9eG5tjTXtr9hceIdg2k5LJvRY3mwNS953x8') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 1 !important;
+    border: none !important;
+    box-shadow: none !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+#toggle-tools-btn {
+    width: 26px !important;
+    height: 26px !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#toggle-tools-btn::before {
+    content: '' !important;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-image: url('shturl.cc/sCdWSuTwZVE4Ny4uiLX3ZsOwdZVzmmXWN7ieFk5ZqoLt') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 1 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+#api-chat-screen .tools-panel {
+    position: absolute !important;
+    bottom: 100% !important;
+    top: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border-radius: 16px 16px 0 0 !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    border-bottom: none !important;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.05) !important;
+}
+
+#api-chat-screen .tools-panel .tool-label {
+    color: #666666 !important;
+}
+
+#api-chat-screen .tools-panel .tool-item .tool-icon {
+    width: 40px !important;
+    height: 40px !important;
+    background-color: transparent !important;
+    background-image: url('shturl.cc/sCdWSuTwZVE4Ny4uiLX3ZsOwdZVzmmXWN7ieFk5ZqoLt') !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: contain !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+#api-chat-screen .tools-panel .tool-item .tool-icon i,
+#api-chat-screen .tools-panel .tool-item .tool-icon svg,
+#api-chat-screen .tools-panel .tool-item .tool-icon img {
+    display: none !important;
+}
+
+/* ====================
+   用户消息气泡 - 浅灰色椭圆（无边框）
+   ==================== */
+.message-container.sent .message-bubble {
+    background: #E9E9EB !important;
+    color: #333333 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    padding: 6px 12px !important;
+    position: relative !important;
+    margin-right: 8px !important;
+    border: none !important;
+}
+
+/* 用户气泡字体颜色确保 */
+.message-container.sent .message-bubble * {
+    color: #333333 !important;
+}
+
+/* 用户气泡尾巴 - 浅灰色 */
+.message-container.sent .message-bubble::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 6px !important;
+    right: -6px !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 10px solid #E9E9EB !important;
+    border-bottom: 12px solid transparent !important;
+    border-top: 10px solid transparent !important;
+    border-right: 0 solid transparent !important;
+}
+
+/* ====================
+   AI消息气泡 - 白色椭圆（无边框）
+   ==================== */
+.message-container.received .message-bubble {
+    background: #FFFFFF !important;
+    color: #8E8E93 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    padding: 6px 12px !important;
+    position: relative !important;
+    margin-left: 8px !important;
+    border: none !important;
+}
+
+/* AI气泡字体颜色确保 */
+.message-container.received .message-bubble * {
+    color: #8E8E93 !important;
+}
+
+/* AI气泡尾巴 - 白色 */
+.message-container.received .message-bubble::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 6px !important;
+    left: -6px !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-right: 10px solid #FFFFFF !important;
+    border-bottom: 12px solid transparent !important;
+    border-top: 0 solid transparent !important;
+    border-left: 0 solid transparent !important;
+}
+
+/* ====================
+   消息容器间距
+   ==================== */
+.message-container {
+    margin-bottom: 8px !important;
+}
+
+/* ====================
+   转账卡片样式
+   ==================== */
+.transfer-card {
+    background-image: url('shturl.cc/9PvhQAOj3ldgb34p6g0qRDI8a1emyJwGbvTHf4nUaCMqd') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    border-radius: 16px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.transfer-card * {
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.transfer-card .title,
+.transfer-card .transfer-title,
+.transfer-card h1,
+.transfer-card h2,
+.transfer-card h3,
+.transfer-card h4,
+.transfer-card [class*="title"] {
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+
+.transfer-card .title::after,
+.transfer-card .transfer-title::after,
+.transfer-card h1::after,
+.transfer-card h2::after,
+.transfer-card h3::after,
+.transfer-card h4::after,
+.transfer-card [class*="title"]::after {
+    content: '♡‧₊ 𓏵 ₊‧♡' !important;
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+    visibility: visible !important;
+    display: block !important;
+    color: #FFFFFF !important;
+    text-align: center !important;
+    font-weight: 500 !important;
+    letter-spacing: 2px !important;
+}
