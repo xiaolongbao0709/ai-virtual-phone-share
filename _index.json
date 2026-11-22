@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T09:25:56.881Z",
+  "generatedAt": "2026-11-22T09:32:39.169Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 95
+      "count": 94
     },
     {
       "name": "MCP",
@@ -1515,22 +1515,6 @@
       "avatar": "",
       "ownerHash": "88f102e0ef217cea73fe5b268e0c11999ebe72de7ee6c86765148d0313569196",
       "updatedAt": "2026-08-18T05:13:19+08:00"
-    },
-    {
-      "folder": "Js插件",
-      "name": "聊天状态插件",
-      "dirName": "聊天状态插件",
-      "type": "dir",
-      "path": "资源/Js插件/聊天状态插件",
-      "files": [
-        "资源/Js插件/聊天状态插件/状态栏插件.js"
-      ],
-      "images": [],
-      "description": "可以在聊天中观察char态度，感觉走系统攻略挺有用挺有意思的，借助小卷搓出来滴",
-      "author": "魔法大药房",
-      "avatar": "资源/Js插件/聊天状态插件/.avatar.png",
-      "ownerHash": "a183d4f4b8c532f21fe060bcdfc60add74736d31ce2f2e983572f312d1c8bb21",
-      "updatedAt": "2026-11-22T18:21:39+09:00"
     },
     {
       "folder": "Js插件",
