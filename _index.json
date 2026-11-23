@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-22T23:48:15.198Z",
+  "generatedAt": "2026-11-23T00:13:15.500Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -33,7 +33,7 @@
     },
     {
       "name": "小剧场",
-      "count": 8
+      "count": 7
     },
     {
       "name": "应用",
@@ -3744,22 +3744,6 @@
       "avatar": "资源/小剧场/do爱的红线怎么连去别的地方了？/.avatar.png",
       "ownerHash": "4eee9ffd3176e2e3c5d3341370fc682604332bd1a01213a99c38c52d2d6e7527",
       "updatedAt": "2026-08-12T03:38:44+02:00"
-    },
-    {
-      "folder": "小剧场",
-      "name": "went[樱桃]",
-      "dirName": "went[樱桃]",
-      "type": "dir",
-      "path": "资源/小剧场/went[樱桃]",
-      "files": [
-        "资源/小剧场/went[樱桃]/灰简eve全局主题.css"
-      ],
-      "images": [],
-      "description": "by 雪梨 灰简eve全局主题",
-      "author": "",
-      "avatar": "",
-      "ownerHash": "513e011a835b635e60c076019eb9261732e49630950a90faa221bf6af692c5e1",
-      "updatedAt": "2026-11-23T08:45:25+09:00"
     },
     {
       "folder": "小剧场",
