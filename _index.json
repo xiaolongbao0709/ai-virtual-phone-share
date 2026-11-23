@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-23T07:06:47.470Z",
+  "generatedAt": "2026-11-23T07:38:31.198Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 171
+      "count": 172
     },
     {
       "name": "应用bug改善",
@@ -6551,6 +6551,27 @@
       "avatar": "",
       "ownerHash": "fc3b073e463d31c9cd6019b161a6f3cf5aff4af389077e4f391887a2aa2f4ae2",
       "updatedAt": "2026-08-26T16:26:06+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "群像通讯",
+      "dirName": "群像通讯",
+      "type": "dir",
+      "path": "资源/应用/群像通讯",
+      "files": [
+        "资源/应用/群像通讯/群像通讯_小手机应用包 (2).zip"
+      ],
+      "images": [
+        "资源/应用/群像通讯/Screenshot_20261123_152933_org.mozilla.firefox.jpg",
+        "资源/应用/群像通讯/Screenshot_20261123_152937_org.mozilla.firefox.jpg",
+        "资源/应用/群像通讯/Screenshot_20261123_152941_org.mozilla.firefox.jpg",
+        "资源/应用/群像通讯/Screenshot_20261123_153046_org.mozilla.firefox.jpg"
+      ],
+      "description": "做了个超好用的小手机扩展 App「群像通讯」🎉 不用改源码、也不用给配角建一大堆系统角色卡！\n它能实时读取【剧情】App 里的内容，点一下「感知」就能把剧情里出场的闺蜜、反派、路人配角全抓出来放进对应的角色卡文件夹里，不仅能找任意配角 1v1 私聊（TA 知道刚发生的所有剧情），还能把同剧目的主角和配角拉到一个群里群聊吃瓜！\n但是功能比较简单就只是文字聊天，简单几个表情包，转账发红包这种。",
+      "author": "宝宝",
+      "avatar": "",
+      "ownerHash": "122da77ce3e09cb45fb3833d01053fa7d73663b1ed5d35d61b66d65a8b7cf4ea",
+      "updatedAt": "2026-11-23T16:35:47+09:00"
     },
     {
       "folder": "应用",
