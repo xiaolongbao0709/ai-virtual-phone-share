@@ -1,0 +1,1565 @@
+/* 仿bubble聊天室美化 v2.8.6 · 有加号版 · ee×codex
+安装：整份 CSS 放入指定会话「聊天室 CSS」，搭配同名 JS。背景沿用 Float 设置。
+自定义：优先修改下面 :root 变量；颜色可填 #色号、rgb()。姓名/日期必须保留英文双引号。
+每个角色的日期可点击顶栏天数分别设置；角色备注名由 Float 联系人备注读取。
+下方布局规则和内嵌字体数据一般无需改动；细节色如需单独改动，搜索对应选择器内的 color/background/border。
+*/
+:root {
+  /* 姓名设置：只改角色气泡 ARTIST 旁的名字，顶部标题不变；留空沿用原名。 */
+  --postmark-character-name: ""; /* 例如 "小鱼"，请保留双引号 */
+  --float-postmark-ready: 1;
+  --postmark-compact: 1;
+  --postmark-menu-location: bottom; /* bottom 为有加号版，top 为右上角菜单版 */
+  --threads-room-css-ready: 0 !important; /* 会话切换到本主题时停用旧 Threads 布局 */
+  --postmark-chrome: #ffffff; /* 顶栏和输入区 */
+  --postmark-chrome-ink: #202020; /* 顶栏及输入文字颜色 */
+  --postmark-field: #f4f4f4; /* 输入框底色 */
+  --postmark-other-bg: #ffffff; /* 角色气泡 */
+  --postmark-other-ink: #202020; /* 角色原文字色 */
+  --postmark-self-bg: #88c6ed; /* 自己的气泡 */
+  --postmark-self-ink: #ffffff; /* 用户原文字色 */
+  --postmark-translation: #6b84f3; /* 角色译文颜色，默认取 ARTIST 渐变的蓝色，可自行修改 */
+  --postmark-self-translation: var(--postmark-translation); /* 用户译文颜色，也可单独填写色号 */
+  --postmark-translation-line: #dedede; /* 原文与译文之间的虚线颜色 */
+  --postmark-user-name: "我"; /* 用户引用标题的名字，改为 "你的名字" 即显示「你的名字的回复」 */
+  --postmark-offline-user-name: ""; /* 线下用户显示名，例如 "丘穗"；留空则显示「你」 */
+  --postmark-quote-opacity: .72; /* 两侧引用气泡的白色透明度，0 全透明，1 不透明 */
+  --postmark-anniversary-start: ""; /* 填 "2026-01-01" 后，从该日期起每天自动计数，当天为第 1 天，留空沿用当前聊天的日期 */
+  --postmark-artist: linear-gradient(110deg, #6b84f3, #32b2de); /* 艺人徽章 */
+  --postmark-translate-glass: #9b94a047; /* 译文按钮的半透明磨砂底色 */
+  --postmark-heart: #e77da8; /* 相识天数旁的心形 */
+  --postmark-meta: #414141; /* 名字、时间和译文按钮 */
+  --postmark-avatar: 34px; /* 头像直径，可小幅调节 */
+  --postmark-gap: 7px; /* 头像与消息间距 */
+  --postmark-message-gap: 12px; /* 相邻消息之间的间距；语音转文字与原语音的间距单独保留 */
+  --postmark-radius: 12px; /* 基础气泡圆角 */
+  --postmark-packet-cover: #ededed; /* 红包封面底色 */
+  --postmark-transfer-cover: #ededed; /* 转账封面底色 */
+  --postmark-gift-cover: #ededed; /* 礼物封面底色 */
+  --postmark-packet-lettering: #a95883; /* 红包手写字 */
+  --postmark-transfer-lettering: #7961b4; /* 转账手写字和纸币符号 */
+  --postmark-gift-lettering: #6e9c88; /* 礼物手写字，独立于转账 */
+  --postmark-gift-ribbon: #b4d2c3; /* 礼物丝带 */
+  --postmark-day-line: rgb(128 128 128 / .10); /* 日期分隔细线 */
+  --postmark-day-ink: #999999; /* 日期文字 */
+}
+
+/* 上方使用原生返回和更多，JS 插入放大镜。会话名居中，圆角收在底边。 */
+:root.float-artist-postmark {
+  --page-header-content-height: 40px;
+}
+
+:root.float-artist-postmark > .page-header {
+  background: var(--postmark-chrome);
+  border-radius: 0 0 18px 18px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 1px 0 #2222221a;
+}
+
+:root.float-artist-postmark:has(.postmark-anniversary:not([hidden])) > .page-header {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:root.float-artist-postmark > .page-header > .page-header-content {
+  grid-template-columns: 76px minmax(0, 1fr) 76px;
+  padding-inline: 9px;
+  column-gap: 2px;
+}
+
+:root.float-artist-postmark > .page-header .page-title {
+  min-width: 0;
+  color: var(--postmark-chrome-ink);
+  font-size: calc(17px * var(--app-text-scale, 1));
+  font-weight: 720;
+  letter-spacing: .015em;
+  overflow-wrap: anywhere;
+  line-height: 1.18;
+}
+
+:root.float-artist-postmark > .page-header button {
+  width: 38px;
+  height: 38px;
+  color: var(--postmark-chrome-ink);
+}
+
+:root.float-artist-postmark .postmark-search {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+}
+
+:root.float-artist-postmark .postmark-lens {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  margin: -3px 3px 0 0;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+
+:root.float-artist-postmark .postmark-lens::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  bottom: -3px;
+  width: 6px;
+  height: 1.5px;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  background: currentColor;
+}
+
+:root.float-artist-postmark > .chat-plugin-header:has(.postmark-anniversary) {
+  top: calc(var(--page-header-safe-top, 48px) + var(--page-header-content-height, 40px) - 2px);
+}
+
+:root.float-artist-postmark .postmark-anniversary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 0 12px 7px;
+  border-radius: 0 0 18px 18px;
+  background: var(--postmark-chrome);
+  color: var(--postmark-chrome-ink);
+  box-shadow: 0 1px 0 #2222221a;
+  font-size: calc(13px * var(--app-text-scale, 1));
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+:root.float-artist-postmark .postmark-anniversary-label {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1.12em;
+}
+
+:root.float-artist-postmark .postmark-heart {
+  width: 18px;
+  height: 18px;
+  fill: var(--postmark-heart);
+}
+
+:root.float-artist-postmark .postmark-heart > path + path {
+  fill: #f4a8c3;
+}
+
+:root.float-artist-postmark .postmark-anniversary[hidden],
+:root.float-artist-postmark .postmark-meta[hidden] {
+  display: none;
+}
+
+/* 只调整排版。聊天背景由 Float 的会话背景与主题处理。 */
+:root.float-artist-postmark > .page-body {
+  padding-inline: 10px;
+  gap: var(--postmark-message-gap);
+}
+
+:root.float-artist-postmark .postmark-row {
+  gap: var(--postmark-gap);
+  --postmark-side-space: calc(var(--postmark-avatar) + 58px + 3 * var(--postmark-gap));
+}
+
+:root.float-artist-postmark .postmark-row[data-consecutive] {
+  margin-top: 0 !important;
+}
+
+:root.float-artist-postmark .postmark-row[data-consecutive] > .chat-msg-avatar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+:root.float-artist-postmark .postmark-row > .chat-msg-content-wrap {
+  flex: 0 1 auto;
+  width: fit-content;
+  max-width: min(76%, calc(100% - var(--postmark-side-space)));
+}
+
+:root.float-artist-postmark .postmark-row[data-role="user"] {
+  --postmark-side-space: 62px;
+  --postmark-current-translation: var(--postmark-self-translation);
+  --postmark-current-translation-line: #ffffff40;
+}
+
+:root.float-artist-postmark .postmark-row[data-multi-select] > .chat-msg-content-wrap {
+  max-width: min(72%, calc(100% - var(--postmark-side-space)));
+}
+
+:root.float-artist-postmark .postmark-row[data-role="assistant"] > .chat-msg-avatar {
+  position: relative;
+  box-sizing: border-box;
+  flex: 0 0 calc(var(--postmark-avatar) + 8px);
+  padding: 4px;
+  width: calc(var(--postmark-avatar) + 8px);
+  height: calc(var(--postmark-avatar) + 8px);
+  aspect-ratio: 1;
+  overflow: visible;
+}
+
+/* 2px 渐变外环与头像之间保留 2px 透明间隙，背景图可以透过。 */
+:root.float-artist-postmark .postmark-row[data-role="assistant"] > .chat-msg-avatar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--postmark-artist);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+:root.float-artist-postmark .postmark-row[data-role="assistant"] > .chat-msg-avatar > div {
+  width: var(--postmark-avatar);
+  height: var(--postmark-avatar);
+  margin: 0;
+  border-radius: 50%;
+  box-shadow: none;
+  outline: none;
+}
+
+:root.float-artist-postmark .postmark-row[data-role="user"] > .chat-msg-avatar {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-sender {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
+  color: var(--postmark-meta);
+  font-size: calc(12px * var(--app-text-scale, 1));
+  font-weight: 550;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+:root.float-artist-postmark .postmark-artist-badge {
+  display: none;
+  align-items: center;
+  flex: none;
+  padding: 2px 5px;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--postmark-artist);
+  color: #ffffff;
+  font: 750 8px/1 system-ui, sans-serif;
+  letter-spacing: .05em;
+  opacity: 1;
+  cursor: default;
+}
+
+:root.float-artist-postmark.postmark-show-artist .postmark-artist-badge {
+  display: inline-flex;
+}
+
+:root.float-artist-postmark .postmark-artist-badge:not(:disabled) {
+  cursor: pointer;
+}
+
+:root.float-artist-postmark .postmark-artist-badge:focus-visible {
+  outline: 2px solid #77a9ed;
+  outline-offset: 3px;
+}
+
+:root.float-artist-postmark.postmark-show-artist .postmark-has-heart > button.chat-monologue-heart {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-row [data-ui^="bubble-"]:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  width: fit-content;
+  max-width: 100%;
+  padding: 9px 12px;
+  box-shadow: none;
+  font-size: calc(14px * var(--app-text-scale, 1));
+  line-height: 1.5;
+}
+
+:root.float-artist-postmark .postmark-row [data-ui="bubble-bot"]:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  background: var(--postmark-other-bg);
+  color: var(--postmark-other-ink);
+  border-radius: 8px var(--postmark-radius) var(--postmark-radius) var(--postmark-radius);
+  box-shadow: none;
+  border: 0;
+  outline: none;
+}
+
+:root.float-artist-postmark .postmark-row [data-ui="bubble-user"]:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  background: var(--postmark-self-bg);
+  color: var(--postmark-self-ink);
+  border-radius: var(--postmark-radius) var(--postmark-radius) 8px var(--postmark-radius);
+}
+
+/* 引用和回复分成两只气泡，保留原生引用节点以便卸载时恢复。 */
+:root.float-artist-postmark .postmark-row [data-ui^="bubble-"]:not(.chat-bubble-media):not(.chat-bubble-html-preview):has(> .chat-quote-message > .postmark-quote-card) {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:root.float-artist-postmark .postmark-row .chat-quote-message:has(> .postmark-quote-card) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  --postmark-quote-fill: var(--postmark-other-bg);
+  --postmark-quote-ink: var(--postmark-other-ink);
+}
+
+:root.float-artist-postmark .postmark-row[data-role="user"] .chat-quote-message {
+  align-items: flex-end;
+  --postmark-quote-fill: var(--postmark-self-bg);
+  --postmark-quote-ink: var(--postmark-self-ink);
+}
+
+:root.float-artist-postmark .postmark-native-quote {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-quote-card {
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 13px 15px;
+  border: 1px solid #ffffff66;
+  border-radius: 17px;
+  background: rgb(255 255 255 / var(--postmark-quote-opacity));
+  color: #929292;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+:root.float-artist-postmark .postmark-quote-title {
+  margin-bottom: 7px;
+  color: #202020;
+  font-size: calc(13px * var(--app-text-scale, 1));
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+:root.float-artist-postmark .postmark-quote-user-name::before {
+  content: var(--postmark-user-name, "我");
+}
+
+/* 标题不计入正文行数，原文和译文合计最多两行。 */
+:root.float-artist-postmark .postmark-quote-excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  white-space: pre-line;
+  font-size: calc(13px * var(--app-text-scale, 1));
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+:root.float-artist-postmark .postmark-quote-translation {
+  font-style: normal;
+  color: var(--postmark-translation);
+}
+
+:root.float-artist-postmark .postmark-row .chat-quote-message:has(> .postmark-quote-card) > :not(.chat-quote-preview):not([data-postmark-ui]) {
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px 17px 17px 17px;
+  background: var(--postmark-quote-fill);
+  color: var(--postmark-quote-ink);
+}
+
+:root.float-artist-postmark .postmark-row[data-role="user"] .chat-quote-message:has(> .postmark-quote-card) > :not(.chat-quote-preview):not([data-postmark-ui]) {
+  border-radius: 17px 17px 8px 17px;
+}
+
+:root.float-artist-postmark .postmark-menu-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  background: #ffffff28;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: opacity 180ms ease, backdrop-filter 180ms ease, -webkit-backdrop-filter 180ms ease, visibility 0s linear 180ms;
+  cursor: default;
+}
+:root.float-artist-postmark .postmark-menu-veil.postmark-veil-open { opacity:1; visibility:visible; pointer-events:auto; backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); transition-delay:0s; }
+
+/* 遮罩位于聊天内容之上，顶栏与输入栏位于遮罩之上。 */
+:root.float-artist-postmark > .page-header,
+:root.float-artist-postmark > .chat-plugin-header,
+:root.float-artist-postmark > .chat-input-bar {
+  z-index: 10;
+}
+
+:root.float-artist-postmark .postmark-row > .chat-monologue-heart {
+  align-self: flex-end;
+  margin-left: -4px;
+}
+
+:root.float-artist-postmark .postmark-row .chat-photo-card--image {
+  display: block;
+  margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  width: fit-content;
+  border-radius: 8px 17px 17px 17px;
+}
+
+:root.float-artist-postmark .postmark-row .chat-photo-card--image > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 图片表情包不叠加原生外侧 padding；透明图片文件自身的留白仍由素材决定。 */
+:root.float-artist-postmark .postmark-row .chat-sticker-image { padding: 0; }
+:root.float-artist-postmark .postmark-row .chat-sticker-image > img { display: block; }
+
+:root.float-artist-postmark .postmark-meta {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: flex-end;
+  gap: 1px;
+  min-width: 34px;
+  padding-bottom: 2px;
+  color: var(--postmark-meta);
+}
+
+:root.float-artist-postmark .postmark-row[data-role="user"] .postmark-meta {
+  align-items: flex-end;
+}
+
+:root.float-artist-postmark .postmark-time {
+  font-size: calc(10px * var(--app-text-scale, 1));
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  opacity: .76;
+}
+
+:root.float-artist-postmark .postmark-native-translate {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-row .chat-bilingual-block {
+  gap: 0;
+}
+
+:root.float-artist-postmark .postmark-row .chat-bilingual-divider {
+  height: 0;
+  margin: 9px -12px;
+  border-top: 1px dashed var(--postmark-current-translation-line, var(--postmark-translation-line));
+}
+
+:root.float-artist-postmark .postmark-translate {
+  position: relative;
+  width: 32px;
+  height: 30px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  margin-left: -4px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #ffffffed;
+  cursor: pointer;
+}
+
+:root.float-artist-postmark .postmark-translate::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ffffff4d;
+  border-radius: 50%;
+  background: var(--postmark-translate-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+:root.float-artist-postmark .postmark-translation-icon {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+:root.float-artist-postmark .postmark-row .chat-bilingual-block > .chat-bilingual-section-translation,
+:root.float-artist-postmark .postmark-row .chat-bilingual-block > .chat-bilingual-section-translation .chat-markdown {
+  color: var(--postmark-current-translation, var(--postmark-translation));
+  font-size: inherit;
+  font-style: normal;
+  opacity: 1;
+}
+
+:root.float-artist-postmark .postmark-row .chat-bilingual-section-translation .chat-markdown * {
+  font-style: normal;
+  color: inherit;
+}
+
+/* 输入框与原生表情包键拼成同一条胶囊。Emoji 和其余操作由加号菜单承接。 */
+:root.float-artist-postmark > .chat-input-bar {
+  background: var(--postmark-chrome);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:root.float-artist-postmark > .postmark-compact-composer {
+  display: grid;
+  grid-template-columns: 39px minmax(0, 1fr) 44px 43px;
+  align-items: end;
+  row-gap: 7px;
+  padding: 8px 10px max(8px, env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -1px 0 #22222214;
+}
+
+:root.float-artist-postmark > .postmark-compact-composer > * {
+  grid-column: 1 / -1;
+}
+
+:root.float-artist-postmark > .postmark-compact-composer > .chat-input-textarea ~ :not(.chat-input-actions) {
+  order: 20;
+}
+
+:root.float-artist-postmark > .postmark-compact-composer > .chat-input-textarea {
+  order: 11;
+  grid-column: 2;
+  min-width: 0;
+  min-height: 42px !important;
+  box-sizing: border-box;
+  align-self: stretch;
+  padding: 10px 4px 10px 14px;
+  border: 0;
+  border-radius: 21px 0 0 21px;
+  background: var(--postmark-field);
+  color: var(--postmark-chrome-ink);
+  outline: none;
+}
+
+:root.float-artist-postmark > .postmark-compact-composer > .chat-input-actions {
+  display: contents;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  margin: 0;
+  padding: 0;
+  color: var(--postmark-chrome-ink);
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:nth-of-type(4) {
+  order: 10;
+  grid-column: 1;
+  align-self: end;
+  width: 34px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:nth-of-type(3) {
+  order: 12;
+  grid-column: 3;
+  height: auto;
+  min-height: 42px;
+  align-self: stretch;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 0 21px 21px 0;
+  background: var(--postmark-field);
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:nth-of-type(5) {
+  order: 13;
+  grid-column: 4;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:disabled {
+  opacity: .32;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button > svg[data-postmark-ui] {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button > .postmark-plus-icon[data-postmark-ui] {
+  width: 21px;
+  height: 21px;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button > .postmark-plane-icon[data-postmark-ui] {
+  width: 27px;
+  height: 27px;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:has(> svg[data-postmark-ui]) > svg:not([data-postmark-ui]) {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:nth-of-type(1),
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:nth-of-type(2),
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:nth-of-type(6) {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-plus-menu {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 10px;
+  z-index: 3;
+  box-sizing: border-box;
+  width: min(352px, calc(100% - 20px));
+  max-height: min(340px, 52dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 8px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #e9e9e9;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 10px 35px #00000018, 0 2px 6px #00000008;
+  transform-origin: bottom left;
+  animation: postmark-panel-in 180ms ease-out both;
+}
+
+:root.float-artist-postmark .postmark-compact-composer:not(.postmark-more-open) > .chat-plus-menu,
+:root.float-artist-postmark .postmark-more-open > .postmark-quick-menu,
+:root.float-artist-postmark .postmark-compact-composer > .chat-plus-menu > .postmark-featured-action {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-quick-menu,
+:root.float-artist-postmark .postmark-menu-leaving {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 5px;
+  z-index: 3;
+  box-sizing: border-box;
+  width: 198px;
+  aspect-ratio: 1;
+  padding: 0;
+  pointer-events: none;
+}
+
+:root.float-artist-postmark .postmark-quick-entry {
+  position: absolute;
+  left: calc((100% - 44px) * var(--fan-x));
+  top: calc((100% - 44px) * var(--fan-y));
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #383838;
+  box-shadow: none;
+  pointer-events: auto;
+  cursor: pointer;
+  animation: postmark-fan-in 200ms cubic-bezier(.2, .75, .25, 1) both;
+  animation-delay: var(--fan-delay);
+}
+
+:root.float-artist-postmark .postmark-quick-entry:nth-child(1) { --fan-x: 0; --fan-y: 0; --fan-delay: 0ms; }
+:root.float-artist-postmark .postmark-quick-entry:nth-child(2) { --fan-x: .309017; --fan-y: .048943; --fan-delay: 20ms; }
+:root.float-artist-postmark .postmark-quick-entry:nth-child(3) { --fan-x: .587785; --fan-y: .190983; --fan-delay: 40ms; }
+:root.float-artist-postmark .postmark-quick-entry:nth-child(4) { --fan-x: .809017; --fan-y: .412215; --fan-delay: 60ms; }
+:root.float-artist-postmark .postmark-quick-entry:nth-child(5) { --fan-x: .951057; --fan-y: .690983; --fan-delay: 80ms; }
+:root.float-artist-postmark .postmark-quick-entry:nth-child(6) { --fan-x: 1; --fan-y: 1; --fan-delay: 100ms; }
+
+@keyframes postmark-fan-in {
+  from {
+    opacity: 0;
+    transform: translate(calc(-154px * var(--fan-x)), calc(154px * (1 - var(--fan-y)))) scale(.65);
+  }
+  to { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+
+:root.float-artist-postmark .postmark-quick-entry::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 3px 12px #00000012;
+  pointer-events: none;
+}
+
+:root.float-artist-postmark .postmark-menu-leaving .postmark-quick-entry {
+  pointer-events: none;
+  animation: postmark-fan-out 180ms ease-in both;
+  animation-delay: calc(100ms - var(--fan-delay));
+}
+
+@keyframes postmark-fan-out {
+  from { opacity: 1; transform: translate(0, 0) scale(1); }
+  to { opacity: 0; transform: translate(calc(-154px * var(--fan-x)), calc(154px * (1 - var(--fan-y)))) scale(.65); }
+}
+
+@keyframes postmark-panel-in {
+  from { opacity: 0; transform: translateY(8px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+:root.float-artist-postmark .postmark-plus-icon {
+  transition: transform 180ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root.float-artist-postmark .postmark-quick-entry,
+  :root.float-artist-postmark .postmark-menu-leaving .postmark-quick-entry,
+  :root.float-artist-postmark .postmark-compact-composer > .chat-plus-menu { animation: none; }
+  :root.float-artist-postmark .postmark-plus-icon { transition: none; }
+}
+
+:root.float-artist-postmark .postmark-quick-entry > .postmark-extra-label {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-compact-composer:has(> .postmark-quick-menu) .postmark-plus-icon {
+  transform: rotate(45deg);
+}
+
+:root.float-artist-postmark .postmark-quick-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+
+:root.float-artist-postmark .postmark-quick-icon > svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #383838;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+:root.float-artist-postmark .postmark-quick-entry:active::before {
+  background: #eaeaea;
+}
+
+:root.float-artist-postmark .postmark-quick-entry[data-postmark-quick="更多"] {
+  color: #666666;
+}
+
+:root.float-artist-postmark .postmark-quick-icon > svg.postmark-more-icon {
+  fill: currentColor;
+  stroke: none;
+}
+
+:root.float-artist-postmark .postmark-quick-entry:disabled {
+  opacity: .35;
+}
+
+:root.float-artist-postmark .postmark-more-heading {
+  position: sticky;
+  top: -12px;
+  z-index: 1;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 88px;
+  align-items: center;
+  padding: 5px 0 10px;
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+  color: #424242;
+  font-size: 12px;
+}
+
+:root.float-artist-postmark .postmark-more-back {
+  justify-self: start;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+:root.float-artist-postmark .postmark-more-title {
+  text-align: center;
+}
+
+/* On Air 的旧输入扩展曾无条件挂载，当前会话以本菜单承接相同操作。 */
+:root.float-artist-postmark .postmark-compact-composer > .chat-plugin-input-toolbar > [data-chat-plugin="onair-room-clean"] {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-plugin-input-toolbar:not(:has(> :not([data-chat-plugin="onair-room-clean"]))) {
+  display: none;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-plus-menu .chat-plus-icon-box {
+  width: 37px;
+  height: 37px;
+  border: 0;
+  border-radius: 12px;
+  background: #f4f4f4;
+  box-shadow: none;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-plus-menu .chat-plus-icon-box > svg {
+  width: 20px;
+  height: 20px;
+}
+
+:root.float-artist-postmark .postmark-plus-extra {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--postmark-chrome-ink);
+  cursor: pointer;
+}
+
+:root.float-artist-postmark .postmark-extra-label {
+  font-size: calc(11px * var(--app-text-scale, 1));
+}
+
+:root.float-artist-postmark .postmark-plus-extra:disabled {
+  opacity: .32;
+}
+
+/* 固定矢量字标，不受手机系统字体影响。 */
+:root.float-artist-postmark .postmark-badge-text { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+:root.float-artist-postmark .postmark-artist-word { width:37px; height:8px; fill:none; stroke:#fff; stroke-width:1.7; stroke-linejoin:round; stroke-linecap:square; }
+:root.float-artist-postmark .postmark-window-dots-icon { width:22px; height:22px; fill:currentColor; stroke:currentColor; stroke-width:1.6; }
+:root.float-artist-postmark .page-header-right button:has(.postmark-window-dots-icon) > svg:not([data-postmark-ui]) { display:none; }
+
+/* 无加号版：右上角普通工具网格，设置仍由原生按钮打开。 */
+:root.float-artist-postmark.postmark-menu-top > .postmark-compact-composer { grid-template-columns:minmax(0,1fr) 44px 43px; }
+:root.float-artist-postmark.postmark-menu-top > .postmark-compact-composer > .chat-input-textarea { grid-column:1; }
+:root.float-artist-postmark.postmark-menu-top .postmark-compact-composer > .chat-input-actions > button:nth-of-type(3) { grid-column:2; }
+:root.float-artist-postmark.postmark-menu-top .postmark-compact-composer > .chat-input-actions > button:nth-of-type(4) { display:none; }
+:root.float-artist-postmark.postmark-menu-top .postmark-compact-composer > .chat-input-actions > button:nth-of-type(5) { grid-column:3; }
+:root.float-artist-postmark.postmark-menu-top .postmark-quick-menu,
+:root.float-artist-postmark.postmark-menu-top .postmark-menu-leaving { display:none; }
+:root.float-artist-postmark .postmark-tools-panel { position:absolute; top:calc(var(--page-header-safe-top,48px) + 80px); right:12px; z-index:12; width:min(300px,calc(100% - 24px)); box-sizing:border-box; padding:16px; border:1px solid #eee; border-radius:20px; background:#fff; color:#242424; box-shadow:0 8px 30px #00000012; animation:postmark-panel-in 180ms ease-out; }
+:root.float-artist-postmark .postmark-tools-heading { margin-bottom:14px; font-size:13px; font-weight:600; }
+:root.float-artist-postmark .postmark-tools-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+:root.float-artist-postmark .postmark-tools-entry { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; min-height:64px; border:0; border-radius:12px; background:transparent; color:#444; font:inherit; cursor:pointer; }
+:root.float-artist-postmark .postmark-tools-entry:active { background:#f4f4f4; }
+:root.float-artist-postmark .postmark-tools-entry > svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.5; }
+:root.float-artist-postmark .postmark-tools-entry > svg.postmark-more-icon { fill:currentColor; stroke:none; }
+:root.float-artist-postmark .postmark-tools-label { font-size:11px; }
+:root.float-artist-postmark .postmark-tools-settings { width:100%; margin-top:12px; padding:14px 2px 0; border:0; border-top:1px solid #eee; background:transparent; color:#555; text-align:left; font-size:12px; cursor:pointer; }
+:root.float-artist-postmark.postmark-top-more .postmark-compact-composer > .chat-plus-menu { position:fixed; top:calc(var(--page-header-safe-top,48px) + 80px); bottom:auto; left:auto; right:12px; width:min(352px,calc(100% - 24px)); max-height:65dvh; }
+
+/* 等待回复时显示轻量打字气泡。 */
+:root.float-artist-postmark:has(> .postmark-compact-composer) .page-title > .chat-typing-indicator { display:none; }
+:root.float-artist-postmark .postmark-typing-row { display:flex; align-items:center; gap:var(--postmark-gap); padding:4px 0; }
+:root.float-artist-postmark .postmark-typing-avatar { width:44px; height:44px; padding:4px; box-sizing:border-box; }
+:root.float-artist-postmark .postmark-typing-avatar > img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+:root.float-artist-postmark .postmark-typing-bubble { display:flex; align-items:center; gap:4px; padding:14px 17px; border-radius:8px 17px 17px 17px; background:var(--postmark-other-bg); }
+:root.float-artist-postmark .postmark-typing-dot { width:4px; height:4px; background:#999; border-radius:50%; animation:postmark-typing 1.2s ease-in-out infinite; }
+:root.float-artist-postmark .postmark-typing-dot:nth-child(2) { animation-delay:.15s; }
+:root.float-artist-postmark .postmark-typing-dot:nth-child(3) { animation-delay:.3s; }
+@keyframes postmark-typing { 0%,65%,100% { opacity:.4; transform:translateY(0); } 32% { opacity:1; transform:translateY(-3px); } }
+
+/* 语音沿用文字气泡的两侧配色，转文字使用下方正体文字区。 */
+:root.float-artist-postmark .postmark-row .chat-bubble-media:has(.voice-msg-bubble) { padding:9px 12px; background:var(--postmark-other-bg); color:var(--postmark-other-ink); border:0; border-radius:8px 17px 17px 17px; box-shadow:none; }
+:root.float-artist-postmark .postmark-row[data-role="user"] .chat-bubble-media:has(.voice-msg-bubble) { background:var(--postmark-self-bg); color:var(--postmark-self-ink); border-radius:17px 17px 8px 17px; }
+:root.float-artist-postmark .voice-msg-bubble { background:transparent; color:inherit; border:0; box-shadow:none; }
+:root.float-artist-postmark .chat-msg-wrapper:has(> .voice-msg-text-bubble) { padding-left:51px; justify-content:flex-start; }
+:root.float-artist-postmark .chat-msg-wrapper[data-role="user"]:has(> .voice-msg-text-bubble) { padding-left:0; justify-content:flex-end; }
+:root.float-artist-postmark .chat-msg-wrapper:has(> .voice-msg-text-bubble) > :not(.voice-msg-text-bubble) { display:none; }
+:root.float-artist-postmark .voice-msg-text-bubble { max-width:78%; padding:8px 0 0; border:0; border-top:1px dashed #d9d9d9; border-radius:0; background:transparent; color:#777; font-size:12px; line-height:1.6; box-shadow:none; }
+:root.float-artist-postmark .voice-msg-text-bubble .chat-markdown * { font-style:normal; }
+
+/* 小幅封面：保留原生金额、祝福语和领取/退回操作，不增加发送人说明。 */
+:root.float-artist-postmark :is(.chat-transfer-card,.chat-red-packet-card,.chat-gift-card,.chat-location-card,.chat-music-share-card) { width:228px; max-width:100%; box-sizing:border-box; overflow:hidden; border:0; border-radius:15px; background:#fff; color:#252525; box-shadow:none; animation:none; }
+:root.float-artist-postmark .postmark-cover-card { padding:10px 10px 0; margin:0; }
+:root.float-artist-postmark .postmark-card-cover { position:relative; display:grid; grid-template-columns:minmax(0,1fr) 72px; align-items:center; gap:10px; padding:0 16px; box-sizing:border-box; height:100px; border-radius:8px; overflow:hidden; isolation:isolate; color:var(--postmark-transfer-lettering); background:linear-gradient(135deg,var(--postmark-transfer-cover),color-mix(in srgb,var(--postmark-transfer-cover) 80%,#fff)); }
+:root.float-artist-postmark .postmark-cover-redpacket { color:var(--postmark-packet-lettering); background:linear-gradient(135deg,var(--postmark-packet-cover),color-mix(in srgb,var(--postmark-packet-cover) 80%,#fff)); }
+:root.float-artist-postmark .postmark-cover-gift { color:var(--postmark-gift-lettering); background:linear-gradient(135deg,var(--postmark-gift-cover),color-mix(in srgb,var(--postmark-gift-cover) 80%,#fff)); }
+:root.float-artist-postmark .postmark-cover-lettering { position:relative; justify-self:center; white-space:pre-line; color:inherit; font:600 28px/1 "Postmark Hand","Segoe Print",cursive; letter-spacing:-.6px; text-align:center; transform:rotate(-5deg); transform-origin:center; }
+:root.float-artist-postmark :is(.postmark-cover-transfer,.postmark-cover-gift) .postmark-cover-lettering { font-size:26px; line-height:.88; }
+:root.float-artist-postmark .postmark-cover-art { position:relative; justify-self:center; width:72px; height:45px; transform:rotate(-9deg); }
+:root.float-artist-postmark .postmark-cover-art-redpacket { border-radius:3px; background:#fdfaff; filter:drop-shadow(0 5px 5px #5b4b7715); }
+:root.float-artist-postmark .postmark-envelope-paper { position:absolute; left:7px; right:7px; top:-15px; height:44px; background:#fff; border-radius:3px; transform:rotate(6deg); box-shadow:0 0 0 1px #e7dfef66; display:grid; place-items:center; color:#c295b1; font:19px/1 sans-serif; padding-bottom:13px; box-sizing:border-box; }
+:root.float-artist-postmark .postmark-envelope-face { position:absolute; inset:0; background:linear-gradient(140deg,#fff,#f7f1fb); clip-path:polygon(0 0,50% 50%,100% 0,100% 100%,0 100%); border-radius:3px; }
+:root.float-artist-postmark .postmark-envelope-seal { position:absolute; top:17px; left:30px; font:13px/1 sans-serif; color:#c99eb6; }
+:root.float-artist-postmark .postmark-cover-art-transfer { transform:none; }
+:root.float-artist-postmark :is(.postmark-banknote-back,.postmark-banknote-front) { position:absolute; inset:0; border-radius:5px; background:#fff; transform:rotate(-8deg); box-shadow:0 4px 8px #68537e12; display:grid; place-items:center; color:var(--postmark-transfer-lettering); font:600 25px/1 Georgia,serif; }
+:root.float-artist-postmark .postmark-banknote-back { transform:translate(-6px,-9px) rotate(7deg); background:#f7f3fb; box-shadow:none; }
+:root.float-artist-postmark .postmark-banknote-front::before,:root.float-artist-postmark .postmark-banknote-front::after { content:""; position:absolute; left:7px; top:8px; width:3px; height:27px; border-radius:2px; background:#f0ebf5; }
+:root.float-artist-postmark .postmark-banknote-front::after { left:auto; right:7px; }
+:root.float-artist-postmark .postmark-cover-art-gift { width:64px; height:54px; transform:rotate(7deg); filter:drop-shadow(0 5px 5px #5b4b7712); }
+:root.float-artist-postmark .postmark-gift-box { position:absolute; inset:8px 2px 0; border-radius:3px; background:linear-gradient(130deg,#fff,#faf4ff); }
+:root.float-artist-postmark .postmark-gift-box::before { content:""; position:absolute; top:-3px; left:-3px; right:-3px; height:11px; border-radius:2px; background:#fff; box-shadow:0 1px 0 #cbbdda33; }
+:root.float-artist-postmark .postmark-gift-ribbon { position:absolute; top:4px; bottom:0; left:27px; width:10px; background:var(--postmark-gift-ribbon); }
+:root.float-artist-postmark .postmark-gift-bow { position:absolute; top:0; left:28px; width:8px; height:8px; border-radius:50%; background:var(--postmark-gift-lettering); }
+:root.float-artist-postmark .postmark-gift-bow::before,:root.float-artist-postmark .postmark-gift-bow::after { content:""; position:absolute; top:-5px; width:18px; height:13px; box-sizing:border-box; border:4px solid var(--postmark-gift-ribbon); border-radius:60% 70% 45% 70%; }
+:root.float-artist-postmark .postmark-gift-bow::before { right:4px; transform:rotate(22deg); }
+:root.float-artist-postmark .postmark-gift-bow::after { left:4px; transform:rotate(-22deg); }
+:root.float-artist-postmark .postmark-cover-speck { position:absolute; width:3px; height:6px; border-radius:1px; background:currentColor; opacity:.3; transform:rotate(28deg); }
+:root.float-artist-postmark .postmark-cover-speck-1 { left:15px; top:16px; }
+:root.float-artist-postmark .postmark-cover-speck-2 { right:22px; top:18px; width:4px; height:4px; transform:rotate(-20deg); background:#c69fb4; }
+:root.float-artist-postmark .postmark-cover-speck-3 { right:91px; bottom:11px; width:3px; height:3px; border-radius:50%; }
+:root.float-artist-postmark .postmark-cover-speck-4 { left:74px; bottom:9px; height:4px; transform:rotate(-30deg); }
+:root.float-artist-postmark .postmark-cover-card :is(.chat-transfer-body,.chat-red-packet-body) { padding:12px 3px 4px; min-height:0; background:#fff; color:#555; gap:0; }
+:root.float-artist-postmark .postmark-cover-card :is(.chat-transfer-body,.chat-red-packet-body) > :first-child { display:none; }
+:root.float-artist-postmark :is(.chat-transfer-body,.chat-red-packet-body) > :last-child > * { color:#555; }
+:root.float-artist-postmark .chat-transfer-body .ts-24 { font-size:18px; font-weight:600; letter-spacing:0; }
+:root.float-artist-postmark .chat-red-packet-body .ts-15 { font-size:13px; font-weight:500; line-height:1.55; }
+:root.float-artist-postmark .chat-transfer-body .ts-13 { margin-top:5px; color:#999; font-size:11px; }
+:root.float-artist-postmark .postmark-cover-card > .ui-media-footer { display:none; }
+:root.float-artist-postmark .chat-transfer-card > :not(.chat-transfer-body):not(.ui-media-footer):not([data-postmark-ui]) { padding:0 3px; background:#fff; color:#999; font-size:11px; }
+:root.float-artist-postmark .postmark-card-action { display:flex; align-items:center; gap:7px; width:100%; min-height:36px; padding:8px 3px 11px; margin:0; border:0; background:transparent; color:#999; font-family:inherit; font-size:11px; line-height:1.4; text-align:left; cursor:pointer; }
+:root.float-artist-postmark .postmark-card-action-label { flex:1; }
+:root.float-artist-postmark .postmark-payment-status { color:#aaa; font-size:10px; }
+:root.float-artist-postmark .postmark-card-chevron { width:14px; height:14px; flex:none; fill:none; stroke:currentColor; stroke-width:1.6; }
+:root.float-artist-postmark .postmark-gift-summary { padding:12px 3px 4px; }
+:root.float-artist-postmark .postmark-gift-name { color:#555; font-size:13px; font-weight:500; line-height:1.55; overflow-wrap:anywhere; }
+:root.float-artist-postmark .postmark-gift-price { margin-top:5px; color:#999; font-size:11px; }
+:root.float-artist-postmark .postmark-cover-card .chat-gift-card-body { display:none; min-height:0; padding:7px 3px 9px; background:#fff; }
+:root.float-artist-postmark .postmark-gift-expanded .chat-gift-card-body { display:block; }
+:root.float-artist-postmark .chat-gift-card-body * { color:#888; }
+:root.float-artist-postmark .chat-gift-card-body > div { min-height:0; }
+:root.float-artist-postmark :is(.chat-gift-card-kicker,.chat-gift-card-main,.chat-gift-card-divider,.chat-gift-card-footer) { display:none; }
+:root.float-artist-postmark .chat-gift-card-source { font-size:11px; }
+:root.float-artist-postmark .chat-gift-card-status { padding:2px 5px; color:#9b79b7; background:#f3edf8; border-radius:5px; font-size:10px; }
+:root.float-artist-postmark .chat-gift-card-grid { margin-top:10px; gap:8px; }
+:root.float-artist-postmark .chat-gift-card-cell-label { font-size:10px; color:#aaa; }
+:root.float-artist-postmark .chat-gift-card-cell-value { font-size:11px; font-weight:400; }
+/* 位置保留淡绿地图示意；音乐使用唱片缩略图，不套礼封，也不添加假进度条。 */
+:root.float-artist-postmark .chat-location-map { height:90px; background-color:#e5eee5; background-image:linear-gradient(118deg,transparent 35%,#fff9 35%,#fff9 40%,transparent 40%),linear-gradient(25deg,transparent 54%,#fffc 54%,#fffc 59%,transparent 59%); }
+:root.float-artist-postmark .chat-location-map > :not(.postmark-location-pin) { display:none; }
+:root.float-artist-postmark .postmark-location-pin { width:27px; height:33px; position:relative; z-index:1; fill:#839b88; stroke:#fff; stroke-width:1.5; filter:drop-shadow(0 3px 3px #657e6a25); }
+:root.float-artist-postmark .chat-location-label { background:#fff; color:#999; padding:11px 13px; gap:7px; }
+:root.float-artist-postmark .chat-location-label > svg { width:13px; height:13px; stroke:#839b88; }
+:root.float-artist-postmark .chat-location-label > span { color:#666; font-size:12px; font-weight:500; }
+:root.float-artist-postmark .chat-music-share-body { display:flex; align-items:center; gap:11px; padding:13px; }
+:root.float-artist-postmark .chat-music-share-cover { display:grid; place-items:center; width:49px; height:49px; flex:none; border-radius:9px; color:#fff; background:radial-gradient(circle,#fff 0 3%,#d8c8ed 4% 12%,#9e87b9 13% 18%,#b39dc9 19% 25%,#a68dbf 26% 31%,#b39dc9 32% 39%,#9e87b9 40% 48%,transparent 49%),linear-gradient(135deg,#e6dcf6,#eee6fa); }
+:root.float-artist-postmark .chat-music-share-cover > svg { display:none; }
+:root.float-artist-postmark .chat-music-share-info { flex:1; min-width:0; }
+:root.float-artist-postmark .chat-music-share-title { font-size:13px; font-weight:500; color:#555; }
+:root.float-artist-postmark .chat-music-share-artist { margin-top:5px; font-size:11px; color:#999; }
+:root.float-artist-postmark .postmark-music-play { width:25px; height:25px; padding:5px; box-sizing:border-box; flex:none; border:0; border-radius:50%; background:#f3edf9; fill:none; stroke:#a086b9; stroke-width:1.5; pointer-events:none; }
+:root.float-artist-postmark .chat-music-share-footer { padding:8px 13px; border-top:1px solid #f1edf4; background:#fff; font-size:10px; color:#aaa; }
+:root.float-artist-postmark :is(.chat-photo-card,.chat-media-file-image,.chat-media-file-video) { border:0; border-radius:17px; overflow:hidden; box-shadow:none; }
+@media (prefers-reduced-motion:reduce) { :root.float-artist-postmark .postmark-typing-dot,:root.float-artist-postmark .postmark-tools-panel { animation:none; } }
+:root.float-artist-postmark .chat-gift-card-body > div { min-height:0; }
+:root.float-artist-postmark .chat-gift-card-body > div > .flex-1:empty { display:none; }
+:root.float-artist-postmark .chat-music-share-cover > svg { stroke:currentColor; }
+
+/* 小号固定字标，徽章底框尺寸保持。 */
+:root.float-artist-postmark .postmark-artist-badge { width:43px; min-width:43px; padding:2px 6px; height:13px; box-sizing:border-box; justify-content:center; }
+:root.float-artist-postmark .postmark-artist-word { width:29px; height:6.4px; flex:none; }
+
+/* 无加号版改为紧凑竖向列表。 */
+:root.float-artist-postmark .postmark-tools-panel { width:170px; padding:8px; border-radius:15px; }
+:root.float-artist-postmark .postmark-tools-heading { display:none; }
+:root.float-artist-postmark .postmark-tools-grid { grid-template-columns:minmax(0,1fr); gap:0; }
+:root.float-artist-postmark .postmark-tools-entry { flex-direction:row; justify-content:flex-start; min-height:37px; padding:0 11px; gap:12px; border-radius:8px; }
+:root.float-artist-postmark .postmark-tools-entry > svg { width:18px; height:18px; flex:none; }
+:root.float-artist-postmark .postmark-tools-label { font-size:12px; }
+:root.float-artist-postmark .postmark-tools-settings { margin-top:6px; padding:11px 11px 5px; font-size:12px; }
+
+/* 独立实心转写气泡，配色直接使用两侧主气泡变量。 */
+:root.float-artist-postmark .voice-msg-text-bubble { max-width:min(78%,var(--postmark-transcript-max,190px)); padding:6px 9px; border:0; border-radius:11px; background:var(--postmark-other-bg); color:var(--postmark-other-ink); font-size:12px; line-height:1.55; box-sizing:border-box; opacity:1; }
+:root.float-artist-postmark .postmark-voice-transcript { margin-top:-9px !important; }
+:root.float-artist-postmark .postmark-voice-transcript[data-role="user"] { padding-right:7px; }
+:root.float-artist-postmark .postmark-voice-transcript[data-role="assistant"] { padding-left:58px; }
+:root.float-artist-postmark .postmark-voice-transcript[data-role="user"] .voice-msg-text-bubble { background:var(--postmark-self-bg); color:var(--postmark-self-ink); }
+:root.float-artist-postmark .voice-msg-text-bubble .chat-markdown { font-size:inherit; color:inherit; }
+
+/* 处理回执只展示于用户消息旁，不改变原生投递状态。 */
+:root.float-artist-postmark .postmark-row[data-role="user"] > .chat-msg-content-wrap { position:relative; overflow:visible; }
+:root.float-artist-postmark .postmark-read-receipt { position:absolute; inset:0; pointer-events:none; }
+:root.float-artist-postmark .postmark-read-avatar { display:none; position:absolute; top:-5px; left:-12px; width:20px; height:20px; border-radius:50%; overflow:hidden; background:var(--postmark-self-bg); }
+:root.float-artist-postmark .postmark-read-avatar img { display:block; width:100%; height:100%; object-fit:cover; border-radius:50%; }
+:root.float-artist-postmark .postmark-read-check { position:absolute; right:calc(100% + 8px); bottom:18px; display:grid; place-items:center; width:15px; height:15px; border-radius:50%; background:var(--postmark-self-bg); color:var(--postmark-self-ink); }
+:root.float-artist-postmark .postmark-read-check-icon { width:12px; height:12px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+:root.float-artist-postmark .postmark-receipt-arriving .postmark-read-avatar { display:block; animation:postmark-read-face 750ms ease both; }
+:root.float-artist-postmark .postmark-receipt-arriving .postmark-read-check { animation:postmark-read-tick 750ms ease both; }
+@keyframes postmark-read-face { 0% { opacity:0; transform:scale(.7); } 12%,75% { opacity:1; transform:scale(1); } 100% { opacity:0; transform:scale(.85); } }
+@keyframes postmark-read-tick { 0%,80% { opacity:0; } 100% { opacity:1; } }
+
+/* 事件提示保留原文，去掉厚重胶囊。错误详情独立折叠。 */
+:root.float-artist-postmark .postmark-event-note { padding:4px 10px; max-width:88%; margin:0; border:0; border-radius:0; background:transparent; color:#939393; box-shadow:none; font-size:11px; line-height:1.65; text-align:left; overflow-wrap:anywhere; }
+:root.float-artist-postmark .postmark-error-native { max-width:min(90%,310px); width:100%; padding:0; border:0; background:transparent; box-shadow:none; font-size:0; line-height:0; color:transparent; text-align:left; }
+:root.float-artist-postmark .postmark-error-card { padding:13px 15px; border:1px solid #f0e5eb; border-radius:15px; background:#fff; color:#555; font-size:12px; line-height:1.6; white-space:normal; }
+:root.float-artist-postmark .postmark-error-title { margin-bottom:5px; color:#ab778c; font-size:12px; font-weight:600; }
+:root.float-artist-postmark .postmark-error-summary { color:#777; font-size:12px; }
+:root.float-artist-postmark .postmark-error-details { margin-top:8px; }
+:root.float-artist-postmark .postmark-error-toggle { cursor:pointer; color:#999; font-size:11px; }
+:root.float-artist-postmark .postmark-error-raw { margin-top:7px; max-height:160px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:#888; font:11px/1.6 ui-monospace,monospace; user-select:text; -webkit-user-select:text; }
+:root.float-artist-postmark .postmark-error-copy { margin-top:8px; padding:4px 8px; border:1px solid #eee; border-radius:7px; background:#fafafa; color:#777; font-size:11px; cursor:pointer; }
+@media (prefers-reduced-motion:reduce) {
+ :root.float-artist-postmark .postmark-receipt-arriving .postmark-read-avatar { display:none; animation:none; }
+ :root.float-artist-postmark .postmark-receipt-arriving .postmark-read-check { animation:none; }
+}
+
+/* 字体使用固定 Roboto Bold 轮廓；只改字形，徽章外框保持。 */
+:root.float-artist-postmark .postmark-artist-word { width:30px; height:6.4px; flex:none; fill:#fff; stroke:none; }
+:root.float-artist-postmark .postmark-anniversary { width:100%; border:0; cursor:pointer; }
+
+/* 气泡在消息尾侧留直角，信息栏统一放在气泡外侧。 */
+:root.float-artist-postmark .postmark-row [data-ui="bubble-bot"]:not(.chat-bubble-media):not(.chat-bubble-html-preview),
+:root.float-artist-postmark .postmark-row .chat-quote-message:has(> .postmark-quote-card) > :not(.chat-quote-preview):not([data-postmark-ui]) { border-radius:0 12px 12px 12px; }
+:root.float-artist-postmark .postmark-row [data-ui="bubble-user"]:not(.chat-bubble-media):not(.chat-bubble-html-preview),
+:root.float-artist-postmark .postmark-row[data-role="user"] .chat-quote-message:has(> .postmark-quote-card) > :not(.chat-quote-preview):not([data-postmark-ui]) { border-radius:12px 12px 0 12px; }
+:root.float-artist-postmark .postmark-meta { position:absolute; width:max-content; gap:4px; padding-bottom:1px; min-width:0; align-items:flex-start; justify-content:flex-end; }
+:root.float-artist-postmark .postmark-row[data-role="user"] .postmark-meta { align-items:center; }
+:root.float-artist-postmark .postmark-translate { align-self:stretch; width:auto; height:22px; margin:0; justify-items:start; }
+:root.float-artist-postmark .postmark-translate::after { content:""; position:absolute; inset:-4px; }
+:root.float-artist-postmark .postmark-read-receipt { position:static; display:grid; place-items:center; width:28px; height:20px; pointer-events:none; order:1; }
+:root.float-artist-postmark .postmark-read-check { position:static; width:15px; height:15px; }
+:root.float-artist-postmark .postmark-meta .postmark-time { order:2; }
+
+/* 语音保留原生播放行为，使用声波图标和 mm:ss 时长。 */
+:root.float-artist-postmark .voice-msg-bubble { display:flex; align-items:center; justify-content:flex-start; gap:10px; min-width:0 !important; width:var(--postmark-voice-length,130px); max-width:100%; height:calc(14px * var(--app-text-scale,1) * 1.5); padding:0; box-sizing:border-box; color:inherit; }
+:root.float-artist-postmark .voice-msg-bubble > .voice-msg-icon-shell,
+:root.float-artist-postmark .voice-msg-bubble > .voice-msg-bars,
+:root.float-artist-postmark .voice-msg-bubble > .voice-msg-dur { display:none; }
+:root.float-artist-postmark .postmark-voice-signal { width:20px; height:20px; flex:none; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; }
+:root.float-artist-postmark .postmark-voice-time { color:inherit; font-size:15px; font-variant-numeric:tabular-nums; }
+:root.float-artist-postmark .postmark-row .chat-bubble-media:has(.voice-msg-bubble) { border-radius:0 12px 12px 12px; padding:9px 12px; font-size:calc(14px * var(--app-text-scale,1)); line-height:1.5; }
+:root.float-artist-postmark .postmark-row[data-role="user"] .chat-bubble-media:has(.voice-msg-bubble) { border-radius:12px 12px 0 12px; }
+:root.float-artist-postmark .postmark-voice-transcript { margin-top:-9px !important; }
+:root.float-artist-postmark .postmark-voice-transcript[data-role="assistant"] { padding-left:51px; }
+:root.float-artist-postmark .postmark-voice-transcript[data-role="user"] { padding-right:0; }
+:root.float-artist-postmark .voice-msg-text-bubble { width:fit-content; max-width:min(85%,var(--postmark-transcript-max,260px)); padding:8px 11px; border-radius:13px; font-size:12px; }
+
+/* 对话旁注：贴在相关消息下方，统一中性灰。 */
+:root.float-artist-postmark .postmark-notice-linked { display:none; }
+:root.float-artist-postmark .postmark-aside-note { align-self:flex-end; max-width:83%; margin-top:7px; padding:0 4px; color:#999; font-size:10px; line-height:1.6; white-space:normal; overflow-wrap:anywhere; box-sizing:border-box; }
+:root.float-artist-postmark .postmark-aside-note[data-role="assistant"] { align-self:flex-start; margin-left:51px; padding-left:8px; border-left:2px solid #e4e1e7; }
+:root.float-artist-postmark .postmark-aside-note.postmark-error-card { width:fit-content; max-width:85%; border:0; border-radius:0; background:transparent; color:#999; box-shadow:none; padding:0 4px; }
+:root.float-artist-postmark .postmark-error-details { margin:0; }
+:root.float-artist-postmark .postmark-error-toggle { display:inline-flex; align-items:center; justify-content:flex-start; gap:4px; color:inherit; font-size:10px; list-style:none; }
+:root.float-artist-postmark .postmark-error-toggle::-webkit-details-marker { display:none; }
+:root.float-artist-postmark .postmark-error-toggle::after { content:"⌄"; margin-left:2px; }
+:root.float-artist-postmark .postmark-error-mark { display:inline-grid; place-items:center; width:11px; height:11px; flex:none; border:1px solid currentColor; border-radius:50%; font:8px/1 system-ui,sans-serif; }
+:root.float-artist-postmark .postmark-error-title { margin:0; color:inherit; font-size:inherit; font-weight:400; }
+:root.float-artist-postmark .postmark-error-details[open] { padding:8px 10px; border-radius:10px; background:var(--postmark-other-bg); }
+:root.float-artist-postmark .postmark-error-raw { color:#888; font-size:10px; }
+:root.float-artist-postmark .postmark-error-copy { font-size:10px; }
+/* 回执缩小并靠向气泡，圆勾与时间戳右边缘对齐。 */
+:root.float-artist-postmark .postmark-meta { gap:2px; }
+:root.float-artist-postmark .postmark-row[data-role="user"] .postmark-meta { align-items:flex-end; }
+:root.float-artist-postmark .postmark-read-receipt { width:100%; height:14px; display:flex; justify-content:flex-end; align-items:flex-end; }
+:root.float-artist-postmark .postmark-read-check { width:12px; height:12px; }
+:root.float-artist-postmark .postmark-read-check-icon { width:9px; height:9px; stroke-width:2.2; }
+
+/* 正圆底直接画在 SVG 内，避免模糊滤镜与箭头描边叠成不规则轮廓。 */
+:root.float-artist-postmark .postmark-translate::before { content:none; }
+:root.float-artist-postmark .postmark-translation-icon { width:17px; height:17px; overflow:visible; stroke-width:1.3; }
+:root.float-artist-postmark .postmark-translation-disc { fill:var(--postmark-translate-glass,#9898984d); stroke:none; }
+
+/* 轻薄灰色胶囊；下方规则在原生提示行内按消息侧边对齐。 */
+:root { --postmark-note-bg:rgb(100 100 100 / .12); /* 提示胶囊底色 */ --postmark-note-ink:#888; /* 提示文字 */ }
+:root.float-artist-postmark .postmark-aside-note,
+:root.float-artist-postmark .postmark-aside-note.postmark-error-card { margin-top:-10px; padding:2px 8px; border:0; border-radius:999px; background:var(--postmark-note-bg); color:var(--postmark-note-ink); font-size:10px; line-height:1.45; }
+:root.float-artist-postmark .postmark-aside-note[data-role="assistant"] { padding:2px 8px; border:0; }
+:root.float-artist-postmark .postmark-aside-note:has(details[open]) { border-radius:11px; }
+/* 常规/工具提示保留在自己的原生行内，不复制、不搬到旧气泡。 */
+:root.float-artist-postmark .chat-msg-wrapper[data-role="system"] > .postmark-event-note { max-width:90%; padding:2px 8px; border:0; border-radius:999px; background:var(--postmark-note-bg); color:var(--postmark-note-ink); font-size:10px; line-height:1.45; white-space:pre-wrap; overflow-wrap:anywhere; }
+:root.float-artist-postmark .postmark-notice-row { box-sizing:border-box; justify-content:flex-end; }
+:root.float-artist-postmark .postmark-notice-row[data-postmark-note-side="assistant"] { justify-content:flex-start; padding-left:calc(var(--postmark-avatar) + 8px + var(--postmark-gap)); }
+:root.float-artist-postmark .postmark-notice-row[data-postmark-note-side="center"] { justify-content:center; padding:0; }
+:root.float-artist-postmark .postmark-notice-row > :is(.postmark-event-note,.postmark-aside-note) { align-self:flex-start; max-width:90%; margin:0; }
+:root.float-artist-postmark .postmark-notice-row > .postmark-aside-note[data-role="assistant"] { margin-left:0; }
+:root.float-artist-postmark .page-body > .postmark-aside-group { margin-top:-8px; }
+
+/* 首条加载消息及间隔满 24 小时后的消息：浅细线在上，日期在下。 */
+:root.float-artist-postmark .postmark-native-date { display:none; }
+:root.float-artist-postmark .postmark-day-divider { display:flex; flex-direction:column; align-items:center; gap:5px; margin:2px 0 -10px; padding:0; background:none; }
+:root.float-artist-postmark .postmark-day-divider::before { content:""; display:block; width:100%; height:1px; background:var(--postmark-day-line); }
+:root.float-artist-postmark .postmark-day-label { padding:0; background:none; color:var(--postmark-day-ink); font-size:11px; line-height:1.4; font-weight:400; }
+@media (prefers-reduced-motion:reduce) { :root.float-artist-postmark .postmark-menu-veil { transition:none; } }
+
+/* 用户语音镜像：时长在左、声波在右；仅镜像声波，不反转数字。 */
+:root.float-artist-postmark .postmark-row[data-role="user"] .voice-msg-bubble { flex-direction:row-reverse; }
+:root.float-artist-postmark .postmark-row[data-role="user"] .postmark-voice-signal { transform:scaleX(-1); }
+
+/* ARTIST 心声弹窗：原生内容保留在隐藏的展开区，以沿用原有解析和翻译。 */
+:root.float-artist-postmark .postmark-thought-source > :is(.chat-thought-card,.chat-status-bare) { display:none; }
+:root.float-artist-postmark .postmark-thought-dialog { position:fixed; inset:0; width:min(344px,calc(100% - 36px)); max-height:80vh; box-sizing:border-box; margin:auto; padding:23px 21px 20px; overflow:auto; border:0; border-radius:17px; background:#fff; color:#242424; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; box-shadow:0 10px 50px #00000012; }
+:root.float-artist-postmark .postmark-thought-dialog::backdrop { background:#00000028; backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); }
+:root.float-artist-postmark .postmark-thought-dialog[open] { animation:postmark-thought-in 170ms ease-out; }
+:root.float-artist-postmark .postmark-thought-close { position:absolute; top:8px; right:8px; display:grid; place-items:center; width:25px; height:25px; padding:5px; border:0; border-radius:50%; background:transparent; color:#aaa; cursor:pointer; }
+:root.float-artist-postmark .postmark-thought-close-icon { width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:1.5; }
+:root.float-artist-postmark .postmark-thought-header { display:flex; align-items:center; gap:10px; padding-right:10px; }
+:root.float-artist-postmark .postmark-thought-avatar { width:36px; height:36px; flex:none; overflow:hidden; display:grid; place-items:center; border-radius:50%; background:#f1f1f1; color:#888; font-size:15px; }
+:root.float-artist-postmark .postmark-thought-avatar > img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+:root.float-artist-postmark .postmark-thought-author { min-width:0; }
+:root.float-artist-postmark .postmark-thought-name { display:block; color:#242424; font-size:14px; line-height:1.4; font-weight:650; overflow-wrap:anywhere; }
+:root.float-artist-postmark .postmark-thought-date { display:block; margin-top:1px; color:#aaa; font-size:11px; line-height:1.4; }
+:root.float-artist-postmark .postmark-thought-body { margin-top:14px; color:#242424; font-size:15px; line-height:1.65; overflow-wrap:anywhere; }
+:root.float-artist-postmark .postmark-thought-body * { font-size:inherit; line-height:inherit; color:inherit; font-style:normal; }
+:root.float-artist-postmark .postmark-thought-body.postmark-thought-translated { color:var(--postmark-translation); }
+:root.float-artist-postmark .postmark-thought-translate { display:block; margin-top:8px; padding:0; border:0; background:none; color:#999; font:inherit; font-size:12px; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+:root.float-artist-postmark .postmark-thought-stats { display:flex; align-items:center; gap:25px; margin-top:14px; color:#292929; }
+:root.float-artist-postmark .postmark-thought-stat { display:flex; align-items:center; gap:7px; min-width:0; font-size:12px; font-weight:550; }
+:root.float-artist-postmark .postmark-thought-stat:last-child { margin-left:auto; }
+:root.float-artist-postmark .postmark-thought-stat-icon { width:21px; height:21px; flex:none; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+:root.float-artist-postmark .postmark-thought-value { font-variant-numeric:tabular-nums; }
+:root.float-artist-postmark .postmark-thought-extra { margin-top:13px; color:#999; font-size:11px; }
+:root.float-artist-postmark .postmark-thought-extra-text { margin-top:7px; white-space:pre-wrap; overflow-wrap:anywhere; }
+@keyframes postmark-thought-in { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+@media (prefers-reduced-motion:reduce) { :root.float-artist-postmark .postmark-thought-dialog[open] { animation:none; } }
+
+/* 线下：双方沿同一阅读流使用独立卡片，保留原生正文与长按操作。 */
+:root.float-artist-postmark .chat-offline-body { display:flex; flex-direction:column; gap:16px; padding:7px 0 12px; }
+:root.float-artist-postmark .chat-offline-time { display:none; }
+:root.float-artist-postmark .chat-offline-turn { display:flex; flex-direction:column; gap:16px; border:0; border-radius:0; background:none; overflow:visible; backdrop-filter:none; -webkit-backdrop-filter:none; }
+:root.float-artist-postmark .chat-offline-entry { position:relative; display:flex; flex-direction:column; gap:0; margin-left:18px; padding:15px 16px 15px 22px; border:1px solid #ededed; border-radius:16px; background:#fff; overflow:visible; }
+:root.float-artist-postmark .chat-offline-entry::before { content:none; }
+:root.float-artist-postmark .chat-offline-entry > :is(.chat-offline-label,.chat-offline-label-row,.chat-reasoning-trigger) { display:none; }
+:root.float-artist-postmark .chat-offline-entry > .chat-offline-avatar { position:absolute; display:grid; place-items:center; left:-18px; top:15px; width:35px; height:35px; overflow:hidden; border-radius:50%; background:#eee; }
+:root.float-artist-postmark .chat-offline-avatar > img { width:100%; height:100%; object-fit:cover; }
+:root.float-artist-postmark .postmark-offline-header { display:flex; align-items:baseline; flex-wrap:wrap; gap:5px 9px; padding-right:17px; margin-top:4px; margin-bottom:7px; }
+:root.float-artist-postmark .postmark-offline-name { color:#6b84f3; font-size:13px; line-height:1.4; font-weight:650; }
+:root.float-artist-postmark .chat-offline-entry[data-role="user"] .postmark-offline-name { color:#777; }
+:root.float-artist-postmark .postmark-offline-date { color:#aaa; font-size:10px; }
+:root.float-artist-postmark .chat-offline-text { padding:0; margin:0; color:#242424; font-size:14px; line-height:1.75; border-radius:0; }
+:root.float-artist-postmark .chat-offline-text .chat-markdown { color:inherit; font-size:inherit; line-height:inherit; }
+:root.float-artist-postmark .chat-offline-paragraph-stack { gap:12px; }
+:root.float-artist-postmark .chat-offline-entry .chat-bilingual-toggle { margin-top:9px; color:#999; font-size:11px; text-decoration:underline; text-underline-offset:3px; }
+:root.float-artist-postmark .chat-offline-entry .chat-bilingual-section-translation { color:var(--postmark-translation); font-style:normal; }
+:root.float-artist-postmark .chat-offline-entry .chat-bilingual-section-translation * { color:inherit; font-style:normal; }
+:root.float-artist-postmark .postmark-offline-more { position:absolute; top:12px; right:7px; display:grid; place-items:center; width:25px; height:28px; border:0; padding:4px; background:none; color:#999; cursor:pointer; }
+:root.float-artist-postmark .postmark-offline-dots { width:17px; height:20px; fill:none; stroke:currentColor; stroke-width:3; stroke-linecap:round; }
+:root.float-artist-postmark .postmark-offline-card-menu { position:absolute; top:36px; right:10px; z-index:4; min-width:115px; padding:5px; border:1px solid #eee; border-radius:11px; background:#fff; box-shadow:0 5px 20px #00000010; }
+:root.float-artist-postmark .postmark-offline-card-action { display:block; width:100%; padding:9px 10px; border:0; border-radius:7px; background:none; color:#555; font-family:inherit; font-size:12px; text-align:left; cursor:pointer; }
+:root.float-artist-postmark .postmark-offline-card-action:active { background:#f5f5f5; }
+:root.float-artist-postmark .postmark-offline-summary-toggle { display:flex; align-items:center; align-self:flex-start; gap:7px; margin:16px 0 0; padding:0; border:0; background:none; color:#888; font-size:11px; cursor:pointer; }
+:root.float-artist-postmark .postmark-offline-comment { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+:root.float-artist-postmark .chat-offline-summary-fold { margin:0; padding:0; border:0; background:none; }
+:root.float-artist-postmark .chat-offline-summary-fold > summary { display:none; }
+:root.float-artist-postmark .chat-offline-summary-content { padding:11px 0 0; margin:0; background:none; color:#888; font-size:12px; line-height:1.6; }
+:root.float-artist-postmark .chat-offline-generating { padding:12px 0 12px 40px; margin:0; font-size:0; color:#999; }
+:root.float-artist-postmark .postmark-offline-pending { display:grid; grid-template-columns:30px minmax(0,1fr); gap:5px 9px; font-size:12px; text-align:left; }
+:root.float-artist-postmark .postmark-offline-pending-avatar { grid-column:1; grid-row:1 / 3; width:30px; height:30px; overflow:hidden; display:grid; place-items:center; border-radius:50%; background:#eee; }
+:root.float-artist-postmark .postmark-offline-pending-avatar > img { width:100%; height:100%; object-fit:cover; }
+:root.float-artist-postmark .postmark-offline-pending-name,:root.float-artist-postmark .postmark-offline-pending-text { grid-column:2; }
+:root.float-artist-postmark .postmark-offline-pending-name { color:#6b84f3; font-weight:600; }
+:root.float-artist-postmark .postmark-offline-pending-text { display:flex; align-items:center; gap:4px; }
+:root.float-artist-postmark.postmark-offline-mode .page-title > .chat-typing-indicator { display:none; }
+:root.float-artist-postmark .postmark-offline-composer { display:grid; grid-template-columns:32px minmax(0,1fr) 37px 39px; align-items:end; gap:0; padding:10px 10px 12px; background:#fff; }
+:root.float-artist-postmark .postmark-offline-composer > .chat-input-actions { display:contents; }
+:root.float-artist-postmark .postmark-offline-composer > textarea { grid-column:2; grid-row:1; height:42px; min-height:42px; padding:10px 12px; box-sizing:border-box; border:0; border-radius:23px 0 0 23px; background:#f4f4f4; box-shadow:none; font-size:14px; line-height:22px; }
+:root.float-artist-postmark .postmark-offline-composer .chat-input-actions > button { grid-row:1; width:100%; height:42px; margin:0; padding:8px; border:0; background:none; color:#333; }
+:root.float-artist-postmark .postmark-offline-composer .chat-input-actions > button:nth-child(1) { grid-column:1; }
+:root.float-artist-postmark .postmark-offline-composer .chat-input-actions > button:nth-child(2) { grid-column:3; background:#f4f4f4; border-radius:0 23px 23px 0; }
+:root.float-artist-postmark .postmark-offline-composer .chat-input-actions > button:nth-child(3) { grid-column:4; color:#aaa; }
+/* 无加号版在线下使用右上角菜单返回，不重复放置左下角入口。 */
+:root.float-artist-postmark.postmark-menu-top > .postmark-offline-composer { grid-template-columns:minmax(0,1fr) 37px 39px; }
+:root.float-artist-postmark.postmark-menu-top .postmark-offline-composer > textarea { grid-column:1; }
+:root.float-artist-postmark.postmark-menu-top .postmark-offline-composer .chat-input-actions > button:nth-child(1) { display:none; }
+:root.float-artist-postmark.postmark-menu-top .postmark-offline-composer .chat-input-actions > button:nth-child(2) { grid-column:2; }
+:root.float-artist-postmark.postmark-menu-top .postmark-offline-composer .chat-input-actions > button:nth-child(3) { grid-column:3; }
+:root.float-artist-postmark.postmark-offline-mode .chat-reasoning-sheet { border-radius:18px 18px 0 0; background:#fff; color:#333; box-shadow:none; }
+:root.float-artist-postmark.postmark-offline-mode .chat-reasoning-sheet-header { border-bottom:1px solid #f0f0f0; }
+:root.float-artist-postmark.postmark-offline-mode .chat-reasoning-sheet-body { font-size:13px; line-height:1.7; }
+
+/* Cover lettering: Caveat subset. Copyright 2014 The Caveat Project Authors (https://github.com/googlefonts/caveat)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded, 
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+
+*/
+@font-face { font-family:"Postmark Hand"; font-style:normal; font-weight:600; font-display:swap; src:url(data:font/ttf;base64,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//YADAACAAoACv/2AAv/9gAM//YADQAKAA4ACgAPAAoAEAAUABH/9gASAAoAFQAUABb/7AANAAP/7AAG/+wAB//2AAn/7AANAAoADgAKAA8ACgAQAAoAEgAKABT/9gAV//YAFv/YABf/7AAGAAIAHgAFAB4ABv/2AAgAPAAJ/+wADwAKAAEAB//2AAUAA//2AAT/9gAG/+wAB//iAAn/zgADAAIACgAG/+wACf/sAAEAB//sAAQAA//2AAb/7AAH//YACf/iAAEAF//sAAIAEAAKABf/+wABABAACgAGAAr/9gANAAoADgAKABAAFAAVACgAFwAKAAEADQAKAAsACwAUAAwACgANABQADgAKAA8AFAAQABQAEQAKABMACgAVAAoAFgAKABf/9gACABAACgAVAAoAAgAW//YAF//2AAIACv/7AA4ABQACAA0ACgAVAAoAAQAOAAUABAANAAoADgAKAA8ACgAQAAoABAAK//YADAAKABUACgAW//YAAQAAAAoAJgBAAAJERkxUAA5sYXRuAA4ABAAAAAD//wACAAAAAQACY2FsdAAObGlnYQAUAAAAAQABAAAAAQAAAA4AHgBqBl4GjgZeBo4GXgaOBl4GjgZeBo4GXgaOAAQAAAABAAgAAQA+AAEACAAGAA4AFgAeACQAKgAwADUAAwANAA4ANgADAA0AEAA0AAIADQA3AAIADgA4AAIAEAA5AAIAFQABAAEADQAGAAAAMABmAHgAigCeALIAyADeAPYBDgEoAUIBXgHoAfoCDAIgAjQCSgJgAngCkAKqAsQC4ANyA4QDlgOqA74D1APqBAIEGgQ0BE4EagS4BMoE3ATwBQQFGgUwBUgFYAV6BZQFsAADAAEBbAABAWwAAAABAAAAAgADAAEBRAABAVoAAAABAAAAAwADAAIA8AFIAAEBSAAAAAEAAAAEAAMAAgDcAR4AAQE0AAAAAQAAAAUAAwADAMgAyAEgAAEBIAAAAAEAAAAGAAMAAwCyALIA9AABAQoAAAABAAAABwADAAQAnACcAJwA9AABAPQAAAABAAAACAADAAQAhACEAIQAxgABANwAAAABAAAACQADAAUAbABsAGwAbADEAAEAxAAAAAEAAAAKAAMABQBSAFIAUgBSAJQAAQCqAAAAAQAAAAsAAwAGADgAOAA4ADgAOACQAAEAkAAAAAEAAAAMAAMABgAcABwAHAAcABwAXgABAHQAAAABAAAADQABAB8AAQACAAMABAAFAAYABwAIAAkACgAMAA4AEQAWABgAGgAcAB8AJAAmACgAKgAtADIANAA1ADYANwA4ADkAOwABAAkAGQAbAB0AHgAgACEAIgAjACUAAQAJAAsADQAPABAAEgATABQAFQAXAAMAAQF8AAEBfAAAAAEAAAACAAMAAQFcAAEBagAAAAEAAAADAAMAAgDwAVgAAQFYAAAAAQAAAAQAAwACANwBNgABAUQAAAABAAAABQADAAMAyADIATAAAQEwAAAAAQAAAAYAAwADALIAsgEMAAEBGgAAAAEAAAAHAAMABACcAJwAnAEEAAEBBAAAAAEAAAAIAAMABACEAIQAhADeAAEA7AAAAAEAAAAJAAMABQBsAGwAbABsANQAAQDUAAAAAQAAAAoAAwAFAFIAUgBSAFIArAABALoAAAABAAAACwADAAYAOAA4ADgAOAA4AKAAAQCgAAAAAQAAAAwAAwAGABwAHAAcABwAHAB2AAEAhAAAAAEAAAANAAEAKwABAAIAAwAEAAUABgAHAAgACQALAA0ADwAQABIAEwAUABUAFwAZABsAHQAeACAAIQAiACMAJQAnACkAKwAsAC4ALwAwADEAMwA0ADUANgA3ADgAOQA7AAEABQAYABoAHAAfACQAAQAFAAoADAAOABEAFgADAAEBPgABAT4AAAABAAAAAgADAAEBJAABASwAAAABAAAAAwADAAIA8AEaAAEBGgAAAAEAAAAEAAMAAgDcAP4AAQEGAAAAAQAAAAUAAwADAMgAyADyAAEA8gAAAAEAAAAGAAMAAwCyALIA1AABANwAAAABAAAABwADAAQAnACcAJwAxgABAMYAAAABAAAACAADAAQAhACEAIQApgABAK4AAAABAAAACQADAAUAbABsAGwAbACWAAEAlgAAAAEAAAAKAAMABQBSAFIAUgBSAHQAAQB8AAAAAQAAAAsAAwAGADgAOAA4ADgAOABiAAEAYgAAAAEAAAAMAAMABgAcABwAHAAcABwAPgABAEYAAAABAAAADQACAAUAAQABAAAABAAEAAEABwAHAAIACgA5AAMAOwA7ADMAAQACAAUABgABAAIAAgADAAMAAQE2AAEBNgAAAAEAAAACAAMAAQEeAAEBJAAAAAEAAAADAAMAAgDwARIAAQESAAAAAQAAAAQAAwACANwA+AABAP4AAAABAAAABQADAAMAyADIAOoAAQDqAAAAAQAAAAYAAwADALIAsgDOAAEA1AAAAAEAAAAHAAMABACcAJwAnAC+AAEAvgAAAAEAAAAIAAMABACEAIQAhACgAAEApgAAAAEAAAAJAAMABQBsAGwAbABsAI4AAQCOAAAAAQAAAAoAAwAFAFIAUgBSAFIAbgABAHQAAAABAAAACwADAAYAOAA4ADgAOAA4AFoAAQBaAAAAAQAAAAwAAwAGABwAHAAcABwAHAA4AAEAPgAAAAEAAAANAAIABAACAAMAAAAFAAYAAgAIADkABAA7ADsANgABAAEABAABAAEAAQABAAAAAQAIAAIAWAARAAQABQAGABgAGQAaABsAHAAdAB4AHwAgACEAIgAjACQAJQABAAAAAQAIAAIAKAARAAcACAAJACYAJwAoACkAKgArACwALQAuAC8AMAAxADIAMwACAAIAAQADAAAACgAXAAMAAAABAAEACAABAAAAFAAAAAAAAAACd2dodAEAAAA=) format("truetype"); }
+
+
+/* 可自定义：菜单/系统卡片与消息密度。字号从 14 调为 13.5，只小幅缩小。 */
+:root {
+  --postmark-message-font:13.5px; /* 聊天原文/译文字号，遵循系统文字缩放 */
+  --postmark-bubble-pad-y:8.5px; /* 气泡上下留白；语音和文字同步 */
+  --postmark-bubble-pad-x:11px; /* 气泡左右留白 */
+  --postmark-menu-bg:rgb(255 255 255 / .94); /* 长按菜单磨砂底色 */
+  --postmark-menu-ink:#333333; /* 长按菜单普通文字 */
+  --postmark-menu-danger:#cc707a; /* 重试、删除统一颜色 */
+  --postmark-menu-line:rgb(80 80 80 / .10); /* 菜单细分隔线 */
+  --postmark-instruction-bg:#ffffff; /* 系统指令卡底色 */
+  --postmark-instruction-ink:#555555; /* 系统指令正文 */
+  --postmark-instruction-label:#999999; /* 系统指令小标题 */
+}
+:root.float-artist-postmark > .page-body { gap:var(--postmark-message-gap); }
+:root.float-artist-postmark .postmark-row [data-ui^="bubble-"]:not(.chat-bubble-media):not(.chat-bubble-html-preview),
+:root.float-artist-postmark .postmark-row .chat-bubble-media:has(.voice-msg-bubble) {
+  padding:var(--postmark-bubble-pad-y) var(--postmark-bubble-pad-x);
+  font-size:calc(var(--postmark-message-font) * var(--app-text-scale,1));
+}
+/* Native send-and-reply is the visible paper plane. Native stop takes over while replying. */
+:root.float-artist-postmark .postmark-reply-ready > .chat-input-actions > button:nth-of-type(5) { display:none; }
+:root.float-artist-postmark .postmark-reply-ready > .chat-input-actions > button:nth-of-type(6) { display:grid; grid-column:4; grid-row:1; order:13; }
+:root.float-artist-postmark.postmark-menu-top .postmark-reply-ready > .chat-input-actions > button:nth-of-type(6) { grid-column:3; }
+:root.float-artist-postmark .postmark-offline-composer button:has(.postmark-plane-icon) > svg:not([data-postmark-ui]) { display:none; }
+:root.float-artist-postmark .postmark-offline-composer .postmark-plane-icon { width:27px; height:27px; fill:none; stroke:currentColor; stroke-width:1.55; stroke-linecap:round; stroke-linejoin:round; }
+:root.float-artist-postmark .chat-input-actions > button[aria-label^="停止"] .postmark-plane-icon { animation:postmark-plane-pulse 1.4s ease-in-out infinite; }
+@keyframes postmark-plane-pulse { 0%,100% {opacity:1} 50% {opacity:.4} }
+@media(prefers-reduced-motion:reduce) { :root.float-artist-postmark .chat-input-actions .postmark-plane-icon { animation:none !important; } }
+/* Error UI remains INSIDE Float's native long-press target; no handler proxy or fake deletion. */
+:root.float-artist-postmark .postmark-notice-linked { display:block; font-size:0; padding:0; background:none; border:0; max-width:90%; }
+:root.float-artist-postmark .postmark-notice-linked > .postmark-error-card { margin:0; max-width:100%; }
+:root.float-artist-postmark .ctx-menu {
+ --ctx-menu-bg:var(--postmark-menu-bg);
+ background:var(--postmark-menu-bg); color:var(--postmark-menu-ink);
+ backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+ box-shadow:0 4px 18px rgb(0 0 0 / .10),inset 0 0 0 1px var(--postmark-menu-line);
+}
+:root.float-artist-postmark .ctx-menu-btn { color:var(--postmark-menu-ink); }
+:root.float-artist-postmark .ctx-menu-btn-danger { color:var(--postmark-menu-danger); }
+:root.float-artist-postmark .ctx-menu-btn:not(:last-of-type) { border-right-color:var(--postmark-menu-line); }
+:root.float-artist-postmark .chat-system-instruction-card { width:fit-content; max-width:90%; min-width:120px; padding:11px 14px; border:0; border-radius:12px; background:var(--postmark-instruction-bg); color:var(--postmark-instruction-ink); box-shadow:none; }
+:root.float-artist-postmark .chat-system-instruction-head { justify-content:flex-start; margin:0 0 6px; padding:0; }
+:root.float-artist-postmark .chat-system-instruction-title { font-size:10px; font-weight:500; color:var(--postmark-instruction-label); }
+:root.float-artist-postmark .chat-system-instruction-body { padding:0; font-size:13px; line-height:1.6; text-align:left; color:var(--postmark-instruction-ink); }
+
+/* 素材/字体来源与授权说明（请随文件保留）
+ARTIST：Roboto Bold 字形轮廓，Copyright 2011 The Roboto Project Authors
+https://github.com/googlefonts/roboto-classic ，SIL OFL 1.1（完整条款见本文件 Caveat 授权段）。
+封面手写字：Caveat 子集，Copyright 2014 The Caveat Project Authors，SIL OFL 1.1，完整条款及字体已内嵌。
+bubble：普通文本，调用设备 Georgia italic/serif 系统字体，未附带或分发 Georgia 字体文件；不主张其字体分发许可。
+本主题为仿制风格，未获得 Bubble 品牌/商标的官方授权或背书，未嵌入其官方标志文件。
+封面插画：本文件 CSS 几何图形绘制，未嵌入第三方封面图片。头像和聊天背景由用户在 Float 中提供。
+图标：包含本主题绘制路径、Float 原生控件图标，以及 Lucide/Feather 来源路径；原生图标仍遵循 Float 各自依赖许可。
+Lucide/Feather 的许可原文如下：
+ISC License
+
+Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2026 as part of Feather (MIT). All other copyright (c) for Lucide are held by Lucide Contributors 2026.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+---
+
+The MIT License (MIT) (for portions derived from Feather)
+
+Copyright (c) 2013-2026 Cole Bemis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/* 可改：发送纸飞机的静止颜色；回复时保持原图形并轻轻闪动。 */
+:root { --postmark-plane-ink:#202020; /* 纸飞机线条 */ }
+:root.float-artist-postmark .chat-input-actions button:has(.postmark-plane-icon) { color:var(--postmark-plane-ink); }
+:root.float-artist-postmark .postmark-row .chat-quote-message:has(> .postmark-quote-card) > :not(.chat-quote-preview):not([data-postmark-ui]) { font-size:calc(var(--postmark-message-font) * var(--app-text-scale,1)); padding:var(--postmark-bubble-pad-y) var(--postmark-bubble-pad-x); }
+
+
+/* 将消息内容限制在独立层叠上下文，原生激活消息/错误菜单不再越过磨砂遮罩。 */
+:root.float-artist-postmark > .page-body { isolation:isolate; z-index:0; }
+:root.float-artist-postmark:has(> .postmark-menu-veil.postmark-veil-open) > .ctx-menu { visibility:hidden; pointer-events:none; }
+/* 引用栏独占首行，所有输入控件固定在下一行；避免只有纸飞机跑到引用栏上方。 */
+:root.float-artist-postmark > .postmark-compact-composer { --postmark-compose-row:1; }
+:root.float-artist-postmark > .postmark-compact-composer:has(> .chat-quote-bar) { --postmark-compose-row:2; }
+:root.float-artist-postmark > .postmark-compact-composer > .chat-quote-bar { grid-row:1; grid-column:1 / -1; }
+:root.float-artist-postmark > .postmark-compact-composer > textarea,
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button { grid-row:var(--postmark-compose-row) !important; }
+/* 两侧时间框底边贴齐实际气泡，不受引用预览、语音转写或回执的高度影响。 */
+:root.float-artist-postmark .postmark-meta { padding-bottom:0; }
+:root.float-artist-postmark .postmark-card-notice-source { display:none; }
+:root.float-artist-postmark .page-body > .postmark-linked-notice-group { display:none; }
+:root.float-artist-postmark .postmark-card-receipt { align-self:flex-start; width:fit-content; max-width:100%; margin-top:5px; padding:2px 8px; border-radius:999px; background:var(--postmark-note-bg); color:var(--postmark-note-ink); font-size:10px; line-height:1.45; overflow-wrap:anywhere; cursor:pointer; }
+:root.float-artist-postmark .postmark-row[data-role="user"] .postmark-card-receipt { align-self:flex-end; }
+
+/* 插件选色后优先使用插件颜色；“还原”重新使用本文件变量。 */
+:root { --postmark-heart-light:#f4a8c3; /* 爱心浅色切面 */ }
+:root.float-artist-postmark .postmark-heart > path + path { fill:var(--postmark-heart-light); }
+/* 日期只允许点天数，bubble 和心形不接收点击。 */
+:root.float-artist-postmark .postmark-anniversary { cursor:default; }
+:root.float-artist-postmark .postmark-anniversary-text { display:inline-block; width:auto; min-width:0; padding:2px 0; border:0; border-radius:4px; background:none; color:inherit; font:inherit; cursor:pointer; }
+:root.float-artist-postmark .postmark-anniversary-text:focus-visible { outline:2px solid var(--postmark-translation); outline-offset:3px; }
+/* 圆勾用短淡入，保持圆形尺寸与原有位置。 */
+:root.float-artist-postmark .postmark-read-check { animation:postmark-check-appear 240ms ease-out both; transform-origin:center; }
+@keyframes postmark-check-appear { from{opacity:0;transform:scale(.78)} to{opacity:1;transform:scale(1)} }
+/* 输入状态复用角色消息的头像、姓名和气泡比例，替换时只淡入第一条内容。 */
+:root.float-artist-postmark .postmark-typing-row { align-items:flex-start; padding:0; gap:var(--postmark-gap); }
+:root.float-artist-postmark .postmark-typing-avatar { position:relative; flex:0 0 calc(var(--postmark-avatar) + 8px); width:calc(var(--postmark-avatar) + 8px); height:calc(var(--postmark-avatar) + 8px); padding:4px; box-sizing:border-box; }
+:root.float-artist-postmark .postmark-typing-avatar::before { content:""; position:absolute;inset:0;padding:2px;border-radius:50%;background:var(--postmark-artist);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none; }
+:root.float-artist-postmark .postmark-typing-avatar > div { width:var(--postmark-avatar); height:var(--postmark-avatar); border-radius:50%; overflow:hidden; }
+:root.float-artist-postmark .postmark-typing-avatar img { width:100%;height:100%;object-fit:cover;border-radius:50%; }
+:root.float-artist-postmark .postmark-typing-content { display:flex;flex-direction:column;align-items:flex-start;gap:0; }
+:root.float-artist-postmark .postmark-typing-content .postmark-sender { margin-bottom:4px;pointer-events:none; }
+:root.float-artist-postmark .postmark-typing-bubble { box-sizing:border-box;min-height:calc(1.5 * var(--postmark-message-font) * var(--app-text-scale,1) + 2 * var(--postmark-bubble-pad-y));padding:var(--postmark-bubble-pad-y) var(--postmark-bubble-pad-x);border-radius:0 12px 12px 12px;gap:4px;min-width:54px;justify-content:center;background:var(--postmark-other-bg);color:var(--postmark-other-ink); }
+:root.float-artist-postmark .chat-stream-bubble { border:0;box-shadow:none;border-radius:0 12px 12px 12px;background:var(--postmark-other-bg);color:var(--postmark-other-ink);padding:var(--postmark-bubble-pad-y) var(--postmark-bubble-pad-x); }
+:root.float-artist-postmark .chat-stream-text { font-size:calc(var(--postmark-message-font) * var(--app-text-scale,1));line-height:1.5;color:var(--postmark-other-ink); }
+@media(prefers-reduced-motion:reduce){ :root.float-artist-postmark .postmark-read-check {animation:none;} }
+
+/* 线下输入框和表情端盖共用同一行高度，多行时同步拉高，图标始终居中。 */
+:root.float-artist-postmark .postmark-offline-composer > textarea { background:var(--postmark-field);color:var(--postmark-chrome-ink);border-radius:21px 0 0 21px; }
+:root.float-artist-postmark .postmark-offline-composer .chat-input-actions > button:nth-child(2) { height:auto;min-height:42px;align-self:stretch;display:grid;place-items:center;padding:0;box-sizing:border-box;border-radius:0 21px 21px 0;background:var(--postmark-field);color:var(--postmark-chrome-ink); }
+:root.float-artist-postmark .postmark-offline-composer button:has(> .postmark-smile-icon) > svg:not([data-postmark-ui]) { display:none; }
+:root.float-artist-postmark .postmark-offline-composer .postmark-smile-icon { width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round; }
+:root.float-artist-postmark .postmark-offline-composer .chat-input-actions > button:nth-child(3) { display:grid;place-items:center;align-self:center;padding:0;color:var(--postmark-plane-ink); }
+:root.float-artist-postmark .postmark-offline-composer .chat-input-actions > button:nth-child(3):disabled { opacity:1; }
+:root.float-artist-postmark .postmark-date-dialog { padding:0;border:0;border-radius:16px;width:min(400px,calc(100% - 32px));max-height:85vh;overflow:auto;background:var(--postmark-chrome);color:var(--postmark-chrome-ink); }
+:root.float-artist-postmark .postmark-date-dialog::backdrop { background:rgb(0 0 0 / .35); }
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:has(> .postmark-plane-icon) { color:var(--postmark-plane-ink); }
+:root.float-artist-postmark .postmark-offline-composer .chat-input-actions > button:first-child { align-self:center; }
+
+/* 日期窗固定在视口中央，显式覆盖通用 margin 重置，iOS 上也不贴左上角。 */
+:root.float-artist-postmark .postmark-date-dialog { position:fixed;inset:0;margin:auto;box-sizing:border-box;width:min(320px,calc(100% - 32px));height:fit-content;max-height:min(520px,calc(100dvh - 32px));padding:0;border:1px solid rgb(0 0 0 / .04);border-radius:18px;box-shadow:0 12px 48px rgb(0 0 0 / .14);background:var(--postmark-chrome);color:var(--postmark-chrome-ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+:root.float-artist-postmark .postmark-date-dialog .postmark-date-form { margin:0;padding:18px;box-sizing:border-box;background:var(--postmark-chrome);color:var(--postmark-chrome-ink);font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+:root.float-artist-postmark .postmark-date-header { display:flex;align-items:center;justify-content:space-between;gap:10px; }
+:root.float-artist-postmark .postmark-date-title { font-size:14px;font-weight:600;line-height:1.4;overflow-wrap:anywhere; }
+:root.float-artist-postmark .postmark-date-close { display:grid;place-items:center;flex:none;width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:#999;font:22px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer; }
+:root.float-artist-postmark .postmark-date-hint { margin:3px 0 14px;color:#999;font-size:11px;line-height:1.5; }
+:root.float-artist-postmark .postmark-date-input { display:block;appearance:none;-webkit-appearance:none;box-sizing:border-box;width:100%;min-width:0;height:42px;margin:0;padding:8px 11px;border:1px solid rgb(128 128 128 / .18);border-radius:10px;background:var(--postmark-field);color:var(--postmark-chrome-ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:light;outline:none;box-shadow:none; }
+:root.float-artist-postmark .postmark-date-input:focus { outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--postmark-translation) 18%,transparent);border-color:var(--postmark-translation); }
+:root.float-artist-postmark .postmark-date-input::-webkit-date-and-time-value { text-align:left; }
+:root.float-artist-postmark .postmark-date-input::-webkit-calendar-picker-indicator { opacity:.5;cursor:pointer; }
+:root.float-artist-postmark .postmark-date-footer { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px; }
+:root.float-artist-postmark .postmark-date-save { min-height:34px;min-width:68px;padding:7px 16px;border:0;border-radius:10px;background:var(--postmark-chrome-ink);color:var(--postmark-chrome);font:12px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer; }
+:root.float-artist-postmark .postmark-date-reset { padding:7px 0;border:0;background:none;color:#999;font:11px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer; }
+/* CSS 直接读取原生播放标记，不加轮询/计时器；暂停或结束时立即恢复静态声波。 */
+:root.float-artist-postmark .voice-msg-bubble:has(> .voice-msg-bars[data-playing]) > .postmark-voice-signal > path:nth-child(2) { animation:postmark-voice-near 900ms steps(1,end) infinite; }
+:root.float-artist-postmark .voice-msg-bubble:has(> .voice-msg-bars[data-playing]) > .postmark-voice-signal > path:nth-child(3) { animation:postmark-voice-far 900ms steps(1,end) infinite; }
+@keyframes postmark-voice-near { 0%,24%{opacity:.2}25%,100%{opacity:1} }
+@keyframes postmark-voice-far { 0%,54%{opacity:.2}55%,100%{opacity:1} }
+/* 系统指令：居中窄卡 + 居中小标签与正文；保留原消息操作，清除原生首行缩进。 */
+:root.float-artist-postmark .chat-msg-wrapper:has(> .chat-system-instruction-card) { justify-content:center; }
+:root.float-artist-postmark .chat-system-instruction-card { box-sizing:border-box;width:fit-content;min-width:168px;max-width:min(86%,360px);margin-inline:auto;padding:11px 16px 13px;border:1px solid color-mix(in srgb,var(--postmark-instruction-ink) 10%,transparent);border-radius:13px;background:var(--postmark-instruction-bg);box-shadow:0 2px 8px rgb(0 0 0 / .015); }
+:root.float-artist-postmark .chat-system-instruction-head { justify-content:center;align-items:center;gap:8px;margin:0 0 8px;padding:0; }
+:root.float-artist-postmark .chat-system-instruction-head::before,:root.float-artist-postmark .chat-system-instruction-head::after { content:"";display:block;width:18px;height:1px;background:color-mix(in srgb,var(--postmark-instruction-label) 20%,transparent); }
+:root.float-artist-postmark .chat-system-instruction-title { display:inline-block;padding:2px 7px;border-radius:5px;background:color-mix(in srgb,var(--postmark-instruction-label) 8%,transparent);color:var(--postmark-instruction-label);font-size:10px;font-weight:500;line-height:1.5;letter-spacing:.03em; }
+:root.float-artist-postmark .chat-system-instruction-body { margin:0;padding:0;text-indent:0;text-align:center;color:var(--postmark-instruction-ink);font-size:13px;line-height:1.65; }
+@media(prefers-reduced-motion:reduce) { :root.float-artist-postmark .postmark-voice-signal > path {animation:none !important;} }
+
+/* ee×codex · 线上/线下共用底栏比例：相同行数、相同安全区下尺寸一致。 */
+:root {
+ --postmark-composer-height:42px; /* 单行输入区与按钮高度 */
+ --postmark-composer-side:39px; /* 加号 / 返回线上的触控区域宽度 */
+ --postmark-composer-face:44px; /* 表情区域宽度 */
+ --postmark-composer-send:43px; /* 发送区域宽度 */
+ --postmark-composer-icon:24px; /* 加号、返回线上、表情图标画布大小 */
+}
+
+:root.float-artist-postmark > .postmark-compact-composer,
+:root.float-artist-postmark > .postmark-offline-composer {
+ grid-template-columns:var(--postmark-composer-side) minmax(0,1fr) var(--postmark-composer-face) var(--postmark-composer-send);
+ align-items:end;column-gap:0;row-gap:7px;box-sizing:border-box;
+ padding:8px 10px max(8px,env(safe-area-inset-bottom,0px));
+ background:var(--postmark-chrome);box-shadow:0 -1px 0 #22222214;
+}
+
+:root.float-artist-postmark.postmark-menu-top > .postmark-compact-composer,
+:root.float-artist-postmark.postmark-menu-top > .postmark-offline-composer {
+ grid-template-columns:minmax(0,1fr) var(--postmark-composer-face) var(--postmark-composer-send);
+}
+
+:root.float-artist-postmark > .postmark-compact-composer > .chat-input-textarea,
+:root.float-artist-postmark > .postmark-offline-composer > .chat-input-textarea {
+ height:var(--postmark-composer-height);min-height:var(--postmark-composer-height) !important;max-height:120px;
+ margin:0;padding:10px 4px 10px 14px;box-sizing:border-box;align-self:stretch;
+ font-size:calc(14px * var(--app-text-scale,1));line-height:22px;
+ border:0;border-radius:21px 0 0 21px;background:var(--postmark-field);color:var(--postmark-chrome-ink);
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button,
+:root.float-artist-postmark .postmark-offline-composer > .chat-input-actions > button {
+ place-items:center;align-self:center;width:100%;min-width:0;height:var(--postmark-composer-height);margin:0;padding:0;box-sizing:border-box;
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:has(> .postmark-smile-icon),
+:root.float-artist-postmark .postmark-offline-composer > .chat-input-actions > button:has(> .postmark-smile-icon) {
+ height:auto;min-height:var(--postmark-composer-height);align-self:stretch;padding:0;border-radius:0 21px 21px 0;background:var(--postmark-field);
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:has(> .postmark-plus-icon),
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:has(> .postmark-return-online-icon),
+:root.float-artist-postmark .postmark-offline-composer > .chat-input-actions > button:has(> .postmark-plus-icon),
+:root.float-artist-postmark .postmark-offline-composer > .chat-input-actions > button:has(> .postmark-return-online-icon) {
+ align-self:center;width:100%;height:var(--postmark-composer-height);padding:0;background:none;color:var(--postmark-chrome-ink);
+}
+
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button > .postmark-plus-icon[data-postmark-ui],
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button > .postmark-return-online-icon[data-postmark-ui],
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button > .postmark-smile-icon[data-postmark-ui],
+:root.float-artist-postmark .postmark-offline-composer > .chat-input-actions > button > .postmark-plus-icon[data-postmark-ui],
+:root.float-artist-postmark .postmark-offline-composer > .chat-input-actions > button > .postmark-return-online-icon[data-postmark-ui],
+:root.float-artist-postmark .postmark-offline-composer > .chat-input-actions > button > .postmark-smile-icon[data-postmark-ui] {
+ width:var(--postmark-composer-icon);height:var(--postmark-composer-icon);fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+}
+:root.float-artist-postmark .postmark-offline-composer button:has(> .postmark-return-online-icon) > svg:not([data-postmark-ui]) {display:none;}
+
+/* ee×codex · 显示规则独立于尺寸规则：原生线下/Emoji 永不重复暴露。 */
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:nth-of-type(1),
+:root.float-artist-postmark .postmark-compact-composer > .chat-input-actions > button:nth-of-type(2) { display:none !important; }
+:root.float-artist-postmark.postmark-menu-top .postmark-compact-composer > .chat-input-actions > button:nth-of-type(4),
+:root.float-artist-postmark.postmark-menu-top .postmark-offline-composer > .chat-input-actions > button:nth-of-type(1) { display:none !important; }
+:root.float-artist-postmark .postmark-reply-ready > .chat-input-actions > button:nth-of-type(5) { display:none !important; }
+:root.float-artist-postmark .postmark-reply-ready > .chat-input-actions > button:nth-of-type(6) { display:grid !important; }
+
+/* 日期文字单独稳定排版，透明原生日期控件仅负责选日期；避免首帧原生格式重排。 */
+:root.float-artist-postmark .postmark-date-field { position:relative;display:flex;align-items:center;gap:10px;box-sizing:border-box;height:42px;padding:8px 11px;border:1px solid rgb(128 128 128 / .18);border-radius:10px;background:var(--postmark-field);color:var(--postmark-chrome-ink); }
+:root.float-artist-postmark .postmark-date-value { display:block;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:14px/22px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums;pointer-events:none; }
+:root.float-artist-postmark .postmark-date-calendar { width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.5;pointer-events:none; }
+:root.float-artist-postmark .postmark-date-field > .postmark-date-input { position:absolute;inset:0;z-index:1;width:100%;height:100%;margin:0;padding:0;border:0;border-radius:inherit;opacity:0;font-size:16px;background:transparent;cursor:pointer; }
+:root.float-artist-postmark .postmark-date-field:focus-within { border-color:var(--postmark-translation);box-shadow:0 0 0 2px color-mix(in srgb,var(--postmark-translation) 18%,transparent); }
+
+:root.float-artist-postmark .postmark-date-dialog:focus { outline:none; }
