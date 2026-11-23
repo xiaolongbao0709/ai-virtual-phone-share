@@ -473,17 +473,31 @@ function mountChat(ctx, slot, sessionId, relay) {
         if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) closeThought();
     });
 
-    function closeThought() {
+    // 自定义状态栏由 Float 的沙盒 iframe 渲染；不能复制为普通心声或替换其交互。
+    function usesCustomStatus(row) {
+        const message = messageForRow(row);
+        return message?.statusRegionMode === "custom"
+            || !!row.parentElement?.querySelector(':scope > .chat-status-bare iframe[title="自定义状态栏"]');
+    }
+
+    function closeThought(keepNative = false) {
         const row = thoughtRow;
         thoughtRow = null;
         thoughtSignature = "";
         row?.parentElement?.classList.remove("postmark-thought-source");
         const heart = row?.querySelector(":scope > button.chat-monologue-heart");
-        if (heart?.hasAttribute("data-active")) heart.click();
+        if (keepNative !== true && heart?.hasAttribute("data-active")) heart.click();
         if (thoughtDialog.open) thoughtDialog.close();
     }
 
     function openThought(row) {
+        if (usesCustomStatus(row)) {
+            closeThought();
+            row.parentElement?.classList.remove("postmark-thought-source");
+            row.querySelector(":scope > button.chat-monologue-heart")?.click();
+            schedule();
+            return;
+        }
         closeThought();
         thoughtRow = row;
         thoughtTranslated = false;
@@ -497,6 +511,7 @@ function mountChat(ctx, slot, sessionId, relay) {
     function updateThought() {
         if (!thoughtRow) return;
         if (!room.contains(thoughtRow)) { closeThought(); return; }
+        if (usesCustomStatus(thoughtRow)) { closeThought(true); return; }
         const message = messageForRow(thoughtRow);
         const source = thoughtRow.parentElement.querySelector(".chat-thought-body,.chat-status-bare .chat-bilingual-block");
         const toggle = source?.querySelector(".chat-bilingual-toggle");
@@ -1229,8 +1244,10 @@ function mountChat(ctx, slot, sessionId, relay) {
             const badge = sender.querySelector(".postmark-artist-badge");
             badge.disabled = !nativeHeart;
             if (nativeHeart) {
-                const expanded = thoughtRow === row && thoughtDialog.open;
-                const label = expanded ? "收起心声与状态" : "查看心声与状态";
+                const customStatus = usesCustomStatus(row);
+                const expanded = customStatus ? nativeHeart.hasAttribute("data-active") : thoughtRow === row && thoughtDialog.open;
+                const panelName = customStatus ? "自定义状态栏" : "心声与状态";
+                const label = `${expanded ? "收起" : "查看"}${panelName}`;
                 badge.setAttribute("aria-label", label);
                 badge.setAttribute("aria-expanded", String(expanded));
                 badge.title = label;
@@ -1594,7 +1611,7 @@ export default {
     manifest: {
         id: "float-artist-postmark",
         name: "仿bubble聊天室美化",
-        version: "2.8.5",
+        version: "2.8.6",
         author: "ee×codex",
         apiVersion: 1,
         description: "配合仿bubble聊天室美化 CSS 使用。逐条角色头像、气泡旁译文按钮与原生聊天记录搜索。",
