@@ -3,7 +3,7 @@ export default {
     id: "offline-scene-launcher",
     name: "线下场景启动器",
     apiVersion: 1,
-    version: "4.1.1",
+    version: "4.1.2",
     author: "你",
     description: "判断线下见面时出现邀约，确认后直接转入内置线下",
     permissions: ["chat.read", "ui"],
@@ -746,15 +746,8 @@ ctx.hooks.transform("prompt.system", function (p) {
         return ids.has(e.anchorId) || (!!e.anchorBatch && batches.has(e.anchorBatch));
       });
       if (attached.length !== data.events.length) {
-        var retry = retries[sid];
-        // 重试只允许目标胶囊等候新回复，在新锚点保存前也不显示它。
-        var retryId = retry && !retry.offline ? retry.capsuleId : null;
-        var attachedIds = new Set(attached.map(function (e) { return e.id; }));
-        var kept = data.events.filter(function (e) { return attachedIds.has(e.id) || e.id === retryId; });
-        if (kept.length !== data.events.length) {
-          data.events = kept;
-          saveSessionEvents(sid, data);
-        }
+        data.events = attached;
+        saveSessionEvents(sid, data);
       }
       return attached;
     }
@@ -786,7 +779,7 @@ ctx.hooks.transform("prompt.system", function (p) {
         migrateRounds(data, messages.filter(function (msg) { return msg.id !== m.id; }));
         if (retry && !retry.offline && retry.responded) {
           delete retries[sid];
-          if (!data.events.length) return;
+          if (!pending && !data.events.length) return;
           var original = data.rounds.find(function (r) { return r.key === retry.key; });
           if (!original) {
             // 目标早于插件开始追踪的位置。仍登记新来源，后续气泡才不会被当成新轮。
@@ -794,9 +787,11 @@ ctx.hooks.transform("prompt.system", function (p) {
             data.rounds.unshift(original);
           }
           if (original.sources.indexOf(key) < 0) original.sources.push(key);
-          var capsule = data.events.find(function (e) { return e.id === retry.capsuleId; });
-          if (capsule && pending) bindCapsule(capsule, pending, m);
-          else if (capsule) data.events = data.events.filter(function (e) { return e !== capsule; });
+          if (pending) {
+            var replacement = { id: m.id, origin: original.key };
+            bindCapsule(replacement, pending, m);
+            data.events.push(replacement);
+          }
         } else {
           if (!pending && !data.events.length) return;
           var round = findRound(data, key);
@@ -1942,10 +1937,8 @@ ctx.hooks.transform("prompt.system", function (p) {
       setTimeout(function () { if (retryClicks[sid] === click) delete retryClicks[sid]; }, 0);
     }
     function clearRetry(sid) {
-      var retry = retries[sid];
       delete retries[sid];
       delete pendingEvt[sid];
-      if (retry && !retry.offline && retry.capsuleId) scheduleLand(sid);
     }
     function onOnlineDeleted(event) {
       var deleted = event.detail && event.detail.messages;
@@ -1964,10 +1957,12 @@ ctx.hooks.transform("prompt.system", function (p) {
             || click.before.find(function (m) { return isReplyBubble(m) && ids.has(m.id); });
           if (target) {
             var round = findRound(data, roundKeyOf(target));
+            // 确认宿主已删除重试目标后立即移除旧胶囊，即使同批还有气泡。
             var capsule = data.events.find(function (e) {
               return e.anchorId === target.id || (e.anchorBatch && e.anchorBatch === target.responseBatchId);
             }) || (round && data.events.find(function (e) { return e.origin === round.key; }));
-            retries[sid] = { key: round ? round.key : "", offline: false, capsuleId: capsule && capsule.id };
+            if (capsule) data.events = data.events.filter(function (e) { return e !== capsule; });
+            retries[sid] = { key: round ? round.key : "", offline: false };
           }
         } else {
           migrateRounds(data, messages.concat(deleted.filter(function (m) { return m.sessionId === sid; })).sort(compareReplyMessages));
