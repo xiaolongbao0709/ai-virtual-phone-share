@@ -3,7 +3,7 @@ export default {
     id: "offline-scene-launcher",
     name: "线下场景启动器",
     apiVersion: 1,
-    version: "4.0.0",
+    version: "4.1.1",
     author: "你",
     description: "判断线下见面时出现邀约，确认后直接转入内置线下",
     permissions: ["chat.read", "ui"],
@@ -30,6 +30,7 @@ export default {
       { key: "replyWrapAfter", label: "你的回应·包裹·后", type: "text", default: "" },
       { key: "maxChars", label: "单个回应分支最多字数", type: "number", default: 60 },
       { key: "capsuleTurns", label: "邀约保留轮数（AI 回复几轮后移除）", type: "number", default: 2 },
+      { key: "roleInvitesOnly", label: "只保留角色邀约", type: "boolean", default: false },
       { key: "fxEnabled", label: "播放全屏粒子动画（相会 / 被拒）", type: "boolean", default: true },
       { key: "armGlow", label: "线下图标·发光强度（0~100，越小越淡）", type: "number", default: 32 },
       { key: "keepMarker", label: "【调试】保留气泡里的标记原文", type: "boolean", default: false }
@@ -39,18 +40,18 @@ export default {
     // ═════════ 常量与状态 ═════════
     var TAG_JUDGE = "线下判定", TAG_SCENE = "线下情境", TAG_OPT = "线下选项";
     var K_EVT = "evt:", K_CSS = "custom-css", K_ARC = "css-archive:", K_ARM = "arm-color";
-    // evt:<sid> = { judge:{direction,agreed,reason}|null, scene:string, opts:string[], turns:number, fxAt:number }
+    // evt:<sid> = { events: [邀约…] }：同一会话可并存多枚胶囊，各自独立到期或关闭
 
     var cssDisp = null, structDisp = null, ticker = null;
     var settingsOff = null;
     var pillEls = {}, pillHosts = {};
     var footEls = {};   // sid -> { 消息id: { el, batch } }：气泡下方的坑位登记
-    var skipAssist = {};
-    var fxArmed = {};
-    var anchorMissAt = {};    // sid -> 首次发现锚点缺失的时间戳
-    var gate = {};      // sid -> { t, persisted, mounted }
+    var pendingEvt = {};   // sid -> 已解析、尚未绑定到落库消息的胶囊
     var landTok = {};
-    var offlinePending = {};   // sid -> true：线下已发起生成，等成功后再计数
+    var offlineNudge = {};
+    var offlineSnapshots = Object.create(null), offlineReads = Object.create(null);
+    var retryClicks = Object.create(null), retries = Object.create(null);
+    var disposedPlugin = false;
     var armedEls = {};         // sid -> 已标记「邀约进行中」的【线下模式】按钮
     // 线下图标颜色与淡度：存插件私有 storage（不走 manifest 设置）。setup 读一次缓存在内存，
     // 之后 armStyle 直接用内存值——避免 tick 里反复读 storage 整桶。
@@ -134,34 +135,36 @@ export default {
     }
     var RE_JUDGE = tagRe(TAG_JUDGE), RE_SCENE = tagRe(TAG_SCENE), RE_OPT = tagRe(TAG_OPT);
 
-    // ═════════ 存储：一个会话一个 evt 对象 ═════════
-    function getEvt(sid) {
-      if (!sid) return null;
-      var v = ctx.system.storage.get(K_EVT + sid);
-      return v && typeof v === "object" ? v : null;
+    // ═════════ 存储：每条胶囊保留自己的锚点和轮数 ═════════
+    function getSessionEvents(sid) {
+      var stored = ctx.system.storage.get(K_EVT + sid);
+      if (stored && Array.isArray(stored.events)) {
+        if (!Array.isArray(stored.rounds)) stored.rounds = [];
+        return stored;
+      }
+      var events = [];
+      if (stored && (stored.scene || (stored.opts && stored.opts.length) || stored.judge)) {
+        events.push(Object.assign({}, stored, { id: "legacy" }));
+      }
+      return { events: events, rounds: [] };
     }
-    function putEvt(sid, e) { if (sid) ctx.system.storage.set(K_EVT + sid, e); }
-    function patchEvt(sid, patch) {
-      var e = getEvt(sid) || {};
-      for (var k in patch) if (Object.prototype.hasOwnProperty.call(patch, k)) e[k] = patch[k];
-      putEvt(sid, e);
-      return e;
+    function saveSessionEvents(sid, data) {
+      if (data.events.length) ctx.system.storage.set(K_EVT + sid, data);
+      else ctx.system.storage.remove(K_EVT + sid);
     }
-    function evtHasData(e) {
-      return !!(e && (e.scene || (e.opts && e.opts.length) || e.judge));
+    function visibleEvents(data) {
+      var limit = sInt("capsuleTurns", 2, 1, 20);
+      return data.events.filter(function (e) { return !e.noContent && (Number(e.turns) || 0) < limit; });
     }
-    function hasData(sid) {
-      return evtHasData(getEvt(sid));
+    function getEvt(sid, id) {
+      return visibleEvents(getSessionEvents(sid)).find(function (e) { return e.id === id; });
     }
-    function clearData(sid) {
-      if (!sid) return;
-      ctx.system.storage.remove(K_EVT + sid);
-      delete gate[sid];
-      delete skipAssist[sid];
-      delete fxArmed[sid];
-      delete anchorMissAt[sid];
-      delete offlinePending[sid];
-      delete landTok[sid];
+    function hasData(sid) { return visibleEvents(getSessionEvents(sid)).length > 0; }
+    function dismissEvt(sid, id) {
+      var data = getSessionEvents(sid);
+      data.events = data.events.filter(function (e) { return e.id !== id; });
+      saveSessionEvents(sid, data);
+      syncPill(sid);
     }
 
     // ═════════ 人称 / 包裹 ═════════
@@ -241,39 +244,96 @@ export default {
       return "动作描写、心理描写、情境描写";
     }
 
-    function injectionText() {
+    function injectionText(invitesOnly) {
       var maxc = sInt("maxChars", 60, 4, 200);
       var sceneNoSubj = sBool("sceneNoSubj", false);
       var replyNoSubj = sBool("replyNoSubj", false);
       return [
-        "\n【线下场景开关】剧情节奏由你决定。本会话在「线上聊天」与「线下见面」之间切换，切换开关只有这一个：你在回复的最末尾输出下面这套标记。",
+        "\n【线下场景开关】",
         "",
-        "【什么时候必须输出】只要这一轮涉及「见面」或「谁到谁那里去」，不论结果如何，都必须输出全部三个标记块：",
-        "· 你动身了、正在过去、或已站到 TA 面前（state: moved）；",
-        "· 对方要你过来，你没动（state: refused）；",
-        "· 你不动，让 TA 过来（state: invite）。",
-        "这种靠近常夹在闲聊里顺带写出来的，照样算。完全没涉及见面、你的位置变化的普通寒暄，一个标记都不要输出。",
+        "━━ 1. 任务 ━━",
+        "本会话可以从线上聊天切换到线下见面。称呼约定：「你」＝你扮演的角色，「用户」＝正在和你聊天的人。",
+        "当本轮出现新的 face to face 地点移动决定时，在回复最末尾输出标记，由用户决定是否接下这段线下剧情。",
         "",
-        "【格式】一律半角方括号；三个块顺序固定，并且必须放在整段回复的最末尾——排在你所有其他内容之后，包括 [内心] 与 ⟦ ⟧ 这类描写。",
+        "━━ 2. 什么时候输出 ━━",
+        (invitesOnly ? "只有本轮由你主动提出新的见面邀约，或主动决定动身去见用户时，才输出标记。"
+          : "只有本轮出现「新的见面决定」时才输出标记：新提出见面、同意或拒绝一个正在讨论的提议、或已经动身。")
+          + "这里的「决定」指你这一轮实际作出的行动决定，不要求在正文里说出口：你可以嘴上只说「想你了」，同时已经动身要去见用户（比如想给对方惊喜），这种也要输出 moved，并把动身写进理由和情境块；线上正文不要提前演到见面。",
+        "反过来，只是表达想念、想见面、只是闹别扭，但你并没有切实要动身，不输出。",
+        invitesOnly ? "如果本轮只是回应已有的见面提议，没有主动提出新邀约或主动决定动身，不输出标记。"
+          : "先判断这一轮你是在「提出 face to face」，还是在「回应一个已有的见面提议」。",
+        "",
+        "【情景一：只要是你这一轮有 face to face 的倾向  →  判断谁移动】",
+        "· 只有你移动：正在过去、快到了、在门口 → state: moved。",
+        "· 你主动提出，用户负责移动或双方都要移动去某一个约好的地点：你与用户有约、你在等用户来、你请用户来找你 → state: invite",
+        ...(!invitesOnly ? [
+        "【情景二：（不管谁移动）这一轮是在回应已有的见面提议  →  判断谁提出见面、有没有拒绝】",
+        "· 你提见面，用户拒绝了：转入【情境三】判断，结果可能是 moved、user_refused 或不输出",
+        "· 用户提见面，你同意→ state: moved",
+        "· 用户提见面，你拒绝了：转入【情境三】判断，优先输出 refused",
+        "· 分不清谁提出（商量出来、顺水推舟）→ state: moved",
+        "【情境三：拒绝的反话处理】",
+        "· 用户拒绝时，默认尊重用户的决定。只有当下有明确依据，才按「反话或被你无视的拒绝」处理，依据有两种：",
+        "    - 这一轮用户的语句或动作有明确线索，例如「谁要见你」之类明显口是心非的话、拒绝后面接了暗示你过来的话、状态不好却明显在逞强；",
+        "    - 你的人设本身就是强势到不理会拒绝的类型（如强制爱、掌控欲极强），并且这一轮的上下文也支持你会不顾拒绝直接过去。",
+        "    仅凭用户的人设别扭傲娇或两人关系亲近，而这一轮没有具体线索，不算依据。",
+        "· 有依据 → 按 moved 处理，你主动靠近；",
+        "· 没有依据，是真的拒绝，且你根据人设和上下文判断自己真的很想见面 → state: user_refused；",
+        "· 没有依据，你无法判断、拿不准，或你并不迫切 → 不输出。",
+        "",
+        "· 你拒绝用户时同理，根据上下文和角色性格判断：若是你口是心非、准备惊喜之类的情景，先拒绝了、但是最后确定了实际要主动去见用户，按 moved 处理，理由和情境写你的主动前往、给对方惊喜或找借口假装不在乎；真不见面，则输出 refused。",
+        ] : []),
+        "· 根据人设和上下文剧情、氛围来判断、写对应的内容。",
+        " ",
+        "只有在本轮内明确作出 state 决定时，才输出全部三个标记块。",
+        "以下情况不输出任何标记：",
+        invitesOnly ? "· 只是聊到见面，但你没有提出新邀约或主动决定去见用户；"
+          : "· 只是聊到见面，但没有明确的新提议、接受或拒绝；",
+        "· 普通寒暄单个角色自己的位置变化，不涉及见面；",
+        ...(!invitesOnly ? ["· 用户此前已拒绝这次见面，这轮没有主动改口——泛泛聊见面、复述拒绝、继续表达想念，都不算新邀约。"] : []),
+        "",
+        "━━ 3. 输出格式 ━━",
+        "一律使用半角方括号。三个块顺序固定，并且必须放在整段回复的最末尾——排在你所有其他内容之后，包括 [内心]、⟦ ⟧ 这类描写。",
         "",
         "[" + TAG_JUDGE + "]",
-        "state: moved               ← 三选一：moved / refused / invite，含义见下",
-        "reason:                    ← 只有 refused 填：你拒绝的理由，15~40 字；其余留空",
+        "state: （" + (invitesOnly ? "moved / invite 二选一" : "moved / invite / refused / user_refused 四选一") + "）",
+        "reason: （15~35 字，你自己口吻的一句心里话，贴合人设；不复述邀约台词，不套用示例，不替对方编造理由。moved / invite 写你想见对方的心"
+          + (invitesOnly ? "" : "；refused 写你拒绝的理由；user_refused 写你听到拒绝后的第一反应") + "。）",
         "[/" + TAG_JUDGE + "]",
-        "state 三选一，先判断再动笔：",
-        "moved＝你动身过来了：前往对方身边、推门、已经站到 TA 面前。",
-        "refused＝你这一轮不过来：对方希望或要求你过来，而你没动。只要用户表达的底层想法是期待你过来（哪怕口是心非、旁敲侧击），而你这轮没过去，就是 refused——哪怕你嘴上写了「好」「马上来」，哪怕你误以为这不算邀约。",
-        "invite＝你不动，但让对方过来：你约 TA 来、要 TA 来找你、或你在等 TA 过来。",
-        "[" + TAG_SCENE + "]（90~220 字：此刻的环境、氛围、位置与光影铺垫；答应时接着写你怎么过来、怎么出现在对方面前的可见动作与神态；婉拒时写你这一侧正在发生的事、在忙什么、身处什么环境、回这条消息时的神态、有什么事件）[/" + TAG_SCENE + "]",
+        "[" + TAG_SCENE + "]（90~220 字；先铺此刻的环境、氛围、位置与光影，再按 state 写：moved 时你移动，就写你怎么过来、怎么出现在对方面前的可见动作与神态"
+          + (invitesOnly ? "" : "，只有用户移动，就写你在原地等待TA和你的视角里用户过来的样子")
+          + "；invite 时写你在哪里、以什么状态等 TA 过来"
+          + (invitesOnly ? "" : "；refused 时写你这一侧正在发生的事、在忙什么、身处什么环境、有什么事件、看到这条消息时的心绪、回这条消息时的神态；user_refused 时需要根据人设、前后文的具体情况，写你如何理解对方的拒绝，或浓烈或克制含蓄的心理描写或者动作白描，表达你此刻的想念、想靠近之情")
+          + "。都不写台词。）[/" + TAG_SCENE + "]",
         "[" + TAG_OPT + "]",
-        "1、[正剧向]（替用户角色写的第一个回应：克制自然）",
-        "2、[暧昧向]（替用户角色写的第二个回应：亲昵暗涌）",
+        "1、[标签]（替用户写的第一个回应）",
+        "2、[标签]（替用户写的第二个回应）",
         "[/" + TAG_OPT + "]",
         "",
-        "【格式样例】下面是一份写好的样子，只照抄结构与标记写法，文字内容必须换成你当前剧情，不要照抄句子：",
+        "━━ 4. 各块写法 ━━",
+        "【情境块】：" + personClause("person", sceneNoSubj, "scene")
+          + wrapClause(wrapPair("sceneWrapBefore", "sceneWrapAfter"), "情境块"),
+        "【选项块】：选项是替用户预写的回应，要符合用户人设与当前剧情，每条不超过 " + maxc + " 字。"
+          + personClause("replyPerson", replyNoSubj, "reply")
+          + wrapClause(wrapPair("replyWrapBefore", "replyWrapAfter"), "每条选项"),
+          "选项标签随 state 走，每个 state 固定一对，各出现一次，与内容一一对应，不许张冠李戴：",
+          "moved / invite → [正剧向]（克制自然）、[暧昧向]（亲昵暗涌）；",
+          ...(!invitesOnly ? [
+            "refused → [追问]＝你不过来，用户干脆自己动身去找你（人已经在路上）；[退让]＝用户不再坚持要你过来，后续态度按用户人设写；",
+            "user_refused → [正剧向]＝用户坦率直接、突袭给个惊喜；[暧昧向]＝用户嘴硬心软（顺路、给自己找台阶）；两种都按用户人设来写。",
+          ] : []),
+        "【描写风格】：" + styleClause() + "。",
+        ...(!invitesOnly ? [
+          "写 refused 的情境与选项时，要写得自然，只写双方各自正在发生的生活；「不来」这件事交给判定块去表达；情境里不要靠「站在原地」「一动不动」去强调没过来，选项里也不要去强调用户「没回消息」「守着屏幕」。",
+          "写 user_refused 时，情境写你那边的场景、生动的心理描写；选项写用户不打招呼、直接出现在你面前时的第一句话或动作，需要具体情况具体安排，比如用户本来就要回到你这里的，写成「提前回来」：[正剧向] 写用户坦率直接，[暧昧向] 写用户嘴硬心软、给自己找台阶；情境的心理描写和用户的行动描写一定要符合人设、具体的上下文情境。",
+        ] : []),
+        "",
+        "━━ 5. 样例 ━━",
+        "只照抄结构与标记写法，文字内容必须换成你当前的剧情，不要照抄句子。",
+        "",
         "[" + TAG_JUDGE + "]",
         "state: moved",
-        "reason:",
+        "reason: 隔着屏幕总问不出冷不冷，干脆把热茶也端过去。",
         "[/" + TAG_JUDGE + "]",
         "[" + TAG_SCENE + "]廊下只留了一盏暖灯，脚步与瓷盘轻碰的声响从尽头一路过来。他把托盘换到左手，抬手推开虚掩的门——光先从门缝里漫到桌脚边。[/" + TAG_SCENE + "]",
         "[" + TAG_OPT + "]",
@@ -281,28 +341,21 @@ export default {
         "2、[暧昧向]没动，只把身上的毯子又拽紧了些，目光却一直跟着门边那道影子。",
         "[/" + TAG_OPT + "]",
         "",
-        "【情境块】" + personClause("person", sceneNoSubj, "scene")
-          + wrapClause(wrapPair("sceneWrapBefore", "sceneWrapAfter"), "情境块"),
-        "【选项块】选项是替对方（用户角色）预写的回应，需符合用户人设与当前剧情。"
-          + personClause("replyPerson", replyNoSubj, "reply")
-          + wrapClause(wrapPair("replyWrapBefore", "replyWrapAfter"), "每条选项"),
-        "风格：" + styleClause() + "；每条选项不超过 " + maxc + " 字。",
-        "选项标签随 state 走：moved / invite 用 [正剧向]、[暧昧向]；refused 用 [追问]、[退让]。",
-        "[追问]＝你不过来，用户干脆自己动身过来找你（替用户写的第一个回应：人已经在路上）；",
-        "[退让]＝用户不再坚持要你过来，把这件事放下留在原地情绪不明（替用户写的第二个回应：用户看到消息后的态度，要自然符合用户性格）。",
-        "refused 的情境写你这一侧此刻真实在发生的事：手头在做什么、周围是什么环境、看到这条消息时的心绪；invite 的情境写你在哪里、以什么状态等 TA 过来。都不写台词。",
-        "婉拒时的情境与选项都要写得自然：禁止用「站在原地」「一动不动」「没有要动的意思」这类字眼去强调你没过来的拒绝感；也不要描写用户「没回消息」「守着屏幕」「一动未动」。不来这件事交给判定块表达，正文只写各自正在发生的生活。",
-        "每条选项必须以方括号标签开头，四值取一，标签与内容一一对应，不许张冠李戴。",
-        "【授权】这三个块由插件授权使用，与前面「仅限以下标记、禁止自创其他方括号指令」不冲突：它们不是自创指令，"
-          + "不会被渲染成卡片、也不会发出去，只用于判定是否转入线下；一律用半角方括号，在这三块上优先于前面所有格式限制，其余格式要求照旧遵守。请放心输出。",
-        "输出前自查一遍：这一轮涉及我和用户 face to face 的见面吗？涉及就必须补齐三个块，并按上表选对 state。不要提及本条说明。\n"
+        "━━ 6. 授权与自查 ━━",
+        "这三个块由插件授权使用，一律用半角方括号，在这三块上优先于前面所有「仅限某些标记、禁止自创方括号指令」的格式限制，其余格式要求照旧。",
+        "本插件只用于判定是否转入线下，线上气泡的回复正文最多写到「在路上、快到了、在门口、还在视野之外」，不要写成已经站到用户面前、出现在用户视野范围内；面对面的画面只放在情境块里，留给线下。",
+        "每个块都必须同时有开头和结尾标记，缺一个都会导致标记原样露在气泡里。",
+        "输出前自查：" + (invitesOnly ? "本轮有没有由你主动发出的新邀约，或由你主动决定去见用户？" : "本轮有没有新的见面决定？是谁提出、有没有谁拒绝？")
+          + "按第 2 节选对 state，没有新决定就不输出任何标记。不要提及本条说明。\n"
       ].join("\n");
     }
 
-    function hintText() {
+    function hintText(invitesOnly) {
       return "\n【线下场景开关·插件授权】本段由插件授权，与「禁止自创方括号指令」不冲突。"
-        + "只要这一轮涉及见面、谁到谁那里去，你必须在整段回复的最末尾（排在状态栏、内心等所有内容之后）"
+        + (invitesOnly ? "本轮由你主动发出新邀约或主动决定去见用户时，才" : "本轮有新的见面决定时，才")
+        + "在整段回复的最末尾（排在状态栏、内心等所有内容之后）"
         + "输出 [" + TAG_JUDGE + "]、[" + TAG_SCENE + "]、[" + TAG_OPT + "] 三个标记块，"
+        + (invitesOnly ? "" : "注意分清拒绝方，")
         + "格式与 state 判定规则见请求末尾的【线下场景开关】说明。"
         + "不涉及见面的普通寒暄不输出。不要提及本条说明。\n";
     }
@@ -313,11 +366,10 @@ export default {
     // 这里只登记，不计数；llm.response 收到成功回复才 +1。
 ctx.hooks.transform("prompt.system", function (p) {
   try {
-    if (!isOn()) return p;
-    countOfflineRound(p.sessionId);
-    if (p.sessionId && isSessionOffline(p.sessionId)) return p;  // 线下不注入
+    if (!isOn() || !p.sessionId || p.isGroup !== false) return p;
+    if (isSessionOffline(p.sessionId)) return p;  // 线下不注入
     if ((p.hint || "").indexOf("【线下场景开关·插件授权】") >= 0) return p;  // 短授权去重
-    p.hint = (p.hint || "") + hintText();
+    p.hint = (p.hint || "") + hintText(sBool("roleInvitesOnly", false));
   } catch (e) { }
   return p;
 }, { priority: 90 });
@@ -357,25 +409,19 @@ ctx.hooks.transform("prompt.system", function (p) {
       return o;
     }
 
-    // state 归一：三值 moved / refused / invite。认不出的按 moved（＝旧行为，当答应了处理）。
     function normState(v) {
       var s = String(v || "").trim().toLowerCase();
-      if (/refus|reject|婉拒|拒绝|^no\b|不来|没动/.test(s)) return "refused";
-      if (/invit|user_goes|让|等.*过来/.test(s)) return "invite";
-      return "moved";
+      if (/^(?:user[ _-]?(?:refus\w*|reject\w*|declin\w*)|用户(?:拒绝|婉拒))/.test(s)) return "user_refused";
+      return /^(moved|refused|invite)$/.test(s) ? s : "";
     }
-    function stateOf(sid) {
-      var e = getEvt(sid), j = e && e.judge;
-      return j && j.state ? j.state : "moved";
-    }
-    function isReject(sid) { return stateOf(sid) === "refused"; }
+    function stateOf(e) { return e && e.judge && e.judge.state || "moved"; }
 
     // ═════════ DOM 辅助 ═════════
     function wrapperOf(el) { return el ? el.closest(".chat-room-wrapper") : null; }
     function isOfflineIn(w) { return !!w.querySelector('button[aria-label="返回线上模式"]'); }
     function wrapperFor(sid) {
       var h = pillHosts[sid];
-      return wrapperOf((h && h.header) || pillEls[sid]);
+      return wrapperOf(h && h.header);
     }
     function isSessionOffline(sid) {
       var w = wrapperFor(sid);
@@ -429,14 +475,16 @@ ctx.hooks.transform("prompt.system", function (p) {
       return o;
     }
 
-    function playFx(sid) {
+    function playFx(sid, id) {
       if (!sBool("fxEnabled", true)) return;
-      var e = getEvt(sid) || {};
-      if (e.fxAt) return; // 每个邀约只播一次，重渲染不会重播
-      patchEvt(sid, { fxAt: Date.now() });
+      var data = getSessionEvents(sid);
+      var e = data.events.find(function (item) { return item.id === id; });
+      if (!e || e.fxAt || stateOf(e) === "user_refused") return;
+      e.fxAt = Date.now();
+      saveSessionEvents(sid, data);
       try {
         clearFx();
-        var reject = isReject(sid);
+        var reject = stateOf(e) === "refused";
         var m = themeMask();
 
         var w = document.createElement("div");
@@ -471,60 +519,70 @@ ctx.hooks.transform("prompt.system", function (p) {
       } catch (err) { }
     }
 
+    function refusalContext(sid, data) {
+      var list = ctx.data.messages.list(sid) || [];
+      for (var i = list.length - 1; i >= 0 && list[i].role !== "user"; i--) { }
+      if (i < 0) return {};
+      var user = list[i];
+      var previous = null;
+      for (var j = i - 1; j >= 0; j--) {
+        if (list[j].role === "assistant") { previous = list[j]; break; }
+      }
+      var followsOffer = previous && previous.role === "assistant" && data.events.some(function (e) {
+        return stateOf(e) === "moved" && (e.anchorId === previous.id ||
+          (e.anchorBatch && e.anchorBatch === previous.responseBatchId));
+      });
+      // 明确且完整的拒绝用代码兜底。带有后续动作或反话线索的复杂表达交由模型结合人设判断。
+      var words = String(user.content || "").trim().replace(/[\s。！!，,]+$/g, "");
+      var explicit = followsOffer && /^(?:(?:你)?(?:先|今天|今晚|现在|暂时)?(?:别|不要|不用|不必)(?:再)?(?:过来|来找我|来了)|(?:我)?(?:今天|今晚|现在|暂时)?不(?:想|愿意)(?:和你)?见(?:面|你)|(?:今天|今晚|现在|暂时)?(?:先)?不见(?:面)?了?|(?:还是)?算了吧?|不了)(?:了|吧|哈|哦|啦)?$/.test(words);
+      return { userId: user.id, followsOffer: followsOffer, explicit: explicit };
+    }
+
     // ═════════ 拦截模型回复 ═════════
     ctx.hooks.transform("llm.response", function (p) {
       try {
-        if (!isOn()) return p;
-
-        // 线下：成功收到回复才结算上一次登记的那一轮
-        var rsid = p && p.sessionId;
-        if (rsid) {
-          if (isSessionOffline(rsid)) {
-            if (offlinePending[rsid] && typeof p.text === "string" && p.text.trim()) {
-              delete offlinePending[rsid];
-              bumpTurns(rsid);
-            }
-            // 指示已送达；evt 若已被 bumpTurns 清掉，getEvt 返回 null，不会重建
-            var ef = getEvt(rsid);
-            if (ef && ef.forceReturn) patchEvt(rsid, { forceReturn: false });
-          } else if (offlinePending[rsid]) {
-            delete offlinePending[rsid];   // 已回线上，作废
-          }
-        }
-
-        var text = typeof p.text === "string" ? p.text : "";
-        if (!text) return p;
-        if (!RE_JUDGE.has.test(text) && !RE_SCENE.has.test(text) && !RE_OPT.has.test(text)) return p;
+        if (!isOn() || p.purpose !== "chat") return p;
 
         var sid = p.sessionId || "";
-        // 线下模式里出现的标记：只清理，不触发新事件
-        if (sid && !isSessionOffline(sid)) {
-          var jm = RE_JUDGE.open.exec(text);
+        var text = typeof p.text === "string" ? p.text : "";
+        var marked = RE_JUDGE.has.test(text) || RE_SCENE.has.test(text) || RE_OPT.has.test(text);
+        var invitesOnly = sBool("roleInvitesOnly", false);
+        var jm = (invitesOnly || (sid && !isSessionOffline(sid))) ? RE_JUDGE.open.exec(text) : null;
+        var judge = jm ? parseJudge(jm[1]) : { state: "", reason: "" };
+        var rejected = invitesOnly && (judge.state === "refused" || judge.state === "user_refused");
+        var offline = sid && isSessionOffline(sid);
+        // 线下模式只清理标记。计数统一在实际回复写入后结算。
+        if (sid && !offline) {
+          delete pendingEvt[sid];
+          if (retries[sid] && !retries[sid].offline) retries[sid].responded = true;
+          var data = getSessionEvents(sid);
+          var current = !invitesOnly && (marked || data.events.length) ? refusalContext(sid, data) : {};
           var sm = RE_SCENE.open.exec(text);
           var om = RE_OPT.open.exec(text);
-          var jd = jm && jm[1] ? parseJudge(jm[1]) : null;
-          var opList = om && om[1] ? parseList(om[1]) : [];
-          // 选项被标成 [追问]/[退让]，说明模型写的就是 refused：state 漏写写错也按婉拒算
-          if (opList.some(function (x) { return x.label === "追问" || x.label === "退让"; })) {
-            if (!jd) jd = { state: "refused", reason: "" };
-            else jd.state = "refused";
-          }
-          putEvt(sid, {
-            judge: jd,
-            scene: sm && sm[1] ? cleanText(sm[1]) : "",
-            opts: opList,
-            turns: 0,
-            at: Date.now()
+          var scene = sm ? cleanText(sm[1]) : "";
+          var options = om ? parseList(om[1]) : [];
+          if (current.explicit) judge.state = "user_refused";
+          var reaction = judge.state === "user_refused";
+          var retry = retries[sid];
+          var dupReaction = reaction && data.events.some(function (x) {
+            return !x.noContent && (!retry || x.origin !== retry.key)
+              && x.refusalFor && x.refusalFor === current.userId;
           });
-          skipAssist[sid] = Date.now();   // 带标记的这条 AI 回复本身不计数（带时间戳，防串轮）
-          fxArmed[sid] = true;            // 动画在"这个新事件的胶囊第一次出现"时播
-          gate[sid] = { t: Date.now(), persisted: false, mounted: false };   // 只是开始等，还不算落库
-          var pe = pillEls[sid];
-          if (pe) pe.classList.remove("opl-ready");   // 旧胶囊先隐身
-          ensureTicker();
+          // 拒绝兜底只纠正判定；缺少卡片内容时不生成空胶囊。
+          var completeReaction = !reaction || (cleanText(judge.reason) && scene
+            && options.length === 2 && options.every(function (option) { return option.text; }));
+          if (!rejected && !dupReaction && completeReaction && judge.state && (judge.state !== "refused" || judge.reason)) {
+            pendingEvt[sid] = {
+              judge: judge,
+              scene: scene,
+              opts: options,
+              refusalFor: reaction ? current.userId : "",
+              at: Date.now()
+            };
+          }
         }
 
-        if (!sBool("keepMarker", false)) {
+        if (marked && (rejected || !sBool("keepMarker", false))) {
           p.text = text
             .replace(RE_JUDGE.strip, "")
             .replace(RE_SCENE.strip, "")
@@ -541,18 +599,18 @@ ctx.hooks.transform("prompt.system", function (p) {
     ctx.hooks.transform("llm.request", function (p) {
       try {
         if (!isOn()) return p;
-        if ((p.purpose || "") !== "chat") return p;
+        if (p.purpose !== "chat") return p;
         var sid = p.sessionId || "";
         if (!sid) return p;
         if (isSessionOffline(sid)) {
-          // 线下：不注入线上那套标记块，只在下述情形注入一小段一次性指示
           if (Array.isArray(p.messages)) injectOfflineNudge(sid, p.messages);
           return p;
         }
-        delete offlinePending[sid];     // 线上生成，丢弃线下遗留的待结算标记
+        delete pendingEvt[sid];
         if (!Array.isArray(p.messages)) return p;
         // 短授权也会引用标题，不能只凭标题去重；匹配完整正文才算已注入。
-        var rules = injectionText();
+        var invitesOnly = sBool("roleInvitesOnly", false);
+        var rules = injectionText(invitesOnly);
         for (var i = p.messages.length - 1; i >= 0; i--) {
           var message = p.messages[i];
           if (!message || message.role !== "system") continue;
@@ -564,57 +622,30 @@ ctx.hooks.transform("prompt.system", function (p) {
           })) return p;
         }
         p.messages.push({ role: "system", content: rules });
+        if (invitesOnly) return p;
+        var data = getSessionEvents(sid);
+        if (data.events.length) {
+          var current = refusalContext(sid, data);
+          if (current.explicit) {
+            p.messages.push({ role: "system", content: "【线下场景开关·本轮】上一条角色回复已发出由你过去的邀约，用户的原话明确拒绝。按统一格式输出全部三个标记块：state 为 user_refused，填写角色的 reason、情境，以及带正文的正剧向和暧昧向两条选项。尊重拒绝，不再邀约。" });
+          } else if (current.followsOffer) {
+            p.messages.push({ role: "system", content: "【线下场景开关·本轮】上一条角色回复已发出由你过去的邀约。请先判定用户是否在回应这份邀约，尤其不要将用户拒绝误判为角色婉拒。" });
+          }
+        }
       } catch (e) { }
       return p;
     }, { priority: 90 });
 
-    // ═════════ 轮次计数 ═════════
-    // 宿主会把一轮 AI 回复拆成多条气泡落库（正文 / 状态栏 / 内心 / 语音 / 图片…），
-    // 每条都触发 message.persisted。必须按"回复批次"去重，否则一轮就能把 turns 冲满。
+    // 群聊整轮可能包含多位角色的批次。显示仍落在原气泡批次，计数按整轮。
     function roundKeyOf(m) {
-      if (!m) return "";
-      if (m.responseBatchId) return "b:" + m.responseBatchId;
       if (m.responseRoundId) return "r:" + m.responseRoundId;
-      return "";
+      if (m.responseBatchId) return "b:" + m.responseBatchId;
+      return "m:" + m.id;
     }
-
-    // 邀约绑定的那条 AI 消息（或同批次消息）还在不在
-    function anchorAlive(sid, e) {
-      e = e || getEvt(sid);
-      if (!e || !e.anchorId) return true;
-      var list = ctx.data.messages.list(sid);
-      if (!list) return true;
-      for (var i = 0; i < list.length; i++) {
-        var m = list[i];
-        if (m.id === e.anchorId) return true;
-        if (e.anchorBatch && m.responseBatchId === e.anchorBatch) return true;
-      }
-      return false;
-    }
-
-    // 锚点缺失且「没有请求在途」时，持续缺失超过这个时间才清。
-    // 只是为了吸收「宿主先删旧消息、下一毫秒才发新请求」之间的极短空档。
-    var ANCHOR_DEBOUNCE_MS = 1200;
-
-    // 锚点缺失：只做短防抖。重新生成时新回复带标记会在 llm.response 里整体重建 evt，
-    // 不带标记或生成失败，旧邀约本就该失效，所以不需要等。
-    function checkAnchor(sid, e) {
-      e = e || getEvt(sid);
-      if (!e) return true;
-      if (anchorAlive(sid, e)) { delete anchorMissAt[sid]; return true; }
-      var now = Date.now();
-      if (!anchorMissAt[sid]) { anchorMissAt[sid] = now; return true; }
-      if (now - anchorMissAt[sid] < ANCHOR_DEBOUNCE_MS) return true;
-      clearData(sid);
-      removePill(sid);
-      return false;
-    }
-
-    // 线下：发起生成时登记待结算标记
-    function countOfflineRound(sid) {
-      if (!sid || !hasData(sid)) return;
-      if (!isSessionOffline(sid)) return;
-      offlinePending[sid] = true;      // 布尔标记：失败后重试再登记也只是覆盖，不会累加
+    function isReplyBubble(m) {
+      return m && m.role === "assistant"
+        && m.mediaType !== "tool_call" && m.mediaType !== "tool_result"
+        && (m.content || m.mediaType || m.statusPanel || m.innerMonologue || m.reasoningText || m.isRetracted);
     }
 
     // 线下专用注入：只注入"角色反悔过来"这一件事，且只在用户选过 [退让] 之后生效
@@ -638,67 +669,155 @@ ctx.hooks.transform("prompt.system", function (p) {
     }
 
     function injectOfflineNudge(sid, msgs) {
-      var e = getEvt(sid);
-      if (!e || !e.forceReturn) return;
+      var nudge = offlineNudge[sid];
+      if (!nudge) return;
       // 同一轮线下可能有多次请求（正文 + 摘要补提），只注入一次
       for (var i = msgs.length - 1, n = 0; i >= 0 && n < 3; i--, n++) {
         var c = msgs[i] && msgs[i].content;
         if (typeof c === "string" && c.indexOf("【本次线下特别指示】") >= 0) return;
       }
-      msgs.push({ role: "system", content: offlineNudgeText(e.judge && e.judge.reason) });
+      msgs.push({ role: "system", content: offlineNudgeText(nudge.reason) });
     }
 
-    function bumpTurns(sid) {            // 只按「一轮 +1」用
-      var e = sid ? getEvt(sid) : null;
-      if (!evtHasData(e)) return;
-      var cur = parseInt(e.turns, 10);
-      if (isNaN(cur)) cur = 0;
-      cur += 1;
-      if (cur >= sInt("capsuleTurns", 2, 1, 20)) {
-        clearData(sid);
-        removePill(sid);
-      } else {
-        patchEvt(sid, { turns: cur });
-      }
+    // 保存逻辑顺序。重试只替换/追加该轮的实际来源，后续气泡继续归入这一轮。
+    function findRound(data, source) {
+      return data.rounds.find(function (r) { return r.sources.indexOf(source) >= 0; });
     }
-    function newRound(sid, e, m) {
-      var key = roundKeyOf(m);
-      var at = Date.parse(m.createdAt || "") || Date.now();
-      if (key && e.round === key) return false;
-      if (!key && e.roundAt && Math.abs(at - e.roundAt) < 2500) {
-        patchEvt(sid, { roundAt: at });
-        return false;
+    function appendRound(data, source) {
+      var round = { key: source, sources: [source], live: true };
+      data.rounds.push(round);
+      return round;
+    }
+    function migrateRounds(data, messages) {
+      var legacy = data.events.filter(function (e) { return !e.origin; });
+      if (!legacy.length) return;
+      var history = [];
+      var seen = new Set();
+      messages.forEach(function (m) {
+        if (!isReplyBubble(m)) return;
+        var source = roundKeyOf(m);
+        if (!seen.has(source)) { seen.add(source); history.push(source); }
+      });
+      if (!data.rounds.length) history.forEach(function (key) { appendRound(data, key); });
+      legacy.forEach(function (e) {
+        var anchor = messages.find(function (m) { return m.id === e.anchorId; })
+          || messages.find(function (m) { return e.anchorBatch && m.responseBatchId === e.anchorBatch; });
+        var key = anchor ? roundKeyOf(anchor) : "m:" + (e.anchorId || e.id);
+        var round = findRound(data, key);
+        if (!round) {
+          round = { key: key, sources: [key], live: false };
+          data.rounds.push(round);
+        }
+        e.origin = round.key;
+        var subsequent = data.rounds.length - data.rounds.indexOf(round) - 1;
+        e.legacyTurns = Math.max(0, (Number(e.turns) || 0) - subsequent);
+        delete e.rebind; delete e.rebindAt; delete e.rebindUser;
+      });
+    }
+    function refreshRounds(sid, data, messages) {
+      var online = new Set(messages.filter(isReplyBubble).map(roundKeyOf));
+      var offline = offlineSnapshots[sid];
+      var remaining = 0, ageByKey = new Map();
+      for (var i = data.rounds.length - 1; i >= 0; i--) {
+        var r = data.rounds[i];
+        r.live = r.sources.some(function (key) {
+          return key.indexOf("o:") === 0 ? (offline ? offline.has(key.slice(2)) : r.live) : online.has(key);
+        });
+        ageByKey.set(r.key, remaining);
+        if (r.live) remaining++;
       }
-      patchEvt(sid, { round: key || ("t:" + at), roundAt: at });
-      return true;
+      data.events.forEach(function (e) {
+        e.turns = (e.legacyTurns || 0) + (ageByKey.get(e.origin) || 0);
+      });
+      saveSessionEvents(sid, data);
+      scheduleLand(sid);
+      if (visibleEvents(data).length) ensureTicker();
+    }
+    // 用已保存的回复确认锚点。同批还有气泡就保留，离屏或切到线下也不算删除。
+    function anchoredEvents(sid, data, messages) {
+      if (!data.events.length) return [];
+      var ids = new Set(), batches = new Set();
+      messages.forEach(function (m) {
+        if (!isReplyBubble(m)) return;
+        ids.add(m.id);
+        if (m.responseBatchId) batches.add(m.responseBatchId);
+      });
+      var attached = data.events.filter(function (e) {
+        return ids.has(e.anchorId) || (!!e.anchorBatch && batches.has(e.anchorBatch));
+      });
+      if (attached.length !== data.events.length) {
+        var retry = retries[sid];
+        // 重试只允许目标胶囊等候新回复，在新锚点保存前也不显示它。
+        var retryId = retry && !retry.offline ? retry.capsuleId : null;
+        var attachedIds = new Set(attached.map(function (e) { return e.id; }));
+        var kept = data.events.filter(function (e) { return attachedIds.has(e.id) || e.id === retryId; });
+        if (kept.length !== data.events.length) {
+          data.events = kept;
+          saveSessionEvents(sid, data);
+        }
+      }
+      return attached;
+    }
+    function bindCapsule(capsule, pending, message) {
+      capsule.anchorId = message.id;
+      capsule.anchorBatch = message.responseBatchId || "";
+      capsule.noContent = !pending;
+      if (pending) Object.assign(capsule, pending);
     }
     ctx.hooks.on("message.persisted", function (p) {
       try {
         var m = p && p.message;
-        if (!m || !m.sessionId || m.role !== "assistant") return;
-        var sid = m.sessionId, e = getEvt(sid);
-        if (!e) return;
-        if (newRound(sid, e, m)) {
-          var sk = skipAssist[sid];
-          if (sk) delete skipAssist[sid];
-          if (sk && Date.now() - sk < 60000) {   // 60 秒内的标记才算数，过期的丢弃后照常计数
-            patchEvt(sid, { anchorId: m.id, anchorBatch: m.responseBatchId || "" });
-          } else {
-            bumpTurns(sid);
+        if (!m || !m.sessionId) return;
+        var sid = m.sessionId;
+        if (m.role === "user") {
+          if (retries[sid] && !retries[sid].offline) delete retries[sid];
+          delete pendingEvt[sid];
+          return;
+        }
+        if (!isReplyBubble(m)) return;
+        var retry = retries[sid];
+        var pending = pendingEvt[sid];
+        delete pendingEvt[sid];
+        if (pending && Date.now() - pending.at >= 60000) pending = null;
+        var data = getSessionEvents(sid);
+        var messages = ctx.data.messages.list(sid) || [];
+        var key = roundKeyOf(m);
+        // 迁移时不把刚保存的这条误当成旧计数。
+        migrateRounds(data, messages.filter(function (msg) { return msg.id !== m.id; }));
+        if (retry && !retry.offline && retry.responded) {
+          delete retries[sid];
+          if (!data.events.length) return;
+          var original = data.rounds.find(function (r) { return r.key === retry.key; });
+          if (!original) {
+            // 目标早于插件开始追踪的位置。仍登记新来源，后续气泡才不会被当成新轮。
+            original = { key: key, sources: [], live: true };
+            data.rounds.unshift(original);
+          }
+          if (original.sources.indexOf(key) < 0) original.sources.push(key);
+          var capsule = data.events.find(function (e) { return e.id === retry.capsuleId; });
+          if (capsule && pending) bindCapsule(capsule, pending, m);
+          else if (capsule) data.events = data.events.filter(function (e) { return e !== capsule; });
+        } else {
+          if (!pending && !data.events.length) return;
+          var round = findRound(data, key);
+          if (round) { scheduleLand(sid); return; }
+          round = appendRound(data, key);
+          if (pending) {
+            var created = { id: m.id, origin: round.key };
+            bindCapsule(created, pending, m);
+            data.events.push(created);
           }
         }
-        if (getEvt(sid)) {   // 再读一次：上面 bumpTurns 可能刚把数据清掉了
-          var g = gate[sid];
-          if (g) { g.persisted = true; g.mounted = false; g.t = Date.now(); }
-          scheduleLand(sid);
-          setTimeout(function () { scheduleLand(sid); }, 320);   // 兜底：这一轮没有带 footer 的气泡
-        }
+        refreshRounds(sid, data, messages);
       } catch (err) { }
     });
 
     // ═════════ 小提醒邀约胶囊 ═════════
-    function pillLabel(sid) {
-      return isReject(sid) ? "💔被婉拒了·还去吗" : "💛 在等你·抬头看看";
+    function pillLabel(e) {
+      var state = stateOf(e);
+      if (state === "user_refused") return "💛 · 好像还在想你……";
+      if (state === "refused") return "💔被婉拒了 · 还去吗";
+      return "💛 在等你 · 抬头看看";
     }
     // 把主题写在 .opl-foot-wrap::before 上的粒子样式，复制给 5 个粒子元素，再各自错开位置/节奏/大小
     var PART_LEFT = [11.6, 31, 46, 69, 88];
@@ -753,66 +872,85 @@ ctx.hooks.transform("prompt.system", function (p) {
           p.style.cssText = "";
           for (var k = 0; k < names.length; k++) p.style.setProperty(names[k], values[k]);
           p.textContent = txt;
-          p.style.left = PART_LEFT[i % 5] + "%";
-          p.style.right = "auto";
-          p.style.animationDelay = (-(PART_PHASE[i % 5] * dur)).toFixed(3) + "s";
-          p.style.animationFillMode = "both";
-          p.style.scale = String(PART_SCALE[i % 5]);
+          // 最左爱心（i=0）：出生点 = .opl-dot 圆心（border 1.5px + padding 13px + 半径 3px = 17.5px）
+          if (i === 0) {
+            p.style.left = "17.5px";
+            p.style.top = "50%";
+            p.style.marginLeft = "0";
+            p.style.transform = "translate(-50%,-50%)";
+          } else {
+            p.style.left = PART_LEFT[i % 5] + "%";
+            p.style.right = "auto";
+            p.style.animationDelay = (-(PART_PHASE[i % 5] * dur)).toFixed(3) + "s";
+            p.style.animationFillMode = "both";
+            p.style.scale = String(PART_SCALE[i % 5]);
+          }
         }
         wrap.classList.add("opl-has-parts"); // 隐藏原来那一个 ::before，避免重复
       } catch (e) { }
     }
 
-    function ensurePill(sid) {
-      if (pillEls[sid]) return pillEls[sid];
+    function ensurePill(sid, e) {
+      var id = e.id;
+      var pills = pillEls[sid] || (pillEls[sid] = Object.create(null));
+      if (pills[id] && pills[id].dataset.oplLabel === pillLabel(e)) return pills[id];
+      if (pills[id]) pills[id].remove();
       var wrap = document.createElement("span");
       wrap.className = "opl-foot-wrap";
+      wrap.dataset.oplLabel = pillLabel(e);
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "opl-foot";
       var dot = document.createElement("span"); dot.className = "opl-dot";
       var lbl = document.createElement("span");
-      lbl.textContent = pillLabel(sid);
+      lbl.textContent = pillLabel(e);
       btn.appendChild(dot); btn.appendChild(lbl);
       // 5 个粒子元素：只负责位置和错开节奏，形状/颜色/大小/动画全由主题 CSS 决定
       for (var hi = 0; hi < PART_LEFT.length; hi++) {
         var h = document.createElement("span");
         h.className = "opl-foot-heart opl-foot-heart-" + (hi + 1);
-        h.style.left = PART_LEFT[hi] + "%";
+        // 最左爱心（hi=0）：出生点 = .opl-dot 圆心（border 1.5px + padding 13px + 半径 3px = 17.5px）
+        if (hi === 0) {
+          h.style.left = "17.5px";
+          h.style.top = "50%";
+          h.style.marginLeft = "0";
+          h.style.transform = "translate(-50%,-50%)";
+        } else {
+          h.style.left = PART_LEFT[hi] + "%";
+        }
         h.style.animationDelay = (-(PART_PHASE[hi] * 2.6)).toFixed(3) + "s";
         h.style.animationFillMode = "both";
         h.style.scale = String(PART_SCALE[hi]);
         wrap.appendChild(h);
       }
       wrap.appendChild(btn);
-      wrap.__lbl = lbl;
-      wrap.__btn = btn;
-      wrap.__mode = isReject(sid) ? "reject" : "ok";
       btn.title = lbl.textContent;
 
       btn.addEventListener("click", function () {
         var host = wrap.closest(".chat-room-wrapper") || document;
         if (document.querySelector(".opl-overlay")) return;
-        if (!hasData(sid)) { removePill(sid); return; }
+        var current = getEvt(sid, id);
+        if (!current) { syncPill(sid); return; }
+        if (stateOf(current) === "user_refused") { showCard(host, sid, id); return; }
         if (host !== document && isOfflineIn(host)) {
           var back = host.querySelector('button[aria-label="返回线上模式"]');
           if (back) {
             back.click();
             waitFor(function () { return !isOfflineIn(host); }, 4000).then(function (ok) {
               if (!ok) { ctx.ui.toast("线下回复生成中，稍后再试"); return; }
-              setTimeout(function () { showCard(host, sid); }, 280);
+              setTimeout(function () { showCard(host, sid, id); }, 280);
             });
             return;
           }
         }
-        showCard(host, sid);
+        showCard(host, sid, id);
       });
 
-      pillEls[sid] = wrap;
+      pills[id] = wrap;
       return wrap;
     }
 
-    // 左下角【线下模式】按钮的「邀约进行中」标记：与胶囊同生共死（hasData 为真即亮）
+    // 左下角【线下模式】按钮的呼吸效果由最新有效胶囊的类型决定。
     // 颜色来自 armRgb（面板可拖），发光/透明度来自设置项，加粗与呼吸闪烁固定开启。
     var ARM_PROPS = ["color", "font-weight", "filter", "animation", "opacity"];
     var ARM_ANIM = "oplArmPulse 3.6s cubic-bezier(.37,0,.63,1) infinite";
@@ -932,19 +1070,33 @@ ctx.hooks.transform("prompt.system", function (p) {
     }
 
     function removePill(sid) {
-      var el = pillEls[sid];
-      if (el) { try { el.remove(); } catch (e) { } }
+      var pills = pillEls[sid] || {};
+      Object.keys(pills).forEach(function (id) { pills[id].remove(); });
       delete pillEls[sid];
-      setArmed(sid, null);       // 胶囊消失 → 按钮标记同步熄灭
+      setArmed(sid, null);
     }
 
     // ═════════ 胶囊：落位（纯事件驱动）═════════
 
-    // 邀约那一轮的「最后一个已挂载气泡」下方。只认锚点所在的那一轮（responseBatchId），
-    // 所以之后的聊天不会把胶囊拽走；同轮里最后一条带 footer 的气泡就是它该待的地方。
-    function lastFooterOfRound(sid, e) {
-      var feet = footEls[sid];
-      if (!feet || !e) return null;
+    // 引用气泡没有普通文字的 footer。按同批已保存消息确定末条是否为引用，
+    // 等对应气泡渲染后再挂载，避免暂时落到前一条。
+    function lastFooterOfRound(sid, e, messages, wrapper) {
+      var feet = footEls[sid] || {};
+      var last = null;
+      messages.forEach(function (m) {
+        if (!isReplyBubble(m)) return;
+        if (e.anchorBatch ? m.responseBatchId !== e.anchorBatch : m.id !== e.anchorId) return;
+        if (!last || compareReplyMessages(last, m) <= 0) last = m;
+      });
+      if (last && last.mediaType === "quote") {
+        var footer = feet[last.id];
+        if (footer && footer.el && wrapper.contains(footer.el)) return footer.el;
+        var row = document.getElementById("message-" + last.id);
+        if (!row || !wrapper.contains(row)) return null;
+        var bubble = row.querySelector('[data-ui="bubble-bot"][data-msg-id]');
+        return bubble && bubble.getAttribute("data-msg-id") === last.id ? bubble : null;
+      }
+
       var best = null;
       for (var id in feet) {
         if (!Object.prototype.hasOwnProperty.call(feet, id)) continue;
@@ -957,44 +1109,44 @@ ctx.hooks.transform("prompt.system", function (p) {
       return best;
     }
 
-    // 新事件：落库后要等到新 footer 挂载才放行；兜底 300ms / 8s
-    function gateOpen(sid) {
-      var g = gate[sid];
-      if (!g) return true;
-      var age = Date.now() - g.t;
-      if (age > 8000) return true;
-      return g.persisted && (g.mounted || age > 300);
-    }
-
-    // 幂等：位置对了什么都不做。一次只读一次 evt。
     function syncPill(sid) {
       try {
         if (!sid || !isOn()) return;
-        var e = getEvt(sid);
-        if (!evtHasData(e)) { removePill(sid); return; }
+        var data = getSessionEvents(sid);
+        var messages = data.events.length ? (ctx.data.messages.list(sid) || []) : [];
+        var events = visibleEvents({ events: anchoredEvents(sid, data, messages) });
+        if (!events.length) { removePill(sid); return; }
+        var latest = events.reduce(function (newest, e) {
+          return (Number(e.at) || 0) >= (Number(newest.at) || 0) ? e : newest;
+        });
         var w = wrapperFor(sid);
-        if (w) setArmed(sid, w.querySelector('button[aria-label="线下模式"]') || w.querySelector(".chat-offline-toggle"));
-        if (!gateOpen(sid)) return;
+        var offline = w && isOfflineIn(w);
+        var shown = offline ? [latest] : events;
+        var pills = pillEls[sid] || {};
+        Object.keys(pills).forEach(function (id) {
+          if (shown.some(function (e) { return e.id === id; })) return;
+          pills[id].remove();
+          delete pills[id];
+        });
         if (!w) return;
-        var offline = isOfflineIn(w);
-        var host = offline ? (pillHosts[sid] && pillHosts[sid].header) : lastFooterOfRound(sid, e);
-        if (!host || !host.isConnected) return;    // 还没挂上就先等着，别熄标记
-        var el = pillEls[sid] || ensurePill(sid);
-        var moved = el.parentElement !== host;
-        if (moved) host.appendChild(el);
-        el.classList.toggle("opl-mini", offline);
-        el.classList.add("opl-ready");
-        // 文案只在判定变化时写 DOM
-        var mode = isReject(sid) ? "reject" : "ok";
-        if (el.__mode !== mode) {
-          el.__mode = mode;
-          var t = pillLabel(sid);
-          if (el.__lbl) el.__lbl.textContent = t;
-          if (el.__btn) el.__btn.title = t;
-        }
-        if (moved) requestAnimationFrame(function () { syncParts(el); });
-        delete gate[sid];
-        if (fxArmed[sid]) { fxArmed[sid] = false; playFx(sid); }
+        var shouldPulse = stateOf(latest) !== "user_refused";
+        setArmed(sid, shouldPulse && (w.querySelector('button[aria-label="线下模式"]') || w.querySelector(".chat-offline-toggle")));
+        var header = pillHosts[sid] && pillHosts[sid].header;
+        shown.forEach(function (e) {
+          // 线上只挂在原回复下方。切回线上时，若气泡尚未挂载或已删除，先卸下小胶囊。
+          var host = offline ? header : lastFooterOfRound(sid, e, messages, w);
+          if (!host || !host.isConnected) {
+            if (pills[e.id] && pills[e.id].parentElement) pills[e.id].remove();
+            return;
+          }
+          var el = ensurePill(sid, e);
+          var moved = el.parentElement !== host;
+          if (moved) host.appendChild(el);
+          el.classList.toggle("opl-mini", offline);
+          el.classList.add("opl-ready");
+          if (moved) requestAnimationFrame(function () { syncParts(el); });
+          if (moved && !offline && !e.fxAt && Date.now() - e.at < 8000) playFx(sid, e.id);
+        });
       } catch (err) { }
     }
 
@@ -1009,16 +1161,14 @@ ctx.hooks.transform("prompt.system", function (p) {
       }, 0);
     }
 
-    // 常驻轮询：只做"邀约绑定的消息还在不在" + 位置兜底（幂等，位置对了不动）
+    // 位置兜底：宿主切换视图或重新挂载时恢复胶囊位置。
     function tick() {
       try {
         var any = false;
         for (var sid in pillHosts) {
           if (!Object.prototype.hasOwnProperty.call(pillHosts, sid)) continue;
-          var e = getEvt(sid);
-          if (!evtHasData(e)) continue;
+          if (!hasData(sid)) continue;
           any = true;
-          if (!checkAnchor(sid, e)) continue;
           syncPill(sid);
         }
         if (!any) stopTicker();
@@ -1200,8 +1350,8 @@ ctx.hooks.transform("prompt.system", function (p) {
         }
       } catch (e) { }
       for (var a in armedEls) if (Object.prototype.hasOwnProperty.call(armedEls, a)) setArmed(a, null);
-      gate = {}; landTok = {}; skipAssist = {}; fxArmed = {};
-      anchorMissAt = {}; offlinePending = {};
+      pendingEvt = {}; landTok = {}; offlineNudge = {};
+      retryClicks = Object.create(null); retries = Object.create(null);
       try { stopTicker(); } catch (e) { }
       try { clearFx(); } catch (e) { }
     }
@@ -1211,7 +1361,7 @@ ctx.hooks.transform("prompt.system", function (p) {
       enabled: true, person: "third", customStyle: "",
       sceneNoSubj: false, replyPerson: "third", replyNoSubj: false,
       sceneWrapBefore: "", sceneWrapAfter: "", replyWrapBefore: "", replyWrapAfter: "",
-      maxChars: 60, capsuleTurns: 2, fxEnabled: true, keepMarker: false,
+      maxChars: 60, capsuleTurns: 2, roleInvitesOnly: false, fxEnabled: true, keepMarker: false,
       armGlow: 32
     };
     // 只改与默认值不同的项，避免一次重挂载十几次设置面板
@@ -1256,7 +1406,7 @@ ctx.hooks.transform("prompt.system", function (p) {
         c.style.animation = "none";
         c.style.width = "min(290px,100%)";
         c.innerHTML = "<div class='opl-eyebrow'>有人来了</div><div class='opl-title'>抬头看看</div>"
-          + "<div class='opl-desc'>光影晃动，空气的温度像是也有所变化\n视线从讯息上离开——</div>"
+          + "<div class='opl-desc'>隔着屏幕总问不出她冷不冷，干脆把热茶也端过去。</div>"
           + "<span class='opl-label'>🫧 情境</span>"
           + "<div class='opl-box' style='min-height:42px;display:flex;align-items:center'>夜色从窗外漫进来……</div>"
           + "<span class='opl-label'>💬 你的回应</span>"
@@ -1641,6 +1791,7 @@ ctx.hooks.transform("prompt.system", function (p) {
           c.className = "opl-chip";
           c.textContent = o.label;
           c.addEventListener("click", function () {
+            if (!o.text) { if (replyEl) replyEl.focus(); return; }
             var all = chips.querySelectorAll(".opl-chip");
             for (var k = 0; k < all.length; k++) all[k].setAttribute("data-sel", "0");
             c.setAttribute("data-sel", "1");
@@ -1656,9 +1807,7 @@ ctx.hooks.transform("prompt.system", function (p) {
       var act = add("opl-actions");
       var sec = document.createElement("button");
       sec.type = "button"; sec.className = "opl-btn ghost"; sec.textContent = opt.secondary || "取消";
-      sec.addEventListener("click", function () {
-        if (opt.onSecondary) opt.onSecondary(close); else close();
-      });
+      sec.addEventListener("click", close);
       var pri = document.createElement("button");
       pri.type = "button"; pri.className = "opl-btn primary"; pri.textContent = opt.primary || "应答";
       pri.addEventListener("click", function () {
@@ -1724,6 +1873,7 @@ ctx.hooks.transform("prompt.system", function (p) {
       if (!sid) return;
       var hh = pillHosts[sid] || (pillHosts[sid] = {});
       hh.header = el;
+      queueOfflineSnapshot(sid, false, null);
       syncPill(sid);
       if (hasData(sid)) ensureTicker();
 
@@ -1734,6 +1884,13 @@ ctx.hooks.transform("prompt.system", function (p) {
         if (!w) return;
         var lastOff = isOfflineIn(w);
         mo = new MutationObserver(function () {
+          var retry = retries[sid];
+          if (retry) {
+            var stopLabel = retry.offline ? "停止线下生成" : "停止本轮生成";
+            var busy = !!w.querySelector('button[aria-label="' + stopLabel + '"]');
+            if (busy) retry.busy = true;
+            else if (retry.busy) clearRetry(sid);
+          }
           if (raf) return;
           raf = requestAnimationFrame(function () {
             raf = 0;
@@ -1757,16 +1914,156 @@ ctx.hooks.transform("prompt.system", function (p) {
       };
     });
 
-    // 锚点气泡被删（含重新生成删旧回复）：立刻登记缺失，不等 footer 卸载。
-    // 之后由 checkAnchor 做短防抖，缺失持续超过 ANCHOR_DEBOUNCE_MS 就清除邀约。
-    ctx.hooks.on("message.deleted", function (p) {
+    // 复用宿主现有的菜单与删除事件。点击和随后的删除必须发生在同一次操作内。
+    function captureRetry(event) {
+      var button = event.target && event.target.closest && event.target.closest("button");
+      if (!button) return;
+      var isRetry = button.matches(".chat-floating-ctx-menu .ctx-menu-btn") && button.textContent.trim() === "重试以下";
+      var label = button.getAttribute("aria-label");
+      if (!isRetry && label !== "发送" && label !== "停止本轮生成" && label !== "停止线下生成") return;
+      var wrapper = wrapperOf(button);
+      if (!wrapper) return;
+      var sid = Object.keys(pillHosts).find(function (id) { return wrapperFor(id) === wrapper; });
+      if (!sid || !isOn()) return;
+      if (!isRetry) {
+        clearRetry(sid);
+        return;
+      }
+      clearRetry(sid);
+      var offline = isOfflineIn(wrapper);
+      if (wrapper.querySelector('button[aria-label="停止本轮生成"],button[aria-label="停止线下生成"]')) return;
+      var click = { offline: offline, before: offline ? [] : ctx.data.messages.list(sid) };
+      if (!offline) {
+        var active = wrapper.querySelector('.chat-msg-wrapper[data-active][id^="message-"]');
+        if (active) click.targetId = active.id.slice("message-".length);
+      }
+      retryClicks[sid] = click;
+      // 浏览器可能在原生 capture 和 React 的点击回调之间执行微任务。
+      setTimeout(function () { if (retryClicks[sid] === click) delete retryClicks[sid]; }, 0);
+    }
+    function clearRetry(sid) {
+      var retry = retries[sid];
+      delete retries[sid];
+      delete pendingEvt[sid];
+      if (retry && !retry.offline && retry.capsuleId) scheduleLand(sid);
+    }
+    function onOnlineDeleted(event) {
+      var deleted = event.detail && event.detail.messages;
+      if (!Array.isArray(deleted)) return;
+      var ids = new Set(deleted.map(function (m) { return m.id; }));
+      var sessions = new Set(deleted.map(function (m) { return m.sessionId; }));
+      sessions.forEach(function (sid) {
+        var data = getSessionEvents(sid);
+        var click = retryClicks[sid];
+        if (!data.events.length && !(click && !click.offline)) return;
+        var messages = ctx.data.messages.list(sid);
+        if (click && !click.offline) {
+          delete retryClicks[sid];
+          migrateRounds(data, click.before);
+          var target = click.before.find(function (m) { return m.id === click.targetId && ids.has(m.id); })
+            || click.before.find(function (m) { return isReplyBubble(m) && ids.has(m.id); });
+          if (target) {
+            var round = findRound(data, roundKeyOf(target));
+            var capsule = data.events.find(function (e) {
+              return e.anchorId === target.id || (e.anchorBatch && e.anchorBatch === target.responseBatchId);
+            }) || (round && data.events.find(function (e) { return e.origin === round.key; }));
+            retries[sid] = { key: round ? round.key : "", offline: false, capsuleId: capsule && capsule.id };
+          }
+        } else {
+          migrateRounds(data, messages.concat(deleted.filter(function (m) { return m.sessionId === sid; })).sort(compareReplyMessages));
+        }
+        refreshRounds(sid, data, messages);
+      });
+    }
+    function compareReplyMessages(a, b) {
+      if (typeof a.order === "number" && typeof b.order === "number") return a.order - b.order;
+      return String(a.createdAt || "").localeCompare(String(b.createdAt || ""));
+    }
+
+    // 现有线下事件只提供会话 ID。读取对应会话的回合记录，不写入宿主存储。
+    function offlineIds(raw) {
+      var turns = JSON.parse(raw || "[]");
+      if (!Array.isArray(turns)) return null;
+      return new Set(turns.filter(function (turn) {
+        return turn && typeof turn.id === "string" && typeof turn.assistantContent === "string" && turn.assistantContent.trim();
+      }).map(function (turn) { return turn.id; }));
+    }
+    function readOfflineIds(sid) {
+      var key = "ai_phone_chat_offline_turns:" + sid;
       try {
-        var sid = p && p.sessionId, e = sid ? getEvt(sid) : null;
-        if (!e || !e.anchorId || p.id !== e.anchorId) return;
-        anchorMissAt[sid] = Date.now();
-        ensureTicker();
+        var mirror = window.localStorage.getItem(key);
+        if (mirror !== null) return Promise.resolve(offlineIds(mirror));
       } catch (err) { }
-    });
+      return new Promise(function (resolve) {
+        if (!window.indexedDB) { resolve(null); return; }
+        var open = window.indexedDB.open("AiPhoneKvDB");
+        open.onupgradeneeded = function () { open.transaction.abort(); };
+        open.onerror = open.onblocked = function () { resolve(null); };
+        open.onsuccess = function () {
+          var db = open.result;
+          try {
+            var read = db.transaction("entries", "readonly").objectStore("entries").get(key);
+            read.onsuccess = function () {
+              try { resolve(offlineIds(read.result && read.result.value)); } catch (err) { resolve(null); }
+            };
+            read.onerror = function () { resolve(null); };
+          } catch (err) { resolve(null); }
+          finally { db.close(); }
+        };
+      }).catch(function () { return null; });
+    }
+    function queueOfflineSnapshot(sid, changed, retry) {
+      var snapshot = readOfflineIds(sid);
+      var task = (offlineReads[sid] || Promise.resolve()).then(function () { return snapshot; }).then(function (current) {
+        if (disposedPlugin || !current) return;
+        var previous = offlineSnapshots[sid];
+        offlineSnapshots[sid] = current;
+        var data = getSessionEvents(sid);
+        if (!data.events.length) return;
+        var messages = ctx.data.messages.list(sid);
+        migrateRounds(data, messages);
+        if (changed && previous) {
+          if (retry && retry.awaitingRemoval) {
+            retry.awaitingRemoval = false;
+            var removed = Array.from(previous).find(function (id) { return !current.has(id); });
+            var original = removed && findRound(data, "o:" + removed);
+            retry.key = original ? original.key : "";
+          }
+          current.forEach(function (id) {
+            if (previous.has(id)) return;
+            var source = "o:" + id;
+            if (retry && retry.key !== undefined) {
+              if (retries[sid] === retry) delete retries[sid];
+              var round = data.rounds.find(function (r) { return r.key === retry.key; });
+              if (round && round.sources.indexOf(source) < 0) round.sources.push(source);
+              retry = null;
+            } else if (!findRound(data, source)) {
+              appendRound(data, source);
+            }
+          });
+        }
+        if (changed) delete offlineNudge[sid];
+        refreshRounds(sid, data, messages);
+      }).catch(function () {});
+      offlineReads[sid] = task;
+      task.then(function () { if (offlineReads[sid] === task) delete offlineReads[sid]; });
+    }
+    function onOfflineChanged(event) {
+      var sid = event.detail && event.detail.sessionId;
+      if (!sid) return;
+      var click = retryClicks[sid];
+      if (click && click.offline) {
+        delete retryClicks[sid];
+        retries[sid] = { offline: true, awaitingRemoval: true };
+      }
+      var retry = retries[sid];
+      queueOfflineSnapshot(sid, true, retry && retry.offline ? retry : null);
+    }
+    if (typeof window !== "undefined") {
+      window.addEventListener("click", captureRetry, true);
+      window.addEventListener("chat-messages-deleted", onOnlineDeleted);
+      window.addEventListener("ai-chat-offline-turns-changed", onOfflineChanged);
+    }
 
     ctx.ui.slot("message.footer", function (el, props) {
       try {
@@ -1775,8 +2072,6 @@ ctx.hooks.transform("prompt.system", function (p) {
         if (!msg || msg.role !== "assistant" || !sid) return;
         var feet = footEls[sid] || (footEls[sid] = {});
         feet[msg.id] = { el: el, batch: msg.responseBatchId || "" };
-        var g = gate[sid];
-        if (g && g.persisted) g.mounted = true;
         if (hasData(sid)) { ensureTicker(); scheduleLand(sid); }
         return function () {
           var cur = footEls[sid];
@@ -1786,12 +2081,13 @@ ctx.hooks.transform("prompt.system", function (p) {
     });
 
     // ═════════ 卡片流程 ═════════
-    function showCard(host, sid) {
-      var e = getEvt(sid) || {};
+    function showCard(host, sid, id) {
+      var e = getEvt(sid, id);
+      if (!e || document.querySelector(".opl-overlay")) return;
       var j = e.judge || {};
       var scenePair = wrapPair("sceneWrapBefore", "sceneWrapAfter");
       var replyPair = wrapPair("replyWrapBefore", "replyWrapAfter");
-      var st = stateOf(sid);
+      var st = stateOf(e);
       var reject = st === "refused";
       var o = e.opts || [];
       var options = [];
@@ -1801,21 +2097,26 @@ ctx.hooks.transform("prompt.system", function (p) {
         if (!it || !it.text) return;
         var lb = it.label || "";
         if (reject ? (lb !== "追问" && lb !== "退让") : (lb !== "正剧向" && lb !== "暧昧向")) lb = pair[1];
+        if (st === "user_refused" && options.some(function (option) { return option.label === lb; })) {
+          lb = lb === l1 ? l2 : l1;
+        }
         options.push({ label: lb, text: applyWrapPair(replyPair, it.text) });
       });
 
-      var eyebrow, title, desc, primary, secondary;
-      if (reject) {
+      var eyebrow, title, primary, secondary;
+      var desc = cleanText(j.reason);
+      if (st === "user_refused") {
+        eyebrow = "Surprise？"; title = "悄悄过去看看";
+        primary = "直接过去"; secondary = "还是算了";
+      } else if (reject) {
         eyebrow = "被婉拒了"; title = "自己过去看看";
         desc = j.reason || "文字闪烁着——\n就这样算了吗？";
         primary = "就这样吧"; secondary = "还是算了";
       } else if (st === "invite") {
         eyebrow = "要过去吗？"; title = "出发去见一面";
-        desc = "这或许是一个邀请——\n现在就动身吧？";
         primary = "答应并出发"; secondary = "还是算了";
       } else {
         eyebrow = "有人来了"; title = "抬头看看";
-        desc = "光影晃动，空气的温度像是也有所变化\n视线从讯息上离开——";
         primary = "应答"; secondary = "再想想";
       }
 
@@ -1835,12 +2136,12 @@ ctx.hooks.transform("prompt.system", function (p) {
             },
             onOk: function () {
               close();
-              clearData(sid);
-              removePill(sid);
+              dismissEvt(sid, id);
             }
           });
         },
         onConfirm: function (close, sceneTxt, replyTxt, label) {
+          if (!getEvt(sid, id)) { close(); return; }
           var a = String(sceneTxt || "").trim();
           var b = String(replyTxt || "").trim();
           var payload = [a, b].filter(Boolean).join("\n\n");
@@ -1851,28 +2152,32 @@ ctx.hooks.transform("prompt.system", function (p) {
               desc: "「你的回应」没有做出动作\n确定直接发送吗？",
               okLabel: "直接发送",
               cancelLabel: "再想想",
-              onOk: function () { close(); enterOffline(host, sid, payload, label === "退让"); }
+              onOk: function () {
+                close();
+                if (getEvt(sid, id)) enterOffline(host, sid, payload, label === "退让" ? { reason: j.reason } : null);
+              }
             });
             return false;
           }
           close();
-          enterOffline(host, sid, payload, label === "退让");
+          enterOffline(host, sid, payload, label === "退让" ? { reason: j.reason } : null);
           return true;
         }
       });
     }
 
-    function enterOffline(host, sid, text, forceReturn) {
+    function enterOffline(host, sid, text, nudge) {
       var toggle = host.querySelector('button[aria-label="线下模式"]')
         || host.querySelector(".chat-offline-toggle");
-      if (!toggle) { ctx.ui.toast("没找到线下模式按钮，宿主 UI 可能已变更"); return; }
-      toggle.click();
+      if (!isOfflineIn(host)) {
+        if (!toggle) { ctx.ui.toast("没找到线下模式按钮，宿主 UI 可能已变更"); return; }
+        toggle.click();
+      }
       waitFor(function () {
         return !!host.querySelector('button[aria-label="返回线上模式"]')
           && !!host.querySelector("textarea.chat-input-textarea");
       }, 4000).then(function (ok) {
         if (!ok) {
-          if (forceReturn) patchEvt(sid, { forceReturn: false });
           ctx.ui.toast("进入线下失败：可能正在生成回复，稍后再试");
           return;
         }
@@ -1890,7 +2195,7 @@ ctx.hooks.transform("prompt.system", function (p) {
           }
           if (!send) { ctx.ui.toast("没找到发送按钮，文字已填入输入框"); return; }
           if (send.disabled) { ta.focus(); ctx.ui.toast("已填入输入框，手动点发送"); return; }
-          if (forceReturn) patchEvt(sid, { forceReturn: true });
+          if (nudge) offlineNudge[sid] = nudge;
           send.click();
           setTimeout(function () { syncPill(sid); }, 300);
         });
@@ -1899,6 +2204,12 @@ ctx.hooks.transform("prompt.system", function (p) {
 
     // ═════════ 卸载 ═════════
     return function () {
+      disposedPlugin = true;
+      if (typeof window !== "undefined") {
+        window.removeEventListener("click", captureRetry, true);
+        window.removeEventListener("chat-messages-deleted", onOnlineDeleted);
+        window.removeEventListener("ai-chat-offline-turns-changed", onOfflineChanged);
+      }
       try { stopTicker(); } catch (e) { }
       try { if (settingsOff) settingsOff(); } catch (e) { }
       try { if (cssDisp) cssDisp(); } catch (e) { }
