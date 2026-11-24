@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-24T04:29:37.946Z",
+  "generatedAt": "2026-11-24T08:04:58.441Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -77,7 +77,7 @@
     },
     {
       "name": "线上美化",
-      "count": 64
+      "count": 65
     },
     {
       "name": "线上聊天状态栏",
@@ -8382,6 +8382,25 @@
       "avatar": "资源/线上美化/OnAir聊天室美化/.avatar.png",
       "ownerHash": "2d219a36b42d6b520c9a72ca38913c044848e875ff08144a9eae53f5db8925b1",
       "updatedAt": "2026-11-20T23:03:36+09:00"
+    },
+    {
+      "folder": "线上美化",
+      "name": "Sententiola美化",
+      "dirName": "Sententiola美化",
+      "type": "dir",
+      "path": "资源/线上美化/Sententiola美化",
+      "files": [
+        "资源/线上美化/Sententiola美化/Sententiola整合版.css",
+        "资源/线上美化/Sententiola美化/Sententiola整合版.js"
+      ],
+      "images": [
+        "资源/线上美化/Sententiola美化/MEITU_20261124_155956804.jpg"
+      ],
+      "description": "Follow：返回键，Message：设置\n底部输入文字区域左侧的圆圈：更多\n自用二改随意",
+      "author": "山羊3",
+      "avatar": "资源/线上美化/Sententiola美化/.avatar.png",
+      "ownerHash": "c0a4698d957b057e64c0309aef8426ac9f6cd4fab2577c4655c82d548ccdbabf",
+      "updatedAt": "2026-11-24T17:02:20+09:00"
     },
     {
       "folder": "线上美化",
