@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-24T08:15:13.455Z",
+  "generatedAt": "2026-11-24T10:27:01.685Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -8336,11 +8336,11 @@
       "images": [
         "资源/线上美化/Aether美化/MEITU_20261123_110309711.jpg"
       ],
-      "description": "一定要导入插件,还要检查有没有开启！否则标题栏会直接消失的\n还有就是提前要把壁纸换成深色系的，不然啥都看不到了|｡･･)っ♡\n二改随意",
+      "description": "一定要导入插件,还要检查有没有开启！否则标题栏会直接消失的\n还有就是提前要把壁纸换成深色系的，不然啥都看不到了|｡･･)っ♡\n二改随意,有bug请自行修改",
       "author": "山羊3",
       "avatar": "资源/线上美化/Aether美化/.avatar.png",
       "ownerHash": "c0a4698d957b057e64c0309aef8426ac9f6cd4fab2577c4655c82d548ccdbabf",
-      "updatedAt": "2026-11-23T12:27:25+09:00"
+      "updatedAt": "2026-11-24T19:23:01+09:00"
     },
     {
       "folder": "线上美化",
@@ -8396,11 +8396,11 @@
       "images": [
         "资源/线上美化/Sententiola美化/MEITU_20261124_155956804.jpg"
       ],
-      "description": "Follow：返回键，Message：设置\n底部输入文字区域左侧的圆圈：更多\n二改随意",
+      "description": "Follow：返回键，Message：设置\n底部输入文字区域左侧的圆圈：更多\n二改随意,有Bug请自行修改",
       "author": "山羊3",
       "avatar": "资源/线上美化/Sententiola美化/.avatar.png",
       "ownerHash": "c0a4698d957b057e64c0309aef8426ac9f6cd4fab2577c4655c82d548ccdbabf",
-      "updatedAt": "2026-11-24T17:12:20+09:00"
+      "updatedAt": "2026-11-24T19:23:40+09:00"
     },
     {
       "folder": "线上美化",
