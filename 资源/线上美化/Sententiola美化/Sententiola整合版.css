@@ -1,0 +1,1579 @@
+/* ===========================================================================
+   THIRD-PARTY NOTICES - Sententiola bundle (CSS)
+   ===========================================================================
+   SCOPE
+   Four icons across this two-file bundle are derived from open icon sets
+   and are licensed under the Apache License, Version 2.0 (January 2004).
+   One is embedded in this CSS file and three are embedded as inline SVG
+   in the companion JavaScript plugin. All four are listed in both files
+   so that the notices stay complete if either file is distributed alone.
+   All other CSS rules, layout, variables, plugin logic and the remaining
+   CC0 icon glyphs are outside this notice. Nothing here asserts a licence
+   over the author's own CSS. Colons and fixed columns are a reading aid
+   only; no licence prescribes file layout, and no user-interface credit
+   is required.
+
+   ---------------------------------------------------------------------------
+   1. LICENSE TEXT (redistribution condition: give recipients a copy)
+   ---------------------------------------------------------------------------
+   ASF licenses index            : https://www.apache.org/licenses/
+   Authoritative English text    : https://www.apache.org/licenses/LICENSE-2.0
+   Plain-text official copy      : https://www.apache.org/licenses/LICENSE-2.0.txt
+   ASF licensing FAQ             : https://www.apache.org/foundation/license-faq.html
+   ASF "Apply the license"       : https://www.apache.org/legal/apply-license.html
+   SPDX entry / short id         : https://spdx.org/licenses/Apache-2.0.html
+   OSI license page              : https://opensource.org/license/apache-2.0
+   The complete, unmodified English text of Apache License 2.0 follows this
+   notice at the top of this file. The same text is also shipped as the
+   separate files LICENSE and LICENSE_Apache-2.0.txt. One full copy per
+   distribution is sufficient; the embedded copy alone satisfies this
+   condition when this CSS is distributed by itself. Only the English text
+   of the licence is authoritative.
+
+   ---------------------------------------------------------------------------
+   2. UPSTREAM ICON SOURCES (redistribution condition: retain notices)
+   ---------------------------------------------------------------------------
+   Browse / download (Google)    : https://fonts.google.com/icons
+   Iconify collection index      : https://github.com/iconify/icon-sets/blob/master/collections.md
+   Iconify set - symbols         : https://icon-sets.iconify.design/material-symbols/
+   Iconify set - mdi             : https://icon-sets.iconify.design/mdi/
+   Iconify data - symbols        : https://api.iconify.design/material-symbols.json
+   Iconify data - mdi            : https://api.iconify.design/mdi.json
+   Pictogrammers licence         : https://pictogrammers.com/docs/general/license/
+   Pictogrammers site            : https://pictogrammers.com/
+   Browse UI used by author      : https://yesicon.app/
+   Per-icon URL form             : https://yesicon.app/zh-Hans/PREFIX/ICON-NAME
+   Source page - mdi:reply       : https://yesicon.app/zh-Hans/mdi/reply
+   Source - chat-display         : https://yesicon.app/zh-Hans/material-symbols/chat-display
+   Source - bookmark-heart       : https://yesicon.app/zh-Hans/material-symbols/bookmark-heart
+   Source - heart-arrow          : https://yesicon.app/zh-Hans/material-symbols/heart-arrow
+
+   A. mdi:reply
+      Set         : Material Design Icons
+      Author      : Pictogrammers
+      License     : Apache-2.0
+      Upstream    : https://github.com/Templarian/MaterialDesign
+      LICENSE     : https://github.com/Templarian/MaterialDesign/blob/master/LICENSE
+      Used in     : --bb-info-icon-svg (bubble info row arrow, companion CSS)
+
+   B. material-symbols:chat-display
+      Set         : Material Symbols
+      Author      : Google
+      License     : Apache-2.0
+      Upstream    : https://github.com/google/material-design-icons
+      LICENSE     : https://github.com/google/material-design-icons/blob/master/LICENSE
+      Used in     : TAB_ICONS.post (Posts tab, companion plugin)
+
+   C. material-symbols:bookmark-heart
+      Set         : Material Symbols
+      Author      : Google
+      License     : Apache-2.0
+      Upstream    : https://github.com/google/material-design-icons
+      LICENSE     : https://github.com/google/material-design-icons/blob/master/LICENSE
+      Used in     : TAB_ICONS.save (Saved tab, companion plugin)
+
+   D. material-symbols:heart-arrow
+      Set         : Material Symbols
+      Author      : Google
+      License     : Apache-2.0
+      Upstream    : https://github.com/google/material-design-icons
+      LICENSE     : https://github.com/google/material-design-icons/blob/master/LICENSE
+      Used in     : TAB_ICONS.like (Likes tab, companion plugin)
+
+   The "mdi" prefix maps to Templarian/MaterialDesign (Pictogrammers), not
+   to google/material-design-icons. Pictogrammers states that icons are
+   Apache 2.0, that non-icon code is MIT, and that Brand / Logos icons are
+   excluded and deprecated; none of the four icons above is a brand logo.
+   Earlier revisions of the Iconify collection index named Austin Andrews
+   as the mdi author; the current entry names Pictogrammers. Both agree on
+   Apache 2.0. Upstream SVG files carry no copyright header, no Apache
+   notice and no comment block, only path data and the SVG namespace, so
+   no file-level notice has to be carried over.
+
+   ---------------------------------------------------------------------------
+   3. MODIFICATIONS (redistribution condition: prominent change notice)
+   ---------------------------------------------------------------------------
+   SVG path data was extracted, converted to data:image/svg+xml URIs or
+   inline <svg> strings, resized, recoloured and embedded into custom
+   selectors and DOM construction. This notice is placed at the top of the
+   file so that it cannot be detached from the modified material.
+
+   ---------------------------------------------------------------------------
+   4. NOTICE FILE (redistribution condition: only if the Work has one)
+   ---------------------------------------------------------------------------
+   Root listings of both upstream repositories were checked: each contains
+   a LICENSE file and no NOTICE file. This condition is not triggered, and
+   no NOTICE text is reproduced. Google, Apache, ASF and Pictogrammers names
+   identify provenance only and imply no endorsement.
+
+   ---------------------------------------------------------------------------
+   5. CC0 ICONS - NOT ENUMERATED
+   ---------------------------------------------------------------------------
+   CC0 1.0 Universal is a public domain dedication with no conditions. It
+   imposes no attribution, no source-link and no licence-copy duty. The
+   remaining icon glyphs are therefore not enumerated, no CC0 URL is
+   recorded and no CC0 text is attached. Descriptive "(CC0)" marks, if
+   present in the author's code, are labels, not notices. CC0 does not
+   affect third-party trademark, patent, privacy or publicity rights, and
+   no author endorsement is implied.
+
+   ---------------------------------------------------------------------------
+   6. REFERENCES CHECKED BUT NOT CONTAINED IN THIS FILE
+   ---------------------------------------------------------------------------
+   SVG namespace URI
+         W3C namespace                 : http://www.w3.org/2000/svg
+         SVG2 structure chapter        : https://www.w3.org/TR/SVG2/struct.html
+         Current SVG specification     : https://www.w3.org/TR/SVG/
+        Occurs only as the xmlns attribute of inline SVG. It is a W3C XML
+        namespace identifier, not a licensed asset and not an attribution.
+   DM Sans / Google Fonts
+         Specimen                      : https://fonts.google.com/specimen/DM+Sans
+         Upstream                      : https://github.com/googlefonts/dm-fonts
+         SIL OFL 1.1                   : https://openfontlicense.org/
+        Zero occurrences of @import, "DM Sans" and "fonts.googleapis" in
+        the non-comment rules; no font file is bundled.
+   Tabler Icons "checks"
+         Author-supplied link          : https://yesicon.app/zh-Hans/tabler/checks
+         Site                          : https://tabler.io/icons
+         Upstream                      : https://github.com/tabler/tabler-icons
+         Licence (MIT)                 : https://docs.tabler.io/ui/getting-started/license
+        Zero occurrences of "tabler" and "checks" in the non-comment rules;
+        it belongs to an earlier theme, not this bundle.
+   =========================================================================== */
+
+/* ===========================================================================
+   BEGIN VERBATIM APACHE LICENSE 2.0 - official English text
+   Source: https://www.apache.org/licenses/LICENSE-2.0.txt
+   Only the English text of the Apache License is authoritative.
+   ===========================================================================
+
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+
+   ===========================================================================
+   END VERBATIM APACHE LICENSE 2.0
+   =========================================================================== */
+
+:root {
+  /* ── 可手调：我这边（用户侧）气泡旁第一行网名；改引号里的字即可，不用 @ ── */
+  --bb-info-self-name: "user"; /* 我这边网名；变量写成 "" 则第一行不显示字 */
+
+  --tb-avatar-x: 18px; 
+  --tb-name-x: 100px; 
+  --tb-active-x: 100px; 
+  --tb-ip-x: 100px; 
+  --tb-typing-x: 195px; 
+  --tb-quote-x: 18px; 
+  --tb-side: 12px; 
+
+  --tb-h: 180px; 
+  --tb-cover-ratio: 0.42; 
+  --tb-name-lift: 22px; 
+  --tb-active-y: 4px; 
+  --tb-ip-y: 27px; 
+  --tb-typing-y: 29px; 
+  --tb-tabs-h: 20px; 
+  --tb-above-tabs-gap: 1px; 
+  --tb-sep-below: 0px; 
+
+  
+
+  --tb-avatar: 74px; 
+  --tb-avatar-border: 3px; 
+  --tb-avatar-border-ink: #ACACAC; 
+  --tb-ip-pad-y: 1px; 
+  --tb-ip-pad-x: 6px; 
+  --tb-ip-lh: 1.3; 
+  --tb-cap-gap: 4px; 
+  --tb-cap-pad-x: 5px; 
+  --tb-cap-radius: 999px; 
+  --tb-cap-text-max: 4em; 
+  --tb-btn-w: 68px; 
+  --tb-btn-h: 22px; 
+  --tb-btn-gap: 12px; 
+  --tb-radius: 10px; 
+  --tb-tab-gap: 26px; 
+  --tb-tab-icon: 14px; 
+  --tb-tab-icon-post: 11px; 
+  --tb-tab-icon-gap: 8px; 
+  --tb-underline-h: 2.5px; 
+  --tb-sep-h: 6px; 
+
+  --tb-name-font: 17px; 
+  --tb-quote-font: 12px; 
+  --tb-quote-line: 1; 
+  --tb-sub-font: 10.8px; 
+  --tb-cap-icon-font: 10px; 
+  --tb-btn-font: 11px; 
+  --tb-tab-font: 13px; 
+  --tb-tab-line: 1; 
+
+  --tb-white: #ffffff; 
+  --tb-placeholder: #e7e9ec; 
+  --tb-avatar-bg: var(--tb-cap-bg); 
+  --tb-line: #d6d9de; 
+  --tb-ink: #1b1d21; 
+  --tb-btn-accent: #64646F; 
+  --tb-name-ink: #1b1d21; 
+  --tb-mid: #8b9099; 
+  --tb-ip-bg: #f2f3f5; 
+  --tb-ip-line: #dfe2e6; 
+  --tb-cap-bg: #F6F6F6; 
+  --tb-cap-ink: #7b8089; 
+  --tb-sep: #E8E7EF; 
+
+  
+
+  --tb-mark: "@"; 
+  --tb-cap-icon: "#"; 
+  --tb-quote-text: "In love with moment rn<3"; 
+  --sensiculus-sigil: 1; 
+
+  --tb-white-ratio: calc(1 - var(--tb-cover-ratio)); 
+  --tb-cover-h: calc(var(--tb-h) * var(--tb-cover-ratio)); 
+  --tb-white-h: calc(var(--tb-h) * var(--tb-white-ratio)); 
+  --tb-quote-w: calc(100% - var(--tb-quote-x) - var(--tb-side) - var(--tb-btn-w) * 2 - var(--tb-btn-gap) - 14px); 
+  --tb-quote-y: calc(var(--tb-tabs-h) + var(--tb-sep-below) + var(--tb-sep-h) + var(--tb-above-tabs-gap)); 
+  --tb-btn-y: calc(var(--tb-tabs-h) + var(--tb-sep-below) + var(--tb-sep-h) + var(--tb-above-tabs-gap)); 
+
+  --bb-avatar-out: 6px; 
+
+  --bb-rope-space: 10px; 
+  --bb-avatar-skew: 8px; 
+  --bb-quote-inset: 0px; 
+  --bb-at-x: 6px; 
+  --bb-rope-x: 0px; 
+
+  
+
+  --bb-avatar-gap: 8px; 
+  --bb-group-gap: 5px; 
+  --bb-list-gap: 16px; 
+  --bb-quote-gap: 6px; 
+  --trans-drop: 6px; 
+  --trans-gap: 8px; 
+  --trans-tight: 16px; 
+  --trans-idle: 62px; 
+  --bb-rope-join: 8px; 
+
+  --bb-avatar: 40px; 
+  --bb-radius: 0px; 
+  --bb-border-w: 1px; 
+  --bb-pad-y: 10px; 
+  --bb-pad-x: 14px; 
+  --bb-quote-h: 13px; 
+  --bb-quote-line-w: 3px; 
+  --bb-quote-radius: 6px; 
+  --bb-quote-pad-x: 10px; 
+  --bb-rope-w: 1px; 
+  --bb-star: 10px; 
+  --bb-at-size: 14px; 
+  --bb-trans-pad-y: 3px; 
+  --bb-trans-pad-x: 9px; 
+  --bb-trans-radius: 0px; 
+  --bb-trans-max-w: 88%; 
+  --bb-trans-extra: 40px; 
+  --trans-space: 62px; 
+  --trans-h-max: 600px; 
+
+  --bb-font: 13.5px; 
+  --bb-quote-font: 10.8px; 
+  --bb-trans-size: 12px; 
+  --bb-trans-line: 1.35; 
+
+  --bb-self-bg: #F4F4F6; 
+  --bb-self-line: #F4F4F6; 
+  --bb-other-bg: #FFFFFF; 
+  --bb-other-line: #DDDDDD; 
+  --bb-ink: #1B1D21; 
+  --bb-quote-bg: #F1F1F3; 
+  --bb-quote-ink: #6B6D75; 
+  --bb-quote-line: #C9CBD0; 
+  --bb-trans-bg: #B8B8BA; 
+  --bb-trans-ink: #FFFFFF; 
+  --bb-rope-ink: #DDDDDF; 
+  --bb-star-ink: #D2D2D6; 
+  --bb-at-ink: #9A9CA4; 
+
+  --bb-at-show: 1; 
+  --bb-at-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='3.5'/%3E%3Cpath d='M15.5 8.5v6a2 2 0 0 0 4 0V12a7.5 7.5 0 1 0-3 6'/%3E%3C/svg%3E");
+  --bb-star-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='2 2 20 19' fill='black'%3E%3Cpath d='m12 3 2.7 5.7 6.3.9-4.5 4.5 1 6.4-5.5-3-5.5 3 1-6.4L3 9.6l6.3-.9Z'/%3E%3C/svg%3E"); 
+  --quietora-sigil: 1; 
+
+  
+
+  --bb-group-margin: calc(var(--bb-group-gap) - var(--bb-list-gap));
+  --bb-bubble-inset: calc(var(--bb-avatar-skew) - var(--bb-avatar-out) + var(--bb-rope-space)); 
+  --bb-rope-end: 0px; 
+
+  --bb-info-font: 10.5px;
+  --bb-info-line: 1.2;
+  --bb-info-ink: #8B8D95;
+  --bb-info-name-ink: #3A3C42;
+  --bb-info-pad: 8px;
+  --bb-info-max-w: 132px;
+  --bb-info-w: 140px;
+  --bb-info-line-gap: 1px;
+  --bb-info-icon: 11px;
+  --bb-info-icon-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M10 9V5l-7 7l7 7v-4.1c5 0 8.5 1.6 11 5.1c-1-5-4-10-11-11'/%3E%3C/svg%3E");
+  --tb-quote-up: 6px;
+  --tb-btn-up: 4px;
+  --sententiola-sigil: 1;
+
+  /* ── 可手调：输入中（typing）状态，紧跟在 Active now 后面 ── */
+  --tb-typing-text: "typing";       /* 文字：外国 App 多用 typing / typing… / is typing */
+  --tb-typing-font: 9.5px;          /* 字号：比 Active now(10.8px) 稍小 */
+  --tb-typing-align: flex-end;      /* 对齐：flex-end＝底边齐平；baseline＝文字基线齐 */
+  --tb-typing-gap: 6px;             /* 紧跟 Active now 后面，中间空多少 */
+  --tb-typing-baseline: -4px;        /* 底部对齐微调：正数上移、负数下移 */
+  --tb-typing-dot: 3px;             /* 三个跳点的直径 */
+  --tb-typing-dot-gap: 2px;         /* 点与点的间距 */
+  --tb-typing-dot-ink: #8B8D95;     /* 点的颜色 */
+  --tb-typing-dot-speed: .9s;       /* 一轮跳动时长，调大变慢 */
+  --tb-typing-show: 1;              /* 1 显示 / 0 隐藏整块 */
+
+  /* ── 可手调：中间那张渐变壁纸（上缘全透、往下慢慢晕白，没有线） ── */
+  --tb-fade-h: 46px;                /* 顶部全透段：这段完全透出底图，之后才渐渐晕白；调大＝更晚才显白 */
+  --tb-fade-ink: #ffffff;           /* 壁纸最下端的白色 */
+
+  /* ── 可手调：标题栏头像上下位置 ── */
+  --tb-avatar-drop: 42px;           /* 头像压过灰线多少；调大往下移，调小往上缩回灰区 */
+  /* ── 可手调：整张壁纸的图层不透明度（P 图那个透明度，上下一起变） ── */
+  --tb-panel-alpha: 0.7;             /* 自己写 0~1：1＝最浓，0.6＝整层一起变淡，0＝全透；上缘永远比下缘更淡 */
+  --tb-quote-bar-h: 28px;
+}
+
+.chat-plugin-header.chat-room-main-pane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--tb-h);
+  z-index: 9;
+  pointer-events: auto;
+}
+
+.page-header.chat-room-main-pane {
+  height: var(--tb-h);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: none;
+  z-index: 10;
+}
+.page-header-safe-area { display: none; }
+.page-header-content {
+  display: block;
+  height: 0;
+  min-height: 0;
+  padding: 0;
+}
+
+.page-body.chat-room-main-pane { padding-top: var(--tb-h); }
+
+.tb-root {
+  position: relative;
+  width: 100%;
+  height: var(--tb-h);
+  background: var(--tb-white);
+  overflow: hidden;
+}
+.tb-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--tb-cover-h);
+  background-color: var(--tb-placeholder);
+  background-image: var(--tb-cover-img, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid var(--tb-line);
+  z-index: 1;
+}
+.tb-white {
+  position: absolute;
+  top: var(--tb-cover-h);
+  left: 0;
+  right: 0;
+  height: var(--tb-white-h);
+  background: var(--tb-white);
+  z-index: 1;
+}
+.tb-avatar {
+  position: absolute;
+  left: var(--tb-avatar-x);
+  top: calc(var(--tb-cover-h) - var(--tb-avatar) + var(--tb-avatar-drop));
+  width: var(--tb-avatar);
+  height: var(--tb-avatar);
+  border-radius: 50%;
+  background-color: var(--tb-avatar-bg);
+  background-image: var(--tb-avatar-img, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: var(--tb-avatar-border) solid var(--tb-avatar-border-ink);
+  box-sizing: border-box;
+  z-index: 3;
+}
+
+.page-header .page-title {
+  position: absolute !important;
+  top: calc(var(--tb-cover-h) - var(--tb-name-lift));
+  left: var(--tb-name-x);
+  transform: none;
+  text-align: left;
+  font-size: var(--tb-name-font);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--tb-name-ink);
+  letter-spacing: .5px;
+  max-width: calc(100% - var(--tb-name-x) - var(--tb-side));
+  overflow: visible !important;
+  text-overflow: clip;
+  white-space: nowrap;
+  pointer-events: auto;
+  z-index: 4;
+}
+.page-header .page-title::before {
+  content: var(--tb-mark);
+  margin-right: 7px;
+  font-weight: 500;
+  color: var(--tb-name-ink);
+}
+
+.tb-active {
+  position: absolute;
+  top: calc(var(--tb-cover-h) + var(--tb-active-y));
+  left: var(--tb-active-x);
+  font-size: var(--tb-sub-font);
+  line-height: 1.5;
+  color: var(--tb-mid);
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.tb-ip-row {
+  position: absolute;
+  top: calc(var(--tb-cover-h) + var(--tb-ip-y));
+  left: var(--tb-ip-x);
+  max-width: calc(100% - var(--tb-ip-x) - var(--tb-side));
+  display: flex;
+  align-items: center;
+  gap: var(--tb-cap-gap);
+  z-index: 2;
+}
+.tb-ip {
+  flex: 0 0 auto;
+  padding: var(--tb-ip-pad-y) var(--tb-ip-pad-x);
+  border: 1px solid var(--tb-ip-line);
+  border-radius: 5px;
+  background: var(--tb-ip-bg);
+  font-size: var(--tb-sub-font);
+  line-height: var(--tb-ip-lh);
+  color: var(--tb-mid);
+  white-space: nowrap;
+}
+.tb-cap {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tb-cap-gap);
+  padding: var(--tb-ip-pad-y) var(--tb-cap-pad-x);
+  border: 0;
+  border-radius: var(--tb-cap-radius);
+  background: var(--tb-cap-bg);
+  box-shadow: none;
+  font-size: var(--tb-sub-font);
+  line-height: var(--tb-ip-lh);
+  color: var(--tb-cap-ink);
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.tb-cap::before {
+  content: var(--tb-cap-icon);
+  flex: 0 0 auto;
+  font-size: var(--tb-cap-icon-font);
+  line-height: 1;
+  color: var(--tb-cap-ink);
+}
+.tb-cap-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: var(--tb-cap-text-max);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.tb-active > .tb-typing {
+  position: static !important;
+  transform: translateY(var(--tb-typing-baseline)) !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  font-size: 0;
+  line-height: 1;
+  color: var(--tb-mid);
+  display: none;
+  align-items: baseline;
+  gap: var(--tb-typing-dot-gap);
+  max-width: none !important;
+  overflow: visible !important;
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: var(--tb-typing-show);
+}
+.tb-active > .tb-typing::before {
+  content: var(--tb-typing-text);
+  font-size: var(--tb-typing-font);
+  line-height: 1;
+  color: var(--tb-mid);
+  font-weight: 400;
+}
+.tb-active .chat-typing-dots {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--tb-typing-dot-gap);
+  margin-left: var(--tb-typing-dot-gap);
+}
+.tb-active .chat-typing-dots i {
+  width: var(--tb-typing-dot);
+  height: var(--tb-typing-dot);
+  border-radius: 50%;
+  background: var(--tb-typing-dot-ink);
+  animation: typing-bounce var(--tb-typing-dot-speed) infinite ease-in-out;
+}
+.tb-active .chat-typing-dots i:nth-child(2) { animation-delay: .15s; }
+.tb-active .chat-typing-dots i:nth-child(3) { animation-delay: .3s; }
+.tb-active > .tb-typing[data-tb-typing="1"] { display: inline-flex; }
+@keyframes typing-bounce {
+  0%, 60%, 100% { opacity: .3; transform: translateY(0); }
+  30%           { opacity: 1;  transform: translateY(-3px); }
+}
+
+.tb-quote {
+  position: absolute;
+  bottom: var(--tb-quote-y);
+  left: var(--tb-quote-x);
+  width: var(--tb-quote-w);
+  padding: 0;
+  border: 0;
+  font-size: var(--tb-quote-font);
+  line-height: var(--tb-quote-line);
+  color: var(--tb-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 2;
+}
+.tb-quote:empty::before { content: var(--tb-quote-text); }
+
+.page-header-content > .page-back-btn,
+.page-header-right {
+  position: absolute;
+  bottom: var(--tb-btn-y);
+  width: var(--tb-btn-w);
+  height: var(--tb-btn-h);
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: var(--tb-radius);
+  box-sizing: border-box;
+  pointer-events: auto;
+  z-index: 22;
+}
+.page-header-content > .page-back-btn {
+  right: calc(var(--tb-side) + var(--tb-btn-w) + var(--tb-btn-gap));
+  background: transparent;
+  border: 1.5px solid var(--tb-btn-accent);
+  color: var(--tb-btn-accent);
+}
+.page-header-right { right: var(--tb-side); }
+.page-header-right .page-back-btn {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1.5px solid var(--tb-btn-accent);
+  border-radius: var(--tb-radius);
+  background: var(--tb-btn-accent);
+  color: var(--tb-white);
+  box-sizing: border-box;
+}
+.page-header-content > .page-back-btn svg,
+.page-header-right .page-back-btn svg { display: none; }
+.page-header-content > .page-back-btn::before,
+.page-header-right .page-back-btn::before {
+  font-size: var(--tb-btn-font);
+  font-weight: 600;
+  letter-spacing: .3px;
+  line-height: 1;
+}
+.page-header-content > .page-back-btn::before { content: "Follow"; }
+.page-header-right .page-back-btn::before { content: "Message"; }
+
+.tb-root::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--tb-tabs-h) + var(--tb-sep-below));
+  height: var(--tb-sep-h);
+  background: var(--tb-sep);
+  border: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.tb-sep { display: none; }
+
+.tb-tabs {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--tb-tabs-h);
+  display: flex;
+  align-items: center;
+  gap: var(--tb-tab-gap);
+  padding: 0 var(--tb-side);
+  border-bottom: 1px solid var(--tb-line);
+  box-sizing: border-box;
+  background: var(--tb-white);
+  z-index: 2;
+}
+.tb-tab {
+  position: relative;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--tb-tab-font);
+  line-height: var(--tb-tab-line);
+  color: var(--tb-mid);
+  white-space: nowrap;
+}
+.tb-tab-svg {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  margin-right: var(--tb-tab-icon-gap);
+  color: inherit;
+}
+.tb-tab-svg svg {
+  display: block;
+  width: var(--tb-tab-icon);
+  height: var(--tb-tab-icon);
+  fill: currentColor;
+}
+
+.tb-tab[data-tb-tab="post"] .tb-tab-svg svg {
+  width: var(--tb-tab-icon-post);
+  height: var(--tb-tab-icon-post);
+}
+.tb-tab-active { color: var(--tb-ink); font-weight: 700; }
+.tb-tab-active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: -4px;
+  right: -4px;
+  height: var(--tb-underline-h);
+  background: var(--tb-ink);
+}
+
+.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview),
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  box-sizing: border-box;
+  padding: var(--bb-pad-y) var(--bb-pad-x);
+  border-radius: var(--bb-radius);
+  border: var(--bb-border-w) solid transparent;
+  font-size: calc(var(--bb-font) * var(--app-text-scale, 1));
+  color: var(--bb-ink);
+  box-shadow: none;
+  overflow: hidden;
+}
+.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  background: var(--bb-self-bg);
+  border-color: var(--bb-self-line);
+}
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview) {
+  background: var(--bb-other-bg);
+  border-color: var(--bb-other-line);
+}
+.chat-bubble-role-user .chat-markdown,
+.chat-bubble-role-assistant .chat-markdown { color: inherit; }
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"],
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"] {
+  position: relative;
+  padding-top: calc(var(--bb-avatar) + var(--bb-avatar-gap));
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"] > .chat-msg-content-wrap { margin-left: var(--bb-bubble-inset); }
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"] > .chat-msg-content-wrap { margin-right: var(--bb-bubble-inset); }
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role] > .chat-msg-avatar {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"] > .chat-msg-avatar {
+  left: calc(var(--bb-avatar-skew) - var(--bb-avatar-out));
+  
+}
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"] > .chat-msg-avatar {
+  right: calc(var(--bb-avatar-skew) - var(--bb-avatar-out));
+  left: auto;
+}
+
+.chat-msg-avatar,
+.chat-msg-avatar > div,
+.chat-msg-avatar img {
+  width: var(--bb-avatar);
+  height: var(--bb-avatar);
+  border-radius: 0;
+  box-shadow: none;
+  border: 0;
+  object-fit: cover;
+}
+.chat-msg-avatar > div { overflow: hidden; }
+.chat-msg-content-wrap { max-width: 70%; }
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"] > .chat-msg-avatar::after {
+  content: "";
+  position: absolute;
+  left: calc(100% + var(--bb-at-x));
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--bb-at-size);
+  height: var(--bb-at-size);
+  background-color: var(--bb-at-ink);
+  -webkit-mask-image: var(--bb-at-svg);
+  mask-image: var(--bb-at-svg);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  opacity: var(--bb-at-show);
+  pointer-events: none;
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive] { padding-top: 0; }
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive] { margin-top: var(--bb-group-margin); }
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive] .chat-msg-avatar { display: none; }
+
+.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview):has(.chat-quote-preview),
+.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview):has(.chat-quote-preview) {
+  position: relative;
+  overflow: visible;
+}
+.chat-bubble-role-user .chat-quote-preview,
+.chat-bubble-role-assistant .chat-quote-preview {
+  position: absolute;
+  bottom: calc(100% + var(--bb-quote-gap));
+  left: var(--bb-quote-inset);
+  right: var(--bb-quote-inset);
+  height: var(--bb-quote-h);
+  line-height: var(--bb-quote-h);
+  padding: 0 var(--bb-quote-pad-x);
+  margin: 0;
+  box-sizing: border-box;
+  background: var(--bb-quote-bg);
+  border-left: var(--bb-quote-line-w) solid var(--bb-quote-line);
+  border-radius: 0 var(--bb-quote-radius) var(--bb-quote-radius) 0;
+  color: var(--bb-quote-ink);
+  font-size: calc(var(--bb-quote-font) * var(--app-text-scale, 1));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+.chat-bubble-role-user .chat-quote-preview {
+  border-left: 0;
+  border-right: var(--bb-quote-line-w) solid var(--bb-quote-line);
+  border-radius: var(--bb-quote-radius) 0 0 var(--bb-quote-radius);
+}
+
+.chat-msg-content-wrap:has(.chat-quote-preview) {
+  padding-top: calc(var(--bb-quote-h) + var(--bb-quote-gap));
+}
+
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block),
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) {
+  overflow: visible;
+}
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-divider,
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-divider { display: none; }
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-toggle,
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-toggle { display: none; }
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation,
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation {
+  position: absolute;
+  top: calc(100% + var(--trans-drop));
+  bottom: auto;
+  left: 0;
+  right: auto;
+  width: max-content;
+  max-width: calc(var(--bb-trans-max-w) + var(--bb-trans-extra));
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--bb-trans-pad-y) var(--bb-trans-pad-x);
+  border-radius: var(--bb-trans-radius);
+  background: var(--bb-trans-bg);
+  color: var(--bb-trans-ink);
+  font-size: var(--bb-trans-size);
+  font-style: normal;
+  line-height: var(--bb-trans-line);
+  opacity: 1;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  pointer-events: none;
+  z-index: 5;
+}
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown,
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown,
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown p,
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown p,
+.chat-bubble-role-user:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown-paragraph,
+.chat-bubble-role-assistant:not(.chat-bubble-media):has(.chat-bilingual-block) .chat-bilingual-section-translation .chat-markdown-paragraph {
+  color: var(--bb-trans-ink);
+  font-size: var(--bb-trans-size);
+  font-style: normal;
+  line-height: var(--bb-trans-line);
+  opacity: 1;
+}
+
+.chat-scroll-anchored > div:has(.chat-bubble-role-user .chat-bilingual-section-translation),
+.chat-scroll-anchored > div:has(.chat-bubble-role-assistant .chat-bilingual-section-translation) {
+  padding-bottom: calc(var(--trans-h, var(--trans-idle)) + var(--trans-gap)) !important;
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before,
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before {
+  content: "";
+  position: absolute;
+  top: var(--bb-avatar);                       
+  bottom: calc(-1 * var(--bb-rope-join));      
+  width: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before,
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before {
+  top: 0;
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before {
+  left: calc(var(--bb-avatar-skew) - var(--bb-avatar-out));
+  border-left: var(--bb-rope-w) dashed var(--bb-rope-ink);
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before {
+  right: calc(var(--bb-avatar-skew) - var(--bb-avatar-out));
+  border-right: var(--bb-rope-w) dashed var(--bb-rope-ink);
+}
+
+.chat-scroll-anchored > div:has(.chat-bilingual-section-translation):has(+ div > .chat-msg-wrapper[data-consecutive]) .chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before,
+.chat-scroll-anchored > div:has(.chat-bilingual-section-translation):has(+ div > .chat-msg-wrapper[data-consecutive]) .chat-msg-wrapper:not([data-reasoning-row])[data-role="user"]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before {
+  bottom: calc(-1 * (var(--trans-h, 0px) + var(--trans-gap) + var(--bb-list-gap) + 2px));
+}
+
+.chat-scroll-anchored > div:not(:has(.chat-bilingual-section-translation)):has(+ div > .chat-msg-wrapper[data-consecutive]) .chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before,
+.chat-scroll-anchored > div:not(:has(.chat-bilingual-section-translation)):has(+ div > .chat-msg-wrapper[data-consecutive]) .chat-msg-wrapper:not([data-reasoning-row])[data-role="user"]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before {
+  bottom: calc(-1 * (var(--bb-list-gap) + 2px));
+}
+
+.chat-scroll-anchored > div:last-child .chat-msg-wrapper:not([data-reasoning-row]):has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before,
+.chat-scroll-anchored > div:last-child .chat-msg-wrapper:not([data-reasoning-row]):has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::before {
+  bottom: var(--bb-rope-end);
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::after,
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::after {
+  content: "";
+  position: absolute;
+  top: calc(50% + (var(--bb-avatar) + var(--bb-avatar-gap)) / 2);
+  transform: translateY(-50%);
+  width: var(--bb-star);
+  height: var(--bb-star);
+  background-color: var(--bb-star-ink);
+  -webkit-mask-image: var(--bb-star-svg);
+  mask-image: var(--bb-star-svg);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  pointer-events: none;
+  z-index: 2;
+}
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::after {
+  left: calc(var(--bb-avatar-skew) - var(--bb-avatar-out) + var(--bb-rope-w) / 2 - var(--bb-star) / 2);
+}
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::after {
+  right: calc(var(--bb-avatar-skew) - var(--bb-avatar-out) + var(--bb-rope-w) / 2 - var(--bb-star) / 2);
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview))::after,
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview))::after {
+  top: 50%;
+}
+
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview)):has(.chat-quote-preview)::after,
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview)):has(.chat-quote-preview)::after {
+  top: calc(50% + (var(--bb-avatar) + var(--bb-avatar-gap)) / 2 + (var(--bb-quote-h) + var(--bb-quote-gap)) / 2);
+}
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive]:has(.chat-bubble-role-assistant:not(.chat-bubble-media):not(.chat-bubble-html-preview)):has(.chat-quote-preview)::after,
+.chat-msg-wrapper:not([data-reasoning-row])[data-consecutive]:has(.chat-bubble-role-user:not(.chat-bubble-media):not(.chat-bubble-html-preview)):has(.chat-quote-preview)::after {
+  top: calc(50% + (var(--bb-quote-h) + var(--bb-quote-gap)) / 2);
+}
+
+
+.bb-info {
+  position: absolute;
+  top: 0;
+  height: var(--bb-avatar);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--bb-info-line-gap);
+  width: var(--bb-info-w);
+  min-width: var(--bb-info-w);
+  max-width: var(--bb-info-w);
+  font-size: var(--bb-info-font);
+  line-height: var(--bb-info-line);
+  color: var(--bb-info-ink);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 6;
+}
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="assistant"] > .bb-info {
+  left: calc(var(--bb-avatar-skew) - var(--bb-avatar-out) + var(--bb-avatar) + var(--bb-info-pad));
+  text-align: left;
+}
+.chat-msg-wrapper:not([data-reasoning-row])[data-role="user"] > .bb-info {
+  right: calc(var(--bb-avatar-skew) - var(--bb-avatar-out) + var(--bb-avatar) + var(--bb-info-pad));
+  text-align: right;
+}
+.bb-info-name { color: var(--bb-info-name-ink); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+.bb-info-sub { overflow: hidden; text-overflow: ellipsis; }
+.bb-info-time { overflow: visible; text-overflow: clip; }
+.bb-info-icon {
+  display: inline-block;
+  width: var(--bb-info-icon);
+  height: var(--bb-info-icon);
+  margin-right: 3px;
+  vertical-align: -2px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--bb-info-icon-svg);
+  mask-image: var(--bb-info-icon-svg);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+
+.chat-input-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  height: auto;
+  min-height: 60px;
+  padding: 0 10px;
+  margin: 0;
+  box-sizing: border-box;
+  display: block;
+  overflow: visible;
+  background: #F4F4F6;
+  border: 0;
+  border-top: 1px solid #DDDDDD;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.chat-input-bar::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: calc(12px + 6px);
+  top: calc((60px - 22px) / 2 - 1px);
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  border: 1.5px solid #C2C2C7;
+  border-radius: 50%;
+  background: transparent;
+  z-index: 4;
+  pointer-events: none;
+}
+.chat-input-bar::after { display: none; }
+
+.chat-input-bar .chat-input-textarea {
+  position: absolute;
+  left: 12px;
+  right: 100px;
+  top: calc((60px - 32px) / 2 - 1px);
+  width: auto;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin: 0;
+  padding: 6px 10px 6px calc(22px + 14px);
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  border-radius: 8px;
+  font-size: calc(13.5px * var(--app-text-scale, 1));
+  line-height: 1.4;
+  outline: none;
+  resize: none;
+  overflow: auto;
+  z-index: 2;
+}
+
+.chat-input-bar .chat-input-actions {
+  display: block;
+  padding: 0;
+  gap: 0;
+}
+
+.chat-input-bar:has(button[aria-label="线下模式"]) .chat-input-actions > button[aria-label="发送"] {
+  display: none;
+}
+
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"]) {
+  position: absolute;
+  left: calc(12px + 6px);
+  top: calc((60px - 22px) / 2 - 1px);
+  width: 22px;
+  height: 22px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  background: transparent;
+  border: 0;
+  z-index: 5;
+}
+.chat-input-bar .chat-input-actions > button:has(line[x1="12"][y1="8"]) svg { display: none; }
+
+.chat-input-bar .chat-input-actions > button[aria-label="停止本轮生成"],
+.chat-input-bar .chat-input-actions > button[aria-label="停止线下生成"] {
+  position: absolute;
+  right: 10px;
+  top: calc((60px - 26px) / 2 - 1px);
+  width: 26px;
+  height: 26px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  z-index: 3;
+}
+.chat-input-bar .chat-input-actions > button[aria-label="停止本轮生成"] > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="停止线下生成"] > svg {
+  width: 26px;
+  height: 26px;
+}
+
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]),
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]),
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] {
+  position: absolute;
+  top: calc(-1 * (10px + 18px));
+  width: 54px;
+  height: 18px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: #F4F4F6;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+  z-index: 1;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]) > svg,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]) > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"] > svg,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] > svg {
+  display: none;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::before,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::before,
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::before,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+  background-color: #253047;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 100% 100%;
+  pointer-events: none;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 12 5-5a2.8 2.8 0 0 1 4 4l-7 7a4.2 4.2 0 0 1-6-6l8-8a5.7 5.7 0 0 1 8 8l-8 8'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 12 5-5a2.8 2.8 0 0 1 4 4l-7 7a4.2 4.2 0 0 1-6-6l8-8a5.7 5.7 0 0 1 8 8l-8 8'/%3E%3C/svg%3E");
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 4h9l8 8-8.5 8.5-8.5-8.5Z'/%3E%3Ccircle cx='8' cy='8' r='1'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 4h9l8 8-8.5 8.5-8.5-8.5Z'/%3E%3Ccircle cx='8' cy='8' r='1'/%3E%3C/svg%3E");
+}
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::before,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23253047' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E%3C/svg%3E");
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::after,
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::after,
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::after,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::after {
+  position: absolute;
+  left: calc(4px + 13px + 3px);
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: calc(9px * var(--app-text-scale, 1));
+  line-height: 1;
+  font-weight: 500;
+  color: #253047;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"])::after { content: "Emoji"; }
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"])::after { content: "Sticker"; }
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"]::after,
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"]::after { content: "Offline"; }
+
+.chat-input-bar .chat-input-actions > button:has(path[d^="M8 14s1.5"]) { left: 10px; }
+.chat-input-bar .chat-input-actions > button:has(path[d^="M15.5 3H5"]) {
+  left: calc(10px + 54px + 6px);
+}
+.chat-input-bar .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar .chat-input-actions > button[aria-label="返回线上模式"] {
+  left: calc(10px + (54px + 6px) * 2);
+}
+
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]),
+.chat-input-bar:has(button[aria-label="返回线上模式"]) .chat-input-actions > button[aria-label="发送"] {
+  position: absolute;
+  right: 10px;
+  top: calc((60px - 32px) / 2 - 1px);
+  width: 82px;
+  height: 32px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  background: #E7E7EA;
+  border: 1px solid #D0D0D5;
+  border-radius: 8px;
+  box-shadow: none;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"]) > svg,
+.chat-input-bar:has(button[aria-label="返回线上模式"]) .chat-input-actions > button[aria-label="发送"] > svg {
+  display: none;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"])::before,
+.chat-input-bar:has(button[aria-label="返回线上模式"]) .chat-input-actions > button[aria-label="发送"]::before {
+  content: none;
+  background: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.chat-input-bar .chat-input-actions > button:has(path[d^="M9.937 15.5"])::after,
+.chat-input-bar:has(button[aria-label="返回线上模式"]) .chat-input-actions > button[aria-label="发送"]::after {
+  content: "reply";
+  position: static;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  line-height: 1;
+  color: #3A3A3C;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.chat-plus-menu,
+.chat-input-bar > div.h-\[220px\],
+.chat-emoji-panel-wrap {
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: calc(60px + 8px) 12px 12px !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  z-index: auto !important;
+  content-visibility: visible !important;
+}
+.chat-plus-menu {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 12px !important;
+}
+
+.page-header .page-title::before { display: none !important; }
+.chat-msg-wrapper:not([data-reasoning-row])[data-role] > .chat-msg-avatar::after { display: none !important; }
+.tb-ip {
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+.tb-quote { bottom: calc(var(--tb-quote-y) + var(--tb-quote-up)) !important; }
+.page-header-content > .page-back-btn,
+.page-header-right { bottom: calc(var(--tb-btn-y) + var(--tb-btn-up)) !important; }
+
+.tb-active {
+  display: inline-flex !important;
+  align-items: var(--tb-typing-align) !important;
+  gap: var(--tb-typing-gap);
+  white-space: nowrap;
+}
+.tb-cover { border-bottom: 0 !important; }
+.tb-cover::after { content: none !important; }
+.page-header .chat-typing-indicator { display: none !important; }
+.chat-msg-wrapper:has(.voice-msg-text-bubble) { padding-top: 0 !important; }
+.chat-msg-wrapper:has(.voice-msg-text-bubble) > div:not(.voice-msg-text-bubble) { display: none !important; }
+.chat-msg-wrapper:has(.voice-msg-text-bubble) > .voice-msg-text-bubble { margin-left: var(--bb-bubble-inset); }
+.chat-msg-wrapper[data-role="user"]:has(.voice-msg-text-bubble) > .voice-msg-text-bubble {
+  margin-left: auto;
+  margin-right: var(--bb-bubble-inset);
+}
+.chat-msg-wrapper:has(.voice-msg-text-bubble)::before,
+.chat-msg-wrapper:has(.voice-msg-text-bubble)::after { content: none !important; }
+.chat-msg-wrapper[data-consecutive] > .bb-info { display: none !important; }
+.chat-bubble-role-user > .chat-floating-ctx-menu,
+.chat-bubble-role-assistant > .chat-floating-ctx-menu {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  bottom: auto !important;
+  left: 0 !important;
+  right: auto !important;
+  z-index: 80 !important;
+}
+.chat-bubble-role-user[data-role="user"] > .chat-floating-ctx-menu,
+.chat-msg-wrapper[data-role="user"] .chat-bubble-role-user > .chat-floating-ctx-menu {
+  left: auto !important;
+  right: 0 !important;
+}
+.chat-bubble-role-user:has(> .chat-floating-ctx-menu),
+.chat-bubble-role-assistant:has(> .chat-floating-ctx-menu) {
+  overflow: visible !important;
+}
+.chat-html-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.chat-input-bar > .chat-quote-bar {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: auto !important;
+  bottom: 100% !important;
+  height: var(--tb-quote-bar-h) !important;
+  min-height: var(--tb-quote-bar-h) !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: #F4F4F6 !important;
+  border-top: 1px solid #DDDDDD !important;
+  border-bottom: 0 !important;
+  overflow: hidden !important;
+  z-index: 12 !important;
+  pointer-events: auto !important;
+}
+.chat-input-bar:has(.chat-quote-bar) .chat-input-actions > button:has(path[d^="M8 14s1.5"]),
+.chat-input-bar:has(.chat-quote-bar) .chat-input-actions > button:has(path[d^="M15.5 3H5"]),
+.chat-input-bar:has(.chat-quote-bar) .chat-input-actions > button[aria-label="线下模式"],
+.chat-input-bar:has(.chat-quote-bar) .chat-input-actions > button[aria-label="返回线上模式"] {
+  top: calc(-1 * (10px + 18px) - var(--tb-quote-bar-h)) !important;
+}
+
+.tb-root { background-color: var(--tb-white) !important; }
+.tb-root::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: calc(var(--tb-tabs-h) + var(--tb-sep-below) + var(--tb-sep-h));
+  background-color: var(--tb-white);
+  background-image: var(--tb-cover-img, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+.tb-cover { background-color: transparent !important; background-image: none !important; }
+.tb-white {
+  top: 0 !important;
+  height: auto !important;
+  bottom: calc(var(--tb-tabs-h) + var(--tb-sep-below) + var(--tb-sep-h)) !important;
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0) var(--tb-fade-h),
+      var(--tb-fade-ink) 100%) !important;
+  opacity: var(--tb-panel-alpha);
+  border: 0 !important;
+  pointer-events: none;
+}
+
+.chat-vc-group-border > div:has(.chat-bilingual-section-translation) {
+  padding-bottom: calc(var(--trans-h, var(--trans-idle)) + var(--trans-gap)) !important;
+}
+.chat-scroll-anchored > div:has(.chat-vc-group-border):has(.chat-bilingual-section-translation) {
+  padding-bottom: 0 !important;
+}
