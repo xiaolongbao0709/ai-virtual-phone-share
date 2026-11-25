@@ -1,0 +1,159 @@
+[{
+  "version": "1.0",
+  "image": {
+    "name": "/var/www/html/onlineconvert.convertserver.com/run/uo94kh0ggtb03asp0b5154s6sv/5a-56K-d57uf6K6hMQ==_6b0739261e568.pdf",
+    "permissions": 644,
+    "format": "PDF",
+    "formatDescription": "Portable Document Format",
+    "mimeType": "application/pdf",
+    "class": "DirectClass",
+    "geometry": {
+      "width": 827,
+      "height": 1169,
+      "x": 0,
+      "y": 0
+    },
+    "resolution": {
+      "x": 100,
+      "y": 100
+    },
+    "printSize": {
+      "x": 8.27,
+      "y": 11.69
+    },
+    "units": "Undefined",
+    "type": "Bilevel",
+    "endianness": "Undefined",
+    "colorspace": "sRGB",
+    "depth": 8,
+    "baseDepth": 16,
+    "channelDepth": {
+      "alpha": 8,
+      "red": 1,
+      "green": 1,
+      "blue": 1
+    },
+    "pixels": 966763,
+    "imageStatistics": {
+      "all": {
+        "min": 0,
+        "max": 65535,
+        "mean": 47870.8,
+        "standardDeviation": 10613.6,
+        "kurtosis": -0.916257,
+        "skewness": -1.03833,
+        "entropy": 0.172137
+      }
+    },
+    "channelStatistics": {
+      "alpha": {
+        "min": 65535,
+        "max": 0,
+        "mean": 64315.5,
+        "standardDeviation": 7719.26,
+        "kurtosis": 49.5617,
+        "skewness": 6.97163,
+        "entropy": 0.0718307
+      },
+      "red": {
+        "min": 0,
+        "max": 65535,
+        "mean": 63421.2,
+        "standardDeviation": 11578.3,
+        "kurtosis": 26.0371,
+        "skewness": -5.29501,
+        "entropy": 0.205573
+      },
+      "green": {
+        "min": 0,
+        "max": 65535,
+        "mean": 63421.2,
+        "standardDeviation": 11578.3,
+        "kurtosis": 26.0371,
+        "skewness": -5.29501,
+        "entropy": 0.205573
+      },
+      "blue": {
+        "min": 0,
+        "max": 65535,
+        "mean": 63421.2,
+        "standardDeviation": 11578.3,
+        "kurtosis": 26.0371,
+        "skewness": -5.29501,
+        "entropy": 0.205573
+      }
+    },
+    "alpha": "#FFFFFFFFFFFF0000",
+    "renderingIntent": "Perceptual",
+    "gamma": 0.454545,
+    "chromaticity": {
+      "redPrimary": {
+        "x": 0.64,
+        "y": 0.33
+      },
+      "greenPrimary": {
+        "x": 0.3,
+        "y": 0.6
+      },
+      "bluePrimary": {
+        "x": 0.15,
+        "y": 0.06
+      },
+      "whitePrimary": {
+        "x": 0.3127,
+        "y": 0.329
+      }
+    },
+    "backgroundColor": "#FFFFFFFFFFFFFFFF",
+    "borderColor": "#DFDFDFDFDFDFFFFF",
+    "matteColor": "#BDBDBDBDBDBDFFFF",
+    "transparentColor": "#0000000000000000",
+    "interlace": "None",
+    "intensity": "Undefined",
+    "compose": "Over",
+    "pageGeometry": {
+      "width": 827,
+      "height": 1169,
+      "x": 0,
+      "y": 0
+    },
+    "dispose": "Undefined",
+    "iterations": 0,
+    "scene": 1,
+    "scenes": 2,
+    "compression": "Undefined",
+    "orientation": "Undefined",
+    "properties": {
+      "date:create": "2026-11-25T19:38:19+00:00",
+      "date:modify": "2026-11-25T19:38:19+00:00",
+      "date:timestamp": "2026-11-25T19:38:19+00:00",
+      "dc:format": "application/pdf",
+      "pdf:HiResBoundingBox": "595.304x841.89+0+0",
+      "pdf:PDFVersion": "1.7",
+      "pdf:Producer": "LibreOffice 26.2.5.2 (X86_64)",
+      "pdf:Version": "PDF-1.7",
+      "signature": "09d0a86f830096432277375d574f0ab2c36bc0c63d722587755f33869b866345",
+      "xmp:CreateDate": "2026-11-25T20:38:17+01:00",
+      "xmp:CreatorTool": "Writer",
+      "xmp:MetadataDate": "2026-11-25T20:38:17+01:00",
+      "xmp:ModifyDate": "2026-11-25T20:38:17+01:00"
+    },
+    "profiles": {
+      "xmp": {
+        "length": 5288
+      }
+    },
+    "artifacts": {
+      "density": "100",
+      "filename": "/var/www/html/onlineconvert.convertserver.com/run/uo94kh0ggtb03asp0b5154s6sv/5a-56K-d57uf6K6hMQ==_6b0739261e568.pdf"
+    },
+    "tainted": false,
+    "filesize": "4015B",
+    "numberPixels": "966763",
+    "pixelsPerSecond": "8.49546MB",
+    "userTime": "0.130u",
+    "elapsedTime": "0:01.113",
+    "version": "ImageMagick 6.9.13-60 Q16 x86_64 19889 https://legacy.imagemagick.org"
+  }
+}
+]
