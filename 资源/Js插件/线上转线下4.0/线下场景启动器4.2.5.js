@@ -3,7 +3,7 @@ export default {
     id: "offline-scene-launcher",
     name: "线下场景启动器",
     apiVersion: 1,
-    version: "4.2.3",
+    version: "4.2.5",
     author: "G",
     description: "判断线下见面时出现邀约，确认后直接转入内置线下",
     permissions: ["chat.read", "ui"],
@@ -33,9 +33,9 @@ export default {
       { key: "roleInvitesOnly", label: "只保留角色邀约", type: "boolean", default: false },
       { key: "sceneNarration", label: "情境·独立旁白（关闭后随用户消息显示）", type: "boolean", default: true },
       { key: "sceneWrapBefore", label: "情境·包裹·前缀", type: "text", default: "",
-        description: "仅关闭独立旁白时生效，已填写的内容会保留。例如 [情境] 或 *，留空不加。" },
+        description: "例如 [情境] 或 <scene>。开启旁白时按字面识别当前前后缀；两项都空时使用默认标签，只填一项不启用旁白包裹。" },
       { key: "sceneWrapAfter", label: "情境·包裹·后缀", type: "text", default: "",
-        description: "例如 [/情境] 或 *，留空不加。" },
+        description: "例如 [/情境] 或 </scene>。关闭旁白时不补默认标签，只加已填写的包裹，由你的正则处理。" },
       { key: "keepMarker", label: "【调试】保留气泡里的标记原文", type: "boolean", default: false }
     ]
   },
@@ -43,11 +43,17 @@ export default {
     // ═════════ 常量与状态 ═════════
     var TAG_JUDGE = "线下判定", TAG_SCENE = "线下情境", TAG_OPT = "线下选项";
     var K_EVT = "evt:", K_CSS = "custom-css", K_ARC = "css-archive:", K_ARM = "arm-color";
-    var K_SCENE_CSS = "scene-custom-css", K_SCENE_TURNS = "scene-turns:", K_SCENE_ARC = "scene-css-archive:";
+    var K_SCENE_CSS = "scene-custom-css", K_SCENE_ARC = "scene-css-archive:";
     // evt:<sid> = { events: [邀约…] }：同一会话可并存多枚胶囊，各自独立到期或关闭
 
     var cssDisp = null, sceneCssDisp = null, structDisp = null, ticker = null;
-    var sceneTurns = Object.create(null), sceneState = Object.create(null);
+    var sceneState = Object.create(null);
+    // 清理旧版插件私有的回合标记，不读写宿主聊天历史。
+    try {
+      (ctx.system.storage.keys ? ctx.system.storage.keys() : []).forEach(function (key) {
+        if (key.indexOf("scene-turns:") === 0) ctx.system.storage.remove(key);
+      });
+    } catch (e) { }
     var settingsOff = null;
     var pillEls = {}, pillHosts = {};
     var footEls = {};   // sid -> { 消息id: { el, batch } }：气泡下方的坑位登记
@@ -218,7 +224,7 @@ export default {
       return { before: sText(beforeKey, ""), after: sText(afterKey, "") };
     }
 
-    // 只在打开卡片时补齐缺失的前后缀，不改变模型请求或已保存的内容。
+    // 补齐缺失的自定义包裹，不重复添加已存在的边界。
     function applyWrapPair(pair, text) {
       var body = String(text == null ? "" : text).trim();
       if (!body) return body;
@@ -227,10 +233,22 @@ export default {
       return (body.startsWith(b) ? "" : b) + body + (body.endsWith(a) ? "" : a);
     }
 
-    function sceneWrapPair() {
-      return sBool("sceneNarration", true)
-        ? { before: "", after: "" }
-        : wrapPair("sceneWrapBefore", "sceneWrapAfter");
+    function sceneWrapPair(narration) {
+      var pair = wrapPair("sceneWrapBefore", "sceneWrapAfter");
+      if (!narration) return pair;
+      if (!pair.before && !pair.after) return { before: "[情境]", after: "[/情境]" };
+      return pair.before && pair.after ? pair : null;
+    }
+    function offlineScenePayload(scene, reply) {
+      var narration = sBool("sceneNarration", true);
+      var pair = sceneWrapPair(narration);
+      var wrapped = narration && pair && scene.length > pair.before.length + pair.after.length &&
+        scene.startsWith(pair.before) && scene.endsWith(pair.after);
+      if (scene && pair && !wrapped) {
+        // 旁白需要成对边界；关闭时保留原有自定义包裹的单边去重行为。
+        scene = narration ? pair.before + scene + pair.after : applyWrapPair(pair, scene);
+      }
+      return [scene, reply].filter(Boolean).join("\n\n");
     }
 
     // ═════════ Prompt 注入 ═════════
@@ -1846,38 +1864,11 @@ ${sceneOrnamentVars}
       addSettingsFold("🎨 线下图标颜色（拖动即改，胶囊在时生效）", [acWrap]);
       el.appendChild(wrap);
       refreshArc(); syncArmPanel();
-      var unbindSceneWrap = bindSceneWrapSettings(el);
       return function () {
         ph.removeEventListener("load", mountInvitePreview);
         if (invitePreviewObserver) invitePreviewObserver.disconnect();
-        if (unbindSceneWrap) unbindSceneWrap();
       };
     });
-
-    function bindSceneWrapSettings(el) {
-      var card = el.closest(".menu-group");
-      if (!card) return;
-      // 齿轮表单由宿主渲染；只在本插件卡片内联动原生输入框，不移动或重写表单。
-      function sync(disabled) {
-        card.querySelectorAll('input.ui-input[type="text"]').forEach(function (input) {
-          var label = input.parentElement.firstElementChild;
-          if (!label || !/^情境·包裹·(?:前缀|后缀)$/.test(label.textContent)) return;
-          if (input.disabled !== disabled) input.disabled = disabled;
-          input.style.opacity = disabled ? "0.5" : "";
-        });
-      }
-      function refresh() { sync(ctx.system.settings.get("sceneNarration") !== false); }
-      // 齿轮展开、收起或保存字段时，宿主可能新建输入节点。
-      var observer = typeof MutationObserver === "function" ? new MutationObserver(refresh) : null;
-      if (observer) observer.observe(card, { childList: true, subtree: true });
-      var off = ctx.system.settings.onChange && ctx.system.settings.onChange(refresh);
-      refresh();
-      return function () {
-        if (observer) observer.disconnect();
-        if (typeof off === "function") off();
-        sync(false);
-      };
-    }
 
     // ═════════ 通用确认弹窗：自成一体，不依赖主题类名 ═════════
     function askConfirm(o) {
@@ -2186,6 +2177,7 @@ ${sceneOrnamentVars}
         if (cur && cur.header === el) {
           delete cur.header;
           clearSceneViews(sid);
+          delete sceneState[sid];
         }
       };
     });
@@ -2202,16 +2194,6 @@ ${sceneOrnamentVars}
       var sid = Object.keys(pillHosts).find(function (id) { return wrapperFor(id) === wrapper; });
       if (!sid) return;
       if (!isRetry) {
-        if (label === "发送" && isOfflineIn(wrapper)) {
-          var state = sceneState[sid];
-          var draft = state && state.pending;
-          if (draft && draft.button !== button) {
-            var input = wrapper.querySelector("textarea.chat-input-textarea");
-            state.pending = null;
-            if (input && input.value.trim() === draft.text) stageScene(sid, draft.parts, draft.text, button);
-          }
-          if (state && state.pending) state.pending.button = null;
-        }
         clearRetry(sid);
         return;
       }
@@ -2222,10 +2204,6 @@ ${sceneOrnamentVars}
       if (!offline) {
         var active = wrapper.querySelector('.chat-msg-wrapper[data-active][id^="message-"]');
         if (active) click.targetId = active.id.slice("message-".length);
-      } else {
-        var old = getOfflineRetryTurn(sid, wrapper);
-        var parts = old && getSceneMarks(sid)[old.id];
-        if (parts && old.userContent.trim()) stageScene(sid, parts, old.userContent.trim(), null);
       }
       retryClicks[sid] = click;
       // 浏览器可能在原生 capture 和 React 的点击回调之间执行微任务。
@@ -2306,7 +2284,7 @@ ${sceneOrnamentVars}
       var snapshot = readOfflineTurns(sid);
       var task = (offlineReads[sid] || Promise.resolve()).then(function () { return snapshot; }).then(function (turns) {
         if (disposedPlugin || !turns) return;
-        updateSceneTurns(sid, turns, changed);
+        updateSceneTurns(sid, turns);
         var current = new Set(turns.filter(function (turn) { return turn.assistantContent.trim(); }).map(function (turn) { return turn.id; }));
         var previous = offlineSnapshots[sid];
         offlineSnapshots[sid] = current;
@@ -2377,7 +2355,6 @@ ${sceneOrnamentVars}
       var e = getEvt(sid, id);
       if (!e || document.querySelector(".opl-overlay")) return;
       var j = e.judge || {};
-      var scenePair = sceneWrapPair();
       var replyPair = wrapPair("replyWrapBefore", "replyWrapAfter");
       var st = stateOf(e);
       var reject = st === "refused";
@@ -2414,7 +2391,7 @@ ${sceneOrnamentVars}
 
       openCard({
         eyebrow: eyebrow, title: title, desc: desc,
-        scene: applyWrapPair(scenePair, e.scene || ""),
+        scene: e.scene || "",
         options: options,
         primary: primary, secondary: secondary,
         onClose: function (close) {
@@ -2436,9 +2413,7 @@ ${sceneOrnamentVars}
           if (!getEvt(sid, id)) { close(); return; }
           var a = String(sceneTxt || "").trim();
           var b = String(replyTxt || "").trim();
-          var payload = [a, b].filter(Boolean).join("\n\n");
-          var scene = a ? { scene: a, reply: b } : null;
-          if (!payload) { ctx.ui.toast("至少填一处内容"); return false; }
+          if (!a && !b) { ctx.ui.toast("至少填一处内容"); return false; }
           if (!b) {
             askConfirm({
               title: "还没写下回应",
@@ -2447,76 +2422,45 @@ ${sceneOrnamentVars}
               cancelLabel: "再想想",
               onOk: function () {
                 close();
-                if (getEvt(sid, id)) enterOffline(host, sid, payload, label === "退让" ? { reason: j.reason } : null, scene);
+                if (getEvt(sid, id)) enterOffline(host, sid, a, b, label === "退让" ? { reason: j.reason } : null);
               }
             });
             return false;
           }
           close();
-          enterOffline(host, sid, payload, label === "退让" ? { reason: j.reason } : null, scene);
+          enterOffline(host, sid, a, b, label === "退让" ? { reason: j.reason } : null);
           return true;
         }
       });
     }
 
     // ═════════ 线下情境：一次发送、分开展示；只存插件自己的分段信息 ═════════
-    function getSceneMarks(sid) {
-      if (!sceneTurns[sid]) {
-        var saved = ctx.system.storage.get(K_SCENE_TURNS + sid);
-        sceneTurns[sid] = Object.assign(Object.create(null), saved || {});
-      }
-      return sceneTurns[sid];
-    }
     function getSceneState(sid) {
-      return sceneState[sid] || (sceneState[sid] = { rows: new Map(), turns: [], pending: null });
+      return sceneState[sid] || (sceneState[sid] = { rows: new Map(), turns: [] });
     }
-    function stageScene(sid, scene, text, button) {
-      var state = getSceneState(sid);
-      state.pending = { parts: scene, text: text, startedAt: Date.now(), button: button, sawPending: false, previous: new Set(state.turns.map(function (turn) { return turn.id; })) };
-    }
-    function updateSceneTurns(sid, turns, changed) {
-      var state = getSceneState(sid);
-      state.turns = turns;
-      var marks = getSceneMarks(sid), pending = state.pending, dirty = false;
-      if (changed && pending) {
-        var latest = turns[turns.length - 1];
-        if (latest && !pending.previous.has(latest.id) && Date.parse(latest.createdAt) >= pending.startedAt && latest.userContent === pending.text) {
-          marks[latest.id] = pending.parts;
-          state.pending = null;
-          dirty = true;
-        }
-      }
-      if (changed) {
-        var live = new Set(turns.map(function (turn) { return turn.id; }));
-        Object.keys(marks).forEach(function (id) {
-          if (!live.has(id)) { delete marks[id]; dirty = true; }
-        });
-      }
-      if (dirty) ctx.system.storage.set(K_SCENE_TURNS + sid, marks);
+    function updateSceneTurns(sid, turns) {
       var host = wrapperFor(sid);
-      if (host) requestAnimationFrame(function () {
+      if (!host) return;
+      getSceneState(sid).turns = turns;
+      requestAnimationFrame(function () {
         if (!disposedPlugin && wrapperFor(sid) === host) paintSceneTurns(sid, host);
       });
     }
 
-    function splitSceneText(text, parts) {
-      if (!parts.reply) return { scene: text, reply: "" };
-      var divider = "\n\n";
-      var edge = -1;
-      if (text.indexOf(parts.scene + divider) === 0) edge = parts.scene.length;
-      else if (text.endsWith(divider + parts.reply)) edge = text.length - parts.reply.length - divider.length;
-      else if (parts.after && (!parts.before || text.indexOf(parts.before) === 0)) {
-        var close = text.indexOf(parts.after + divider, (parts.before || "").length);
-        if (close >= 0) edge = close + parts.after.length;
+    function splitTaggedScene(text, pair) {
+      var raw = String(text || "").trim();
+      if (!pair || !raw.startsWith(pair.before)) return null;
+      var at = raw.indexOf(pair.after, pair.before.length);
+      while (at >= 0) {
+        var tail = raw.slice(at + pair.after.length);
+        // 正文里也可能有同样的符号；优先识别消息末尾或回应分隔前的闭合标签。
+        if (!tail || /^[\t ]*\r?\n/.test(tail)) {
+          var scene = raw.slice(pair.before.length, at).trim();
+          return scene ? { scene: scene, reply: tail.trim() } : null;
+        }
+        at = raw.indexOf(pair.after, at + 1);
       }
-      if (edge < 0) {
-        var first = text.indexOf(divider);
-        if (first >= 0 && first === text.lastIndexOf(divider)) edge = first;
-      }
-      // 用户删掉分隔或使分段不明确时，保留宿主的完整原文，不猜哪段是回应。
-      if (edge < 0) return null;
-      var scene = text.slice(0, edge).trim();
-      return scene ? { scene: scene, reply: text.slice(edge + divider.length).trim() } : null;
+      return null;
     }
     function makeSceneNode(text) {
       var node = mk("div");
@@ -2527,7 +2471,6 @@ ${sceneOrnamentVars}
       return node;
     }
     function removeSceneView(row, view) {
-      row.removeAttribute("data-opl-scene-turn");
       view.entry.classList.remove("opl-scene-only", "opl-scene-split");
       view.node.remove();
       if (view.reply) view.reply.remove();
@@ -2538,20 +2481,6 @@ ${sceneOrnamentVars}
       state.rows.forEach(function (view, row) { removeSceneView(row, view); });
       state.rows.clear();
     }
-    function getOfflineRetryTurn(sid, host) {
-      var state = sceneState[sid];
-      var body = host.querySelector(".chat-offline-body");
-      var selected = body && body.querySelector(".chat-offline-text[data-active]");
-      var row = selected && selected.closest(".chat-offline-turn");
-      if (!state || !row) return null;
-      var id = row.getAttribute("data-opl-scene-turn");
-      if (id) return state.turns.find(function (turn) { return turn.id === id; });
-      // 宿主按最近若干回合渲染；关闭旁白时没有插件 DOM 标记。
-      var rows = Array.from(body.children).filter(function (el) { return el.classList.contains("chat-offline-turn"); });
-      var index = rows.indexOf(row), offset = state.turns.length - rows.length;
-      if (index < 0 || offset < 0) return null;
-      return state.turns[offset + index];
-    }
     function paintSceneTurns(sid, host) {
       var state = getSceneState(sid);
       var body = isOfflineIn(host) && host.querySelector(".chat-offline-body");
@@ -2560,36 +2489,27 @@ ${sceneOrnamentVars}
       var last = rows[rows.length - 1];
       // 生成中的宿主正文没有已落库消息的右键外观与操作；用预览节点识别临时行。
       var busy = !!(last && last.querySelector(".chat-offline-generating, .chat-stream-cursor"));
-      var pending = state.pending;
-      if (pending && busy) pending.sawPending = true;
-      if (pending && !busy && pending.sawPending && !pending.clearTimer) {
-        // 存储事件可能比宿主最后一帧晚到，给已发送的回合留一点关联时间。
-        pending.clearTimer = setTimeout(function () { if (state.pending === pending) state.pending = null; }, 2000);
-      }
-      // 开关只控制显示；关闭时仍追踪发送结束，避免残留情境污染下一轮。
-      if (!sBool("sceneNarration", true)) { clearSceneViews(sid); return; }
+      var pair = sBool("sceneNarration", true) && sceneWrapPair(true);
+      if (!pair) { clearSceneViews(sid); return; }
       var savedRows = busy ? rows.slice(0, -1) : rows;
       var offset = state.turns.length - savedRows.length;
-      var marks = getSceneMarks(sid), visible = new Set();
+      var visible = new Set();
       rows.forEach(function (row, index) {
         var stored = !(busy && row === last) && offset >= 0 ? state.turns[index + offset] : null;
-        var parts = stored ? marks[stored.id] : busy && row === last && pending ? pending.parts : null;
-        if (!parts) return;
-        var split = splitSceneText(stored ? stored.userContent : pending.text, parts);
-        if (!split) return;
         var entry = row.querySelector('.chat-offline-entry[data-role="user"]');
         var text = entry && entry.querySelector(".chat-offline-text");
         if (!text) return;
+        // 已存回合读原文，避免宿主的 Markdown 或正则改变自定义标签。
         var prev = state.rows.get(row);
-        var key = stored ? stored.id : "pending";
+        var split = stored ? splitTaggedScene(stored.userContent, pair) : null;
+        if (!split) return;
         visible.add(row);
-        if (prev && prev.key === key && prev.entry === entry && prev.text === text &&
+        if (prev && prev.entry === entry && prev.text === text &&
             prev.sceneText === split.scene && prev.replyText === split.reply &&
             prev.node.nextElementSibling === row && (!prev.reply || prev.reply.parentNode === text)) return;
         if (prev) removeSceneView(row, prev);
         var node = makeSceneNode(split.scene);
         var reply = null;
-        row.setAttribute("data-opl-scene-turn", key);
         if (split.reply) {
           reply = mk("div", "", split.reply);
           reply.className = "opl-scene-reply";
@@ -2597,7 +2517,7 @@ ${sceneOrnamentVars}
           entry.classList.add("opl-scene-split");
         } else entry.classList.add("opl-scene-only");
         row.before(node);
-        state.rows.set(row, { key: key, entry: entry, text: text, node: node, reply: reply, sceneText: split.scene, replyText: split.reply });
+        state.rows.set(row, { entry: entry, text: text, node: node, reply: reply, sceneText: split.scene, replyText: split.reply });
       });
       state.rows.forEach(function (view, row) {
         if (visible.has(row)) return;
@@ -2606,7 +2526,7 @@ ${sceneOrnamentVars}
       });
     }
 
-    function enterOffline(host, sid, text, nudge, scene) {
+    function enterOffline(host, sid, scene, reply, nudge) {
       var toggle = host.querySelector('button[aria-label="线下模式"]')
         || host.querySelector(".chat-offline-toggle");
       if (!isOfflineIn(host)) {
@@ -2624,8 +2544,12 @@ ${sceneOrnamentVars}
         // 刻意不清数据、不移除胶囊：胶囊要留到你发够 N 条
         var ta = host.querySelector("textarea.chat-input-textarea");
         if (!ta) { ctx.ui.toast("没找到线下输入框"); return; }
+        if (disposedPlugin || wrapperFor(sid) !== host) return;
+        var text = offlineScenePayload(scene, reply);
         setNativeValue(ta, text);
         return sleep(160).then(function () {
+          if (disposedPlugin || wrapperFor(sid) !== host || !isOfflineIn(host) ||
+              host.querySelector("textarea.chat-input-textarea") !== ta || ta.value.trim() !== text) return;
           var act = host.querySelector(".chat-input-actions"), send = null;
           if (act) {
             var ls = act.querySelectorAll("button");
@@ -2634,15 +2558,12 @@ ${sceneOrnamentVars}
             }
           }
           if (!send) {
-            if (scene) stageScene(sid, scene, text, null);
             ctx.ui.toast("没找到发送按钮，文字已填入输入框"); return;
           }
           if (send.disabled) {
-            if (scene) stageScene(sid, scene, text, null);
             ta.focus(); ctx.ui.toast("已填入输入框，手动点发送"); return;
           }
           if (nudge) offlineNudge[sid] = nudge;
-          if (scene) stageScene(sid, scene, text, send);
           send.click();
           setTimeout(function () { syncPill(sid); }, 300);
         });
