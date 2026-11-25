@@ -345,7 +345,7 @@ export default {
         "",
         "[" + TAG_JUDGE + "]",
         "state: moved",
-        "reason: 看不见摸不着，总归问不出冷暖……",
+        "reason: 看不见摸不着，总归问不出冷暖。",
         "[/" + TAG_JUDGE + "]",
         "[" + TAG_SCENE + "]廊下只留了一盏暖灯，脚步与瓷盘轻碰的声响从尽头一路过来。他把托盘换到左手，抬手推开虚掩的门——光先从门缝里漫到桌脚边。[/" + TAG_SCENE + "]",
         "[" + TAG_OPT + "]",
@@ -1283,11 +1283,11 @@ ${sceneOrnamentVars}
 
     var defaultSceneCSS = `/* 线下情境 · 简洁旁白*/
 .opl-scene-narration {
-  width: min(88%, 42rem);
+  width: min(98%, 46rem);
   box-sizing: border-box;
   align-self: center;
   margin: 4px auto;
-  padding: 4px 10px;
+  padding: 4px 6px;
   background: transparent;
   border: 0;
   color: var(--c-text, #4A3F6B);
@@ -1309,12 +1309,12 @@ ${sceneOrnamentVars}
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(86%, 40rem);
+  width: min(96%, 44rem);
   min-height: 98px;
   box-sizing: border-box;
   align-self: center;
   margin: 14px auto;
-  padding: 30px 52px 12px;
+  padding: 30px 44px 12px;
   border: 0;
   color: var(--opl-ink);
   text-align: center;
@@ -1548,7 +1548,7 @@ ${sceneOrnamentVars}
         c.style.animation = "none";
         c.style.width = "min(290px,100%)";
         c.innerHTML = "<div class='opl-eyebrow'>有人来了</div><div class='opl-title'>抬头看看</div>"
-          + "<div class='opl-desc'>看不见摸不着，总归问不出冷暖……</div>"
+          + "<div class='opl-desc'>看不见摸不着，总归问不出冷暖。</div>"
           + "<span class='opl-label'>🫧 情境</span>"
           + "<div class='opl-box' style='min-height:42px;display:flex;align-items:center'>夜色从窗外漫进来……</div>"
           + "<span class='opl-label'>💬 你的回应</span>"
