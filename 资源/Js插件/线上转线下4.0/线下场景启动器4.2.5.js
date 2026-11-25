@@ -32,10 +32,10 @@ export default {
       { key: "armGlow", label: "线下图标·发光强度（0~100，越小越淡）", type: "number", default: 32 },
       { key: "roleInvitesOnly", label: "只保留角色邀约", type: "boolean", default: false },
       { key: "sceneNarration", label: "情境·独立旁白（关闭后随用户消息显示）", type: "boolean", default: true },
-      { key: "sceneWrapBefore", label: "情境·包裹·前缀", type: "text", default: "",
-        description: "例如 [情境] 或 <scene>。开启旁白时按字面识别当前前后缀；两项都空时使用默认标签，只填一项不启用旁白包裹。" },
-      { key: "sceneWrapAfter", label: "情境·包裹·后缀", type: "text", default: "",
-        description: "例如 [/情境] 或 </scene>。关闭旁白时不补默认标签，只加已填写的包裹，由你的正则处理。" },
+      { key: "sceneWrapBefore", label: "情境·包裹·前", type: "text", default: "",
+        description: "默认前缀：[旁白]。开启独立旁白时，前后都填才用自定义标签；任一项留空，就用整对默认标签来包裹和识别情境。" },
+      { key: "sceneWrapAfter", label: "情境·包裹·后", type: "text", default: "",
+        description: "默认后缀：[/旁白]。关闭独立旁白时，不补默认标签，只加填写的包裹内容，由你的正则处理。" },
       { key: "keepMarker", label: "【调试】保留气泡里的标记原文", type: "boolean", default: false }
     ]
   },
@@ -235,9 +235,8 @@ export default {
 
     function sceneWrapPair(narration) {
       var pair = wrapPair("sceneWrapBefore", "sceneWrapAfter");
-      if (!narration) return pair;
-      if (!pair.before && !pair.after) return { before: "[情境]", after: "[/情境]" };
-      return pair.before && pair.after ? pair : null;
+      if (!narration || (pair.before && pair.after)) return pair;
+      return { before: "[旁白]", after: "[/旁白]" };
     }
     function offlineScenePayload(scene, reply) {
       var narration = sBool("sceneNarration", true);
