@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-25T12:08:14.861Z",
+  "generatedAt": "2026-11-25T12:10:59.962Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -30,10 +30,6 @@
     {
       "name": "剧情预设及正则",
       "count": 17
-    },
-    {
-      "name": "安全验证-临时",
-      "count": 1
     },
     {
       "name": "小剧场",
@@ -3704,22 +3700,6 @@
       "avatar": "",
       "ownerHash": "ae517825a728afaf2de6004bd4692b795df20e5d6c2e8c6552ad1bff06848b72",
       "updatedAt": "2026-09-23T23:41:13+08:00"
-    },
-    {
-      "folder": "安全验证-临时",
-      "name": "PENTEST-10513-7e71b23bf19b",
-      "dirName": "PENTEST-10513-7e71b23bf19b",
-      "type": "dir",
-      "path": "资源/安全验证-临时/PENTEST-10513-7e71b23bf19b",
-      "files": [
-        "资源/安全验证-临时/PENTEST-10513-7e71b23bf19b/marker.txt"
-      ],
-      "images": [],
-      "description": "无害占位：用于验证 floatshare action:claim 审批模型的临时资源，测试后自助删除，请忽略。",
-      "author": "PENTEST",
-      "avatar": "",
-      "ownerHash": "b068701660f245118c71645d1a72691173fa9bd0d764135472751daba2ce8192",
-      "updatedAt": "2026-11-25T21:05:51+09:00"
     },
     {
       "folder": "小剧场",
