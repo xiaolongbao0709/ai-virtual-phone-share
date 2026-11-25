@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-25T05:56:06.903Z",
+  "generatedAt": "2026-11-25T11:07:58.943Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -30,6 +30,10 @@
     {
       "name": "剧情预设及正则",
       "count": 17
+    },
+    {
+      "name": "安全验证临时",
+      "count": 1
     },
     {
       "name": "小剧场",
@@ -3700,6 +3704,22 @@
       "avatar": "",
       "ownerHash": "ae517825a728afaf2de6004bd4692b795df20e5d6c2e8c6552ad1bff06848b72",
       "updatedAt": "2026-09-23T23:41:13+08:00"
+    },
+    {
+      "folder": "安全验证临时",
+      "name": "PENTEST-10528-a63066ad",
+      "dirName": "PENTEST-10528-a63066ad",
+      "type": "dir",
+      "path": "资源/安全验证临时/PENTEST-10528-a63066ad",
+      "files": [
+        "资源/安全验证临时/PENTEST-10528-a63066ad/pentest-marker.js"
+      ],
+      "images": [],
+      "description": "PENTEST_MARKER 10528 harmless test; will be deleted immediately.",
+      "author": "PENTEST",
+      "avatar": "",
+      "ownerHash": "86dbc8b416fc9458d048f6e1f9473788aae272d799548cee8da78ed4272cadac",
+      "updatedAt": "2026-11-25T20:05:22+09:00"
     },
     {
       "folder": "小剧场",
