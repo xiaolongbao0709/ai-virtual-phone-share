@@ -1502,11 +1502,31 @@ ${sceneOrnamentVars}
       ed.value = loadCSS();
 
       var pt = mk("div", HEAD_CSS, "👀 实时预览");
-      var ph = mk("div"); ph.className = "opl-prev";
-
+      // 用独立文档保留主题中的 :root 等选择器，同时隔离未应用的 CSS。
+      var ph = mk("iframe", "display:block;width:100%;height:360px;border:0;");
+      ph.title = "邀请函 CSS 实时预览";
+      ph.setAttribute("sandbox", "allow-same-origin");
+      var invitePreviewStyle, invitePreviewBody, invitePreviewObserver;
+      function sizeInvitePreview() {
+        if (!invitePreviewBody) return;
+        var height = Math.ceil(invitePreviewBody.getBoundingClientRect().height);
+        if (height > 0 && ph.style.height !== height + "px") ph.style.height = height + "px";
+      }
       function renderPrev() {
-        ph.innerHTML = "";
-        var c = document.createElement("div");
+        if (!invitePreviewStyle) return;
+        invitePreviewStyle.textContent = ed.value;
+        sizeInvitePreview();
+      }
+      function mountInvitePreview() {
+        var doc = ph.contentDocument;
+        if (!doc || !doc.body) return;
+        if (invitePreviewObserver) invitePreviewObserver.disconnect();
+        invitePreviewStyle = doc.createElement("style");
+        doc.head.replaceChildren(invitePreviewStyle);
+        doc.body.style.margin = "0";
+        var sample = doc.createElement("div");
+        sample.className = "opl-prev";
+        var c = doc.createElement("div");
         c.className = "opl-card";
         c.style.animation = "none";
         c.style.width = "min(290px,100%)";
@@ -1518,8 +1538,20 @@ ${sceneOrnamentVars}
           + "<div class='opl-chips'><span class='opl-chip' data-sel='1'>正剧向</span><span class='opl-chip'>暧昧向</span></div>"
           + "<div class='opl-box' style='min-height:42px;display:flex;align-items:center;opacity:.42'>选一个，或在此自由改写…</div>"
           + "<div class='opl-actions'><button class='opl-btn ghost'>再想想</button><button class='opl-btn primary'>应答</button></div>";
-        ph.appendChild(c);
+        sample.appendChild(c);
+        invitePreviewBody = doc.createElement("div");
+        invitePreviewBody.style.display = "flow-root";
+        invitePreviewBody.appendChild(sample);
+        doc.body.replaceChildren(invitePreviewBody);
+        if (typeof ResizeObserver === "function") {
+          invitePreviewObserver = new ResizeObserver(sizeInvitePreview);
+          invitePreviewObserver.observe(invitePreviewBody);
+        }
+        renderPrev();
       }
+      ph.addEventListener("load", mountInvitePreview);
+      ph.srcdoc = "<!doctype html><html><head><meta charset='utf-8'></head><body></body></html>";
+      ed.addEventListener("input", renderPrev);
 
       // ── 线下图标颜色面板：HSL + 淡度滑块，拖动即改；底部输入框可直接填颜色 ──
       var acRow = mk("div", "display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid " + C_LINE + ";border-radius:16px;background:" + C_CARD + ";");
@@ -1813,8 +1845,13 @@ ${sceneOrnamentVars}
       addSettingsFold("📁 CSS 存档", [arcNav, al]);
       addSettingsFold("🎨 线下图标颜色（拖动即改，胶囊在时生效）", [acWrap]);
       el.appendChild(wrap);
-      renderPrev(); refreshArc(); syncArmPanel();
-      return bindSceneWrapSettings(el);
+      refreshArc(); syncArmPanel();
+      var unbindSceneWrap = bindSceneWrapSettings(el);
+      return function () {
+        ph.removeEventListener("load", mountInvitePreview);
+        if (invitePreviewObserver) invitePreviewObserver.disconnect();
+        if (unbindSceneWrap) unbindSceneWrap();
+      };
     });
 
     function bindSceneWrapSettings(el) {
