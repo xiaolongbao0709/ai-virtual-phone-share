@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-25T19:15:06.027Z",
+  "generatedAt": "2026-11-25T19:31:39.060Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -9,7 +9,7 @@
     },
     {
       "name": "Js插件",
-      "count": 94
+      "count": 95
     },
     {
       "name": "MCP",
@@ -419,6 +419,22 @@
       "avatar": "资源/Js插件/侧边滑动回退/.avatar.png",
       "ownerHash": "8be1404dc48b69dac097ce254c34d80c5a2bc55c62acef7b9d6217419189b554",
       "updatedAt": "2026-09-09T11:31:17+08:00"
+    },
+    {
+      "folder": "Js插件",
+      "name": "全局对话统计",
+      "dirName": "全局对话统计",
+      "type": "dir",
+      "path": "资源/Js插件/全局对话统计",
+      "files": [
+        "资源/Js插件/全局对话统计/对话统计.json"
+      ],
+      "images": [],
+      "description": "",
+      "author": "",
+      "avatar": "",
+      "ownerHash": "d40dd2d1a0db78ed724b567b7fd27eea57c25be147e36719a280ea4663809eff",
+      "updatedAt": "2026-11-26T04:28:28+09:00"
     },
     {
       "folder": "Js插件",
