@@ -3,19 +3,19 @@ export default {
     id: "offline-scene-launcher",
     name: "线下场景启动器",
     apiVersion: 1,
-    version: "4.1.2",
-    author: "你",
+    version: "4.2.1",
+    author: "G",
     description: "判断线下见面时出现邀约，确认后直接转入内置线下",
     permissions: ["chat.read", "ui"],
     settings: [
-      { key: "enabled", label: "启用", type: "boolean", default: true },
+      { key: "pauseInvitations", label: "关闭邀约", type: "boolean", default: false },
       { key: "person", label: "情境·人称（旁白里怎么称呼你）", type: "select", default: "third",
         options: [
           { value: "first", label: "第一人称（我）" },
           { value: "second", label: "第二人称（你）" },
           { value: "third", label: "第三人称" }
         ] },
-      { key: "customStyle", label: "你想要的风格 prompt（填了会覆盖默认描写类型；不影响上面的人称）", type: "text", default: "" },
+      { key: "customStyle", label: "情境·内容自定义prompt", type: "text", default: "" },
       { key: "sceneNoSubj", label: "情境·无主语模式", type: "boolean", default: false },
       { key: "replyPerson", label: "你的回应·人称", type: "select", default: "third",
         options: [
@@ -24,15 +24,14 @@ export default {
           { value: "third", label: "第三人称" }
         ] },
       { key: "replyNoSubj", label: "你的回应·无主语模式", type: "boolean", default: false },
-      { key: "sceneWrapBefore", label: "情境·包裹·前（如 [情境] / *，留空=不加）", type: "text", default: "" },
-      { key: "sceneWrapAfter", label: "情境·包裹·后（如 [/情境] / *，留空=不加）", type: "text", default: "" },
       { key: "replyWrapBefore", label: "你的回应·包裹·前", type: "text", default: "" },
       { key: "replyWrapAfter", label: "你的回应·包裹·后", type: "text", default: "" },
       { key: "maxChars", label: "单个回应分支最多字数", type: "number", default: 60 },
       { key: "capsuleTurns", label: "邀约保留轮数（AI 回复几轮后移除）", type: "number", default: 2 },
-      { key: "roleInvitesOnly", label: "只保留角色邀约", type: "boolean", default: false },
       { key: "fxEnabled", label: "播放全屏粒子动画（相会 / 被拒）", type: "boolean", default: true },
       { key: "armGlow", label: "线下图标·发光强度（0~100，越小越淡）", type: "number", default: 32 },
+      { key: "roleInvitesOnly", label: "只保留角色邀约", type: "boolean", default: false },
+      { key: "sceneNarration", label: "情境·独立旁白（关闭后随用户消息显示）", type: "boolean", default: true },
       { key: "keepMarker", label: "【调试】保留气泡里的标记原文", type: "boolean", default: false }
     ]
   },
@@ -40,9 +39,11 @@ export default {
     // ═════════ 常量与状态 ═════════
     var TAG_JUDGE = "线下判定", TAG_SCENE = "线下情境", TAG_OPT = "线下选项";
     var K_EVT = "evt:", K_CSS = "custom-css", K_ARC = "css-archive:", K_ARM = "arm-color";
+    var K_SCENE_CSS = "scene-custom-css", K_SCENE_TURNS = "scene-turns:", K_SCENE_ARC = "scene-css-archive:";
     // evt:<sid> = { events: [邀约…] }：同一会话可并存多枚胶囊，各自独立到期或关闭
 
-    var cssDisp = null, structDisp = null, ticker = null;
+    var cssDisp = null, sceneCssDisp = null, structDisp = null, ticker = null;
+    var sceneTurns = Object.create(null), sceneState = Object.create(null);
     var settingsOff = null;
     var pillEls = {}, pillHosts = {};
     var footEls = {};   // sid -> { 消息id: { el, batch } }：气泡下方的坑位登记
@@ -93,7 +94,12 @@ export default {
       if (ctx.system.settings.onChange) {
         var off = ctx.system.settings.onChange(function () {
           S = {}; Sat = 0;
+          if (invitationsPaused()) pendingEvt = {};
           rearmAll();   // 发光强度/透明度改了：已亮起的图标立刻重绘
+          Object.keys(sceneState).forEach(function (sid) {
+            var host = wrapperFor(sid);
+            if (host) paintSceneTurns(sid, host);
+          });
         });
         if (typeof off === "function") settingsOff = off;
       }
@@ -116,7 +122,7 @@ export default {
       var v = sGet(k);
       return v === undefined || v === null ? fb : v === true;
     }
-    function isOn() { return sBool("enabled", true); }
+    function invitationsPaused() { return sBool("pauseInvitations", false); }
 
     // ═════════ 标记正则（模块级预编译）═════════
     function esc(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
@@ -311,8 +317,7 @@ export default {
         "[/" + TAG_OPT + "]",
         "",
         "━━ 4. 各块写法 ━━",
-        "【情境块】：" + personClause("person", sceneNoSubj, "scene")
-          + wrapClause(wrapPair("sceneWrapBefore", "sceneWrapAfter"), "情境块"),
+        "【情境块】：" + personClause("person", sceneNoSubj, "scene") + wrapClause(null, "情境块"),
         "【选项块】：选项是替用户预写的回应，要符合用户人设与当前剧情，每条不超过 " + maxc + " 字。"
           + personClause("replyPerson", replyNoSubj, "reply")
           + wrapClause(wrapPair("replyWrapBefore", "replyWrapAfter"), "每条选项"),
@@ -333,12 +338,12 @@ export default {
         "",
         "[" + TAG_JUDGE + "]",
         "state: moved",
-        "reason: 隔着屏幕总问不出冷不冷，干脆把热茶也端过去。",
+        "reason: 看不见摸不着，总归问不出冷暖……",
         "[/" + TAG_JUDGE + "]",
         "[" + TAG_SCENE + "]廊下只留了一盏暖灯，脚步与瓷盘轻碰的声响从尽头一路过来。他把托盘换到左手，抬手推开虚掩的门——光先从门缝里漫到桌脚边。[/" + TAG_SCENE + "]",
         "[" + TAG_OPT + "]",
         "1、[正剧向]把手里的东西放下，起身往门边迎了两步，语气有点不自然地问他怎么亲自来了。",
-        "2、[暧昧向]没动，只把身上的毯子又拽紧了些，目光却一直跟着门边那道影子。",
+        "2、[暧昧向]舔了舔嘴唇，只把身上的毯子又拽紧了些，目光却一直跟着门边那道影子。",
         "[/" + TAG_OPT + "]",
         "",
         "━━ 6. 授权与自查 ━━",
@@ -366,7 +371,7 @@ export default {
     // 这里只登记，不计数；llm.response 收到成功回复才 +1。
 ctx.hooks.transform("prompt.system", function (p) {
   try {
-    if (!isOn() || !p.sessionId || p.isGroup !== false) return p;
+    if (invitationsPaused() || !p.sessionId || p.isGroup !== false) return p;
     if (isSessionOffline(p.sessionId)) return p;  // 线下不注入
     if ((p.hint || "").indexOf("【线下场景开关·插件授权】") >= 0) return p;  // 短授权去重
     p.hint = (p.hint || "") + hintText(sBool("roleInvitesOnly", false));
@@ -541,7 +546,7 @@ ctx.hooks.transform("prompt.system", function (p) {
     // ═════════ 拦截模型回复 ═════════
     ctx.hooks.transform("llm.response", function (p) {
       try {
-        if (!isOn() || p.purpose !== "chat") return p;
+        if (p.purpose !== "chat") return p;
 
         var sid = p.sessionId || "";
         var text = typeof p.text === "string" ? p.text : "";
@@ -551,10 +556,12 @@ ctx.hooks.transform("prompt.system", function (p) {
         var judge = jm ? parseJudge(jm[1]) : { state: "", reason: "" };
         var rejected = invitesOnly && (judge.state === "refused" || judge.state === "user_refused");
         var offline = sid && isSessionOffline(sid);
-        // 线下模式只清理标记。计数统一在实际回复写入后结算。
+        // 暂停时仍清理标记并跟踪重试，但不把回复解析成新邀约。
         if (sid && !offline) {
           delete pendingEvt[sid];
           if (retries[sid] && !retries[sid].offline) retries[sid].responded = true;
+        }
+        if (sid && !offline && !invitationsPaused()) {
           var data = getSessionEvents(sid);
           var current = !invitesOnly && (marked || data.events.length) ? refusalContext(sid, data) : {};
           var sm = RE_SCENE.open.exec(text);
@@ -598,7 +605,7 @@ ctx.hooks.transform("prompt.system", function (p) {
     // priority 在同一个 point 内升序执行；90 早于默认值 100。
     ctx.hooks.transform("llm.request", function (p) {
       try {
-        if (!isOn()) return p;
+        if (invitationsPaused()) return p;
         if (p.purpose !== "chat") return p;
         var sid = p.sessionId || "";
         if (!sid) return p;
@@ -769,7 +776,7 @@ ctx.hooks.transform("prompt.system", function (p) {
         }
         if (!isReplyBubble(m)) return;
         var retry = retries[sid];
-        var pending = pendingEvt[sid];
+        var pending = invitationsPaused() ? null : pendingEvt[sid];
         delete pendingEvt[sid];
         if (pending && Date.now() - pending.at >= 60000) pending = null;
         var data = getSessionEvents(sid);
@@ -1106,7 +1113,7 @@ ctx.hooks.transform("prompt.system", function (p) {
 
     function syncPill(sid) {
       try {
-        if (!sid || !isOn()) return;
+        if (!sid) return;
         var data = getSessionEvents(sid);
         var messages = data.events.length ? (ctx.data.messages.list(sid) || []) : [];
         var events = visibleEvents({ events: anchoredEvents(sid, data, messages) });
@@ -1177,13 +1184,20 @@ ctx.hooks.transform("prompt.system", function (p) {
     var C_PURPLE = "#8B4CF7", C_LILAC = "#EDE6FA", C_TITLE = "#2D1B69",
         C_TEXT = "#4A3F6B", C_LINE = "#E6E1F2", C_CARD = "#FFFFFF";
 
-    var defaultCSS = `/* 线下场景启动器 · 默认 */
+    var sceneOrnamentVars = `  --opl-ink:#4a3859;
+  --opl-font:"Hannotate SC","Xingkai SC","STXingkai","Kaiti SC","STKaiti","KaiTi","楷体","DFKai-SB","cursive",-apple-system,system-ui,sans-serif;
+  --opl-sun:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237d6792' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.3' fill='%23dfa3bd'/%3E%3Cpath d='M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M5.3 18.7L7 17M17 7l1.7-1.7'/%3E%3C/svg%3E");
+  --opl-moon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath transform='translate(.8 0)' d='M17.09 4.58A9 9 0 1 0 17.09 19.42A7.5 7.5 0 1 1 17.09 4.58Z' fill='%23dfa3bd' stroke='%237d6792' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --opl-sprig-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 90'%3E%3Cg fill='%237d6792' fill-opacity='.3' stroke='%237d6792' stroke-opacity='.55' stroke-width='.6'%3E%3Cpath d='M17 88C15 62 20 40 17 8' fill='none' stroke-width='1'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(16.5 74) rotate(-40)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(16.5 62) rotate(-140)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17.5 50) rotate(-40)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(18 38) rotate(-140)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17.5 26) rotate(-45) scale(.85)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17 16) rotate(-135) scale(.75)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17 9) rotate(-90) scale(.7)'/%3E%3C/g%3E%3C/svg%3E");
+  --opl-sprig-r:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 90'%3E%3Cg transform='rotate(180 17 45)' fill='%237d6792' fill-opacity='.3' stroke='%237d6792' stroke-opacity='.55' stroke-width='.6'%3E%3Cpath d='M17 88C15 62 20 40 17 8' fill='none' stroke-width='1'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(16.5 74) rotate(-40)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(16.5 62) rotate(-140)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17.5 50) rotate(-40)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(18 38) rotate(-140)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17.5 26) rotate(-45) scale(.85)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17 16) rotate(-135) scale(.75)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17 9) rotate(-90) scale(.7)'/%3E%3C/g%3E%3C/svg%3E");`;
+
+    var defaultCSS = `/* 线下场景启动器 · 星月信笺 */
 :root{
   --opl-bg:#f2e8f0;
   --opl-bg-mid:#f4dbe9;
   --opl-bg-low:#f7bdd6;
   --opl-well:rgba(255,238,247,.38);
-  --opl-ink:#4a3859;
+${sceneOrnamentVars}
   --opl-mauve:#7d6792;
   --opl-mauve-hi:#8d77a2;
   --opl-pink:#dfa3bd;
@@ -1193,16 +1207,11 @@ ctx.hooks.transform("prompt.system", function (p) {
   --opl-r-in:12px;
   --opl-pill:999px;
   --opl-font-plain:-apple-system,system-ui,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  --opl-font:"Hannotate SC","Xingkai SC","STXingkai","Kaiti SC","STKaiti","KaiTi","楷体","DFKai-SB","cursive",-apple-system,system-ui,sans-serif;
   --opl-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .29 0 0 0 0 .22 0 0 0 0 .35 0 0 0 .24 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --opl-fiber:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .55' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .5 0 0 0 .24 -.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
   --opl-hearts:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' width='300' height='300'%3E%3Cpath transform='translate(226 70) rotate(-12) scale(1.7) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='none' stroke='%23ffd6e8' stroke-opacity='.6' stroke-width='1.4'/%3E%3Cpath transform='translate(60 214) rotate(10) scale(1.1) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='%23ff8fbd' fill-opacity='.7'/%3E%3Cpath transform='translate(150 140) rotate(-8) scale(.7) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='%23ffe0ee' fill-opacity='.8'/%3E%3Cpath transform='translate(250 250) rotate(14) scale(.9) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='none' stroke='%23ff9fc6' stroke-opacity='.9' stroke-width='1.5'/%3E%3Cpath transform='translate(40 40) rotate(-6) scale(.6) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='%23ff9fc6' fill-opacity='.75'/%3E%3C/svg%3E");
   --opl-sparkle:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='%237d6792' opacity='.42'%3E%3Cpath d='M40 30l2.5 6.5L49 39l-6.5 2.5L40 48l-2.5-6.5L31 39l6.5-2.5z'/%3E%3Cpath d='M205 150l2 5.2 5.2 2-5.2 2-2 5.2-2-5.2-5.2-2 5.2-2z'/%3E%3Ccircle cx='120' cy='22' r='1.6'/%3E%3Ccircle cx='236' cy='96' r='1.4'/%3E%3Ccircle cx='24' cy='190' r='1.5'/%3E%3C/g%3E%3Cg fill='%23b8628a' opacity='.5'%3E%3Cpath d='M96 88l1.8 4.6 4.6 1.8-4.6 1.8-1.8 4.6-1.8-4.6-4.6-1.8 4.6-1.8z'/%3E%3Ccircle cx='190' cy='60' r='1.4'/%3E%3Ccircle cx='70' cy='215' r='1.4'/%3E%3Ccircle cx='140' cy='130' r='1.2'/%3E%3C/g%3E%3C/svg%3E");
   --opl-star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,1.8 14.53,9.52 22.65,9.54 16.09,14.33 18.58,22.06 12,17.3 5.42,22.06 7.91,14.33 1.35,9.54 9.47,9.52' fill='%237d6792' stroke='%237d6792' stroke-width='.5' stroke-linejoin='round'/%3E%3C/svg%3E");
-  --opl-sun:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237d6792' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4.3' fill='%23dfa3bd'/%3E%3Cpath d='M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M5.3 18.7L7 17M17 7l1.7-1.7'/%3E%3C/svg%3E");
-  --opl-moon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath transform='translate(.8 0)' d='M17.09 4.58A9 9 0 1 0 17.09 19.42A7.5 7.5 0 1 1 17.09 4.58Z' fill='%23dfa3bd' stroke='%237d6792' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
-  --opl-sprig-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 90'%3E%3Cg fill='%237d6792' fill-opacity='.3' stroke='%237d6792' stroke-opacity='.55' stroke-width='.6'%3E%3Cpath d='M17 88C15 62 20 40 17 8' fill='none' stroke-width='1'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(16.5 74) rotate(-40)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(16.5 62) rotate(-140)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17.5 50) rotate(-40)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(18 38) rotate(-140)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17.5 26) rotate(-45) scale(.85)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17 16) rotate(-135) scale(.75)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17 9) rotate(-90) scale(.7)'/%3E%3C/g%3E%3C/svg%3E");
-  --opl-sprig-r:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 90'%3E%3Cg transform='rotate(180 17 45)' fill='%237d6792' fill-opacity='.3' stroke='%237d6792' stroke-opacity='.55' stroke-width='.6'%3E%3Cpath d='M17 88C15 62 20 40 17 8' fill='none' stroke-width='1'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(16.5 74) rotate(-40)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(16.5 62) rotate(-140)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17.5 50) rotate(-40)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(18 38) rotate(-140)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17.5 26) rotate(-45) scale(.85)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17 16) rotate(-135) scale(.75)'/%3E%3Cpath d='M0 0C5-4 11-4 15 0C11 4 5 4 0 0Z' transform='translate(17 9) rotate(-90) scale(.7)'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 @keyframes oplFade{from{opacity:0}to{opacity:1}}
@@ -1267,9 +1276,122 @@ ctx.hooks.transform("prompt.system", function (p) {
     }
     applyCSS(loadCSS());
 
+    var defaultSceneCSS = `/* 线下情境 · 简洁旁白*/
+.opl-scene-narration {
+  width: min(88%, 42rem);
+  box-sizing: border-box;
+  align-self: center;
+  margin: 4px auto;
+  padding: 4px 10px;
+  background: transparent;
+  border: 0;
+  color: var(--c-text, #4A3F6B);
+  text-align: center;
+  font-size: calc(13px * var(--app-text-scale, 1));
+  line-height: 1.75;
+}
+.opl-scene-text { white-space: pre-wrap; overflow-wrap: anywhere; }`;
+
+    var moonSprigSceneCSS = `/* 线下情境 · 日月垂髫 */
+.opl-scene-narration {
+${sceneOrnamentVars}
+  --sc-spark-mauve: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1C12.8 7.5 16.5 11.2 23 12C16.5 12.8 12.8 16.5 12 23C11.2 16.5 7.5 12.8 1 12C7.5 11.2 11.2 7.5 12 1Z' fill='%237d6792'/%3E%3C/svg%3E");
+  --sc-spark-rose: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1C12.8 7.5 16.5 11.2 23 12C16.5 12.8 12.8 16.5 12 23C11.2 16.5 7.5 12.8 1 12C7.5 11.2 11.2 7.5 12 1Z' fill='%23b8628a'/%3E%3C/svg%3E");
+  --sc-spark-pink: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1C12.8 7.5 16.5 11.2 23 12C16.5 12.8 12.8 16.5 12 23C11.2 16.5 7.5 12.8 1 12C7.5 11.2 11.2 7.5 12 1Z' fill='%23dfa3bd'/%3E%3C/svg%3E");
+  --sc-dot-mauve: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%237d6792' fill-opacity='.7'/%3E%3C/svg%3E");
+  --sc-dot-pink: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23dfa3bd' fill-opacity='.9'/%3E%3C/svg%3E");
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(86%, 40rem);
+  min-height: 98px;
+  box-sizing: border-box;
+  align-self: center;
+  margin: 14px auto;
+  padding: 30px 52px 12px;
+  border: 0;
+  color: var(--opl-ink);
+  text-align: center;
+  font-family: var(--opl-font);
+  font-size: calc(13px * var(--app-text-scale, 1));
+  line-height: 1.75;
+  letter-spacing: .04em;
+  background:
+    var(--sc-spark-mauve) 50% 0 / 18px 18px no-repeat,
+    var(--sc-spark-rose) calc(50% - 22px) 3px / 12px 12px no-repeat,
+    var(--sc-spark-rose) calc(50% + 22px) 3px / 12px 12px no-repeat,
+    var(--sc-spark-pink) calc(50% - 38px) 5px / 8px 8px no-repeat,
+    var(--sc-spark-pink) calc(50% + 38px) 5px / 8px 8px no-repeat,
+    var(--sc-dot-mauve) calc(50% - 50px) 7px / 4px 4px no-repeat,
+    var(--sc-dot-mauve) calc(50% + 50px) 7px / 4px 4px no-repeat,
+    var(--sc-dot-pink) calc(50% - 59px) 7px / 3px 3px no-repeat,
+    var(--sc-dot-pink) calc(50% + 59px) 7px / 3px 3px no-repeat,
+    transparent;
+}
+.opl-scene-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.opl-scene-narration::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 8px;
+  width: 30px;
+  height: 78px;
+  pointer-events: none;
+  background: var(--opl-sprig-r) center 22px / 20px 54px no-repeat;
+}
+.opl-scene-text::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 9px;
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+  background: var(--opl-sun) center / 28px 28px no-repeat;
+  transform: rotate(20deg);
+}
+.opl-scene-narration::after {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  right: 8px;
+  width: 30px;
+  height: 72px;
+  pointer-events: none;
+  background: var(--opl-sprig-l) top center / 20px 54px no-repeat;
+}
+.opl-scene-text::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  background: var(--opl-moon) center / 21px 21px no-repeat;
+  transform: rotate(-8deg);
+}`;
+
+    function loadSceneCSS() {
+      var css = ctx.system.storage.get(K_SCENE_CSS);
+      return typeof css === "string" && css.trim() ? css : defaultSceneCSS;
+    }
+    function applySceneCSS(css) {
+      if (sceneCssDisp) sceneCssDisp();
+      sceneCssDisp = ctx.ui.injectCSS(css.trim() ? defaultSceneCSS + "\n" + css : defaultSceneCSS);
+    }
+    applySceneCSS(loadSceneCSS());
+
     // 结构约束：与主题 CSS 分开注入，用户换皮也不会失效
     try {
       structDisp = ctx.ui.injectCSS([
+        ".opl-scene-controls{container-type:inline-size;}",
+        "@container (max-width: 300px){.opl-scene-control-label{display:none;}}",
+        ".chat-offline-entry.opl-scene-only{display:none!important;}",
+        ".chat-offline-entry.opl-scene-only+.chat-offline-entry{border-top:0;}",
+        ".chat-offline-entry.opl-scene-split>.chat-offline-text>:not(.opl-scene-reply):not(.ctx-menu){display:none!important;}",
+        ".opl-scene-reply{white-space:pre-wrap;overflow-wrap:anywhere;}",
         ".opl-foot-wrap{opacity:0;transition:opacity .25s ease;}",
         ".opl-foot-wrap.opl-ready{opacity:1;}",
         ".opl-foot-wrap:not(.opl-ready){pointer-events:none;}",
@@ -1315,11 +1437,11 @@ ctx.hooks.transform("prompt.system", function (p) {
     } catch (e) { }
 
     // ═════════ 设置页：CSS 编辑 / 预览 / 存档 ═════════
-    function listArc() {
+    function listArc(prefix) {
       var out = [];
       try {
         var ks = ctx.system.storage.keys ? ctx.system.storage.keys() : [];
-        for (var i = 0; i < ks.length; i++) if (ks[i].indexOf(K_ARC) === 0) out.push(ks[i].slice(K_ARC.length));
+        for (var i = 0; i < ks.length; i++) if (ks[i].indexOf(prefix) === 0) out.push(ks[i].slice(prefix.length));
       } catch (e) { }
       return out;
     }
@@ -1353,9 +1475,9 @@ ctx.hooks.transform("prompt.system", function (p) {
 
     // 全部设置项的默认值，必须与 manifest 保持一致。
     var DEF_SETTINGS = {
-      enabled: true, person: "third", customStyle: "",
+      pauseInvitations: false, sceneNarration: true, person: "third", customStyle: "",
       sceneNoSubj: false, replyPerson: "third", replyNoSubj: false,
-      sceneWrapBefore: "", sceneWrapAfter: "", replyWrapBefore: "", replyWrapAfter: "",
+      replyWrapBefore: "", replyWrapAfter: "",
       maxChars: 60, capsuleTurns: 2, roleInvitesOnly: false, fxEnabled: true, keepMarker: false,
       armGlow: 32
     };
@@ -1401,7 +1523,7 @@ ctx.hooks.transform("prompt.system", function (p) {
         c.style.animation = "none";
         c.style.width = "min(290px,100%)";
         c.innerHTML = "<div class='opl-eyebrow'>有人来了</div><div class='opl-title'>抬头看看</div>"
-          + "<div class='opl-desc'>隔着屏幕总问不出她冷不冷，干脆把热茶也端过去。</div>"
+          + "<div class='opl-desc'>看不见摸不着，总归问不出冷暖……</div>"
           + "<span class='opl-label'>🫧 情境</span>"
           + "<div class='opl-box' style='min-height:42px;display:flex;align-items:center'>夜色从窗外漫进来……</div>"
           + "<span class='opl-label'>💬 你的回应</span>"
@@ -1412,7 +1534,6 @@ ctx.hooks.transform("prompt.system", function (p) {
       }
 
       // ── 线下图标颜色面板：HSL + 淡度滑块，拖动即改；底部输入框可直接填颜色 ──
-      var acT = mk("div", HEAD_CSS, "🎨 线下图标颜色（拖动即改，胶囊在时生效）");
       var acRow = mk("div", "display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid " + C_LINE + ";border-radius:16px;background:" + C_CARD + ";");
       var acDot = mk("div", "width:34px;height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:center;line-height:0;");
       acDot.innerHTML = "<svg viewBox='0 0 24 24' width='24' height='24' fill='none' stroke='currentColor'"
@@ -1516,36 +1637,71 @@ ctx.hooks.transform("prompt.system", function (p) {
 
       acRow.appendChild(acDot); acRow.appendChild(acSliders);
       var acWrap = mk("div", "display:flex;flex-direction:column;gap:8px;margin-top:4px;");
-      acWrap.appendChild(acT); acWrap.appendChild(acRow); acWrap.appendChild(acHex);
-      var at = mk("div", HEAD_CSS, "📁 CSS 存档");
+      acWrap.appendChild(acRow); acWrap.appendChild(acHex);
       var al = mk("div", "display:flex;flex-direction:column;gap:8px;");
+      var arcNav = mk("div", "display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;");
+      var inviteArc = mk("button", BTN_BASE, "邀请函 CSS");
+      var sceneArc = mk("button", BTN_BASE, "情境 CSS");
+      inviteArc.type = sceneArc.type = "button";
+      arcNav.appendChild(inviteArc); arcNav.appendChild(sceneArc);
+      var arcIsScene = false;
+      function selectArc(isScene) {
+        arcIsScene = isScene;
+        refreshArc();
+      }
+      inviteArc.addEventListener("click", function () { selectArc(false); });
+      sceneArc.addEventListener("click", function () { selectArc(true); });
 
       function refreshArc() {
+        inviteArc.style.cssText = arcIsScene ? BTN_BASE : BTN_MAIN;
+        sceneArc.style.cssText = arcIsScene ? BTN_MAIN : BTN_BASE;
+        inviteArc.setAttribute("aria-pressed", String(!arcIsScene));
+        sceneArc.setAttribute("aria-pressed", String(arcIsScene));
         al.innerHTML = "";
-        var ns = listArc();
-        if (!ns.length) {
-          al.appendChild(mk("div", "font-size:12px;color:" + C_TEXT + ";opacity:.6;", "暂无存档——编辑后点「保存存档」命名保存。"));
-          return;
-        }
-        ns.forEach(function (n) {
+        var isScene = arcIsScene;
+        var prefix = isScene ? K_SCENE_ARC : K_ARC;
+        var names = listArc(prefix);
+        if (!names.length) al.appendChild(mk("div", "font-size:12px;color:" + C_TEXT + ";", "此分类暂无 CSS 存档。"));
+        names.forEach(function (n) {
           var row = mk("div", "display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid " + C_LINE + ";border-radius:16px;background:" + C_CARD + ";");
           var lb = mk("span", "flex:1;font-size:12.5px;color:" + C_TEXT + ";overflow:hidden;text-overflow:ellipsis;white-space:nowrap;", "🎨 " + n);
+          lb.title = lb.textContent;
           var bl = mk("button", "padding:6px 12px;border-radius:12px;border:1px solid transparent;background:" + C_LILAC + ";color:" + C_PURPLE + ";font-size:12px;cursor:pointer;font-family:inherit;", "应用");
           bl.addEventListener("click", function () {
-            var css = ctx.system.storage.get(K_ARC + n);
-            if (typeof css !== "string" || !css) return;
-            ed.value = css;
-            ctx.system.storage.set(K_CSS, css);
-            applyCSS(css);
-            renderPrev();
+            var css = ctx.system.storage.get(prefix + n);
+            if (typeof css !== "string") return;
+            if (isScene) {
+              sceneEd.value = css;
+              ctx.system.storage.set(K_SCENE_CSS, css);
+              applySceneCSS(css);
+              previewSceneCSS();
+            } else {
+              ed.value = css;
+              ctx.system.storage.set(K_CSS, css);
+              applyCSS(css);
+              renderPrev();
+            }
             ctx.ui.toast("已应用「" + n + "」");
           });
+          row.appendChild(lb); row.appendChild(bl);
           var bd = mk("button", "padding:6px 12px;border-radius:12px;border:1px solid " + C_LINE + ";background:" + C_CARD + ";color:" + C_TEXT + ";font-size:12px;cursor:pointer;font-family:inherit;", "删除");
+          bl.type = bd.type = "button";
+          bd.setAttribute("aria-label", "删除存档「" + n + "」");
           bd.addEventListener("click", function () {
-            ctx.system.storage.remove(K_ARC + n);
-            refreshArc();
+            askConfirm({
+              primaryConfirm: true,
+              title: "确定删除此 CSS 存档吗？",
+              desc: (isScene ? "情境 CSS" : "邀请函 CSS") + "：「" + n + "」\n\n删除后无法恢复该存档，当前应用的样式不变。",
+              okLabel: "确认删除",
+              onOk: function () {
+                ctx.system.storage.remove(prefix + n);
+                refreshArc();
+                ctx.ui.toast("已删除存档「" + n + "」，当前样式不变");
+              }
+            });
           });
-          row.appendChild(lb); row.appendChild(bl); row.appendChild(bd); al.appendChild(row);
+          row.appendChild(bd);
+          al.appendChild(row);
         });
       }
 
@@ -1553,13 +1709,15 @@ ctx.hooks.transform("prompt.system", function (p) {
         ed.value = defaultCSS; renderPrev();
         ctx.ui.toast("已载入默认，点「应用」生效");
       });
-      bSave.addEventListener("click", function () {
+      function saveArc(isScene, css) {
         var n = window.prompt("存档名称：");
         if (!n || !n.trim()) return;
-        ctx.system.storage.set(K_ARC + n.trim(), ed.value);
-        refreshArc();
-        ctx.ui.toast("已保存「" + n.trim() + "」");
-      });
+        n = n.trim();
+        ctx.system.storage.set((isScene ? K_SCENE_ARC : K_ARC) + n, css);
+        selectArc(isScene);
+        ctx.ui.toast("已保存「" + n + "」");
+      }
+      bSave.addEventListener("click", function () { saveArc(false, ed.value); });
       bAp.addEventListener("click", function () {
         ctx.system.storage.set(K_CSS, ed.value);
         applyCSS(ed.value);
@@ -1599,10 +1757,73 @@ ctx.hooks.transform("prompt.system", function (p) {
         });
       });
 
-      wrap.appendChild(bar);
-      wrap.appendChild(ed); wrap.appendChild(pt);
-      wrap.appendChild(ph); wrap.appendChild(at); wrap.appendChild(al);
-      wrap.appendChild(acWrap);
+      function addSettingsFold(title, children) {
+        var fold = mk("details", "border:1px solid " + C_LINE + ";border-radius:14px;");
+        var summary = mk("summary", HEAD_CSS + "display:list-item;padding:12px 14px;cursor:pointer;", title);
+        var body = mk("div", "display:flex;flex-direction:column;gap:10px;padding:0 14px 14px;");
+        children.forEach(function (child) { body.appendChild(child); });
+        fold.appendChild(summary);
+        fold.appendChild(body);
+        wrap.appendChild(fold);
+      }
+
+      var maintenance = mk("div", "display:flex;gap:8px;flex-wrap:wrap;");
+      maintenance.appendChild(bPurge);
+      maintenance.appendChild(bReset);
+      wrap.appendChild(maintenance);
+      addSettingsFold("✉️ 邀请函", [bar, ed, pt, ph]);
+
+      var scenePanel = mk("div", "display:flex;flex-direction:column;gap:8px;");
+      scenePanel.appendChild(mk("div", "font-size:12px;color:" + C_TEXT + ";", "启用「情境·独立旁白」时生效，与邀请函 CSS 分开保存。"));
+      var sceneEd = mk("textarea", ed.style.cssText);
+      sceneEd.value = loadSceneCSS();
+      sceneEd.spellcheck = false;
+      sceneEd.setAttribute("aria-label", "情境 CSS");
+      scenePanel.appendChild(sceneEd);
+      var sceneBar = mk("div", "display:flex;gap:6px;flex-wrap:nowrap;align-items:stretch;");
+      sceneBar.className = "opl-scene-controls";
+      function addSceneControl(icon, label, style) {
+        var button = mk("button", style + "padding:8px 6px;min-width:0;white-space:nowrap;flex:1 1 auto;", icon);
+        button.type = "button";
+        button.setAttribute("aria-label", label);
+        button.title = label;
+        var caption = mk("span", "", " " + label);
+        caption.className = "opl-scene-control-label";
+        button.appendChild(caption);
+        sceneBar.appendChild(button);
+        return button;
+      }
+      [["✨", "简洁", defaultSceneCSS], ["🌙", "日月垂髫", moonSprigSceneCSS]].forEach(function (preset) {
+        var button = addSceneControl(preset[0], preset[1], BTN_BASE);
+        button.addEventListener("click", function () {
+          sceneEd.value = preset[2];
+          previewSceneCSS();
+          ctx.ui.toast("已载入「" + preset[1] + "」，点「应用」生效");
+        });
+      });
+      var sceneSave = addSceneControl("💾", "保存存档", BTN_BASE);
+      var sceneApply = addSceneControl("✅", "应用", BTN_MAIN);
+      sceneSave.addEventListener("click", function () { saveArc(true, sceneEd.value); });
+      scenePanel.appendChild(sceneBar);
+      scenePanel.appendChild(mk("div", HEAD_CSS, "情境实时预览"));
+      var scenePreview = mk("div", "padding:8px;border:1px solid " + C_LINE + ";border-radius:12px;");
+      var sceneShadow = scenePreview.attachShadow ? scenePreview.attachShadow({ mode: "open" }) : null;
+      var scenePreviewStyle = mk("style");
+      if (sceneShadow) sceneShadow.appendChild(scenePreviewStyle);
+      var sceneSample = makeSceneNode("雨刚停，他站在便利店门口。\n暖黄色的灯光落在湿漉漉的路上。");
+      (sceneShadow || scenePreview).appendChild(sceneSample);
+      scenePanel.appendChild(scenePreview);
+      function previewSceneCSS() { if (sceneShadow) scenePreviewStyle.textContent = defaultSceneCSS + "\n" + sceneEd.value; }
+      sceneEd.addEventListener("input", previewSceneCSS);
+      sceneApply.addEventListener("click", function () {
+        ctx.system.storage.set(K_SCENE_CSS, sceneEd.value);
+        applySceneCSS(sceneEd.value);
+        ctx.ui.toast("情境 CSS 已应用");
+      });
+      previewSceneCSS();
+      addSettingsFold("情境 CSS · 线下旁白", [scenePanel]);
+      addSettingsFold("📁 CSS 存档", [arcNav, al]);
+      addSettingsFold("🎨 线下图标颜色（拖动即改，胶囊在时生效）", [acWrap]);
       el.appendChild(wrap);
       renderPrev(); refreshArc(); syncArmPanel();
     });
@@ -1620,8 +1841,10 @@ ctx.hooks.transform("prompt.system", function (p) {
       }
 
       var btnBase = "flex:1!important;cursor:pointer!important;padding:10px 0!important;font-size:13.5px!important;font-weight:600!important;font-family:inherit!important;border-radius:14px!important;";
-      var sec = mk("button", btnBase + "border:1px solid #6f5a86!important;background:#7d6792!important;color:#ffffff!important;", o.cancelLabel || "取消");
-      var pri = mk("button", btnBase + "border:1px solid #c8a8c6!important;background:#f7edf7!important;color:#5f3f63!important;", o.okLabel || "确定");
+      var strong = "border:1px solid #6f5a86!important;background:#7d6792!important;color:#ffffff!important;";
+      var light = "border:1px solid #c8a8c6!important;background:#f7edf7!important;color:#5f3f63!important;";
+      var sec = mk("button", btnBase + (o.primaryConfirm ? light : strong), o.cancelLabel || "取消");
+      var pri = mk("button", btnBase + (o.primaryConfirm ? strong : light), o.okLabel || "确定");
       sec.type = "button"; pri.type = "button";
 
       function close() { try { ov.remove(); } catch (e) { } }
@@ -1890,22 +2113,29 @@ ctx.hooks.transform("prompt.system", function (p) {
           raf = requestAnimationFrame(function () {
             raf = 0;
             try {
+              paintSceneTurns(sid, w);
               var off = isOfflineIn(w);
               if (off === lastOff) return;
               lastOff = off;
+              if (off) queueOfflineSnapshot(sid, false, null);
               if (hasData(sid)) syncPill(sid);
             } catch (e) { }
           });
         });
         mo.observe(w, { childList: true, subtree: true, attributes: true, attributeFilter: ["aria-label"] });
+        paintSceneTurns(sid, w);
       }
       watch();
       if (!mo) setTimeout(watch, 400);
       return function () {
         disposed = true;
         if (mo) mo.disconnect();
+        if (raf) cancelAnimationFrame(raf);
         var cur = pillHosts[sid];
-        if (cur && cur.header === el) delete cur.header;
+        if (cur && cur.header === el) {
+          delete cur.header;
+          clearSceneViews(sid);
+        }
       };
     });
 
@@ -1919,8 +2149,18 @@ ctx.hooks.transform("prompt.system", function (p) {
       var wrapper = wrapperOf(button);
       if (!wrapper) return;
       var sid = Object.keys(pillHosts).find(function (id) { return wrapperFor(id) === wrapper; });
-      if (!sid || !isOn()) return;
+      if (!sid) return;
       if (!isRetry) {
+        if (label === "发送" && isOfflineIn(wrapper)) {
+          var state = sceneState[sid];
+          var draft = state && state.pending;
+          if (draft && draft.button !== button) {
+            var input = wrapper.querySelector("textarea.chat-input-textarea");
+            state.pending = null;
+            if (input && input.value.trim() === draft.text) stageScene(sid, draft.parts, draft.text, button);
+          }
+          if (state && state.pending) state.pending.button = null;
+        }
         clearRetry(sid);
         return;
       }
@@ -1931,6 +2171,10 @@ ctx.hooks.transform("prompt.system", function (p) {
       if (!offline) {
         var active = wrapper.querySelector('.chat-msg-wrapper[data-active][id^="message-"]');
         if (active) click.targetId = active.id.slice("message-".length);
+      } else {
+        var old = getOfflineRetryTurn(sid, wrapper);
+        var parts = old && getSceneMarks(sid)[old.id];
+        if (parts && old.userContent.trim()) stageScene(sid, parts, old.userContent.trim(), null);
       }
       retryClicks[sid] = click;
       // 浏览器可能在原生 capture 和 React 的点击回调之间执行微任务。
@@ -1976,18 +2220,18 @@ ctx.hooks.transform("prompt.system", function (p) {
     }
 
     // 现有线下事件只提供会话 ID。读取对应会话的回合记录，不写入宿主存储。
-    function offlineIds(raw) {
+    function parseOfflineTurns(raw) {
       var turns = JSON.parse(raw || "[]");
       if (!Array.isArray(turns)) return null;
-      return new Set(turns.filter(function (turn) {
-        return turn && typeof turn.id === "string" && typeof turn.assistantContent === "string" && turn.assistantContent.trim();
-      }).map(function (turn) { return turn.id; }));
+      return turns.filter(function (turn) {
+        return turn && typeof turn.id === "string" && typeof turn.userContent === "string" && typeof turn.assistantContent === "string";
+      });
     }
-    function readOfflineIds(sid) {
+    function readOfflineTurns(sid) {
       var key = "ai_phone_chat_offline_turns:" + sid;
       try {
         var mirror = window.localStorage.getItem(key);
-        if (mirror !== null) return Promise.resolve(offlineIds(mirror));
+        if (mirror !== null) return Promise.resolve(parseOfflineTurns(mirror));
       } catch (err) { }
       return new Promise(function (resolve) {
         if (!window.indexedDB) { resolve(null); return; }
@@ -1999,7 +2243,7 @@ ctx.hooks.transform("prompt.system", function (p) {
           try {
             var read = db.transaction("entries", "readonly").objectStore("entries").get(key);
             read.onsuccess = function () {
-              try { resolve(offlineIds(read.result && read.result.value)); } catch (err) { resolve(null); }
+              try { resolve(parseOfflineTurns(read.result && read.result.value)); } catch (err) { resolve(null); }
             };
             read.onerror = function () { resolve(null); };
           } catch (err) { resolve(null); }
@@ -2008,9 +2252,11 @@ ctx.hooks.transform("prompt.system", function (p) {
       }).catch(function () { return null; });
     }
     function queueOfflineSnapshot(sid, changed, retry) {
-      var snapshot = readOfflineIds(sid);
-      var task = (offlineReads[sid] || Promise.resolve()).then(function () { return snapshot; }).then(function (current) {
-        if (disposedPlugin || !current) return;
+      var snapshot = readOfflineTurns(sid);
+      var task = (offlineReads[sid] || Promise.resolve()).then(function () { return snapshot; }).then(function (turns) {
+        if (disposedPlugin || !turns) return;
+        updateSceneTurns(sid, turns, changed);
+        var current = new Set(turns.filter(function (turn) { return turn.assistantContent.trim(); }).map(function (turn) { return turn.id; }));
         var previous = offlineSnapshots[sid];
         offlineSnapshots[sid] = current;
         var data = getSessionEvents(sid);
@@ -2080,7 +2326,6 @@ ctx.hooks.transform("prompt.system", function (p) {
       var e = getEvt(sid, id);
       if (!e || document.querySelector(".opl-overlay")) return;
       var j = e.judge || {};
-      var scenePair = wrapPair("sceneWrapBefore", "sceneWrapAfter");
       var replyPair = wrapPair("replyWrapBefore", "replyWrapAfter");
       var st = stateOf(e);
       var reject = st === "refused";
@@ -2117,7 +2362,7 @@ ctx.hooks.transform("prompt.system", function (p) {
 
       openCard({
         eyebrow: eyebrow, title: title, desc: desc,
-        scene: applyWrapPair(scenePair, e.scene || ""),
+        scene: e.scene || "",
         options: options,
         primary: primary, secondary: secondary,
         onClose: function (close) {
@@ -2140,6 +2385,7 @@ ctx.hooks.transform("prompt.system", function (p) {
           var a = String(sceneTxt || "").trim();
           var b = String(replyTxt || "").trim();
           var payload = [a, b].filter(Boolean).join("\n\n");
+          var scene = a ? { scene: a, reply: b } : null;
           if (!payload) { ctx.ui.toast("至少填一处内容"); return false; }
           if (!b) {
             askConfirm({
@@ -2149,19 +2395,166 @@ ctx.hooks.transform("prompt.system", function (p) {
               cancelLabel: "再想想",
               onOk: function () {
                 close();
-                if (getEvt(sid, id)) enterOffline(host, sid, payload, label === "退让" ? { reason: j.reason } : null);
+                if (getEvt(sid, id)) enterOffline(host, sid, payload, label === "退让" ? { reason: j.reason } : null, scene);
               }
             });
             return false;
           }
           close();
-          enterOffline(host, sid, payload, label === "退让" ? { reason: j.reason } : null);
+          enterOffline(host, sid, payload, label === "退让" ? { reason: j.reason } : null, scene);
           return true;
         }
       });
     }
 
-    function enterOffline(host, sid, text, nudge) {
+    // ═════════ 线下情境：一次发送、分开展示；只存插件自己的分段信息 ═════════
+    function getSceneMarks(sid) {
+      if (!sceneTurns[sid]) {
+        var saved = ctx.system.storage.get(K_SCENE_TURNS + sid);
+        sceneTurns[sid] = Object.assign(Object.create(null), saved || {});
+      }
+      return sceneTurns[sid];
+    }
+    function getSceneState(sid) {
+      return sceneState[sid] || (sceneState[sid] = { rows: new Map(), turns: [], pending: null });
+    }
+    function stageScene(sid, scene, text, button) {
+      var state = getSceneState(sid);
+      state.pending = { parts: scene, text: text, startedAt: Date.now(), button: button, sawPending: false, previous: new Set(state.turns.map(function (turn) { return turn.id; })) };
+    }
+    function updateSceneTurns(sid, turns, changed) {
+      var state = getSceneState(sid);
+      state.turns = turns;
+      var marks = getSceneMarks(sid), pending = state.pending, dirty = false;
+      if (changed && pending) {
+        var latest = turns[turns.length - 1];
+        if (latest && !pending.previous.has(latest.id) && Date.parse(latest.createdAt) >= pending.startedAt && latest.userContent === pending.text) {
+          marks[latest.id] = pending.parts;
+          state.pending = null;
+          dirty = true;
+        }
+      }
+      if (changed) {
+        var live = new Set(turns.map(function (turn) { return turn.id; }));
+        Object.keys(marks).forEach(function (id) {
+          if (!live.has(id)) { delete marks[id]; dirty = true; }
+        });
+      }
+      if (dirty) ctx.system.storage.set(K_SCENE_TURNS + sid, marks);
+      var host = wrapperFor(sid);
+      if (host) requestAnimationFrame(function () {
+        if (!disposedPlugin && wrapperFor(sid) === host) paintSceneTurns(sid, host);
+      });
+    }
+
+    function splitSceneText(text, parts) {
+      if (!parts.reply) return { scene: text, reply: "" };
+      var divider = "\n\n";
+      var edge = -1;
+      if (text.indexOf(parts.scene + divider) === 0) edge = parts.scene.length;
+      else if (text.endsWith(divider + parts.reply)) edge = text.length - parts.reply.length - divider.length;
+      else if (parts.after && (!parts.before || text.indexOf(parts.before) === 0)) {
+        var close = text.indexOf(parts.after + divider, (parts.before || "").length);
+        if (close >= 0) edge = close + parts.after.length;
+      }
+      if (edge < 0) {
+        var first = text.indexOf(divider);
+        if (first >= 0 && first === text.lastIndexOf(divider)) edge = first;
+      }
+      // 用户删掉分隔或使分段不明确时，保留宿主的完整原文，不猜哪段是回应。
+      if (edge < 0) return null;
+      var scene = text.slice(0, edge).trim();
+      return scene ? { scene: scene, reply: text.slice(edge + divider.length).trim() } : null;
+    }
+    function makeSceneNode(text) {
+      var node = mk("div");
+      node.className = "opl-scene-narration";
+      var body = mk("div", "", text);
+      body.className = "opl-scene-text";
+      node.appendChild(body);
+      return node;
+    }
+    function removeSceneView(row, view) {
+      row.removeAttribute("data-opl-scene-turn");
+      view.entry.classList.remove("opl-scene-only", "opl-scene-split");
+      view.node.remove();
+      if (view.reply) view.reply.remove();
+    }
+    function clearSceneViews(sid) {
+      var state = sceneState[sid];
+      if (!state) return;
+      state.rows.forEach(function (view, row) { removeSceneView(row, view); });
+      state.rows.clear();
+    }
+    function getOfflineRetryTurn(sid, host) {
+      var state = sceneState[sid];
+      var body = host.querySelector(".chat-offline-body");
+      var selected = body && body.querySelector(".chat-offline-text[data-active]");
+      var row = selected && selected.closest(".chat-offline-turn");
+      if (!state || !row) return null;
+      var id = row.getAttribute("data-opl-scene-turn");
+      if (id) return state.turns.find(function (turn) { return turn.id === id; });
+      // 宿主按最近若干回合渲染；关闭旁白时没有插件 DOM 标记。
+      var rows = Array.from(body.children).filter(function (el) { return el.classList.contains("chat-offline-turn"); });
+      var index = rows.indexOf(row), offset = state.turns.length - rows.length;
+      if (index < 0 || offset < 0) return null;
+      return state.turns[offset + index];
+    }
+    function paintSceneTurns(sid, host) {
+      var state = getSceneState(sid);
+      var body = isOfflineIn(host) && host.querySelector(".chat-offline-body");
+      if (!body) { clearSceneViews(sid); return; }
+      var rows = Array.from(body.children).filter(function (el) { return el.classList.contains("chat-offline-turn"); });
+      var last = rows[rows.length - 1];
+      // 生成中的宿主正文没有已落库消息的右键外观与操作；用预览节点识别临时行。
+      var busy = !!(last && last.querySelector(".chat-offline-generating, .chat-stream-cursor"));
+      var pending = state.pending;
+      if (pending && busy) pending.sawPending = true;
+      if (pending && !busy && pending.sawPending && !pending.clearTimer) {
+        // 存储事件可能比宿主最后一帧晚到，给已发送的回合留一点关联时间。
+        pending.clearTimer = setTimeout(function () { if (state.pending === pending) state.pending = null; }, 2000);
+      }
+      // 开关只控制显示；关闭时仍追踪发送结束，避免残留情境污染下一轮。
+      if (!sBool("sceneNarration", true)) { clearSceneViews(sid); return; }
+      var savedRows = busy ? rows.slice(0, -1) : rows;
+      var offset = state.turns.length - savedRows.length;
+      var marks = getSceneMarks(sid), visible = new Set();
+      rows.forEach(function (row, index) {
+        var stored = !(busy && row === last) && offset >= 0 ? state.turns[index + offset] : null;
+        var parts = stored ? marks[stored.id] : busy && row === last && pending ? pending.parts : null;
+        if (!parts) return;
+        var split = splitSceneText(stored ? stored.userContent : pending.text, parts);
+        if (!split) return;
+        var entry = row.querySelector('.chat-offline-entry[data-role="user"]');
+        var text = entry && entry.querySelector(".chat-offline-text");
+        if (!text) return;
+        var prev = state.rows.get(row);
+        var key = stored ? stored.id : "pending";
+        visible.add(row);
+        if (prev && prev.key === key && prev.entry === entry && prev.text === text &&
+            prev.sceneText === split.scene && prev.replyText === split.reply &&
+            prev.node.nextElementSibling === row && (!prev.reply || prev.reply.parentNode === text)) return;
+        if (prev) removeSceneView(row, prev);
+        var node = makeSceneNode(split.scene);
+        var reply = null;
+        row.setAttribute("data-opl-scene-turn", key);
+        if (split.reply) {
+          reply = mk("div", "", split.reply);
+          reply.className = "opl-scene-reply";
+          text.appendChild(reply);
+          entry.classList.add("opl-scene-split");
+        } else entry.classList.add("opl-scene-only");
+        row.before(node);
+        state.rows.set(row, { key: key, entry: entry, text: text, node: node, reply: reply, sceneText: split.scene, replyText: split.reply });
+      });
+      state.rows.forEach(function (view, row) {
+        if (visible.has(row)) return;
+        removeSceneView(row, view);
+        state.rows.delete(row);
+      });
+    }
+
+    function enterOffline(host, sid, text, nudge, scene) {
       var toggle = host.querySelector('button[aria-label="线下模式"]')
         || host.querySelector(".chat-offline-toggle");
       if (!isOfflineIn(host)) {
@@ -2188,9 +2581,16 @@ ctx.hooks.transform("prompt.system", function (p) {
               if (ls[i].getAttribute("aria-label") === "发送") { send = ls[i]; break; }
             }
           }
-          if (!send) { ctx.ui.toast("没找到发送按钮，文字已填入输入框"); return; }
-          if (send.disabled) { ta.focus(); ctx.ui.toast("已填入输入框，手动点发送"); return; }
+          if (!send) {
+            if (scene) stageScene(sid, scene, text, null);
+            ctx.ui.toast("没找到发送按钮，文字已填入输入框"); return;
+          }
+          if (send.disabled) {
+            if (scene) stageScene(sid, scene, text, null);
+            ta.focus(); ctx.ui.toast("已填入输入框，手动点发送"); return;
+          }
           if (nudge) offlineNudge[sid] = nudge;
+          if (scene) stageScene(sid, scene, text, send);
           send.click();
           setTimeout(function () { syncPill(sid); }, 300);
         });
@@ -2207,6 +2607,8 @@ ctx.hooks.transform("prompt.system", function (p) {
       }
       try { stopTicker(); } catch (e) { }
       try { if (settingsOff) settingsOff(); } catch (e) { }
+      Object.keys(sceneState).forEach(clearSceneViews);
+      try { if (sceneCssDisp) sceneCssDisp(); } catch (e) { }
       try { if (cssDisp) cssDisp(); } catch (e) { }
       try { if (structDisp) structDisp(); } catch (e) { }
       try { clearFx(); } catch (e) { }
