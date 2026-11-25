@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-25T19:31:39.060Z",
+  "generatedAt": "2026-11-25T19:43:03.052Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -427,14 +427,14 @@
       "type": "dir",
       "path": "资源/Js插件/全局对话统计",
       "files": [
-        "资源/Js插件/全局对话统计/对话统计.json"
+        "资源/Js插件/全局对话统计/对话统计1 ( docx to json ).zip"
       ],
       "images": [],
       "description": "",
       "author": "",
       "avatar": "",
       "ownerHash": "d40dd2d1a0db78ed724b567b7fd27eea57c25be147e36719a280ea4663809eff",
-      "updatedAt": "2026-11-26T04:28:28+09:00"
+      "updatedAt": "2026-11-26T04:39:56+09:00"
     },
     {
       "folder": "Js插件",
