@@ -33,9 +33,9 @@ export default {
       { key: "roleInvitesOnly", label: "只保留角色邀约", type: "boolean", default: false },
       { key: "sceneNarration", label: "情境·独立旁白（关闭后随用户消息显示）", type: "boolean", default: true },
       { key: "sceneWrapBefore", label: "情境·包裹·前", type: "text", default: "",
-        description: "默认前缀：[旁白]。开启独立旁白时，前后都填才用自定义标签；任一项留空，就用整对默认标签来包裹和识别情境。" },
+        description: "默认前缀：[旁白]。开启独立旁白时，识别当前填入前后内容、并应用插件css美化；两项都空时使用默认标签，只填一项时不应用，依旧采用默认标签" },
       { key: "sceneWrapAfter", label: "情境·包裹·后", type: "text", default: "",
-        description: "默认后缀：[/旁白]。关闭独立旁白时，不补默认标签，只加填写的包裹内容，由你的正则处理。" },
+        description: "默认后缀：[/旁白]。关闭独立旁白时，不补默认标签，只加填写的包裹内容，由用户自定义正则处理。" },
       { key: "keepMarker", label: "【调试】保留气泡里的标记原文", type: "boolean", default: false }
     ]
   },
@@ -1215,7 +1215,8 @@ ${sceneOrnamentVars}
   --opl-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .29 0 0 0 0 .22 0 0 0 0 .35 0 0 0 .24 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --opl-fiber:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .55' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .5 0 0 0 .24 -.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
   --opl-hearts:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' width='300' height='300'%3E%3Cpath transform='translate(226 70) rotate(-12) scale(1.7) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='none' stroke='%23ffd6e8' stroke-opacity='.6' stroke-width='1.4'/%3E%3Cpath transform='translate(60 214) rotate(10) scale(1.1) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='%23ff8fbd' fill-opacity='.7'/%3E%3Cpath transform='translate(150 140) rotate(-8) scale(.7) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='%23ffe0ee' fill-opacity='.8'/%3E%3Cpath transform='translate(250 250) rotate(14) scale(.9) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='none' stroke='%23ff9fc6' stroke-opacity='.9' stroke-width='1.5'/%3E%3Cpath transform='translate(40 40) rotate(-6) scale(.6) translate(-12 -12)' d='M12 20.6C6 16.4 3.2 13 3.2 9.6A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 20.8 9.6C20.8 13 18 16.4 12 20.6z' fill='%23ff9fc6' fill-opacity='.75'/%3E%3C/svg%3E");
-  --opl-sparkle:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='%237d6792' opacity='.42'%3E%3Cpath d='M40 30l2.5 6.5L49 39l-6.5 2.5L40 48l-2.5-6.5L31 39l6.5-2.5z'/%3E%3Cpath d='M205 150l2 5.2 5.2 2-5.2 2-2 5.2-2-5.2-5.2-2 5.2-2z'/%3E%3Ccircle cx='120' cy='22' r='1.6'/%3E%3Ccircle cx='236' cy='96' r='1.4'/%3E%3Ccircle cx='24' cy='190' r='1.5'/%3E%3C/g%3E%3Cg fill='%23b8628a' opacity='.5'%3E%3Cpath d='M96 88l1.8 4.6 4.6 1.8-4.6 1.8-1.8 4.6-1.8-4.6-4.6-1.8 4.6-1.8z'/%3E%3Ccircle cx='190' cy='60' r='1.4'/%3E%3Ccircle cx='70' cy='215' r='1.4'/%3E%3Ccircle cx='140' cy='130' r='1.2'/%3E%3C/g%3E%3C/svg%3E");
+  --opl-corner-sparkle:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='31 30 18 18'%3E%3Cpath d='M40 30l2.5 6.5L49 39l-6.5 2.5L40 48l-2.5-6.5L31 39l6.5-2.5z' fill='%23b8628a' opacity='.30'/%3E%3C/svg%3E");
+  --opl-sparkle:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='%237d6792' opacity='.42'%3E%3Cpath d='M205 150l2 5.2 5.2 2-5.2 2-2 5.2-2-5.2-5.2-2 5.2-2z'/%3E%3Ccircle cx='120' cy='22' r='1.6'/%3E%3Ccircle cx='236' cy='96' r='1.4'/%3E%3Ccircle cx='24' cy='190' r='1.5'/%3E%3C/g%3E%3Cg fill='%23b8628a' opacity='.5'%3E%3Cpath d='M96 88l1.8 4.6 4.6 1.8-4.6 1.8-1.8 4.6-1.8-4.6-4.6-1.8 4.6-1.8z'/%3E%3Ccircle cx='190' cy='60' r='1.4'/%3E%3Ccircle cx='70' cy='215' r='1.4'/%3E%3Ccircle cx='140' cy='130' r='1.2'/%3E%3C/g%3E%3C/svg%3E");
   --opl-star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,1.8 14.53,9.52 22.65,9.54 16.09,14.33 18.58,22.06 12,17.3 5.42,22.06 7.91,14.33 1.35,9.54 9.47,9.52' fill='%237d6792' stroke='%237d6792' stroke-width='.5' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
@@ -1238,7 +1239,7 @@ ${sceneOrnamentVars}
 .opl-foot .opl-dot{width:6px;height:6px;border-radius:50%;background:var(--opl-rose);animation:oplPulse 1.9s infinite;}
 
 .opl-overlay{position:fixed;inset:0;z-index:2147483000;display:flex;justify-content:center;align-items:center;background:var(--opl-noise),var(--opl-hearts) 0 0/300px 300px repeat,radial-gradient(circle at 18% 22%,rgba(255,225,240,.85) 0 1px,transparent 2px),radial-gradient(circle at 82% 14%,rgba(255,225,240,.7) 0 1.2px,transparent 2.2px),radial-gradient(circle at 68% 34%,rgba(255,225,240,.6) 0 1px,transparent 2px),radial-gradient(circle at 9% 58%,rgba(255,225,240,.6) 0 1px,transparent 2px),linear-gradient(180deg,rgba(118,92,146,.55) 0%,rgba(176,118,160,.5) 52%,rgba(244,150,192,.55) 100%);animation:oplFade .24s ease both;}
-.opl-card{position:relative;box-sizing:border-box;width:min(288px,100%);padding:34px 20px 30px;text-align:center;border-radius:var(--opl-r);overflow:visible;color:var(--opl-ink);font-size:12.5px;font-weight:400;font-family:var(--opl-font);border:2px solid var(--opl-mauve);outline:1.5px solid var(--opl-pink);outline-offset:-7px;background:var(--opl-star) top 10px left 10px/15px 15px no-repeat,var(--opl-star) top 10px right 10px/15px 15px no-repeat,var(--opl-star) bottom 10px left 10px/15px 15px no-repeat,var(--opl-star) bottom 10px right 10px/15px 15px no-repeat,var(--opl-sprig-l) left 7px bottom 30px/30px 80px no-repeat,var(--opl-sprig-r) right 7px top 30px/30px 80px no-repeat,var(--opl-sparkle) 0 0/200px 200px repeat,var(--opl-fiber),var(--opl-noise),linear-gradient(180deg,var(--opl-bg) 0%,var(--opl-bg-mid) 52%,var(--opl-bg-low) 100%);box-shadow:inset 0 0 20px rgba(125,103,146,.1),0 0 0 4px rgba(223,163,189,.38),0 16px 38px rgba(30,16,42,.55);}
+.opl-card{position:relative;box-sizing:border-box;width:min(288px,100%);padding:34px 20px 30px;text-align:center;border-radius:var(--opl-r);overflow:visible;color:var(--opl-ink);font-size:12.5px;font-weight:400;font-family:var(--opl-font);border:2px solid var(--opl-mauve);outline:1.5px solid var(--opl-pink);outline-offset:-7px;background:var(--opl-star) top 10px left 10px/15px 15px no-repeat,var(--opl-star) top 10px right 10px/15px 15px no-repeat,var(--opl-star) bottom 10px left 10px/15px 15px no-repeat,var(--opl-star) bottom 10px right 10px/15px 15px no-repeat,var(--opl-corner-sparkle) right 41px top 47px/10px 10px no-repeat,var(--opl-sprig-l) left 7px bottom 30px/30px 80px no-repeat,var(--opl-sprig-r) right 7px top 30px/30px 80px no-repeat,var(--opl-sparkle) 0 0/200px 200px repeat,var(--opl-fiber),var(--opl-noise),linear-gradient(180deg,var(--opl-bg) 0%,var(--opl-bg-mid) 52%,var(--opl-bg-low) 100%);box-shadow:inset 0 0 20px rgba(125,103,146,.1),0 0 0 4px rgba(223,163,189,.38),0 16px 38px rgba(30,16,42,.55);}
 .opl-card::before{content:'';position:absolute;left:50%;top:-22px;transform:translateX(-50%);width:40px;height:40px;box-sizing:border-box;border-radius:50%;background:var(--opl-sun) center/24px 24px no-repeat,radial-gradient(circle at 50% 35%,#f3eaf1,var(--opl-bg));border:2px solid var(--opl-mauve);outline:1.5px solid var(--opl-pink);outline-offset:3px;}
 .opl-card::after{content:'';position:absolute;left:50%;bottom:-19px;transform:translateX(-50%);width:36px;height:36px;box-sizing:border-box;border-radius:50%;background:var(--opl-moon) center/22px 22px no-repeat,radial-gradient(circle at 50% 35%,#f6dbe6,var(--opl-bg-low));border:2px solid var(--opl-mauve);outline:1.5px solid var(--opl-pink);outline-offset:3px;}
 .opl-eyebrow{position:relative;display:block;font-size:1.02em;letter-spacing:.22em;color:var(--opl-mauve);margin:0 0 6px;padding:0;background:none;}
@@ -1778,18 +1779,25 @@ ${sceneOrnamentVars}
       bReset.addEventListener("click", function () {
         askConfirm({
           title: "重置全部设置？",
-          desc: "人称、无主语、包裹格式、字数、轮数\n全部恢复插件默认值。\n\n同时清除邀约缓存；自定义 CSS 不受影响。",
+          desc: "插件设置、邀请函 CSS 和线下情境 CSS 都将恢复默认。\n\n邀约缓存、胶囊状态与已保存的 CSS 存档不受影响。",
           okLabel: "重置",
           cancelLabel: "取消",
           onOk: function () {
-            var n = resetSettings();
+            resetSettings();
             armOp = ARM_OP_DEF;
             armRgb = ARM_DEF.slice();     // 颜色一起复位
             try { ctx.system.storage.remove(K_ARM); } catch (e) { }
+            ctx.system.storage.remove(K_CSS);
+            ctx.system.storage.remove(K_SCENE_CSS);
+            ed.value = defaultCSS;
+            sceneEd.value = defaultSceneCSS;
+            applyCSS(defaultCSS);
+            applySceneCSS("");
+            renderPrev();
+            previewSceneCSS();
             rearmAll();
             syncArmPanel();
-            purgeRuntime();
-            ctx.ui.toast(n > 0 ? "已重置 " + n + " 项设置" : "设置本来就是默认值");
+            ctx.ui.toast("设置与两套 CSS 已恢复默认");
           }
         });
       });
