@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-26T11:33:36.738Z",
+  "generatedAt": "2026-11-26T14:10:05.548Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -37,7 +37,7 @@
     },
     {
       "name": "应用",
-      "count": 172
+      "count": 173
     },
     {
       "name": "应用bug改善",
@@ -6588,6 +6588,22 @@
       "avatar": "",
       "ownerHash": "fc3b073e463d31c9cd6019b161a6f3cf5aff4af389077e4f391887a2aa2f4ae2",
       "updatedAt": "2026-08-26T16:26:06+08:00"
+    },
+    {
+      "folder": "应用",
+      "name": "群像小剧场",
+      "dirName": "群像小剧场",
+      "type": "dir",
+      "path": "资源/应用/群像小剧场",
+      "files": [
+        "资源/应用/群像小剧场/juanzong.ensemble.v2-2.2.0.zip"
+      ],
+      "images": [],
+      "description": "因为想要写1vn就试图做了一个小剧场，类似剧情那样小说的版本，目前测试的话，API正常应该是一轮一次，不排除有bug的情况，是用道具工坊写的，所以说有问题可以直接让工坊给解决，很努力的在调整了qwq",
+      "author": "123",
+      "avatar": "",
+      "ownerHash": "5cc48f316b36c538d8f2b690070c19265e9343ebfb9f8a7c7597a86d489b737c",
+      "updatedAt": "2026-11-26T23:06:58+09:00"
     },
     {
       "folder": "应用",
