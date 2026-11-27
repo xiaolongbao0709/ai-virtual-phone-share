@@ -1,7 +1,7 @@
 {
   "schema": "ai_phone_share_index",
   "schemaVersion": 1,
-  "generatedAt": "2026-11-26T23:22:12.962Z",
+  "generatedAt": "2026-11-27T02:05:43.401Z",
   "folders": [
     {
       "name": "A 重要须知（自部署版请查看）",
@@ -89,7 +89,7 @@
     },
     {
       "name": "表情包",
-      "count": 14
+      "count": 15
     }
   ],
   "entries": [
@@ -10471,6 +10471,22 @@
       "avatar": "",
       "ownerHash": "b4f8122c2c864ab59b9b44d3ac94bc675d36ed06adce337dbbaa28b94d488a99",
       "updatedAt": "2026-09-19T01:08:22+08:00"
+    },
+    {
+      "folder": "表情包",
+      "name": "可爱表情包",
+      "dirName": "可爱表情包",
+      "type": "dir",
+      "path": "资源/表情包/可爱表情包",
+      "files": [
+        "资源/表情包/可爱表情包/文本.txt"
+      ],
+      "images": [],
+      "description": "",
+      "author": "灰萌萌",
+      "avatar": "",
+      "ownerHash": "ca29b9e2c6d48b960420cd4d6c9a363e60998e2edb897c169a1adfcdf8fa7eb8",
+      "updatedAt": "2026-11-27T11:02:55+09:00"
     },
     {
       "folder": "表情包",
